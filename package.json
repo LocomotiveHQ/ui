@@ -1,6 +1,6 @@
 {
     "name": "@cushy/forms",
-    "version": "0.0.1711621133928",
+    "version": "0.0.1711633997404",
     "author": {
         "name": "rvion",
         "url": "https://github.com/rvion/CushyStudio",
@@ -23,5 +23,17 @@
     "devDependencies": {
         "rollup": "^4.13.0",
         "rollup-plugin-dts": "^6.1.0"
+    },
+    "peerDeps": {
+        "@uiw/react-json-view": "*",
+        "mobx-react-lite": "*",
+        "react-error-boundary": "*",
+        "mobx": "*",
+        "react": "*",
+        "react-dom": "*",
+        "marked": "*",
+        "nanoid": "*",
+        "react-toastify": "*",
+        "react-easy-sort": "*"
     }
 }

@@ -1,4 +1,5 @@
 INPUT:
+    src/theme/form.vars.css ([object Set])
     src/theme/markdown.css ([object Set])
     src/theme/form.css ([object Set])
     src/llm/OpenRouter_infos.ts ([object Set])
@@ -311,6 +312,7 @@ TYPES:
         [🟢]: src/controls/widgets/string/WidgetString
     [🟢]: src/controls/FormBuilder.loco       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🟡]: src/controls/IWidget
+        [🟢]: src/theme/form.vars.css
         [🟢]: src/theme/markdown.css
         [🟢]: src/theme/form.css
         [🟡]: src/llm/OpenRouter_models
@@ -335,6 +337,7 @@ TYPES:
         [🟢]: src/controls/widgets/spacer/WidgetSpacer
         [🟢]: src/controls/widgets/string/WidgetString
     [🟢]: src/controls/widgets/number/InputNumberUI.css       (from /lib/controls/widgets/number/InputNumberUI.d.ts files)
+    [🟢]: src/theme/form.vars.css       (from /lib/controls/FormBuilder.loco.d.ts files)
     [🟢]: src/theme/markdown.css       (from /lib/controls/FormBuilder.loco.d.ts files)
     [🟢]: src/theme/form.css       (from /lib/controls/FormBuilder.loco.d.ts files)
 
