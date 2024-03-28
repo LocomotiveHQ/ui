@@ -1818,471 +1818,474 @@
       "imports": [
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react-error-boundary",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "@uiw/react-json-view",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react/jsx-runtime",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react/jsx-runtime",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react-dom",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "marked",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react-toastify",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react-dom",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react-easy-sort",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react-error-boundary",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "react",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "nanoid",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         },
         {
           "path": "mobx-react-lite",
-          "kind": "require-call",
+          "kind": "import-statement",
           "external": true
         }
       ],
-      "exports": [],
+      "exports": [
+        "FormBuilder_Loco",
+        "LocoFormManager"
+      ],
       "entryPoint": "src/controls/FormBuilder.loco.ts",
       "cssBundle": "@cushy/forms/pre/initial.css",
       "inputs": {
@@ -2296,232 +2299,232 @@
           "bytesInOutput": 0
         },
         "src/controls/FormBuilder.loco.ts": {
-          "bytesInOutput": 8198
+          "bytesInOutput": 7917
         },
         "src/llm/OpenRouter_infos.ts": {
-          "bytesInOutput": 24749
+          "bytesInOutput": 23665
         },
         "src/utils/misc/_FIX_INDENTATION.ts": {
-          "bytesInOutput": 272
+          "bytesInOutput": 256
         },
         "src/controls/FormManager.ts": {
-          "bytesInOutput": 1212
+          "bytesInOutput": 1111
         },
         "src/controls/Form.ts": {
-          "bytesInOutput": 3237
+          "bytesInOutput": 3059
         },
         "src/utils/misc/debounce.ts": {
-          "bytesInOutput": 540
+          "bytesInOutput": 500
         },
         "src/controls/FormUI.tsx": {
-          "bytesInOutput": 595
+          "bytesInOutput": 542
         },
         "src/controls/widgets/group/WidgetGroupUI.tsx": {
-          "bytesInOutput": 1540
+          "bytesInOutput": 1403
         },
         "src/controls/shared/WidgetWithLabelUI.tsx": {
-          "bytesInOutput": 5479
+          "bytesInOutput": 5133
         },
         "src/utils/misc/makeLabelFromFieldName.tsx": {
-          "bytesInOutput": 528
+          "bytesInOutput": 498
         },
         "src/widgets/workspace/JsonViewUI.tsx": {
-          "bytesInOutput": 1624
+          "bytesInOutput": 1444
         },
         "src/utils/custom-jsx/jsx-runtime.js": {
-          "bytesInOutput": 1347
+          "bytesInOutput": 1164
         },
         "src/widgets/misc/ErrorBoundary.tsx": {
-          "bytesInOutput": 867
+          "bytesInOutput": 845
         },
         "src/controls/utils/AnimatedSizeUI.tsx": {
-          "bytesInOutput": 414
+          "bytesInOutput": 373
         },
         "src/controls/utils/useSizeOf.tsx": {
-          "bytesInOutput": 762
+          "bytesInOutput": 657
         },
         "src/utils/misc/bang.ts": {
-          "bytesInOutput": 188
+          "bytesInOutput": 174
         },
         "src/controls/widgets/WidgetUI.DI.ts": {
-          "bytesInOutput": 282
+          "bytesInOutput": 268
         },
         "src/controls/shared/getActualWidgetToDisplay.tsx": {
-          "bytesInOutput": 290
+          "bytesInOutput": 276
         },
         "src/controls/shared/getBorderStatusForWidget.ts": {
-          "bytesInOutput": 259
+          "bytesInOutput": 241
         },
         "src/controls/shared/getIfWidgetIsCollapsible.tsx": {
-          "bytesInOutput": 258
+          "bytesInOutput": 240
         },
         "src/controls/shared/getIfWidgetNeedAlignedLabel.tsx": {
-          "bytesInOutput": 270
+          "bytesInOutput": 252
         },
         "src/controls/shared/Widget_ToggleUI.tsx": {
-          "bytesInOutput": 439
+          "bytesInOutput": 380
         },
         "src/controls/widgets/bool/InputBoolUI.tsx": {
-          "bytesInOutput": 3513
+          "bytesInOutput": 3239
         },
         "src/controls/shared/WidgetTooltipUI.tsx": {
-          "bytesInOutput": 507
+          "bytesInOutput": 466
         },
         "src/rsuite/reveal/RevealUI.tsx": {
-          "bytesInOutput": 5368
+          "bytesInOutput": 4933
         },
         "src/rsuite/reveal/ModalShell.tsx": {
-          "bytesInOutput": 1036
+          "bytesInOutput": 961
         },
         "src/rsuite/reveal/RevealState.tsx": {
-          "bytesInOutput": 5137
+          "bytesInOutput": 4797
         },
         "src/rsuite/reveal/RevealPlacement.tsx": {
-          "bytesInOutput": 2155
+          "bytesInOutput": 2067
         },
         "src/rsuite/shims.tsx": {
-          "bytesInOutput": 4164
+          "bytesInOutput": 3681
         },
         "src/utils/misc/exhaust.ts": {
-          "bytesInOutput": 26
+          "bytesInOutput": 24
         },
         "src/panels/MessageUI.tsx": {
-          "bytesInOutput": 2299
+          "bytesInOutput": 2075
         },
         "src/rsuite/MarkdownUI.tsx": {
-          "bytesInOutput": 445
+          "bytesInOutput": 359
         },
         "src/controls/shared/runWithGlobalForm.ts": {
-          "bytesInOutput": 735
+          "bytesInOutput": 656
         },
         "src/controls/Spec.ts": {
-          "bytesInOutput": 834
+          "bytesInOutput": 788
         },
         "src/controls/widgets/bool/WidgetBool.tsx": {
-          "bytesInOutput": 1415
+          "bytesInOutput": 1343
         },
         "src/controls/Mixins.tsx": {
-          "bytesInOutput": 2155
+          "bytesInOutput": 2002
         },
         "src/controls/widgets/bool/WidgetBoolUI.tsx": {
-          "bytesInOutput": 1121
+          "bytesInOutput": 1013
         },
         "src/controls/widgets/button/WidgetButton.ts": {
-          "bytesInOutput": 1024
+          "bytesInOutput": 958
         },
         "src/controls/widgets/button/WidgetButtonUI.tsx": {
-          "bytesInOutput": 931
+          "bytesInOutput": 853
         },
         "src/controls/widgets/choices/WidgetChoices.tsx": {
-          "bytesInOutput": 4691
+          "bytesInOutput": 4429
         },
         "src/utils/misc/toasts.ts": {
-          "bytesInOutput": 199
+          "bytesInOutput": 145
         },
         "src/controls/widgets/choices/WidgetChoicesUI.tsx": {
-          "bytesInOutput": 3811
+          "bytesInOutput": 3485
         },
         "src/rsuite/SelectUI.tsx": {
-          "bytesInOutput": 16677
+          "bytesInOutput": 15698
         },
         "src/utils/misc/searchMatches.ts": {
-          "bytesInOutput": 293
+          "bytesInOutput": 275
         },
         "src/controls/widgets/color/WidgetColor.tsx": {
-          "bytesInOutput": 1188
+          "bytesInOutput": 1113
         },
         "src/controls/widgets/color/WidgetColorUI.tsx": {
-          "bytesInOutput": 796
+          "bytesInOutput": 719
         },
         "src/controls/widgets/group/WidgetGroup.tsx": {
-          "bytesInOutput": 3525
+          "bytesInOutput": 3325
         },
         "src/controls/widgets/list/WidgetList.ts": {
-          "bytesInOutput": 5233
+          "bytesInOutput": 4974
         },
         "src/controls/widgets/list/WidgetListUI.tsx": {
-          "bytesInOutput": 4235
+          "bytesInOutput": 3870
         },
         "src/controls/widgets/list/ListControlsUI.tsx": {
-          "bytesInOutput": 2378
+          "bytesInOutput": 2211
         },
         "src/controls/widgets/markdown/WidgetMarkdown.ts": {
-          "bytesInOutput": 1116
+          "bytesInOutput": 1034
         },
         "src/controls/widgets/markdown/WidgetMarkdownUI.tsx": {
-          "bytesInOutput": 341
+          "bytesInOutput": 300
         },
         "src/controls/widgets/matrix/WidgetMatrix.ts": {
-          "bytesInOutput": 2502
+          "bytesInOutput": 2338
         },
         "src/controls/widgets/matrix/WidgetMatrixUI.tsx": {
-          "bytesInOutput": 2215
+          "bytesInOutput": 2049
         },
         "src/controls/widgets/number/WidgetNumber.tsx": {
-          "bytesInOutput": 1382
+          "bytesInOutput": 1287
         },
         "src/controls/widgets/number/WidgetNumberUI.tsx": {
-          "bytesInOutput": 1271
+          "bytesInOutput": 1151
         },
         "src/controls/widgets/number/InputNumberUI.css": {
           "bytesInOutput": 0
         },
         "src/controls/widgets/number/InputNumberUI.tsx": {
-          "bytesInOutput": 13732
+          "bytesInOutput": 13018
         },
         "src/utils/misc/parseFloatNoRoundingErr.ts": {
-          "bytesInOutput": 253
+          "bytesInOutput": 239
         },
         "src/controls/widgets/optional/WidgetOptional.tsx": {
-          "bytesInOutput": 2107
+          "bytesInOutput": 1989
         },
         "src/controls/widgets/seed/WidgetSeed.ts": {
-          "bytesInOutput": 1380
+          "bytesInOutput": 1286
         },
         "src/controls/widgets/seed/WidgetSeedUI.tsx": {
-          "bytesInOutput": 4523
+          "bytesInOutput": 4245
         },
         "src/controls/widgets/selectMany/WidgetSelectMany.tsx": {
-          "bytesInOutput": 2553
+          "bytesInOutput": 2403
         },
         "src/controls/widgets/selectMany/WidgetSelectManyUI.tsx": {
-          "bytesInOutput": 2712
+          "bytesInOutput": 2501
         },
         "src/controls/widgets/selectOne/WidgetSelectOne.ts": {
-          "bytesInOutput": 1774
+          "bytesInOutput": 1667
         },
         "src/controls/widgets/selectOne/WidgetSelectOneUI.tsx": {
-          "bytesInOutput": 2677
+          "bytesInOutput": 2460
         },
         "src/controls/widgets/shared/WidgetShared.tsx": {
-          "bytesInOutput": 904
+          "bytesInOutput": 848
         },
         "src/controls/widgets/size/WidgetSize.ts": {
-          "bytesInOutput": 1911
+          "bytesInOutput": 1768
         },
         "src/controls/widgets/size/ResolutionState.tsx": {
-          "bytesInOutput": 3538
+          "bytesInOutput": 3345
         },
         "src/controls/widgets/size/WidgetSizeUI.tsx": {
-          "bytesInOutput": 6043
+          "bytesInOutput": 5568
         },
         "src/controls/widgets/spacer/WidgetSpacer.tsx": {
-          "bytesInOutput": 771
+          "bytesInOutput": 717
         },
         "src/controls/widgets/spacer/WidgetSpacerUI.tsx": {
-          "bytesInOutput": 207
+          "bytesInOutput": 168
         },
         "src/controls/widgets/spacer/SpacerUI.tsx": {
-          "bytesInOutput": 209
+          "bytesInOutput": 170
         },
         "src/controls/widgets/string/WidgetString.tsx": {
-          "bytesInOutput": 1677
+          "bytesInOutput": 1570
         },
         "src/controls/widgets/string/WidgetStringUI.tsx": {
-          "bytesInOutput": 3788
+          "bytesInOutput": 3468
         }
       },
-      "bytes": 195398
+      "bytes": 181230
     },
     "@cushy/forms/pre/initial.css": {
       "imports": [],
