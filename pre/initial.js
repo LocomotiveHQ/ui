@@ -835,6 +835,7 @@ var InputBoolUI = observer3(function InputBoolUI_(p) {
     "div",
     {
       className: p.className,
+      style: p.style,
       tw: [
         "WIDGET-FIELD select-none",
         "flex items-center",
@@ -2495,11 +2496,7 @@ var SelectPopupUI = observer17(function SelectPopupUI_(p) {
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx("div", { tw: "overflow-hidden", children: s.displayValue }) }),
           s.filteredOptions.length === 0 ? /* @__PURE__ */ jsx("li", { className: "WIDGET-FIELD text-base", children: "No results" }) : null,
           s.filteredOptions.map((option, index) => {
-            const isSelected = s.values.find((v) => {
-              if (s.p.equalityCheck != null)
-                return s.p.equalityCheck(v, option);
-              return v === option;
-            }) != null;
+            const isSelected = s.values.find((v) => s.isEqual(v, option)) != null;
             return /* @__PURE__ */ jsx(
               "li",
               {
@@ -4098,7 +4095,7 @@ var WidgetSelectMany_TabUI = observer27(function WidgetSelectMany_TabUI_(p) {
         InputBoolUI,
         {
           active: true,
-          className: "bderr",
+          style: { border: "1px solid oklch(var(--er))" },
           display: "button",
           text: item.label ?? "no label",
           onValueChange: (value) => widget.toggleItem(item)

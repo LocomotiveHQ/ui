@@ -162,7 +162,7 @@
       "format": "esm"
     },
     "src/controls/widgets/bool/InputBoolUI.tsx": {
-      "bytes": 3934,
+      "bytes": 4032,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -734,7 +734,7 @@
       "format": "esm"
     },
     "src/rsuite/SelectUI.tsx": {
-      "bytes": 21625,
+      "bytes": 21451,
       "imports": [
         {
           "path": "mobx",
@@ -1342,17 +1342,12 @@
       "format": "esm"
     },
     "src/controls/widgets/selectMany/WidgetSelectManyUI.tsx": {
-      "bytes": 3506,
+      "bytes": 3537,
       "imports": [
         {
           "path": "mobx-react-lite",
           "kind": "import-statement",
           "external": true
-        },
-        {
-          "path": "src/controls/widgets/bool/InputBoolUI.tsx",
-          "kind": "import-statement",
-          "original": "../bool/InputBoolUI"
         },
         {
           "path": "src/panels/MessageUI.tsx",
@@ -1363,6 +1358,11 @@
           "path": "src/rsuite/SelectUI.tsx",
           "kind": "import-statement",
           "original": "../../../rsuite/SelectUI"
+        },
+        {
+          "path": "src/controls/widgets/bool/InputBoolUI.tsx",
+          "kind": "import-statement",
+          "original": "../bool/InputBoolUI"
         },
         {
           "path": "src/utils/custom-jsx/jsx-runtime.js",
@@ -2196,7 +2196,7 @@
     }
   },
   "outputs": {
-    "release-forms/main.js": {
+    "@cushy/forms/main.js": {
       "imports": [
         {
           "path": "@uiw/react-json-view",
@@ -2811,7 +2811,7 @@
         "useSizeOf"
       ],
       "entryPoint": "src/controls/FormBuilder.loco.LIBRARY.ts",
-      "cssBundle": "release-forms/main.css",
+      "cssBundle": "@cushy/forms/main.css",
       "inputs": {
         "src/llm/OpenRouter_infos.ts": {
           "bytesInOutput": 23665
@@ -2862,7 +2862,7 @@
           "bytesInOutput": 252
         },
         "src/controls/widgets/bool/InputBoolUI.tsx": {
-          "bytesInOutput": 3217
+          "bytesInOutput": 3239
         },
         "src/controls/shared/Widget_ToggleUI.tsx": {
           "bytesInOutput": 380
@@ -2937,7 +2937,7 @@
           "bytesInOutput": 275
         },
         "src/rsuite/SelectUI.tsx": {
-          "bytesInOutput": 15826
+          "bytesInOutput": 15698
         },
         "src/controls/widgets/choices/WidgetChoicesUI.tsx": {
           "bytesInOutput": 3485
@@ -3000,7 +3000,7 @@
           "bytesInOutput": 1286
         },
         "src/controls/widgets/selectMany/WidgetSelectManyUI.tsx": {
-          "bytesInOutput": 2472
+          "bytesInOutput": 2501
         },
         "src/controls/widgets/selectMany/WidgetSelectMany.tsx": {
           "bytesInOutput": 2403
@@ -3048,9 +3048,9 @@
           "bytesInOutput": 7917
         }
       },
-      "bytes": 185377
+      "bytes": 185300
     },
-    "release-forms/main.css": {
+    "@cushy/forms/main.css": {
       "imports": [],
       "inputs": {
         "src/controls/widgets/number/InputNumberUI.css": {

@@ -493,11 +493,7 @@ export const SelectPopupUI = observer(function SelectPopupUI_<T>(p: { s: AutoCom
 
                 {/* Entries */}
                 {s.filteredOptions.map((option, index) => {
-                    const isSelected =
-                        s.values.find((v) => {
-                            if (s.p.equalityCheck != null) return s.p.equalityCheck(v, option)
-                            return v === option
-                        }) != null
+                    const isSelected = s.values.find((v) => s.isEqual(v, option)) != null
                     return (
                         <li // Fake gaps by padding <li> to make sure you can't click inbetween visual gaps
                             key={index}

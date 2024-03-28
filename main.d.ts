@@ -1,7 +1,7 @@
 /// <reference types="react" />
 /// <reference types="node" />
 import * as react from 'react';
-import react__default, { ReactNode, DependencyList, FC } from 'react';
+import react__default, { ReactNode, DependencyList, FC, CSSProperties } from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { FallbackProps } from 'react-error-boundary';
 import * as react_toastify from 'react-toastify';
@@ -733,11 +733,12 @@ declare const getIfWidgetNeedAlignedLabel: (widget: IWidget) => boolean;
 
 declare const InputBoolUI: react.FunctionComponent<{
     active?: Maybe<boolean>;
-    display?: "button" | "check" | undefined;
+    display?: "check" | "button" | undefined;
     expand?: boolean | undefined;
     icon?: string | undefined;
     text?: string | undefined;
     className?: string | undefined;
+    style?: CSSProperties | undefined;
     onValueChange?: ((next: boolean) => void) | undefined;
 }>;
 
