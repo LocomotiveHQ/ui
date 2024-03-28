@@ -1,0 +1,2553 @@
+{
+  "inputs": {
+    "src/theme/markdown.css": {
+      "bytes": 1368,
+      "imports": []
+    },
+    "src/theme/form.css": {
+      "bytes": 2179,
+      "imports": []
+    },
+    "src/llm/OpenRouter_infos.ts": {
+      "bytes": 26314,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/utils/misc/_FIX_INDENTATION.ts": {
+      "bytes": 504,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/utils/misc/debounce.ts": {
+      "bytes": 736,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/utils/misc/makeLabelFromFieldName.tsx": {
+      "bytes": 638,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/utils/custom-jsx/jsx-runtime.js": {
+      "bytes": 1353,
+      "imports": [
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/widgets/workspace/JsonViewUI.tsx": {
+      "bytes": 1633,
+      "imports": [
+        {
+          "path": "@uiw/react-json-view",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/widgets/misc/ErrorBoundary.tsx": {
+      "bytes": 1122,
+      "imports": [
+        {
+          "path": "react-error-boundary",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/widgets/workspace/JsonViewUI.tsx",
+          "kind": "import-statement",
+          "original": "../workspace/JsonViewUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/utils/misc/bang.ts": {
+      "bytes": 805,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/controls/utils/useSizeOf.tsx": {
+      "bytes": 1075,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/bang.ts",
+          "kind": "import-statement",
+          "original": "../../utils/misc/bang"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/utils/AnimatedSizeUI.tsx": {
+      "bytes": 467,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/utils/useSizeOf.tsx",
+          "kind": "import-statement",
+          "original": "./useSizeOf"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/WidgetUI.DI.ts": {
+      "bytes": 1540,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/controls/shared/getActualWidgetToDisplay.tsx": {
+      "bytes": 458,
+      "imports": [
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../widgets/WidgetUI.DI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/shared/getBorderStatusForWidget.ts": {
+      "bytes": 617,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/controls/shared/getIfWidgetIsCollapsible.tsx": {
+      "bytes": 606,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/controls/shared/getIfWidgetNeedAlignedLabel.tsx": {
+      "bytes": 349,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/controls/widgets/bool/InputBoolUI.tsx": {
+      "bytes": 3934,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/shared/Widget_ToggleUI.tsx": {
+      "bytes": 753,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/bool/InputBoolUI.tsx",
+          "kind": "import-statement",
+          "original": "../widgets/bool/InputBoolUI"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../widgets/WidgetUI.DI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/rsuite/reveal/ModalShell.tsx": {
+      "bytes": 912,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/rsuite/reveal/RevealPlacement.tsx": {
+      "bytes": 2970,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/rsuite/reveal/RevealState.tsx": {
+      "bytes": 5356,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/rsuite/reveal/RevealPlacement.tsx",
+          "kind": "import-statement",
+          "original": "./RevealPlacement"
+        },
+        {
+          "path": "./RevealProps",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/rsuite/reveal/RevealUI.tsx": {
+      "bytes": 6270,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-dom",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/rsuite/reveal/ModalShell.tsx",
+          "kind": "import-statement",
+          "original": "./ModalShell"
+        },
+        {
+          "path": "./RevealProps",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/rsuite/reveal/RevealState.tsx",
+          "kind": "import-statement",
+          "original": "./RevealState"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/utils/misc/exhaust.ts": {
+      "bytes": 119,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/rsuite/shims.tsx": {
+      "bytes": 8210,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/exhaust.ts",
+          "kind": "import-statement",
+          "original": "../utils/misc/exhaust"
+        },
+        {
+          "path": "src/rsuite/reveal/RevealUI.tsx",
+          "kind": "import-statement",
+          "original": "./reveal/RevealUI"
+        },
+        {
+          "path": "./RsuiteTypes",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/shared/WidgetTooltipUI.tsx": {
+      "bytes": 582,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/rsuite/reveal/RevealUI.tsx",
+          "kind": "import-statement",
+          "original": "../../rsuite/reveal/RevealUI"
+        },
+        {
+          "path": "src/rsuite/shims.tsx",
+          "kind": "import-statement",
+          "original": "../../rsuite/shims"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/shared/WidgetWithLabelUI.tsx": {
+      "bytes": 10168,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-error-boundary",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/makeLabelFromFieldName.tsx",
+          "kind": "import-statement",
+          "original": "../../utils/misc/makeLabelFromFieldName"
+        },
+        {
+          "path": "src/widgets/misc/ErrorBoundary.tsx",
+          "kind": "import-statement",
+          "original": "../../widgets/misc/ErrorBoundary"
+        },
+        {
+          "path": "src/controls/utils/AnimatedSizeUI.tsx",
+          "kind": "import-statement",
+          "original": "../utils/AnimatedSizeUI"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../widgets/WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/shared/getActualWidgetToDisplay.tsx",
+          "kind": "import-statement",
+          "original": "./getActualWidgetToDisplay"
+        },
+        {
+          "path": "src/controls/shared/getBorderStatusForWidget.ts",
+          "kind": "import-statement",
+          "original": "./getBorderStatusForWidget"
+        },
+        {
+          "path": "src/controls/shared/getIfWidgetIsCollapsible.tsx",
+          "kind": "import-statement",
+          "original": "./getIfWidgetIsCollapsible"
+        },
+        {
+          "path": "src/controls/shared/getIfWidgetNeedAlignedLabel.tsx",
+          "kind": "import-statement",
+          "original": "./getIfWidgetNeedAlignedLabel"
+        },
+        {
+          "path": "src/controls/shared/Widget_ToggleUI.tsx",
+          "kind": "import-statement",
+          "original": "./Widget_ToggleUI"
+        },
+        {
+          "path": "src/controls/shared/WidgetTooltipUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetTooltipUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/group/WidgetGroupUI.tsx": {
+      "bytes": 2173,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/shared/WidgetWithLabelUI.tsx",
+          "kind": "import-statement",
+          "original": "../../shared/WidgetWithLabelUI"
+        },
+        {
+          "path": "src/utils/misc/bang.ts",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/bang"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/rsuite/MarkdownUI.tsx": {
+      "bytes": 410,
+      "imports": [
+        {
+          "path": "marked",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/panels/MessageUI.tsx": {
+      "bytes": 2323,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/rsuite/MarkdownUI.tsx",
+          "kind": "import-statement",
+          "original": "../rsuite/MarkdownUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/FormUI.tsx": {
+      "bytes": 666,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/group/WidgetGroupUI.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/group/WidgetGroupUI"
+        },
+        {
+          "path": "src/panels/MessageUI.tsx",
+          "kind": "import-statement",
+          "original": "../panels/MessageUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/shared/runWithGlobalForm.ts": {
+      "bytes": 1805,
+      "imports": [
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/Spec.ts": {
+      "bytes": 2163,
+      "imports": [
+        {
+          "path": "src/controls/shared/runWithGlobalForm.ts",
+          "kind": "import-statement",
+          "original": "./shared/runWithGlobalForm"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/Form.ts": {
+      "bytes": 6357,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/debounce.ts",
+          "kind": "import-statement",
+          "original": "../utils/misc/debounce"
+        },
+        {
+          "path": "src/controls/FormUI.tsx",
+          "kind": "import-statement",
+          "original": "./FormUI"
+        },
+        {
+          "path": "src/controls/Spec.ts",
+          "kind": "import-statement",
+          "original": "./Spec"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/FormManager.ts": {
+      "bytes": 2153,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Form.ts",
+          "kind": "import-statement",
+          "original": "./Form"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/Mixins.tsx": {
+      "bytes": 3168,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/shared/WidgetWithLabelUI.tsx",
+          "kind": "import-statement",
+          "original": "./shared/WidgetWithLabelUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/bool/WidgetBoolUI.tsx": {
+      "bytes": 1168,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/bool/InputBoolUI.tsx",
+          "kind": "import-statement",
+          "original": "./InputBoolUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/bool/WidgetBool.tsx": {
+      "bytes": 3545,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/bool/WidgetBoolUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetBoolUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/button/WidgetButtonUI.tsx": {
+      "bytes": 1054,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/button/WidgetButton.ts": {
+      "bytes": 2449,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/button/WidgetButtonUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetButtonUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/utils/misc/toasts.ts": {
+      "bytes": 396,
+      "imports": [
+        {
+          "path": "react-toastify",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/utils/misc/searchMatches.ts": {
+      "bytes": 402,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/rsuite/SelectUI.tsx": {
+      "bytes": 21625,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-dom",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/bool/InputBoolUI.tsx",
+          "kind": "import-statement",
+          "original": "../controls/widgets/bool/InputBoolUI"
+        },
+        {
+          "path": "src/utils/misc/searchMatches.ts",
+          "kind": "import-statement",
+          "original": "../utils/misc/searchMatches"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/choices/WidgetChoicesUI.tsx": {
+      "bytes": 5544,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/shared/WidgetWithLabelUI.tsx",
+          "kind": "import-statement",
+          "original": "../../shared/WidgetWithLabelUI"
+        },
+        {
+          "path": "src/controls/utils/AnimatedSizeUI.tsx",
+          "kind": "import-statement",
+          "original": "../../utils/AnimatedSizeUI"
+        },
+        {
+          "path": "src/controls/widgets/bool/InputBoolUI.tsx",
+          "kind": "import-statement",
+          "original": "../bool/InputBoolUI"
+        },
+        {
+          "path": "src/rsuite/SelectUI.tsx",
+          "kind": "import-statement",
+          "original": "../../../rsuite/SelectUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/choices/WidgetChoices.tsx": {
+      "bytes": 8369,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/makeLabelFromFieldName.tsx",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/makeLabelFromFieldName"
+        },
+        {
+          "path": "src/utils/misc/toasts.ts",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/toasts"
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/choices/WidgetChoicesUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetChoicesUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/color/WidgetColorUI.tsx": {
+      "bytes": 756,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/color/WidgetColor.tsx": {
+      "bytes": 2225,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/color/WidgetColorUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetColorUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/group/WidgetGroup.tsx": {
+      "bytes": 6806,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/bang.ts",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/bang"
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/shared/getActualWidgetToDisplay.tsx",
+          "kind": "import-statement",
+          "original": "../../shared/getActualWidgetToDisplay"
+        },
+        {
+          "path": "src/controls/shared/getIfWidgetIsCollapsible.tsx",
+          "kind": "import-statement",
+          "original": "../../shared/getIfWidgetIsCollapsible"
+        },
+        {
+          "path": "src/controls/shared/runWithGlobalForm.ts",
+          "kind": "import-statement",
+          "original": "../../shared/runWithGlobalForm"
+        },
+        {
+          "path": "src/controls/Spec.ts",
+          "kind": "import-statement",
+          "original": "../../Spec"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/group/WidgetGroupUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetGroupUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/list/ListControlsUI.tsx": {
+      "bytes": 2759,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/list/WidgetListUI.tsx": {
+      "bytes": 6673,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-easy-sort",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-error-boundary",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/shared/getBorderStatusForWidget.ts",
+          "kind": "import-statement",
+          "original": "../../shared/getBorderStatusForWidget"
+        },
+        {
+          "path": "src/controls/widgets/list/ListControlsUI.tsx",
+          "kind": "import-statement",
+          "original": "./ListControlsUI"
+        },
+        {
+          "path": "src/widgets/misc/ErrorBoundary.tsx",
+          "kind": "import-statement",
+          "original": "../../../widgets/misc/ErrorBoundary"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/list/WidgetList.ts": {
+      "bytes": 7630,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/bang.ts",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/bang"
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/shared/runWithGlobalForm.ts",
+          "kind": "import-statement",
+          "original": "../../shared/runWithGlobalForm"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/list/WidgetListUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetListUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/markdown/WidgetMarkdownUI.tsx": {
+      "bytes": 416,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/rsuite/MarkdownUI.tsx",
+          "kind": "import-statement",
+          "original": "../../../rsuite/MarkdownUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/markdown/WidgetMarkdown.ts": {
+      "bytes": 2324,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/markdown/WidgetMarkdownUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetMarkdownUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/matrix/WidgetMatrixUI.tsx": {
+      "bytes": 3421,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/matrix/WidgetMatrix.ts": {
+      "bytes": 4131,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/bang.ts",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/bang"
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/matrix/WidgetMatrixUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetMatrixUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/number/InputNumberUI.css": {
+      "bytes": 530,
+      "imports": []
+    },
+    "src/utils/misc/parseFloatNoRoundingErr.ts": {
+      "bytes": 571,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/controls/widgets/number/InputNumberUI.tsx": {
+      "bytes": 17261,
+      "imports": [
+        {
+          "path": "src/controls/widgets/number/InputNumberUI.css",
+          "kind": "import-statement",
+          "original": "./InputNumberUI.css"
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/parseFloatNoRoundingErr.ts",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/parseFloatNoRoundingErr"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/number/WidgetNumberUI.tsx": {
+      "bytes": 1346,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/number/InputNumberUI.tsx",
+          "kind": "import-statement",
+          "original": "./InputNumberUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/number/WidgetNumber.tsx": {
+      "bytes": 2711,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/number/WidgetNumberUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetNumberUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/optional/WidgetOptional.tsx": {
+      "bytes": 3519,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/seed/WidgetSeedUI.tsx": {
+      "bytes": 4689,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/number/InputNumberUI.tsx",
+          "kind": "import-statement",
+          "original": "../number/InputNumberUI"
+        },
+        {
+          "path": "src/rsuite/shims.tsx",
+          "kind": "import-statement",
+          "original": "../../../rsuite/shims"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/seed/WidgetSeed.ts": {
+      "bytes": 2459,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/seed/WidgetSeedUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetSeedUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/selectMany/WidgetSelectManyUI.tsx": {
+      "bytes": 3506,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/bool/InputBoolUI.tsx",
+          "kind": "import-statement",
+          "original": "../bool/InputBoolUI"
+        },
+        {
+          "path": "src/panels/MessageUI.tsx",
+          "kind": "import-statement",
+          "original": "../../../panels/MessageUI"
+        },
+        {
+          "path": "src/rsuite/SelectUI.tsx",
+          "kind": "import-statement",
+          "original": "../../../rsuite/SelectUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/selectMany/WidgetSelectMany.tsx": {
+      "bytes": 4349,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/selectMany/WidgetSelectManyUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetSelectManyUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/selectOne/WidgetSelectOneUI.tsx": {
+      "bytes": 3449,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/bool/InputBoolUI.tsx",
+          "kind": "import-statement",
+          "original": "../bool/InputBoolUI"
+        },
+        {
+          "path": "src/rsuite/SelectUI.tsx",
+          "kind": "import-statement",
+          "original": "../../../rsuite/SelectUI"
+        },
+        {
+          "path": "src/utils/misc/makeLabelFromFieldName.tsx",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/makeLabelFromFieldName"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/selectOne/WidgetSelectOne.ts": {
+      "bytes": 3331,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/selectOne/WidgetSelectOneUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetSelectOneUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/shared/WidgetShared.tsx": {
+      "bytes": 2252,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/size/ResolutionState.tsx": {
+      "bytes": 4163,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/parseFloatNoRoundingErr.ts",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/parseFloatNoRoundingErr"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/size/WidgetSizeUI.tsx": {
+      "bytes": 6956,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/number/InputNumberUI.tsx",
+          "kind": "import-statement",
+          "original": "../number/InputNumberUI"
+        },
+        {
+          "path": "src/rsuite/shims.tsx",
+          "kind": "import-statement",
+          "original": "../../../rsuite/shims"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/size/WidgetSize.ts": {
+      "bytes": 3440,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/size/ResolutionState.tsx",
+          "kind": "import-statement",
+          "original": "./ResolutionState"
+        },
+        {
+          "path": "src/controls/widgets/size/WidgetSizeUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetSizeUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/spacer/SpacerUI.tsx": {
+      "bytes": 587,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/spacer/WidgetSpacerUI.tsx": {
+      "bytes": 258,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/spacer/SpacerUI.tsx",
+          "kind": "import-statement",
+          "original": "./SpacerUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/spacer/WidgetSpacer.tsx": {
+      "bytes": 1754,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/spacer/WidgetSpacerUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetSpacerUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/string/WidgetStringUI.tsx": {
+      "bytes": 4171,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/string/WidgetString.tsx": {
+      "bytes": 2942,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Mixins.tsx",
+          "kind": "import-statement",
+          "original": "../../Mixins"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/widgets/string/WidgetStringUI.tsx",
+          "kind": "import-statement",
+          "original": "./WidgetStringUI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/FormBuilder.loco.ts": {
+      "bytes": 15545,
+      "imports": [
+        {
+          "path": "src/theme/markdown.css",
+          "kind": "import-statement",
+          "original": "../theme/markdown.css"
+        },
+        {
+          "path": "src/theme/form.css",
+          "kind": "import-statement",
+          "original": "../theme/form.css"
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/llm/OpenRouter_infos.ts",
+          "kind": "import-statement",
+          "original": "../llm/OpenRouter_infos"
+        },
+        {
+          "path": "src/utils/misc/_FIX_INDENTATION.ts",
+          "kind": "import-statement",
+          "original": "../utils/misc/_FIX_INDENTATION"
+        },
+        {
+          "path": "src/controls/FormManager.ts",
+          "kind": "import-statement",
+          "original": "./FormManager"
+        },
+        {
+          "path": "src/controls/Spec.ts",
+          "kind": "import-statement",
+          "original": "./Spec"
+        },
+        {
+          "path": "src/controls/widgets/bool/WidgetBool.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/bool/WidgetBool"
+        },
+        {
+          "path": "src/controls/widgets/button/WidgetButton.ts",
+          "kind": "import-statement",
+          "original": "./widgets/button/WidgetButton"
+        },
+        {
+          "path": "src/controls/widgets/choices/WidgetChoices.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/choices/WidgetChoices"
+        },
+        {
+          "path": "src/controls/widgets/color/WidgetColor.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/color/WidgetColor"
+        },
+        {
+          "path": "src/controls/widgets/group/WidgetGroup.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/group/WidgetGroup"
+        },
+        {
+          "path": "src/controls/widgets/list/WidgetList.ts",
+          "kind": "import-statement",
+          "original": "./widgets/list/WidgetList"
+        },
+        {
+          "path": "src/controls/widgets/markdown/WidgetMarkdown.ts",
+          "kind": "import-statement",
+          "original": "./widgets/markdown/WidgetMarkdown"
+        },
+        {
+          "path": "src/controls/widgets/matrix/WidgetMatrix.ts",
+          "kind": "import-statement",
+          "original": "./widgets/matrix/WidgetMatrix"
+        },
+        {
+          "path": "src/controls/widgets/number/WidgetNumber.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/number/WidgetNumber"
+        },
+        {
+          "path": "src/controls/widgets/optional/WidgetOptional.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/optional/WidgetOptional"
+        },
+        {
+          "path": "src/controls/widgets/seed/WidgetSeed.ts",
+          "kind": "import-statement",
+          "original": "./widgets/seed/WidgetSeed"
+        },
+        {
+          "path": "src/controls/widgets/selectMany/WidgetSelectMany.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/selectMany/WidgetSelectMany"
+        },
+        {
+          "path": "src/controls/widgets/selectOne/WidgetSelectOne.ts",
+          "kind": "import-statement",
+          "original": "./widgets/selectOne/WidgetSelectOne"
+        },
+        {
+          "path": "src/controls/widgets/shared/WidgetShared.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/shared/WidgetShared"
+        },
+        {
+          "path": "src/controls/widgets/size/WidgetSize.ts",
+          "kind": "import-statement",
+          "original": "./widgets/size/WidgetSize"
+        },
+        {
+          "path": "src/controls/widgets/spacer/WidgetSpacer.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/spacer/WidgetSpacer"
+        },
+        {
+          "path": "src/controls/widgets/string/WidgetString.tsx",
+          "kind": "import-statement",
+          "original": "./widgets/string/WidgetString"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "release-forms/initial.js": {
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-error-boundary",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@uiw/react-json-view",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-dom",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "marked",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-toastify",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-dom",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-easy-sort",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react-error-boundary",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "FormBuilder_Loco",
+        "LocoFormManager"
+      ],
+      "entryPoint": "src/controls/FormBuilder.loco.ts",
+      "cssBundle": "release-forms/initial.css",
+      "inputs": {
+        "src/theme/markdown.css": {
+          "bytesInOutput": 0
+        },
+        "src/theme/form.css": {
+          "bytesInOutput": 0
+        },
+        "src/controls/FormBuilder.loco.ts": {
+          "bytesInOutput": 7917
+        },
+        "src/llm/OpenRouter_infos.ts": {
+          "bytesInOutput": 23665
+        },
+        "src/utils/misc/_FIX_INDENTATION.ts": {
+          "bytesInOutput": 256
+        },
+        "src/controls/FormManager.ts": {
+          "bytesInOutput": 1111
+        },
+        "src/controls/Form.ts": {
+          "bytesInOutput": 3059
+        },
+        "src/utils/misc/debounce.ts": {
+          "bytesInOutput": 500
+        },
+        "src/controls/FormUI.tsx": {
+          "bytesInOutput": 542
+        },
+        "src/controls/widgets/group/WidgetGroupUI.tsx": {
+          "bytesInOutput": 1403
+        },
+        "src/controls/shared/WidgetWithLabelUI.tsx": {
+          "bytesInOutput": 5133
+        },
+        "src/utils/misc/makeLabelFromFieldName.tsx": {
+          "bytesInOutput": 498
+        },
+        "src/widgets/workspace/JsonViewUI.tsx": {
+          "bytesInOutput": 1444
+        },
+        "src/utils/custom-jsx/jsx-runtime.js": {
+          "bytesInOutput": 1164
+        },
+        "src/widgets/misc/ErrorBoundary.tsx": {
+          "bytesInOutput": 845
+        },
+        "src/controls/utils/AnimatedSizeUI.tsx": {
+          "bytesInOutput": 373
+        },
+        "src/controls/utils/useSizeOf.tsx": {
+          "bytesInOutput": 657
+        },
+        "src/utils/misc/bang.ts": {
+          "bytesInOutput": 174
+        },
+        "src/controls/widgets/WidgetUI.DI.ts": {
+          "bytesInOutput": 268
+        },
+        "src/controls/shared/getActualWidgetToDisplay.tsx": {
+          "bytesInOutput": 276
+        },
+        "src/controls/shared/getBorderStatusForWidget.ts": {
+          "bytesInOutput": 241
+        },
+        "src/controls/shared/getIfWidgetIsCollapsible.tsx": {
+          "bytesInOutput": 240
+        },
+        "src/controls/shared/getIfWidgetNeedAlignedLabel.tsx": {
+          "bytesInOutput": 252
+        },
+        "src/controls/shared/Widget_ToggleUI.tsx": {
+          "bytesInOutput": 380
+        },
+        "src/controls/widgets/bool/InputBoolUI.tsx": {
+          "bytesInOutput": 3217
+        },
+        "src/controls/shared/WidgetTooltipUI.tsx": {
+          "bytesInOutput": 466
+        },
+        "src/rsuite/reveal/RevealUI.tsx": {
+          "bytesInOutput": 4933
+        },
+        "src/rsuite/reveal/ModalShell.tsx": {
+          "bytesInOutput": 961
+        },
+        "src/rsuite/reveal/RevealState.tsx": {
+          "bytesInOutput": 4797
+        },
+        "src/rsuite/reveal/RevealPlacement.tsx": {
+          "bytesInOutput": 2067
+        },
+        "src/rsuite/shims.tsx": {
+          "bytesInOutput": 3930
+        },
+        "src/utils/misc/exhaust.ts": {
+          "bytesInOutput": 24
+        },
+        "src/panels/MessageUI.tsx": {
+          "bytesInOutput": 2075
+        },
+        "src/rsuite/MarkdownUI.tsx": {
+          "bytesInOutput": 359
+        },
+        "src/controls/shared/runWithGlobalForm.ts": {
+          "bytesInOutput": 656
+        },
+        "src/controls/Spec.ts": {
+          "bytesInOutput": 788
+        },
+        "src/controls/widgets/bool/WidgetBool.tsx": {
+          "bytesInOutput": 1343
+        },
+        "src/controls/Mixins.tsx": {
+          "bytesInOutput": 2002
+        },
+        "src/controls/widgets/bool/WidgetBoolUI.tsx": {
+          "bytesInOutput": 1013
+        },
+        "src/controls/widgets/button/WidgetButton.ts": {
+          "bytesInOutput": 958
+        },
+        "src/controls/widgets/button/WidgetButtonUI.tsx": {
+          "bytesInOutput": 853
+        },
+        "src/controls/widgets/choices/WidgetChoices.tsx": {
+          "bytesInOutput": 4429
+        },
+        "src/utils/misc/toasts.ts": {
+          "bytesInOutput": 145
+        },
+        "src/controls/widgets/choices/WidgetChoicesUI.tsx": {
+          "bytesInOutput": 3485
+        },
+        "src/rsuite/SelectUI.tsx": {
+          "bytesInOutput": 15826
+        },
+        "src/utils/misc/searchMatches.ts": {
+          "bytesInOutput": 275
+        },
+        "src/controls/widgets/color/WidgetColor.tsx": {
+          "bytesInOutput": 1113
+        },
+        "src/controls/widgets/color/WidgetColorUI.tsx": {
+          "bytesInOutput": 719
+        },
+        "src/controls/widgets/group/WidgetGroup.tsx": {
+          "bytesInOutput": 3325
+        },
+        "src/controls/widgets/list/WidgetList.ts": {
+          "bytesInOutput": 4974
+        },
+        "src/controls/widgets/list/WidgetListUI.tsx": {
+          "bytesInOutput": 3870
+        },
+        "src/controls/widgets/list/ListControlsUI.tsx": {
+          "bytesInOutput": 2211
+        },
+        "src/controls/widgets/markdown/WidgetMarkdown.ts": {
+          "bytesInOutput": 1034
+        },
+        "src/controls/widgets/markdown/WidgetMarkdownUI.tsx": {
+          "bytesInOutput": 300
+        },
+        "src/controls/widgets/matrix/WidgetMatrix.ts": {
+          "bytesInOutput": 2338
+        },
+        "src/controls/widgets/matrix/WidgetMatrixUI.tsx": {
+          "bytesInOutput": 2049
+        },
+        "src/controls/widgets/number/WidgetNumber.tsx": {
+          "bytesInOutput": 1287
+        },
+        "src/controls/widgets/number/WidgetNumberUI.tsx": {
+          "bytesInOutput": 1151
+        },
+        "src/controls/widgets/number/InputNumberUI.css": {
+          "bytesInOutput": 0
+        },
+        "src/controls/widgets/number/InputNumberUI.tsx": {
+          "bytesInOutput": 13012
+        },
+        "src/utils/misc/parseFloatNoRoundingErr.ts": {
+          "bytesInOutput": 239
+        },
+        "src/controls/widgets/optional/WidgetOptional.tsx": {
+          "bytesInOutput": 1989
+        },
+        "src/controls/widgets/seed/WidgetSeed.ts": {
+          "bytesInOutput": 1286
+        },
+        "src/controls/widgets/seed/WidgetSeedUI.tsx": {
+          "bytesInOutput": 4245
+        },
+        "src/controls/widgets/selectMany/WidgetSelectMany.tsx": {
+          "bytesInOutput": 2403
+        },
+        "src/controls/widgets/selectMany/WidgetSelectManyUI.tsx": {
+          "bytesInOutput": 2472
+        },
+        "src/controls/widgets/selectOne/WidgetSelectOne.ts": {
+          "bytesInOutput": 1667
+        },
+        "src/controls/widgets/selectOne/WidgetSelectOneUI.tsx": {
+          "bytesInOutput": 2460
+        },
+        "src/controls/widgets/shared/WidgetShared.tsx": {
+          "bytesInOutput": 848
+        },
+        "src/controls/widgets/size/WidgetSize.ts": {
+          "bytesInOutput": 1768
+        },
+        "src/controls/widgets/size/ResolutionState.tsx": {
+          "bytesInOutput": 3345
+        },
+        "src/controls/widgets/size/WidgetSizeUI.tsx": {
+          "bytesInOutput": 5443
+        },
+        "src/controls/widgets/spacer/WidgetSpacer.tsx": {
+          "bytesInOutput": 717
+        },
+        "src/controls/widgets/spacer/WidgetSpacerUI.tsx": {
+          "bytesInOutput": 168
+        },
+        "src/controls/widgets/spacer/SpacerUI.tsx": {
+          "bytesInOutput": 170
+        },
+        "src/controls/widgets/string/WidgetString.tsx": {
+          "bytesInOutput": 1570
+        },
+        "src/controls/widgets/string/WidgetStringUI.tsx": {
+          "bytesInOutput": 3468
+        }
+      },
+      "bytes": 181425
+    },
+    "release-forms/initial.css": {
+      "imports": [],
+      "inputs": {
+        "src/theme/markdown.css": {
+          "bytesInOutput": 983
+        },
+        "src/theme/form.css": {
+          "bytesInOutput": 1470
+        },
+        "src/controls/widgets/number/InputNumberUI.css": {
+          "bytesInOutput": 410
+        }
+      },
+      "bytes": 2971
+    }
+  }
+}

@@ -1,0 +1,3690 @@
+{
+  "version": 2,
+  "tree": {
+    "name": "root",
+    "children": [
+      {
+        "name": "main.d.ts",
+        "children": [
+          {
+            "name": "lib",
+            "children": [
+              {
+                "name": "llm",
+                "children": [
+                  {
+                    "uid": "c4b6e0eb-1",
+                    "name": "OpenRouter_models.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-3",
+                    "name": "OpenRouter_infos.d.ts"
+                  }
+                ]
+              },
+              {
+                "name": "utils/misc",
+                "children": [
+                  {
+                    "uid": "c4b6e0eb-5",
+                    "name": "_FIX_INDENTATION.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-7",
+                    "name": "debounce.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-9",
+                    "name": "makeLabelFromFieldName.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-15",
+                    "name": "bang.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-87",
+                    "name": "exhaust.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-117",
+                    "name": "toasts.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-119",
+                    "name": "searchMatches.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-143",
+                    "name": "parseFloatNoRoundingErr.d.ts"
+                  }
+                ]
+              },
+              {
+                "name": "widgets",
+                "children": [
+                  {
+                    "name": "workspace/JsonViewUI.d.ts",
+                    "uid": "c4b6e0eb-11"
+                  },
+                  {
+                    "name": "misc/ErrorBoundary.d.ts",
+                    "uid": "c4b6e0eb-13"
+                  }
+                ]
+              },
+              {
+                "name": "controls",
+                "children": [
+                  {
+                    "name": "utils",
+                    "children": [
+                      {
+                        "uid": "c4b6e0eb-17",
+                        "name": "useSizeOf.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-19",
+                        "name": "AnimatedSizeUI.d.ts"
+                      }
+                    ]
+                  },
+                  {
+                    "uid": "c4b6e0eb-21",
+                    "name": "FormManager.d.ts"
+                  },
+                  {
+                    "name": "widgets",
+                    "children": [
+                      {
+                        "name": "group",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-23",
+                            "name": "WidgetGroup.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-97",
+                            "name": "WidgetGroupUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "optional/WidgetOptional.d.ts",
+                        "uid": "c4b6e0eb-25"
+                      },
+                      {
+                        "name": "shared/WidgetShared.d.ts",
+                        "uid": "c4b6e0eb-27"
+                      },
+                      {
+                        "name": "listExt",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-51",
+                            "name": "WidgetListExtTypes.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-57",
+                            "name": "WidgetListExt.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "size",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-53",
+                            "name": "WidgetSizeTypes.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-55",
+                            "name": "ResolutionState.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-163",
+                            "name": "WidgetSize.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-165",
+                            "name": "WidgetSizeUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "list",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-59",
+                            "name": "WidgetList.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-131",
+                            "name": "ListControlsUI.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-133",
+                            "name": "WidgetListUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "uid": "c4b6e0eb-63",
+                        "name": "WidgetUI.DI.d.ts"
+                      },
+                      {
+                        "name": "bool",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-73",
+                            "name": "InputBoolUI.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-109",
+                            "name": "WidgetBool.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-111",
+                            "name": "WidgetBoolUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "button",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-113",
+                            "name": "WidgetButton.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-115",
+                            "name": "WidgetButtonUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "choices",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-123",
+                            "name": "WidgetChoices.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-125",
+                            "name": "WidgetChoicesUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "color",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-127",
+                            "name": "WidgetColor.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-129",
+                            "name": "WidgetColorUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "markdown",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-135",
+                            "name": "WidgetMarkdown.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-137",
+                            "name": "WidgetMarkdownUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "matrix",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-139",
+                            "name": "WidgetMatrix.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-141",
+                            "name": "WidgetMatrixUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "number",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-145",
+                            "name": "InputNumberUI.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-147",
+                            "name": "WidgetNumber.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-149",
+                            "name": "WidgetNumberUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "seed",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-151",
+                            "name": "WidgetSeed.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-153",
+                            "name": "WidgetSeedUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "selectOne",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-155",
+                            "name": "WidgetSelectOne.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-161",
+                            "name": "WidgetSelectOneUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "selectMany",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-157",
+                            "name": "WidgetSelectMany.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-159",
+                            "name": "WidgetSelectManyUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "spacer",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-167",
+                            "name": "SpacerUI.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-169",
+                            "name": "WidgetSpacer.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-171",
+                            "name": "WidgetSpacerUI.d.ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "string",
+                        "children": [
+                          {
+                            "uid": "c4b6e0eb-173",
+                            "name": "WidgetString.d.ts"
+                          },
+                          {
+                            "uid": "c4b6e0eb-175",
+                            "name": "WidgetStringUI.d.ts"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "uid": "c4b6e0eb-29",
+                    "name": "Form.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-47",
+                    "name": "Requirements.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-49",
+                    "name": "IWidget.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-61",
+                    "name": "Spec.d.ts"
+                  },
+                  {
+                    "name": "shared",
+                    "children": [
+                      {
+                        "uid": "c4b6e0eb-65",
+                        "name": "getActualWidgetToDisplay.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-67",
+                        "name": "getBorderStatusForWidget.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-69",
+                        "name": "getIfWidgetIsCollapsible.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-71",
+                        "name": "getIfWidgetNeedAlignedLabel.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-75",
+                        "name": "Widget_ToggleUI.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-93",
+                        "name": "WidgetTooltipUI.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-95",
+                        "name": "WidgetWithLabelUI.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-105",
+                        "name": "runWithGlobalForm.d.ts"
+                      }
+                    ]
+                  },
+                  {
+                    "uid": "c4b6e0eb-103",
+                    "name": "FormUI.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-107",
+                    "name": "Mixins.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-177",
+                    "name": "FormBuilder.loco.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-179",
+                    "name": "FormBuilder.loco.LIBRARY.d.ts"
+                  }
+                ]
+              },
+              {
+                "name": "manager",
+                "children": [
+                  {
+                    "name": "custom-node-list",
+                    "children": [
+                      {
+                        "uid": "c4b6e0eb-31",
+                        "name": "KnownCustomNode_File.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-33",
+                        "name": "KnownCustomNode_Title.d.ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "extension-node-map/KnownCustomNode_CushyName.d.ts",
+                    "uid": "c4b6e0eb-35"
+                  },
+                  {
+                    "name": "model-list",
+                    "children": [
+                      {
+                        "uid": "c4b6e0eb-37",
+                        "name": "KnownModel_Base.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-39",
+                        "name": "KnownModel_Name.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-41",
+                        "name": "KnownModel_SavePath.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-43",
+                        "name": "KnownModel_Type.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-45",
+                        "name": "model-list-loader-types.d.ts"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "rsuite",
+                "children": [
+                  {
+                    "name": "reveal",
+                    "children": [
+                      {
+                        "uid": "c4b6e0eb-77",
+                        "name": "ModalShell.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-79",
+                        "name": "RevealPlacement.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-81",
+                        "name": "RevealProps.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-83",
+                        "name": "RevealState.d.ts"
+                      },
+                      {
+                        "uid": "c4b6e0eb-85",
+                        "name": "RevealUI.d.ts"
+                      }
+                    ]
+                  },
+                  {
+                    "uid": "c4b6e0eb-89",
+                    "name": "RsuiteTypes.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-91",
+                    "name": "shims.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-99",
+                    "name": "MarkdownUI.d.ts"
+                  },
+                  {
+                    "uid": "c4b6e0eb-121",
+                    "name": "SelectUI.d.ts"
+                  }
+                ]
+              },
+              {
+                "name": "panels/MessageUI.d.ts",
+                "uid": "c4b6e0eb-101"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "isRoot": true
+  },
+  "nodeParts": {
+    "c4b6e0eb-1": {
+      "renderedLength": 1788,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-0"
+    },
+    "c4b6e0eb-3": {
+      "renderedLength": 672,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-2"
+    },
+    "c4b6e0eb-5": {
+      "renderedLength": 70,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-4"
+    },
+    "c4b6e0eb-7": {
+      "renderedLength": 141,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-6"
+    },
+    "c4b6e0eb-9": {
+      "renderedLength": 59,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-8"
+    },
+    "c4b6e0eb-11": {
+      "renderedLength": 82,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-10"
+    },
+    "c4b6e0eb-13": {
+      "renderedLength": 89,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-12"
+    },
+    "c4b6e0eb-15": {
+      "renderedLength": 308,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-14"
+    },
+    "c4b6e0eb-17": {
+      "renderedLength": 232,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-16"
+    },
+    "c4b6e0eb-19": {
+      "renderedLength": 121,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-18"
+    },
+    "c4b6e0eb-21": {
+      "renderedLength": 1229,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-20"
+    },
+    "c4b6e0eb-23": {
+      "renderedLength": 2276,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-22"
+    },
+    "c4b6e0eb-25": {
+      "renderedLength": 1478,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-24"
+    },
+    "c4b6e0eb-27": {
+      "renderedLength": 1280,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-26"
+    },
+    "c4b6e0eb-29": {
+      "renderedLength": 2446,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-28"
+    },
+    "c4b6e0eb-31": {
+      "renderedLength": 38296,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-30"
+    },
+    "c4b6e0eb-33": {
+      "renderedLength": 16886,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-32"
+    },
+    "c4b6e0eb-35": {
+      "renderedLength": 136984,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-34"
+    },
+    "c4b6e0eb-37": {
+      "renderedLength": 468,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-36"
+    },
+    "c4b6e0eb-39": {
+      "renderedLength": 9468,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-38"
+    },
+    "c4b6e0eb-41": {
+      "renderedLength": 1410,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-40"
+    },
+    "c4b6e0eb-43": {
+      "renderedLength": 524,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-42"
+    },
+    "c4b6e0eb-45": {
+      "renderedLength": 241,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-44"
+    },
+    "c4b6e0eb-47": {
+      "renderedLength": 738,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-46"
+    },
+    "c4b6e0eb-49": {
+      "renderedLength": 5630,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-48"
+    },
+    "c4b6e0eb-51": {
+      "renderedLength": 311,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-50"
+    },
+    "c4b6e0eb-53": {
+      "renderedLength": 444,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-52"
+    },
+    "c4b6e0eb-55": {
+      "renderedLength": 743,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-54"
+    },
+    "c4b6e0eb-57": {
+      "renderedLength": 2574,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-56"
+    },
+    "c4b6e0eb-59": {
+      "renderedLength": 1930,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-58"
+    },
+    "c4b6e0eb-61": {
+      "renderedLength": 948,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-60"
+    },
+    "c4b6e0eb-63": {
+      "renderedLength": 513,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-62"
+    },
+    "c4b6e0eb-65": {
+      "renderedLength": 120,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-64"
+    },
+    "c4b6e0eb-67": {
+      "renderedLength": 69,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-66"
+    },
+    "c4b6e0eb-69": {
+      "renderedLength": 69,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-68"
+    },
+    "c4b6e0eb-71": {
+      "renderedLength": 72,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-70"
+    },
+    "c4b6e0eb-73": {
+      "renderedLength": 322,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-72"
+    },
+    "c4b6e0eb-75": {
+      "renderedLength": 81,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-74"
+    },
+    "c4b6e0eb-77": {
+      "renderedLength": 148,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-76"
+    },
+    "c4b6e0eb-79": {
+      "renderedLength": 461,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-78"
+    },
+    "c4b6e0eb-81": {
+      "renderedLength": 488,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-80"
+    },
+    "c4b6e0eb-83": {
+      "renderedLength": 1453,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-82"
+    },
+    "c4b6e0eb-85": {
+      "renderedLength": 165,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-84"
+    },
+    "c4b6e0eb-87": {
+      "renderedLength": 43,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-86"
+    },
+    "c4b6e0eb-89": {
+      "renderedLength": 113,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-88"
+    },
+    "c4b6e0eb-91": {
+      "renderedLength": 3682,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-90"
+    },
+    "c4b6e0eb-93": {
+      "renderedLength": 81,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-92"
+    },
+    "c4b6e0eb-95": {
+      "renderedLength": 429,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-94"
+    },
+    "c4b6e0eb-97": {
+      "renderedLength": 292,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-96"
+    },
+    "c4b6e0eb-99": {
+      "renderedLength": 126,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-98"
+    },
+    "c4b6e0eb-101": {
+      "renderedLength": 513,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-100"
+    },
+    "c4b6e0eb-103": {
+      "renderedLength": 120,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-102"
+    },
+    "c4b6e0eb-105": {
+      "renderedLength": 710,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-104"
+    },
+    "c4b6e0eb-107": {
+      "renderedLength": 58,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-106"
+    },
+    "c4b6e0eb-109": {
+      "renderedLength": 2204,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-108"
+    },
+    "c4b6e0eb-111": {
+      "renderedLength": 82,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-110"
+    },
+    "c4b6e0eb-113": {
+      "renderedLength": 1420,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-112"
+    },
+    "c4b6e0eb-115": {
+      "renderedLength": 157,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-114"
+    },
+    "c4b6e0eb-117": {
+      "renderedLength": 173,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-116"
+    },
+    "c4b6e0eb-119": {
+      "renderedLength": 177,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-118"
+    },
+    "c4b6e0eb-121": {
+      "renderedLength": 4303,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-120"
+    },
+    "c4b6e0eb-123": {
+      "renderedLength": 2780,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-122"
+    },
+    "c4b6e0eb-125": {
+      "renderedLength": 504,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-124"
+    },
+    "c4b6e0eb-127": {
+      "renderedLength": 1154,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-126"
+    },
+    "c4b6e0eb-129": {
+      "renderedLength": 84,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-128"
+    },
+    "c4b6e0eb-131": {
+      "renderedLength": 310,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-130"
+    },
+    "c4b6e0eb-133": {
+      "renderedLength": 459,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-132"
+    },
+    "c4b6e0eb-135": {
+      "renderedLength": 1301,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-134"
+    },
+    "c4b6e0eb-137": {
+      "renderedLength": 89,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-136"
+    },
+    "c4b6e0eb-139": {
+      "renderedLength": 1770,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-138"
+    },
+    "c4b6e0eb-141": {
+      "renderedLength": 86,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-140"
+    },
+    "c4b6e0eb-143": {
+      "renderedLength": 100,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-142"
+    },
+    "c4b6e0eb-145": {
+      "renderedLength": 508,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-144"
+    },
+    "c4b6e0eb-147": {
+      "renderedLength": 1433,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-146"
+    },
+    "c4b6e0eb-149": {
+      "renderedLength": 86,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-148"
+    },
+    "c4b6e0eb-151": {
+      "renderedLength": 1201,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-150"
+    },
+    "c4b6e0eb-153": {
+      "renderedLength": 82,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-152"
+    },
+    "c4b6e0eb-155": {
+      "renderedLength": 1641,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-154"
+    },
+    "c4b6e0eb-157": {
+      "renderedLength": 1801,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-156"
+    },
+    "c4b6e0eb-159": {
+      "renderedLength": 523,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-158"
+    },
+    "c4b6e0eb-161": {
+      "renderedLength": 517,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-160"
+    },
+    "c4b6e0eb-163": {
+      "renderedLength": 1204,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-162"
+    },
+    "c4b6e0eb-165": {
+      "renderedLength": 831,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-164"
+    },
+    "c4b6e0eb-167": {
+      "renderedLength": 413,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-166"
+    },
+    "c4b6e0eb-169": {
+      "renderedLength": 1036,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-168"
+    },
+    "c4b6e0eb-171": {
+      "renderedLength": 86,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-170"
+    },
+    "c4b6e0eb-173": {
+      "renderedLength": 1534,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-172"
+    },
+    "c4b6e0eb-175": {
+      "renderedLength": 295,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-174"
+    },
+    "c4b6e0eb-177": {
+      "renderedLength": 4624,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-176"
+    },
+    "c4b6e0eb-179": {
+      "renderedLength": 0,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "c4b6e0eb-178"
+    }
+  },
+  "nodeMetas": {
+    "c4b6e0eb-0": {
+      "id": "/lib/llm/OpenRouter_models.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-1"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-2"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-2": {
+      "id": "/lib/llm/OpenRouter_infos.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-3"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-0"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-4": {
+      "id": "/lib/utils/misc/_FIX_INDENTATION.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-5"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-6": {
+      "id": "/lib/utils/misc/debounce.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-7"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-8": {
+      "id": "/lib/utils/misc/makeLabelFromFieldName.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-9"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-10": {
+      "id": "/lib/widgets/workspace/JsonViewUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-11"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-12": {
+      "id": "/lib/widgets/misc/ErrorBoundary.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-13"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-182"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-14": {
+      "id": "/lib/utils/misc/bang.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-15"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-16": {
+      "id": "/lib/controls/utils/useSizeOf.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-17"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-18": {
+      "id": "/lib/controls/utils/AnimatedSizeUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-19"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-20": {
+      "id": "/lib/controls/FormManager.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-21"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-22": {
+      "id": "/lib/controls/widgets/group/WidgetGroup.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-23"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-62"
+        },
+        {
+          "uid": "c4b6e0eb-96"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-134"
+        },
+        {
+          "uid": "c4b6e0eb-156"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-24": {
+      "id": "/lib/controls/widgets/optional/WidgetOptional.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-25"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-62"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-26": {
+      "id": "/lib/controls/widgets/shared/WidgetShared.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-27"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-62"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-28": {
+      "id": "/lib/controls/Form.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-29"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-20"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-24"
+        },
+        {
+          "uid": "c4b6e0eb-26"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-102"
+        },
+        {
+          "uid": "c4b6e0eb-104"
+        },
+        {
+          "uid": "c4b6e0eb-20"
+        },
+        {
+          "uid": "c4b6e0eb-108"
+        },
+        {
+          "uid": "c4b6e0eb-112"
+        },
+        {
+          "uid": "c4b6e0eb-122"
+        },
+        {
+          "uid": "c4b6e0eb-126"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-134"
+        },
+        {
+          "uid": "c4b6e0eb-138"
+        },
+        {
+          "uid": "c4b6e0eb-146"
+        },
+        {
+          "uid": "c4b6e0eb-24"
+        },
+        {
+          "uid": "c4b6e0eb-150"
+        },
+        {
+          "uid": "c4b6e0eb-156"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        },
+        {
+          "uid": "c4b6e0eb-26"
+        },
+        {
+          "uid": "c4b6e0eb-162"
+        },
+        {
+          "uid": "c4b6e0eb-168"
+        },
+        {
+          "uid": "c4b6e0eb-172"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-56"
+        }
+      ]
+    },
+    "c4b6e0eb-30": {
+      "id": "/lib/manager/custom-node-list/KnownCustomNode_File.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-31"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-46"
+        }
+      ]
+    },
+    "c4b6e0eb-32": {
+      "id": "/lib/manager/custom-node-list/KnownCustomNode_Title.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-33"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-46"
+        }
+      ]
+    },
+    "c4b6e0eb-34": {
+      "id": "/lib/manager/extension-node-map/KnownCustomNode_CushyName.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-35"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-46"
+        }
+      ]
+    },
+    "c4b6e0eb-36": {
+      "id": "/lib/manager/model-list/KnownModel_Base.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-37"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-46"
+        },
+        {
+          "uid": "c4b6e0eb-44"
+        }
+      ]
+    },
+    "c4b6e0eb-38": {
+      "id": "/lib/manager/model-list/KnownModel_Name.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-39"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-46"
+        },
+        {
+          "uid": "c4b6e0eb-44"
+        }
+      ]
+    },
+    "c4b6e0eb-40": {
+      "id": "/lib/manager/model-list/KnownModel_SavePath.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-41"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-44"
+        }
+      ]
+    },
+    "c4b6e0eb-42": {
+      "id": "/lib/manager/model-list/KnownModel_Type.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-43"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-44"
+        }
+      ]
+    },
+    "c4b6e0eb-44": {
+      "id": "/lib/manager/model-list/model-list-loader-types.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-45"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-187"
+        },
+        {
+          "uid": "c4b6e0eb-36"
+        },
+        {
+          "uid": "c4b6e0eb-38"
+        },
+        {
+          "uid": "c4b6e0eb-40"
+        },
+        {
+          "uid": "c4b6e0eb-42"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-46"
+        }
+      ]
+    },
+    "c4b6e0eb-46": {
+      "id": "/lib/controls/Requirements.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-47"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-30"
+        },
+        {
+          "uid": "c4b6e0eb-32"
+        },
+        {
+          "uid": "c4b6e0eb-34"
+        },
+        {
+          "uid": "c4b6e0eb-36"
+        },
+        {
+          "uid": "c4b6e0eb-38"
+        },
+        {
+          "uid": "c4b6e0eb-44"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ]
+    },
+    "c4b6e0eb-48": {
+      "id": "/lib/controls/IWidget.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-49"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-46"
+        },
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-62"
+        },
+        {
+          "uid": "c4b6e0eb-64"
+        },
+        {
+          "uid": "c4b6e0eb-66"
+        },
+        {
+          "uid": "c4b6e0eb-68"
+        },
+        {
+          "uid": "c4b6e0eb-70"
+        },
+        {
+          "uid": "c4b6e0eb-74"
+        },
+        {
+          "uid": "c4b6e0eb-92"
+        },
+        {
+          "uid": "c4b6e0eb-94"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-106"
+        },
+        {
+          "uid": "c4b6e0eb-108"
+        },
+        {
+          "uid": "c4b6e0eb-112"
+        },
+        {
+          "uid": "c4b6e0eb-122"
+        },
+        {
+          "uid": "c4b6e0eb-126"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-132"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-134"
+        },
+        {
+          "uid": "c4b6e0eb-138"
+        },
+        {
+          "uid": "c4b6e0eb-146"
+        },
+        {
+          "uid": "c4b6e0eb-24"
+        },
+        {
+          "uid": "c4b6e0eb-150"
+        },
+        {
+          "uid": "c4b6e0eb-156"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        },
+        {
+          "uid": "c4b6e0eb-26"
+        },
+        {
+          "uid": "c4b6e0eb-162"
+        },
+        {
+          "uid": "c4b6e0eb-168"
+        },
+        {
+          "uid": "c4b6e0eb-172"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        },
+        {
+          "uid": "c4b6e0eb-56"
+        },
+        {
+          "uid": "c4b6e0eb-50"
+        }
+      ]
+    },
+    "c4b6e0eb-50": {
+      "id": "/lib/controls/widgets/listExt/WidgetListExtTypes.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-51"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-56"
+        }
+      ]
+    },
+    "c4b6e0eb-52": {
+      "id": "/lib/controls/widgets/size/WidgetSizeTypes.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-53"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-54"
+        },
+        {
+          "uid": "c4b6e0eb-162"
+        }
+      ]
+    },
+    "c4b6e0eb-54": {
+      "id": "/lib/controls/widgets/size/ResolutionState.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-55"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-52"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-164"
+        },
+        {
+          "uid": "c4b6e0eb-162"
+        },
+        {
+          "uid": "c4b6e0eb-56"
+        }
+      ]
+    },
+    "c4b6e0eb-56": {
+      "id": "/lib/controls/widgets/listExt/WidgetListExt.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-57"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-50"
+        },
+        {
+          "uid": "c4b6e0eb-54"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-132"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        }
+      ]
+    },
+    "c4b6e0eb-58": {
+      "id": "/lib/controls/widgets/list/WidgetList.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-59"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-56"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-132"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        },
+        {
+          "uid": "c4b6e0eb-56"
+        }
+      ]
+    },
+    "c4b6e0eb-60": {
+      "id": "/lib/controls/Spec.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-61"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-24"
+        },
+        {
+          "uid": "c4b6e0eb-26"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-62"
+        },
+        {
+          "uid": "c4b6e0eb-96"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-20"
+        },
+        {
+          "uid": "c4b6e0eb-124"
+        },
+        {
+          "uid": "c4b6e0eb-122"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-132"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-24"
+        },
+        {
+          "uid": "c4b6e0eb-26"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        },
+        {
+          "uid": "c4b6e0eb-56"
+        }
+      ]
+    },
+    "c4b6e0eb-62": {
+      "id": "/lib/controls/widgets/WidgetUI.DI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-63"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-24"
+        },
+        {
+          "uid": "c4b6e0eb-26"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-64": {
+      "id": "/lib/controls/shared/getActualWidgetToDisplay.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-65"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-66": {
+      "id": "/lib/controls/shared/getBorderStatusForWidget.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-67"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-68": {
+      "id": "/lib/controls/shared/getIfWidgetIsCollapsible.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-69"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-70": {
+      "id": "/lib/controls/shared/getIfWidgetNeedAlignedLabel.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-71"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-72": {
+      "id": "/lib/controls/widgets/bool/InputBoolUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-73"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-74": {
+      "id": "/lib/controls/shared/Widget_ToggleUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-75"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-76": {
+      "id": "/lib/rsuite/reveal/ModalShell.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-77"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-78": {
+      "id": "/lib/rsuite/reveal/RevealPlacement.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-79"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-82"
+        },
+        {
+          "uid": "c4b6e0eb-80"
+        }
+      ]
+    },
+    "c4b6e0eb-80": {
+      "id": "/lib/rsuite/reveal/RevealProps.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-81"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-78"
+        },
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-82"
+        },
+        {
+          "uid": "c4b6e0eb-84"
+        }
+      ]
+    },
+    "c4b6e0eb-82": {
+      "id": "/lib/rsuite/reveal/RevealState.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-83"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-78"
+        },
+        {
+          "uid": "c4b6e0eb-80"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-84": {
+      "id": "/lib/rsuite/reveal/RevealUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-85"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-80"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-86": {
+      "id": "/lib/utils/misc/exhaust.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-87"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-88": {
+      "id": "/lib/rsuite/RsuiteTypes.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-89"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-90"
+        }
+      ]
+    },
+    "c4b6e0eb-90": {
+      "id": "/lib/rsuite/shims.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-91"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-88"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-92": {
+      "id": "/lib/controls/shared/WidgetTooltipUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-93"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-94": {
+      "id": "/lib/controls/shared/WidgetWithLabelUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-95"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-96": {
+      "id": "/lib/controls/widgets/group/WidgetGroupUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-97"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-98": {
+      "id": "/lib/rsuite/MarkdownUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-99"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-100": {
+      "id": "/lib/panels/MessageUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-101"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-102": {
+      "id": "/lib/controls/FormUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-103"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-104": {
+      "id": "/lib/controls/shared/runWithGlobalForm.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-105"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-28"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-106": {
+      "id": "/lib/controls/Mixins.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-107"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-108": {
+      "id": "/lib/controls/widgets/bool/WidgetBool.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-109"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-110"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-110": {
+      "id": "/lib/controls/widgets/bool/WidgetBoolUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-111"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-108"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-112": {
+      "id": "/lib/controls/widgets/button/WidgetButton.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-113"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-114"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-114": {
+      "id": "/lib/controls/widgets/button/WidgetButtonUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-115"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-112"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-116": {
+      "id": "/lib/utils/misc/toasts.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-117"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-183"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-118": {
+      "id": "/lib/utils/misc/searchMatches.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-119"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-120": {
+      "id": "/lib/rsuite/SelectUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-121"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-122": {
+      "id": "/lib/controls/widgets/choices/WidgetChoices.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-123"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-124"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-124": {
+      "id": "/lib/controls/widgets/choices/WidgetChoicesUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-125"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-122"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-126": {
+      "id": "/lib/controls/widgets/color/WidgetColor.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-127"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-128"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-128": {
+      "id": "/lib/controls/widgets/color/WidgetColorUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-129"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-126"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-130": {
+      "id": "/lib/controls/widgets/list/ListControlsUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-131"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-132": {
+      "id": "/lib/controls/widgets/list/WidgetListUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-133"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-56"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-134": {
+      "id": "/lib/controls/widgets/markdown/WidgetMarkdown.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-135"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-136"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-136": {
+      "id": "/lib/controls/widgets/markdown/WidgetMarkdownUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-137"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-134"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-138": {
+      "id": "/lib/controls/widgets/matrix/WidgetMatrix.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-139"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-140"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-140": {
+      "id": "/lib/controls/widgets/matrix/WidgetMatrixUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-141"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-138"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-142": {
+      "id": "/lib/utils/misc/parseFloatNoRoundingErr.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-143"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-144": {
+      "id": "/lib/controls/widgets/number/InputNumberUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-145"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-184"
+        },
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-146": {
+      "id": "/lib/controls/widgets/number/WidgetNumber.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-147"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-148"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-148": {
+      "id": "/lib/controls/widgets/number/WidgetNumberUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-149"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-146"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-150": {
+      "id": "/lib/controls/widgets/seed/WidgetSeed.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-151"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-152"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-152": {
+      "id": "/lib/controls/widgets/seed/WidgetSeedUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-153"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-150"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-154": {
+      "id": "/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-155"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-158"
+        },
+        {
+          "uid": "c4b6e0eb-156"
+        },
+        {
+          "uid": "c4b6e0eb-160"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-156": {
+      "id": "/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-157"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-158"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-158": {
+      "id": "/lib/controls/widgets/selectMany/WidgetSelectManyUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-159"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        },
+        {
+          "uid": "c4b6e0eb-156"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-160": {
+      "id": "/lib/controls/widgets/selectOne/WidgetSelectOneUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-161"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-181"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-162": {
+      "id": "/lib/controls/widgets/size/WidgetSize.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-163"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-52"
+        },
+        {
+          "uid": "c4b6e0eb-54"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-164"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-164": {
+      "id": "/lib/controls/widgets/size/WidgetSizeUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-165"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-54"
+        },
+        {
+          "uid": "c4b6e0eb-162"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-166": {
+      "id": "/lib/controls/widgets/spacer/SpacerUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-167"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-168": {
+      "id": "/lib/controls/widgets/spacer/WidgetSpacer.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-169"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-170"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-170": {
+      "id": "/lib/controls/widgets/spacer/WidgetSpacerUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-171"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-168"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-172": {
+      "id": "/lib/controls/widgets/string/WidgetString.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-173"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        },
+        {
+          "uid": "c4b6e0eb-174"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ]
+    },
+    "c4b6e0eb-174": {
+      "id": "/lib/controls/widgets/string/WidgetStringUI.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-175"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-180"
+        },
+        {
+          "uid": "c4b6e0eb-172"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-176": {
+      "id": "/lib/controls/FormBuilder.loco.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-177"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-185"
+        },
+        {
+          "uid": "c4b6e0eb-186"
+        },
+        {
+          "uid": "c4b6e0eb-0"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-20"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-108"
+        },
+        {
+          "uid": "c4b6e0eb-112"
+        },
+        {
+          "uid": "c4b6e0eb-122"
+        },
+        {
+          "uid": "c4b6e0eb-126"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-134"
+        },
+        {
+          "uid": "c4b6e0eb-138"
+        },
+        {
+          "uid": "c4b6e0eb-146"
+        },
+        {
+          "uid": "c4b6e0eb-24"
+        },
+        {
+          "uid": "c4b6e0eb-150"
+        },
+        {
+          "uid": "c4b6e0eb-156"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        },
+        {
+          "uid": "c4b6e0eb-26"
+        },
+        {
+          "uid": "c4b6e0eb-162"
+        },
+        {
+          "uid": "c4b6e0eb-168"
+        },
+        {
+          "uid": "c4b6e0eb-172"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-178"
+        }
+      ]
+    },
+    "c4b6e0eb-178": {
+      "id": "/lib/controls/FormBuilder.loco.LIBRARY.d.ts",
+      "moduleParts": {
+        "main.d.ts": "c4b6e0eb-179"
+      },
+      "imported": [
+        {
+          "uid": "c4b6e0eb-2"
+        },
+        {
+          "uid": "c4b6e0eb-4"
+        },
+        {
+          "uid": "c4b6e0eb-6"
+        },
+        {
+          "uid": "c4b6e0eb-8"
+        },
+        {
+          "uid": "c4b6e0eb-10"
+        },
+        {
+          "uid": "c4b6e0eb-12"
+        },
+        {
+          "uid": "c4b6e0eb-14"
+        },
+        {
+          "uid": "c4b6e0eb-16"
+        },
+        {
+          "uid": "c4b6e0eb-18"
+        },
+        {
+          "uid": "c4b6e0eb-62"
+        },
+        {
+          "uid": "c4b6e0eb-64"
+        },
+        {
+          "uid": "c4b6e0eb-66"
+        },
+        {
+          "uid": "c4b6e0eb-68"
+        },
+        {
+          "uid": "c4b6e0eb-70"
+        },
+        {
+          "uid": "c4b6e0eb-72"
+        },
+        {
+          "uid": "c4b6e0eb-74"
+        },
+        {
+          "uid": "c4b6e0eb-76"
+        },
+        {
+          "uid": "c4b6e0eb-78"
+        },
+        {
+          "uid": "c4b6e0eb-82"
+        },
+        {
+          "uid": "c4b6e0eb-84"
+        },
+        {
+          "uid": "c4b6e0eb-86"
+        },
+        {
+          "uid": "c4b6e0eb-90"
+        },
+        {
+          "uid": "c4b6e0eb-92"
+        },
+        {
+          "uid": "c4b6e0eb-94"
+        },
+        {
+          "uid": "c4b6e0eb-96"
+        },
+        {
+          "uid": "c4b6e0eb-98"
+        },
+        {
+          "uid": "c4b6e0eb-100"
+        },
+        {
+          "uid": "c4b6e0eb-102"
+        },
+        {
+          "uid": "c4b6e0eb-104"
+        },
+        {
+          "uid": "c4b6e0eb-60"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-20"
+        },
+        {
+          "uid": "c4b6e0eb-106"
+        },
+        {
+          "uid": "c4b6e0eb-110"
+        },
+        {
+          "uid": "c4b6e0eb-108"
+        },
+        {
+          "uid": "c4b6e0eb-114"
+        },
+        {
+          "uid": "c4b6e0eb-112"
+        },
+        {
+          "uid": "c4b6e0eb-116"
+        },
+        {
+          "uid": "c4b6e0eb-118"
+        },
+        {
+          "uid": "c4b6e0eb-120"
+        },
+        {
+          "uid": "c4b6e0eb-124"
+        },
+        {
+          "uid": "c4b6e0eb-122"
+        },
+        {
+          "uid": "c4b6e0eb-128"
+        },
+        {
+          "uid": "c4b6e0eb-126"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-130"
+        },
+        {
+          "uid": "c4b6e0eb-132"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-136"
+        },
+        {
+          "uid": "c4b6e0eb-134"
+        },
+        {
+          "uid": "c4b6e0eb-140"
+        },
+        {
+          "uid": "c4b6e0eb-138"
+        },
+        {
+          "uid": "c4b6e0eb-142"
+        },
+        {
+          "uid": "c4b6e0eb-144"
+        },
+        {
+          "uid": "c4b6e0eb-148"
+        },
+        {
+          "uid": "c4b6e0eb-146"
+        },
+        {
+          "uid": "c4b6e0eb-24"
+        },
+        {
+          "uid": "c4b6e0eb-152"
+        },
+        {
+          "uid": "c4b6e0eb-150"
+        },
+        {
+          "uid": "c4b6e0eb-158"
+        },
+        {
+          "uid": "c4b6e0eb-156"
+        },
+        {
+          "uid": "c4b6e0eb-160"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        },
+        {
+          "uid": "c4b6e0eb-26"
+        },
+        {
+          "uid": "c4b6e0eb-54"
+        },
+        {
+          "uid": "c4b6e0eb-164"
+        },
+        {
+          "uid": "c4b6e0eb-162"
+        },
+        {
+          "uid": "c4b6e0eb-166"
+        },
+        {
+          "uid": "c4b6e0eb-170"
+        },
+        {
+          "uid": "c4b6e0eb-168"
+        },
+        {
+          "uid": "c4b6e0eb-174"
+        },
+        {
+          "uid": "c4b6e0eb-172"
+        },
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ],
+      "importedBy": [],
+      "isEntry": true
+    },
+    "c4b6e0eb-180": {
+      "id": "react",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-10"
+        },
+        {
+          "uid": "c4b6e0eb-18"
+        },
+        {
+          "uid": "c4b6e0eb-72"
+        },
+        {
+          "uid": "c4b6e0eb-74"
+        },
+        {
+          "uid": "c4b6e0eb-76"
+        },
+        {
+          "uid": "c4b6e0eb-84"
+        },
+        {
+          "uid": "c4b6e0eb-90"
+        },
+        {
+          "uid": "c4b6e0eb-92"
+        },
+        {
+          "uid": "c4b6e0eb-94"
+        },
+        {
+          "uid": "c4b6e0eb-96"
+        },
+        {
+          "uid": "c4b6e0eb-98"
+        },
+        {
+          "uid": "c4b6e0eb-100"
+        },
+        {
+          "uid": "c4b6e0eb-102"
+        },
+        {
+          "uid": "c4b6e0eb-28"
+        },
+        {
+          "uid": "c4b6e0eb-20"
+        },
+        {
+          "uid": "c4b6e0eb-110"
+        },
+        {
+          "uid": "c4b6e0eb-108"
+        },
+        {
+          "uid": "c4b6e0eb-120"
+        },
+        {
+          "uid": "c4b6e0eb-128"
+        },
+        {
+          "uid": "c4b6e0eb-126"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-130"
+        },
+        {
+          "uid": "c4b6e0eb-132"
+        },
+        {
+          "uid": "c4b6e0eb-136"
+        },
+        {
+          "uid": "c4b6e0eb-134"
+        },
+        {
+          "uid": "c4b6e0eb-140"
+        },
+        {
+          "uid": "c4b6e0eb-138"
+        },
+        {
+          "uid": "c4b6e0eb-144"
+        },
+        {
+          "uid": "c4b6e0eb-148"
+        },
+        {
+          "uid": "c4b6e0eb-146"
+        },
+        {
+          "uid": "c4b6e0eb-152"
+        },
+        {
+          "uid": "c4b6e0eb-150"
+        },
+        {
+          "uid": "c4b6e0eb-164"
+        },
+        {
+          "uid": "c4b6e0eb-162"
+        },
+        {
+          "uid": "c4b6e0eb-166"
+        },
+        {
+          "uid": "c4b6e0eb-170"
+        },
+        {
+          "uid": "c4b6e0eb-168"
+        },
+        {
+          "uid": "c4b6e0eb-174"
+        },
+        {
+          "uid": "c4b6e0eb-172"
+        },
+        {
+          "uid": "c4b6e0eb-48"
+        },
+        {
+          "uid": "c4b6e0eb-80"
+        }
+      ],
+      "isExternal": true
+    },
+    "c4b6e0eb-181": {
+      "id": "react/jsx-runtime",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-12"
+        },
+        {
+          "uid": "c4b6e0eb-90"
+        },
+        {
+          "uid": "c4b6e0eb-96"
+        },
+        {
+          "uid": "c4b6e0eb-114"
+        },
+        {
+          "uid": "c4b6e0eb-112"
+        },
+        {
+          "uid": "c4b6e0eb-120"
+        },
+        {
+          "uid": "c4b6e0eb-124"
+        },
+        {
+          "uid": "c4b6e0eb-122"
+        },
+        {
+          "uid": "c4b6e0eb-22"
+        },
+        {
+          "uid": "c4b6e0eb-132"
+        },
+        {
+          "uid": "c4b6e0eb-58"
+        },
+        {
+          "uid": "c4b6e0eb-158"
+        },
+        {
+          "uid": "c4b6e0eb-156"
+        },
+        {
+          "uid": "c4b6e0eb-160"
+        },
+        {
+          "uid": "c4b6e0eb-154"
+        },
+        {
+          "uid": "c4b6e0eb-56"
+        }
+      ],
+      "isExternal": true
+    },
+    "c4b6e0eb-182": {
+      "id": "react-error-boundary",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-12"
+        }
+      ],
+      "isExternal": true
+    },
+    "c4b6e0eb-183": {
+      "id": "react-toastify",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-116"
+        }
+      ],
+      "isExternal": true
+    },
+    "c4b6e0eb-184": {
+      "id": "/lib/controls/widgets/number/InputNumberUI.css",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-144"
+        }
+      ],
+      "isExternal": true
+    },
+    "c4b6e0eb-185": {
+      "id": "/lib/theme/markdown.css",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ],
+      "isExternal": true
+    },
+    "c4b6e0eb-186": {
+      "id": "/lib/theme/form.css",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-176"
+        }
+      ],
+      "isExternal": true
+    },
+    "c4b6e0eb-187": {
+      "id": "@sinclair/typebox",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "c4b6e0eb-44"
+        }
+      ],
+      "isExternal": true
+    }
+  },
+  "env": {
+    "rollup": "4.13.0"
+  },
+  "options": {
+    "gzip": false,
+    "brotli": false,
+    "sourcemap": false
+  }
+}
