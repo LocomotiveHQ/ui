@@ -114,7 +114,7 @@
   margin-top: .1rem;
 }
 .input {
-  background-color: oklch(var( --pn)/.15) !important;
+  background-color: oklch(var( --p)/.15) !important;
 }
 .text-shadow {
   text-shadow:

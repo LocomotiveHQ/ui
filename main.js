@@ -574,25 +574,8 @@ function debounce(func, delay, maxWait) {
   };
 }
 
-// src/utils/misc/makeLabelFromFieldName.tsx
-function makeLabelFromFieldName(s) {
-  if (typeof s !== "string") {
-    console.log(`[\u{1F534}] makeLabelFromFieldName: expected string, got ${typeof s} (${s})`);
-  }
-  if (s == null)
-    return "";
-  if (s.length === 0)
-    return s;
-  s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
-  s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
-  s = s.replace(/_/g, " ");
-  s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
-  s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
-  return s[0].toUpperCase() + s.slice(1);
-}
-
-// src/widgets/workspace/JsonViewUI.tsx
-import JsonView from "@uiw/react-json-view";
+// src/rsuite/MarkdownUI.tsx
+import { marked } from "marked";
 import { observer } from "mobx-react-lite";
 
 // src/utils/custom-jsx/jsx-runtime.js
@@ -638,8 +621,312 @@ function jsxs(type, props, key) {
   return jsxs_(type, newProps, key);
 }
 
+// src/rsuite/MarkdownUI.tsx
+var MarkdownUI = observer(function MarkdownUI_(p) {
+  if (p.markdown == null)
+    return null;
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      tw: "_MD",
+      className: p.className,
+      dangerouslySetInnerHTML: { __html: marked(p.markdown) }
+    }
+  );
+});
+
+// src/panels/MessageUI.tsx
+import { observer as observer2 } from "mobx-react-lite";
+var MessageInfoUI = observer2(function MessageInfoUI_(p) {
+  return /* @__PURE__ */ jsxs("div", { className: p.className, tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-info-2", children: [
+    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "info" }),
+    p.title ? /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
+      p.children,
+      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+      p.children,
+      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+    ] })
+  ] });
+});
+var MessageErrorUI = observer2(function MessageErrorUI_(p) {
+  return /* @__PURE__ */ jsxs("div", { tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-error-2", children: [
+    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
+    p.title ? /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
+      p.children,
+      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+      p.children,
+      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+    ] })
+  ] });
+});
+var MessageWarningUI = observer2(function MessageWarningUI_(p) {
+  return /* @__PURE__ */ jsxs("div", { tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-warning-2", children: [
+    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "warning" }),
+    p.title ? /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
+      p.children,
+      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+      p.children,
+      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+    ] })
+  ] });
+});
+
+// src/controls/FormUI.tsx
+import { observer as observer3 } from "mobx-react-lite";
+var FormUI = observer3(function FormUI_(p) {
+  const form = p.form;
+  if (form == null)
+    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: `form is not yet initialized` });
+  if (form.error)
+    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: form.error });
+  if (form.root == null)
+    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: "form.root is null" });
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      tw: "bg-base-100",
+      "data-theme": p.theme,
+      className: p.className,
+      style: p.style,
+      children: form.root.ui()
+    }
+  );
+});
+
+// src/controls/widgets/WidgetUI.DI.ts
+var WidgetDI = {};
+var getWidgetClass = (widgetName) => {
+  return WidgetDI[widgetName];
+};
+var registerWidgetClass = (type, kls) => {
+  WidgetDI[type] = kls;
+};
+var isWidgetOptional = (widget) => widget.type === "optional";
+var isWidgetShared = (widget) => widget.type === "shared";
+var isWidgetGroup = (widget) => widget.type === "group";
+
+// src/controls/Form.ts
+import { action, isObservable, makeAutoObservable, observable } from "mobx";
+import { createElement } from "react";
+var Form = class {
+  constructor(manager, ui, formConfig) {
+    this.manager = manager;
+    this.ui = ui;
+    this.formConfig = formConfig;
+    /** loading error  */
+    this.error = null;
+    /** shortcut to access the <FormUI /> component without having to import it first */
+    this.FormUI = FormUI;
+    /**
+     * allow to quickly render the form in a react component
+     * without having to import any component; usage:
+     * | <div>{x.render()}</div>
+     */
+    this.render = () => createElement(FormUI, { form: this });
+    /** Out of Tree unmounted serials  */
+    this.shared = {};
+    // Change tracking ------------------------------------
+    /** timestamp at which form value was last updated, or 0 when form still pristine */
+    this.valueLastUpdatedAt = 0;
+    /** timestamp at which form serial was last updated, or 0 when form still pristine */
+    this.serialLastUpdatedAt = 0;
+    this._onSerialChange = this.formConfig.onSerialChange ? debounce(this.formConfig.onSerialChange, 200) : null;
+    this._onValueChange = this.formConfig.onValueChange ? debounce(this.formConfig.onValueChange, 200) : null;
+    /** every widget node must call this function once it's value change */
+    this.valueChanged = (widget) => {
+      this.valueLastUpdatedAt = Date.now();
+      this.serialChanged(widget);
+      console.log(`[\u{1F98A}] value changed`);
+      this._onValueChange?.(this);
+    };
+    /** every widget node must call this function once it's serial changed */
+    this.serialChanged = (_widget) => {
+      this.serialLastUpdatedAt = Date.now();
+      this._onSerialChange?.(this);
+    };
+    this.ready = false;
+    this.init = () => {
+      console.log(`[\u{1F950}] Building form ${this.formConfig.name}`);
+      const formBuilder = this.builder;
+      const spec = this.ui?.(formBuilder);
+      try {
+        let formSerial = this.formConfig.initialSerial?.();
+        if (formSerial && !isObservable(formSerial))
+          formSerial = observable(formSerial);
+        if (formSerial != null && formSerial.type !== "FormSerial") {
+          const oldSerial = formSerial;
+          const oldsharedSerial = {};
+          for (const [k, v] of Object.entries(oldSerial.values_)) {
+            if (k.startsWith("__")) {
+              oldsharedSerial[k.slice(2, -2)] = v;
+              delete oldSerial.values_[k];
+            }
+          }
+          formSerial = {
+            name: this.formConfig.name,
+            type: "FormSerial",
+            root: formSerial,
+            shared: oldsharedSerial,
+            serialLastUpdatedAt: 0,
+            valueLastUpdatedAt: 0
+          };
+          console.log(`[\u{1F534}] MIGRATED formSerial:`, JSON.stringify(formSerial, null, 3).slice(0, 800));
+        }
+        if (formSerial != null && formSerial.type !== "FormSerial") {
+          throw new Error("\u274C INVALID form serial");
+        }
+        this.shared = formSerial?.shared || {};
+        const rootWidget = formBuilder._HYDRATE(null, spec, formSerial?.root);
+        this.ready = true;
+        this.error = null;
+        return rootWidget;
+      } catch (e) {
+        console.error(`[\u{1F459}\u{1F534}] Building form ${this.formConfig.name} FAILED`, this);
+        console.error(e);
+        this.error = "invalid form definition";
+        return formBuilder._HYDRATE(null, spec, null);
+      }
+    };
+    this.builder = manager.getBuilder(this);
+    makeAutoObservable(this, {
+      //
+      // builder: false,
+      root: false,
+      init: action
+    });
+  }
+  get value() {
+    return this.root.value;
+  }
+  // get rootSerial(): ROOT['$Serial'] {
+  //     return this.root.serial
+  // }
+  get serial() {
+    return {
+      type: "FormSerial",
+      name: this.formConfig.name,
+      root: this.root.serial,
+      shared: this.shared,
+      serialLastUpdatedAt: this.serialLastUpdatedAt,
+      valueLastUpdatedAt: this.valueLastUpdatedAt
+    };
+  }
+  /** @deprecated ; only work when root is a Widget_group */
+  get fields() {
+    if (isWidgetGroup(this.root))
+      return this.root.fields;
+    throw new Error("\u{1F534} root is not a group");
+  }
+  // 🔴 👇 remove that
+  get root() {
+    const root = this.init();
+    Object.defineProperty(this, "root", { value: root });
+    return root;
+  }
+};
+
+// src/controls/shared/runWithGlobalForm.ts
+import { nanoid } from "nanoid";
+var GlobalFormCtx = class {
+  constructor() {
+    this.id = nanoid();
+    this.currentForm = null;
+  }
+};
+var globalCtx = new GlobalFormCtx();
+globalThis.globalCtx = globalCtx;
+var runWithGlobalForm = (form, f) => {
+  if (globalCtx.currentForm === form)
+    return f();
+  const prev = globalCtx.currentForm;
+  globalCtx.currentForm = form;
+  const res = f();
+  globalCtx.currentForm = prev;
+  return res;
+};
+var getCurrentForm_IMPL = () => {
+  if (globalCtx.currentForm == null) {
+    console.log(`[\u{1F459}] `, globalCtx);
+    debugger;
+    throw new Error(`No form in context !`);
+  }
+  return globalCtx.currentForm;
+};
+
+// src/controls/FormManager.ts
+import { useMemo } from "react";
+var FormManager = class {
+  constructor(builderCtor) {
+    this.builderCtor = builderCtor;
+    this._builders = /* @__PURE__ */ new WeakMap();
+    this.getBuilder = (form) => {
+      const prev = this._builders.get(form);
+      if (prev)
+        return prev;
+      const builder = new this.builderCtor(form);
+      this._builders.set(form, builder);
+      return builder;
+    };
+    /** LEGACY API; TYPES ARE COMPLICATED DUE TO MAINTAINING BACKWARD COMPAT */
+    this.form = (ui, formProperties = { name: "unnamed" }) => {
+      const FN = (builder) => {
+        return runWithGlobalForm(
+          builder,
+          () => builder.group({
+            label: false,
+            items: ui(builder),
+            topLevel: true,
+            collapsed: false
+          })
+        );
+      };
+      const form = new Form(this, FN, formProperties);
+      return form;
+    };
+    /** simple way to defined forms and in react components */
+    this.use = (ui, formProperties = { name: "unnamed" }, deps = []) => {
+      return useMemo(() => {
+        const form = new Form(this, ui, formProperties);
+        return form;
+      }, deps);
+    };
+  }
+};
+
+// src/controls/IWidget.ts
+var isWidget = (x) => {
+  return x != null && //
+  typeof x === "object" && "$WidgetSym" in x && x.$WidgetSym === $WidgetSym;
+};
+var $WidgetSym = Symbol("Widget");
+
+// src/utils/misc/makeLabelFromFieldName.tsx
+function makeLabelFromFieldName(s) {
+  if (typeof s !== "string") {
+    console.log(`[\u{1F534}] makeLabelFromFieldName: expected string, got ${typeof s} (${s})`);
+  }
+  if (s == null)
+    return "";
+  if (s.length === 0)
+    return s;
+  s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
+  s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
+  s = s.replace(/_/g, " ");
+  s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
+  s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
+  return s[0].toUpperCase() + s.slice(1);
+}
+
 // src/widgets/workspace/JsonViewUI.tsx
-var JsonViewUI = observer(function JsonViewUI_(p) {
+import JsonView from "@uiw/react-json-view";
+import { observer as observer4 } from "mobx-react-lite";
+var JsonViewUI = observer4(function JsonViewUI_(p) {
   JSON.stringify(p.value);
   return /* @__PURE__ */ jsx(
     JsonView,
@@ -747,27 +1034,15 @@ var useSizeOf = () => {
       return ro.disconnect();
     ro.observe(e);
   };
-  return { refFn, size };
+  return { ref: refFn, size };
 };
 
 // src/controls/utils/AnimatedSizeUI.tsx
-import { observer as observer2 } from "mobx-react-lite";
-var AnimatedSizeUI = observer2(function AnimatedSizeUI_(p) {
-  const { refFn, size } = useSizeOf();
+import { observer as observer5 } from "mobx-react-lite";
+var AnimatedSizeUI = observer5(function AnimatedSizeUI_(p) {
+  const { ref: refFn, size } = useSizeOf();
   return /* @__PURE__ */ jsx("div", { className: p.className, tw: "animated overflow-hidden", style: { height: `${size.height}px` }, children: /* @__PURE__ */ jsx("div", { ref: refFn, children: p.children }) });
 });
-
-// src/controls/widgets/WidgetUI.DI.ts
-var WidgetDI = {};
-var getWidgetClass = (widgetName) => {
-  return WidgetDI[widgetName];
-};
-var registerWidgetClass = (type, kls) => {
-  WidgetDI[type] = kls;
-};
-var isWidgetOptional = (widget) => widget.type === "optional";
-var isWidgetShared = (widget) => widget.type === "shared";
-var isWidgetGroup = (widget) => widget.type === "group";
 
 // src/controls/shared/getActualWidgetToDisplay.tsx
 function getActualWidgetToDisplay(originalWidget) {
@@ -780,6 +1055,8 @@ function getActualWidgetToDisplay(originalWidget) {
 
 // src/controls/shared/getBorderStatusForWidget.ts
 var getBorderStatusForWidget = (widget) => {
+  if (isWidgetGroup(widget) && widget.config.topLevel)
+    return false;
   if (widget.config.border != null)
     return widget.config.border;
   if (widget.border != null)
@@ -793,6 +1070,8 @@ var getBorderStatusForWidget = (widget) => {
 var getIfWidgetIsCollapsible = (widget) => {
   if (widget.config.collapsed != null)
     return widget.config.collapsed;
+  if (widget.collapsible != null)
+    return widget.collapsible;
   if (!widget.DefaultBodyUI)
     return false;
   if (widget.config.label === false)
@@ -812,10 +1091,10 @@ var getIfWidgetNeedAlignedLabel = (widget) => {
 };
 
 // src/controls/widgets/bool/InputBoolUI.tsx
-import { observer as observer3 } from "mobx-react-lite";
+import { observer as observer6 } from "mobx-react-lite";
 var isDragging = false;
 var wasEnabled = false;
-var InputBoolUI = observer3(function InputBoolUI_(p) {
+var InputBoolUI = observer6(function InputBoolUI_(p) {
   const isActive = p.active ?? false;
   const display = p.display ?? "check";
   const expand = p.expand;
@@ -833,7 +1112,7 @@ var InputBoolUI = observer3(function InputBoolUI_(p) {
       className: p.className,
       style: p.style,
       tw: [
-        "WIDGET-FIELD select-none",
+        "WIDGET-FIELD select-none cursor-pointer",
         "flex items-center",
         "!outline-none",
         "hover:brightness-110",
@@ -883,7 +1162,7 @@ var InputBoolUI = observer3(function InputBoolUI_(p) {
           }
         ),
         icon && /* @__PURE__ */ jsx("span", { tw: "pl-1.5", className: "material-symbols-outlined", children: icon }),
-        label && /* @__PURE__ */ jsx("div", { tw: [icon ? "pl-1" : "pl-1.5"], children: label })
+        label && /* @__PURE__ */ jsx("div", { tw: ["line-clamp-1", icon ? "pl-1" : "pl-1.5"], children: label })
       ] }) : /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs(
         "div",
         {
@@ -894,8 +1173,10 @@ var InputBoolUI = observer3(function InputBoolUI_(p) {
             "border-b-2 border-b-base-300",
             isActive && "bg-primary text-primary-content text-shadow-inv",
             icon && "pl-1.5",
-            expand && "w-full justify-center"
+            expand && "w-full justify-center",
+            "grid gap-0"
           ],
+          style: icon ? { gridTemplateColumns: "24px 1fr" } : {},
           children: [
             icon && /* @__PURE__ */ jsx("span", { tw: "flex-shrink-0 h-full pr-1.5 shadow-inherit", className: "material-symbols-outlined", children: icon }),
             /* @__PURE__ */ jsx("p", { tw: "w-full text-center line-clamp-1", children: label ? label : /* @__PURE__ */ jsx(Fragment, {}) })
@@ -907,8 +1188,8 @@ var InputBoolUI = observer3(function InputBoolUI_(p) {
 });
 
 // src/controls/shared/Widget_ToggleUI.tsx
-import { observer as observer4 } from "mobx-react-lite";
-var Widget_ToggleUI = observer4(function Widget_ToggleUI_(p) {
+import { observer as observer7 } from "mobx-react-lite";
+var Widget_ToggleUI = observer7(function Widget_ToggleUI_(p) {
   if (!isWidgetOptional(p.widget))
     return null;
   const widget = p.widget;
@@ -923,8 +1204,8 @@ var Widget_ToggleUI = observer4(function Widget_ToggleUI_(p) {
 });
 
 // src/rsuite/reveal/ModalShell.tsx
-import { observer as observer5 } from "mobx-react-lite";
-var ModalShellUI = observer5(function ModalShellUI_(p) {
+import { observer as observer8 } from "mobx-react-lite";
+var ModalShellUI = observer8(function ModalShellUI_(p) {
   return /* @__PURE__ */ jsxs(
     "div",
     {
@@ -936,7 +1217,18 @@ var ModalShellUI = observer5(function ModalShellUI_(p) {
         /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
           /* @__PURE__ */ jsx("div", { tw: "text-xl", children: p.title }),
           /* @__PURE__ */ jsx("div", { tw: "flex-1" }),
-          /* @__PURE__ */ jsx("div", { tw: "btn btn-sm btn-square", children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "close" }) })
+          /* @__PURE__ */ jsx(
+            "div",
+            {
+              tw: "btn btn-sm btn-square",
+              onClick: (ev) => {
+                ev.stopPropagation();
+                ev.preventDefault();
+                p.close();
+              },
+              children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "close" })
+            }
+          )
         ] }),
         /* @__PURE__ */ jsx("div", { className: "divider my-0" }),
         /* @__PURE__ */ jsx("div", { tw: "_ModalBody", children: p.children }),
@@ -946,15 +1238,41 @@ var ModalShellUI = observer5(function ModalShellUI_(p) {
   );
 });
 
+// src/rsuite/reveal/RevealCtx.ts
+import { createContext, useContext } from "react";
+var RevealCtx = createContext(null);
+var useRevealOrNull = () => {
+  const val = useContext(RevealCtx);
+  return val;
+};
+var useReveal = () => {
+  const val = useContext(RevealCtx);
+  if (val == null)
+    throw new Error("missing editor in current widget react contexts");
+  return val;
+};
+
 // src/rsuite/reveal/RevealPlacement.tsx
 var computePlacement = (placement, rect) => {
-  if (placement == "popup-xs")
+  if (placement === "popup-xs")
     return { top: 0, left: 0 };
-  if (placement == "popup-sm")
+  if (placement === "popup-sm")
     return { top: 0, left: 0 };
-  if (placement == "popup-lg")
+  if (placement === "popup-lg")
     return { top: 0, left: 0 };
-  if (placement == "auto") {
+  if (placement === "autoHorizontalStart") {
+    placement = rect.left + rect.width / 2 < window.innerWidth / 2 ? "rightStart" : "leftStart";
+  }
+  if (placement === "autoHorizontalEnd") {
+    placement = rect.left + rect.width / 2 < window.innerWidth / 2 ? "rightEnd" : "leftEnd";
+  }
+  if (placement === "autoVerticalStart") {
+    placement = rect.top + rect.height / 2 < window.innerHeight / 2 ? "bottomStart" : "topStart";
+  }
+  if (placement === "autoVerticalEnd") {
+    placement = rect.top + rect.height / 2 < window.innerHeight / 2 ? "bottomEnd" : "topEnd";
+  }
+  if (placement === "auto") {
     placement = (() => {
       const top = rect.top;
       const bottom = window.innerHeight - rect.bottom;
@@ -993,16 +1311,37 @@ var computePlacement = (placement, rect) => {
 };
 
 // src/rsuite/reveal/RevealState.tsx
-import { makeAutoObservable, observable } from "mobx";
-var defaultShowDelay = 100;
-var defaultHideDelay = 300;
-var RevealState = class _RevealState {
-  constructor(p) {
+import { makeAutoObservable as makeAutoObservable2, observable as observable2 } from "mobx";
+var defaultShowDelay_whenRoot = 100;
+var defaultHideDelay_whenRoot = 300;
+var defaultShowDelay_whenNested = 0;
+var defaultHideDelay_whenNested = 0;
+var DEBUG_REVEAL = false;
+var RevealStateLazy = class {
+  constructor(p, parents) {
     this.p = p;
+    this.parents = parents;
+    this.uistOrNull = null;
+    this.getUist = () => {
+      if (this.uistOrNull)
+        return this.uistOrNull;
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F499}] init RevealUI`);
+      this.uistOrNull = new RevealState({ ...this.p }, this.parents);
+      return this.uistOrNull;
+    };
+    makeAutoObservable2(this, { p: false });
+  }
+};
+var RevealState = class _RevealState {
+  constructor(p, parents) {
+    this.p = p;
+    this.parents = parents;
     this.uid = _RevealState.nextUID++;
     // ------------------------------------------------
     this.inAnchor = false;
     this.inTooltip = false;
+    this.inChildren = /* @__PURE__ */ new Set();
     // prettier-ignore
     // position --------------------------------------------
     this.tooltipPosition = { top: 0, left: 0 };
@@ -1033,13 +1372,17 @@ var RevealState = class _RevealState {
     };
     // ---
     this.enterAnchor = () => {
-      if (_RevealState.shared.current != this)
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] ENTERING anchor ${this.ix}`);
+      if (_RevealState.shared.current != this && !this.parents.includes(_RevealState.shared.current))
         _RevealState.shared.current?.close();
       _RevealState.shared.current = this;
       this._resetAllAnchorTimouts();
       this.inAnchor = true;
     };
     this.leaveAnchor = () => {
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] LEAVING anchor  ${this.ix}`);
       if (_RevealState.shared.current == this)
         _RevealState.shared.current = null;
       this._resetAllAnchorTimouts();
@@ -1078,10 +1421,18 @@ var RevealState = class _RevealState {
     // ---
     this.enterTooltip = () => {
       this._resetAllTooltipTimouts();
+      for (const [ix, p] of this.parents.entries())
+        p.enterChildren(ix);
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] enter tooltip of ${this.ix}`);
       this.inTooltip = true;
     };
     this.leaveTooltip = () => {
       this._resetAllTooltipTimouts();
+      for (const [ix, p] of this.parents.entries())
+        p.leaveChildren(ix);
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] leaving tooltip of ${this.ix}`);
       this.inTooltip = false;
     };
     // ---
@@ -1101,25 +1452,50 @@ var RevealState = class _RevealState {
         this.leaveTooltipTimeoutId = null;
       }
     };
-    makeAutoObservable(this, { uid: false, p: false });
+    // --------------------
+    this.enterChildren = (depth) => {
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] entering children (of ${this.ix}) ${depth}`);
+      this.inChildren.add(depth);
+    };
+    this.leaveChildren = (depth) => {
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] leaving children (of ${this.ix}) ${depth}`);
+      this.inChildren.delete(depth);
+    };
+    this.contentFn = p.content;
+    makeAutoObservable2(this, { uid: false, p: false });
   }
   static {
     this.nextUID = 1;
   }
   static {
-    this.shared = observable({ current: null }, { current: observable.ref });
+    this.shared = observable2({ current: null }, { current: observable2.ref });
+  }
+  /** how deep in the reveal stack we are */
+  get ix() {
+    return this.parents.length;
+  }
+  // prettier-ignore
+  get debugColor() {
+    return {
+      borderLeft: this.inAnchor ? `3px solid red` : void 0,
+      borderTop: this.inTooltip ? `3px solid cyan` : void 0,
+      borderBottom: this.inChildren.size > 0 ? `3px solid orange` : void 0
+    };
   }
   /** toolip is visible if either inAnchor or inTooltip */
   get visible() {
     if (this._lock)
       return true;
-    return this.inAnchor || this.inTooltip;
+    return this.inAnchor || this.inTooltip || this.inChildren.size > 0;
   }
   close() {
     this._resetAllAnchorTimouts();
     this._resetAllTooltipTimouts();
     this.inAnchor = false;
     this.inTooltip = false;
+    this.inChildren.clear();
   }
   get triggerOnClick() {
     return this.p.trigger == null || this.p.trigger == "click" || //
@@ -1130,13 +1506,11 @@ var RevealState = class _RevealState {
     this.p.trigger == "clickAndHover";
   }
   get showDelay() {
-    return this.p.showDelay ?? defaultShowDelay;
+    return this.p.showDelay ?? (this.ix ? defaultShowDelay_whenNested : defaultShowDelay_whenRoot);
   }
-  // prettier-ignore
   get hideDelay() {
-    return this.p.hideDelay ?? defaultHideDelay;
+    return this.p.hideDelay ?? (this.ix ? defaultHideDelay_whenNested : defaultHideDelay_whenRoot);
   }
-  // prettier-ignore
   get placement() {
     return this.p.placement ?? "auto";
   }
@@ -1149,38 +1523,42 @@ var RevealState = class _RevealState {
 };
 
 // src/rsuite/reveal/RevealUI.tsx
-import { observable as observable2 } from "mobx";
-import { observer as observer6 } from "mobx-react-lite";
-import { useEffect, useMemo, useRef } from "react";
+import { observer as observer9 } from "mobx-react-lite";
+import { useEffect, useMemo as useMemo2, useRef } from "react";
 import { createPortal } from "react-dom";
-var useMemoLazy = (fn) => useMemo(() => {
-  let x = observable2({
-    uist: null,
-    uist2: () => {
-      if (x.uist)
-        return x.uist;
-      console.log(`[\u{1F499}] init RevealUI`);
-      x.uist = fn();
-      return x.uist;
-    }
-  });
-  return x;
-}, []);
-var RevealUI = observer6(function RevealUI_(p) {
-  const { uist, uist2 } = useMemoLazy(() => new RevealState(p));
+var RevealUI = observer9(function RevealUI_(p) {
   const ref = useRef(null);
+  const parents = useRevealOrNull()?.tower ?? [];
+  const self = useMemo2(() => new RevealStateLazy(p, parents.map((p2) => p2.getUist())), []);
+  const { uistOrNull, getUist: uist2 } = self;
+  const nextTower = useMemo2(() => ({ tower: [...parents, self] }), []);
   useEffect(() => {
-    if (uist?.visible && ref.current) {
+    const x = uistOrNull;
+    if (x == null)
+      return;
+    if (p.content !== x.p.content)
+      x.contentFn = p.content;
+    if (p.trigger !== x.p.trigger)
+      x.p.trigger = p.trigger;
+    if (p.placement !== x.p.placement)
+      x.p.placement = p.placement;
+    if (p.showDelay !== x.p.showDelay)
+      x.p.showDelay = p.showDelay;
+    if (p.hideDelay !== x.p.hideDelay)
+      x.p.hideDelay = p.hideDelay;
+  }, [p.content, p.trigger, p.placement, p.showDelay, p.hideDelay]);
+  useEffect(() => {
+    if (uistOrNull?.visible && ref.current) {
       const rect = ref.current.getBoundingClientRect();
-      uist.setPosition(rect);
+      uistOrNull.setPosition(rect);
     }
-  }, [uist?.visible]);
+  }, [uistOrNull?.visible]);
   const content = p.children;
-  const tooltip = mkTooltip(uist);
-  return /* @__PURE__ */ jsxs(
+  const tooltip = mkTooltip(uistOrNull);
+  const anchor = /* @__PURE__ */ jsxs(
     "span",
     {
-      tw: uist?.defaultCursor,
+      tw: ["inline-block ui-reveal-anchor", uistOrNull?.defaultCursor ?? "cursor-pointer"],
       className: p.className,
       ref,
       style: p.style,
@@ -1188,16 +1566,16 @@ var RevealUI = observer6(function RevealUI_(p) {
       onMouseEnter: () => uist2().onMouseEnterAnchor(),
       onMouseLeave: () => uist2().onMouseLeaveAnchor(),
       onClick: (ev) => {
-        const uist3 = uist2();
-        const toc = uist3.triggerOnClick;
+        const uist = uist2();
+        const toc = uist.triggerOnClick;
         if (!toc)
           return;
         ev.stopPropagation();
         ev.preventDefault();
-        if (uist3.visible)
-          uist3.leaveAnchor();
+        if (uist.visible)
+          uist.leaveAnchor();
         else
-          uist3.enterAnchor();
+          uist.enterAnchor();
       },
       children: [
         content,
@@ -1205,6 +1583,7 @@ var RevealUI = observer6(function RevealUI_(p) {
       ]
     }
   );
+  return /* @__PURE__ */ jsx(RevealCtx.Provider, { value: nextTower, children: anchor });
 });
 var mkTooltip = (uist) => {
   if (uist == null)
@@ -1216,7 +1595,7 @@ var mkTooltip = (uist) => {
   );
   const pos = uist.tooltipPosition;
   const p = uist.p;
-  const hiddenContent = p.content();
+  const hiddenContent = uist.contentFn();
   const revealedContent = uist.placement.startsWith("#") ? /* @__PURE__ */ jsx(
     "div",
     {
@@ -1265,7 +1644,16 @@ var mkTooltip = (uist) => {
       },
       style: { zIndex: 99999999, backgroundColor: "#0000003d" },
       tw: "pointer-events-auto absolute w-full h-full flex items-center justify-center z-50",
-      children: /* @__PURE__ */ jsx(ModalShellUI, { title: p.title, children: hiddenContent })
+      children: /* @__PURE__ */ jsx(
+        ModalShellUI,
+        {
+          close: () => {
+            uist.close();
+          },
+          title: p.title,
+          children: hiddenContent
+        }
+      )
     }
   ) : /* @__PURE__ */ jsxs(
     "div",
@@ -1310,7 +1698,7 @@ var mkTooltip = (uist) => {
 var exhaust = (x) => x;
 
 // src/rsuite/shims.tsx
-import { observer as observer7 } from "mobx-react-lite";
+import { observer as observer10 } from "mobx-react-lite";
 var FormHelpTextUI = (p) => /* @__PURE__ */ jsx("div", { ...p });
 var Button = (p) => {
   const { icon, active, size, loading, disabled, appearance, ...rest } = p;
@@ -1359,7 +1747,7 @@ var Input = (p) => {
   const { tw, className, children, ...rest } = p;
   return /* @__PURE__ */ jsx("input", { tw: [tw, className, "input input-bordered input-sm"], ...rest, children });
 };
-var InputNumberBase = observer7(function InputNumberBase_(p) {
+var InputNumberBase = observer10(function InputNumberBase_(p) {
   const sizeClass = p._size ? `input-${p._size}` : null;
   return /* @__PURE__ */ jsx(
     "input",
@@ -1370,7 +1758,7 @@ var InputNumberBase = observer7(function InputNumberBase_(p) {
     }
   );
 });
-var Slider = observer7(function Slider_(p) {
+var Slider = observer10(function Slider_(p) {
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -1380,7 +1768,7 @@ var Slider = observer7(function Slider_(p) {
     }
   );
 });
-var Radio = observer7(function Radio_(p) {
+var Radio = observer10(function Radio_(p) {
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -1389,7 +1777,7 @@ var Radio = observer7(function Radio_(p) {
     }
   );
 });
-var Toggle = observer7(function Toggle_(p) {
+var Toggle = observer10(function Toggle_(p) {
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -1445,7 +1833,7 @@ var Panel = (p) => {
     }
   );
 };
-var ProgressLine = observer7(function ProgressLine_(p) {
+var ProgressLine = observer10(function ProgressLine_(p) {
   const status = p.status === "success" ? "progress-success" : "progress-info";
   return /* @__PURE__ */ jsx(
     "progress",
@@ -1466,7 +1854,7 @@ var messageIcon = (type) => {
   exhaust(type);
   return null;
 };
-var Message = observer7(function Message_(p) {
+var Message = observer10(function Message_(p) {
   const { showIcon, ...rest } = p;
   return /* @__PURE__ */ jsxs(
     "div",
@@ -1492,7 +1880,7 @@ var Message = observer7(function Message_(p) {
   );
 });
 var Tag = (p) => /* @__PURE__ */ jsx("div", { ...p });
-var Loader = observer7((p) => /* @__PURE__ */ jsx(
+var Loader = observer10((p) => /* @__PURE__ */ jsx(
   "span",
   {
     className: p.className,
@@ -1502,18 +1890,18 @@ var Loader = observer7((p) => /* @__PURE__ */ jsx(
 var RadioTile = (p) => /* @__PURE__ */ jsx("div", { ...p });
 
 // src/controls/shared/WidgetTooltipUI.tsx
-import { observer as observer8 } from "mobx-react-lite";
-var WidgetTooltipUI = observer8(function WidgetTooltipUI_(p) {
+import { observer as observer11 } from "mobx-react-lite";
+var WidgetTooltipUI = observer11(function WidgetTooltipUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx(Tooltip, { children: widget.config.tooltip }), children: /* @__PURE__ */ jsx("div", { className: "btn btn-sm btn-square btn-ghost", children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "info" }) }) });
 });
 
 // src/controls/shared/WidgetWithLabelUI.tsx
-import { observer as observer9 } from "mobx-react-lite";
+import { observer as observer12 } from "mobx-react-lite";
 import { ErrorBoundary } from "react-error-boundary";
 var isDragging2 = false;
 var wasEnabled2 = false;
-var WidgetWithLabelUI = observer9(function WidgetWithLabelUI_(p) {
+var WidgetWithLabelUI = observer12(function WidgetWithLabelUI_(p) {
   if (p.widget.config.hidden)
     return null;
   const rootKey = p.rootKey;
@@ -1527,7 +1915,7 @@ var WidgetWithLabelUI = observer9(function WidgetWithLabelUI_(p) {
   const alignLabel = p.alignLabel ?? getIfWidgetNeedAlignedLabel(widget);
   const k = widget;
   if (isWidgetGroup(k) && //
-  Object.keys(k.fields).length === 0 && k.config.requirements == null) {
+  Object.keys(k.fields).length === 0) {
     return;
   }
   const showBorder = getBorderStatusForWidget(widget);
@@ -1612,6 +2000,7 @@ var WidgetWithLabelUI = observer9(function WidgetWithLabelUI_(p) {
                   children: [
                     (isCollapsed || isCollapsible) && /* @__PURE__ */ jsx("span", { className: "WIDGET-COLLAPSE-BTN COLLAPSE-PASSTHROUGH material-symbols-outlined opacity-70 hover:opacity-100 cursor-pointer", children: isCollapsed ? "chevron_right" : "expand_more" }),
                     BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: originalWidget }),
+                    widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
                     widget.config.tooltip && /* @__PURE__ */ jsx(WidgetTooltipUI, { widget }),
                     LABEL,
                     !BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: originalWidget })
@@ -1631,305 +2020,17 @@ var WidgetWithLabelUI = observer9(function WidgetWithLabelUI_(p) {
   );
 });
 
-// src/controls/widgets/group/WidgetGroupUI.tsx
-import { observer as observer10 } from "mobx-react-lite";
-var WidgetGroup_LineUI = observer10(function WidgetGroup_LineUI_(p) {
-  if (!p.widget.serial.collapsed)
-    return null;
-  return /* @__PURE__ */ jsx("div", { className: "COLLAPSE-PASSTHROUGH", tw: "line-clamp-1 italic opacity-50", children: p.widget.summary });
-});
-var WidgetGroup_BlockUI = observer10(function WidgetGroup_BlockUI_(p) {
-  const widget = p.widget;
-  const isTopLevel = widget.config.topLevel;
-  const groupFields = Object.entries(widget.fields);
-  const isHorizontal = widget.config.layout === "H";
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      className: p.className,
-      tw: ["WIDGET-GROUP", "flex items-start w-full text-base-content"],
-      children: widget.serial.collapsed ? null : /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: widget.config.className,
-          tw: [
-            "_WidgetGroupUI w-full",
-            isHorizontal ? `GROUP-HORIZONTAL flex gap-1 flex-wrap` : `GROUP-VERTICAL   flex gap-1 flex-col`
-          ],
-          children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
-            WidgetWithLabelUI,
-            {
-              isTopLevel,
-              rootKey,
-              alignLabel: isHorizontal ? false : widget.config.alignLabel,
-              widget: bang(sub)
-            },
-            rootKey
-          ))
-        }
-      )
-    }
-  );
-});
-
-// src/rsuite/MarkdownUI.tsx
-import { marked } from "marked";
-import { observer as observer11 } from "mobx-react-lite";
-var MarkdownUI = observer11(function MarkdownUI_(p) {
-  if (p.markdown == null)
-    return null;
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      tw: "_MD",
-      className: p.className,
-      dangerouslySetInnerHTML: { __html: marked(p.markdown) }
-    }
-  );
-});
-
-// src/panels/MessageUI.tsx
-import { observer as observer12 } from "mobx-react-lite";
-var MessageInfoUI = observer12(function MessageInfoUI_(p) {
-  return /* @__PURE__ */ jsxs("div", { className: p.className, tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-info-2", children: [
-    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "info" }),
-    p.title ? /* @__PURE__ */ jsxs("div", { children: [
-      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] })
-  ] });
-});
-var MessageErrorUI = observer12(function MessageErrorUI_(p) {
-  return /* @__PURE__ */ jsxs("div", { tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-error-2", children: [
-    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
-    p.title ? /* @__PURE__ */ jsxs("div", { children: [
-      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] })
-  ] });
-});
-var MessageWarningUI = observer12(function MessageWarningUI_(p) {
-  return /* @__PURE__ */ jsxs("div", { tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-warning-2", children: [
-    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "warning" }),
-    p.title ? /* @__PURE__ */ jsxs("div", { children: [
-      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] })
-  ] });
-});
-
-// src/controls/FormUI.tsx
-import { observer as observer13 } from "mobx-react-lite";
-var FormUI = observer13(function FormUI_(p) {
-  const form = p.form;
-  if (form == null)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: `form is not yet initialized` });
-  if (form.error)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: form.error });
-  if (form.root == null)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: "form.root is null" });
-  return /* @__PURE__ */ jsx(WidgetGroup_BlockUI, { className: p.className, widget: form.root });
-});
-
-// src/controls/shared/runWithGlobalForm.ts
-import { nanoid } from "nanoid";
-var GlobalFormCtx = class {
-  constructor() {
-    this.id = nanoid();
-    this.currentForm = null;
-  }
-};
-var globalCtx = new GlobalFormCtx();
-globalThis.globalCtx = globalCtx;
-var runWithGlobalForm = (form, f) => {
-  if (globalCtx.currentForm === form)
-    return f();
-  const prev = globalCtx.currentForm;
-  globalCtx.currentForm = form;
-  const res = f();
-  globalCtx.currentForm = prev;
-  return res;
-};
-var getCurrentForm_IMPL = () => {
-  if (globalCtx.currentForm == null) {
-    console.log(`[\u{1F459}] `, globalCtx);
-    debugger;
-    throw new Error(`No form in context !`);
-  }
-  return globalCtx.currentForm;
-};
-
-// src/controls/Spec.ts
-var Spec = class _Spec {
-  constructor(type, config) {
-    this.type = type;
-    this.config = config;
-    /** wrap widget spec to list stuff */
-    this.list = (config = {}) => new _Spec("list", {
-      ...config,
-      element: this
-    });
-    this.optional = (startActive = false) => new _Spec("optional", {
-      widget: this,
-      startActive,
-      label: this.config.label,
-      requirements: this.config.requirements,
-      startCollapsed: this.config.startCollapsed,
-      collapsed: this.config.collapsed,
-      border: this.config.border
-    });
-    this.shared = (key) => getCurrentForm_IMPL().shared(key, this);
-    /** clone the spec, and patch the cloned config to make it hidden */
-    this.hidden = () => new _Spec(this.type, { ...this.config, hidden: true });
-  }
-};
-
-// src/controls/Form.ts
-import { action, isObservable, makeAutoObservable as makeAutoObservable2, observable as observable3 } from "mobx";
-import { createElement } from "react";
-var Form = class {
-  constructor(manager, ui, formConfig) {
-    this.manager = manager;
-    this.ui = ui;
-    this.formConfig = formConfig;
-    this.error = null;
-    /** shortcut to access the <FormUI /> component without having to import it first */
-    this.FormUI = FormUI;
-    /**
-     * allow to quickly render the form in a react component
-     * without having to import any component; usage:
-     * | <div>{x.render()}</div>
-     */
-    this.render = () => createElement(FormUI, { form: this });
-    this.at = (key) => {
-      return this.root.at(key);
-    };
-    this.get = (key) => {
-      return this.root.get(key);
-    };
-    // Change tracking ------------------------------------
-    this.valueLastUpdatedAt = 0;
-    this.serialLastUpdatedAt = 0;
-    this._onSerialChange = this.formConfig.onSerialChange ? debounce(this.formConfig.onSerialChange, 200) : null;
-    this._onValueChange = this.formConfig.onValueChange ? debounce(this.formConfig.onValueChange, 200) : null;
-    /** every widget node must call this function once it's value change */
-    this.valueChanged = (widget) => {
-      this.valueLastUpdatedAt = Date.now();
-      this.serialChanged(widget);
-      console.log(`[\u{1F98A}] value changed`);
-      this._onValueChange?.(this.root);
-    };
-    /** every widget node must call this function once it's serial changed */
-    this.serialChanged = (_widget) => {
-      this.serialLastUpdatedAt = Date.now();
-      this._onSerialChange?.(this.root);
-    };
-    this.knownShared = /* @__PURE__ */ new Map();
-    this.ready = false;
-    this.init = () => {
-      console.log(`[\u{1F950}] Building form ${this.formConfig.name}`);
-      const formBuilder = this.builder;
-      const rootDef = { topLevel: true, items: () => this.ui?.(formBuilder) ?? {} };
-      const unmounted = new Spec("group", rootDef);
-      try {
-        let initialValue = this.formConfig.initialValue?.();
-        if (initialValue && !isObservable(initialValue))
-          initialValue = observable3(initialValue);
-        const rootWidget = formBuilder._HYDRATE(null, unmounted, initialValue);
-        this.ready = true;
-        this.error = null;
-        return rootWidget;
-      } catch (e) {
-        console.error(`[\u{1F459}\u{1F534}] Building form ${this.formConfig.name} FAILED`, this);
-        console.error(e);
-        this.error = "invalid form definition";
-        return formBuilder._HYDRATE(null, unmounted, null);
-      }
-    };
-    this.builder = manager.getBuilder(this);
-    makeAutoObservable2(this, {
-      //
-      // builder: false,
-      root: false,
-      init: action
-    });
-  }
-  get value() {
-    return this.root.value;
-  }
-  get serial() {
-    return this.root.serial;
-  }
-  get fields() {
-    return this.root.fields;
-  }
-  // 🔴 👇 remove that
-  get root() {
-    const root = this.init();
-    Object.defineProperty(this, "root", { value: root });
-    return root;
-  }
-};
-
-// src/controls/FormManager.ts
-import { useMemo as useMemo2 } from "react";
-var FormManager = class {
-  constructor(builderCtor) {
-    this.builderCtor = builderCtor;
-    this._builders = /* @__PURE__ */ new WeakMap();
-    this.getBuilder = (form) => {
-      const prev = this._builders.get(form);
-      if (prev)
-        return prev;
-      const builder = new this.builderCtor(form);
-      this._builders.set(form, builder);
-      return builder;
-    };
-    this.form = (ui, formProperties = { name: "unnamed" }) => {
-      const form = new Form(this, ui, formProperties);
-      return form;
-    };
-    this.useForm = (ui, formProperties = { name: "unnamed" }, deps = []) => {
-      return useMemo2(() => {
-        const form = new Form(this, ui, formProperties);
-        return form;
-      }, deps);
-    };
-    /**
-     * copy pasted from useForm, with a better name
-     * intented to be used as `cushy.forms.use(...)`
-     */
-    this.use = (ui, formProperties = { name: "unnamed" }, deps = []) => {
-      return useMemo2(() => {
-        const form = new Form(this, ui, formProperties);
-        return form;
-      }, deps);
-    };
-  }
-};
-
 // src/controls/Mixins.tsx
-import { observer as observer14 } from "mobx-react-lite";
+import { observer as observer13 } from "mobx-react-lite";
 var ensureObserver = (fn) => {
   if (fn == null)
     return null;
   const isObserver = "$$typeof" in fn && fn.$$typeof === Symbol.for("react.memo");
-  const FmtUI = isObserver ? fn : observer14(fn);
+  const FmtUI = isObserver ? fn : observer13(fn);
   return FmtUI;
 };
 var mixin = {
+  $WidgetSym,
   // BUMP ----------------------------------------------------
   bumpSerial() {
     this.form.serialChanged(this);
@@ -1939,6 +2040,7 @@ var mixin = {
   bumpValue() {
     this.serial.lastUpdatedAt = Date.now();
     this.form.valueChanged(this);
+    this.config.onValueChange?.(this.value);
   },
   // FOLD ----------------------------------------------------
   setCollapsed(val) {
@@ -1953,7 +2055,7 @@ var mixin = {
   },
   // UI ----------------------------------------------------
   ui() {
-    return /* @__PURE__ */ jsx(WidgetWithLabelUI, { widget: this, rootKey: "_" });
+    return /* @__PURE__ */ jsx(WidgetWithLabelUI, { isTopLevel: true, widget: this, rootKey: "_" }, this.id);
   },
   defaultHeader() {
     if (this.DefaultHeaderUI == null)
@@ -1983,6 +2085,12 @@ var applyWidgetMixinV2 = (self) => {
   Object.defineProperties(self, descriptors);
 };
 
+// src/controls/widgets/spacer/SpacerUI.tsx
+import { observer as observer14 } from "mobx-react-lite";
+var SpacerUI = observer14(function SpacerUI_(p) {
+  return /* @__PURE__ */ jsx("div", { tw: ["ml-auto"] });
+});
+
 // src/controls/widgets/bool/WidgetBoolUI.tsx
 import { observer as observer15 } from "mobx-react-lite";
 var WidgetBoolUI = observer15(function WidgetBoolUI_(p) {
@@ -1990,7 +2098,7 @@ var WidgetBoolUI = observer15(function WidgetBoolUI_(p) {
   if (widget.config.label2) {
     console.warn("label2 is deprecated, please use the text option instead. label2 will be removed in the future");
   }
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
+  return /* @__PURE__ */ jsxs("div", { tw: "flex w-full h-full ", children: [
     /* @__PURE__ */ jsx(
       InputBoolUI,
       {
@@ -2002,6 +2110,7 @@ var WidgetBoolUI = observer15(function WidgetBoolUI_(p) {
         onValueChange: (value) => widget.value = value
       }
     ),
+    /* @__PURE__ */ jsx(SpacerUI, {}),
     /* @__PURE__ */ jsx(
       "div",
       {
@@ -2015,15 +2124,16 @@ var WidgetBoolUI = observer15(function WidgetBoolUI_(p) {
 });
 
 // src/controls/widgets/bool/WidgetBool.tsx
-import { computed, makeAutoObservable as makeAutoObservable3, observable as observable4, runInAction as runInAction2 } from "mobx";
+import { computed, makeAutoObservable as makeAutoObservable3, observable as observable3, runInAction as runInAction2 } from "mobx";
 import { nanoid as nanoid2 } from "nanoid";
 var Widget_bool = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetBoolUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "bool";
     this.setOn = () => this.value = true;
     this.setOff = () => this.value = false;
@@ -2035,14 +2145,17 @@ var Widget_bool = class {
     this.serial = serial ?? {
       id: this.id,
       type: "bool",
-      active: config.default ?? false,
-      collapsed: config.startCollapsed
+      active: this.spec.config.default ?? false,
+      collapsed: this.spec.config.startCollapsed
     };
     applyWidgetMixinV2(this);
     makeAutoObservable3(this, {
-      serial: observable4,
+      serial: observable3,
       value: computed
     });
+  }
+  get config() {
+    return this.spec.config;
   }
   get isChanged() {
     return this.value !== this.defaultValue;
@@ -2089,13 +2202,15 @@ var WidgetInlineRunUI = observer16(function WidgetInlineRunUI_(p) {
 import { makeAutoObservable as makeAutoObservable4, runInAction as runInAction4 } from "mobx";
 import { nanoid as nanoid3 } from "nanoid";
 var Widget_button = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetInlineRunUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "button";
+    const config = spec.config;
     if (config.text) {
       config.label = config.label ?? ` `;
     }
@@ -2108,6 +2223,9 @@ var Widget_button = class {
     };
     applyWidgetMixinV2(this);
     makeAutoObservable4(this);
+  }
+  get config() {
+    return this.spec.config;
   }
   get value() {
     return this.serial.val;
@@ -2123,13 +2241,31 @@ var Widget_button = class {
 };
 registerWidgetClass("button", Widget_button);
 
-// src/utils/misc/toasts.ts
+// src/utils/misc/toasts.tsx
 import { toast } from "react-toastify";
 var position = "bottom-right";
-var toastSuccess = (msg) => toast(msg, { type: "success", position });
-var toastInfo = (msg) => toast(msg, { type: "info", position });
-var toastError = (msg) => {
-  toast(msg, { type: "error", position });
+var toastSuccess = (msg) => void toast(msg, { type: "success", position });
+var toastInfo = (msg) => void toast(msg, { type: "info", position });
+var toastError = (msg) => void toast(msg, { type: "error", position });
+var toastImage = (imageSrc, message) => {
+  const src = typeof imageSrc === "string" ? imageSrc : imageSrc.toString("base64");
+  console.log(src);
+  const CustomToast = () => /* @__PURE__ */ jsxs("div", { tw: "flex flex-col aspect-square", children: [
+    /* @__PURE__ */ jsx(
+      "img",
+      {
+        tw: "object-contain bg-black rounded",
+        src: `${src}`,
+        alt: "Toast Image",
+        style: { width: "256px", height: "256px" }
+      }
+    ),
+    /* @__PURE__ */ jsx("p", { children: message })
+  ] });
+  toast(/* @__PURE__ */ jsx(CustomToast, {}), {
+    position: "bottom-right",
+    pauseOnFocusLoss: false
+  });
 };
 
 // src/utils/misc/searchMatches.ts
@@ -2352,6 +2488,8 @@ var AutoCompleteSelectState = class {
     value = Array.isArray(value) ? value : [value];
     const str = value.length === 0 ? placeHolderStr : value.map((i) => {
       const label = this.p.getLabelText(i);
+      if (!this.p.multiple)
+        return label;
       return /* @__PURE__ */ jsx(
         "div",
         {
@@ -2419,12 +2557,12 @@ var SelectUI = observer17(function SelectUI_(p) {
     {
       tabIndex: -1,
       tw: [
-        "WIDGET-FIELD",
-        "flex flex-1 items-center p-0.5 relative",
+        "WIDGET-FIELD bg-base-100",
+        "flex flex-1 items-center relative",
         "rounded overflow-clip text-shadow",
         "border border-base-100 hover:brightness-110",
         "hover:border-base-200",
-        "bg-primary/20 border-1",
+        "border-1",
         "border-b-2 border-b-base-200 hover:border-b-base-300"
       ],
       className: p.className,
@@ -2674,17 +2812,19 @@ var WidgetChoices_SelectHeaderUI = observer18(function WidgetChoices_SelectLineU
 import { makeAutoObservable as makeAutoObservable6 } from "mobx";
 import { nanoid as nanoid4 } from "nanoid";
 var Widget_choices = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetChoices_HeaderUI;
     this.DefaultBodyUI = WidgetChoices_BodyUI;
     /* override */
     this.background = true;
+    // prettier-ignore
     this.type = "choices";
     this.expand = this.config.expand ?? false;
     this.children = {};
+    const config = spec.config;
     this.id = serial?.id ?? nanoid4();
     if (typeof config.items === "function") {
       toastError('\u{1F534} ChoicesWidget "items" property should now be an object, not a function');
@@ -2716,6 +2856,9 @@ var Widget_choices = class {
     }
     applyWidgetMixinV2(this);
     makeAutoObservable6(this);
+  }
+  get config() {
+    return this.spec.config;
   }
   get isMulti() {
     return this.config.multi;
@@ -2829,16 +2972,18 @@ var WidgetColorUI = observer19(function WidgetColorUI_(p) {
 import { makeAutoObservable as makeAutoObservable7, runInAction as runInAction5 } from "mobx";
 import { nanoid as nanoid5 } from "nanoid";
 var Widget_color = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetColorUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "color";
     this.defaultValue = this.config.default ?? "#000000";
     // prettier-ignore
     this.reset = () => this.value = this.defaultValue;
+    const config = spec.config;
     this.id = serial?.id ?? nanoid5();
     this.serial = serial ?? {
       type: "color",
@@ -2848,6 +2993,9 @@ var Widget_color = class {
     };
     applyWidgetMixinV2(this);
     makeAutoObservable7(this);
+  }
+  get config() {
+    return this.spec.config;
   }
   get isChanged() {
     return this.value !== this.defaultValue;
@@ -2866,15 +3014,57 @@ var Widget_color = class {
 };
 registerWidgetClass("color", Widget_color);
 
+// src/controls/widgets/group/WidgetGroupUI.tsx
+import { observer as observer20 } from "mobx-react-lite";
+var WidgetGroup_LineUI = observer20(function WidgetGroup_LineUI_(p) {
+  if (!p.widget.serial.collapsed)
+    return null;
+  return /* @__PURE__ */ jsx("div", { className: "COLLAPSE-PASSTHROUGH", tw: "line-clamp-1 italic opacity-50", children: p.widget.summary });
+});
+var WidgetGroup_BlockUI = observer20(function WidgetGroup_BlockUI_(p) {
+  const widget = p.widget;
+  const isTopLevel = widget.config.topLevel;
+  const groupFields = Object.entries(widget.fields);
+  const isHorizontal = widget.config.layout === "H";
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: p.className,
+      tw: ["WIDGET-GROUP", "flex items-start w-full text-base-content"],
+      children: widget.serial.collapsed ? null : /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: widget.config.className,
+          tw: [
+            "_WidgetGroupUI w-full",
+            isHorizontal ? `GROUP-HORIZONTAL flex gap-1 flex-wrap` : `GROUP-VERTICAL   flex gap-1 flex-col`
+          ],
+          children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
+            WidgetWithLabelUI,
+            {
+              isTopLevel,
+              rootKey,
+              alignLabel: isHorizontal ? false : widget.config.alignLabel,
+              widget: bang(sub)
+            },
+            rootKey
+          ))
+        }
+      )
+    }
+  );
+});
+
 // src/controls/widgets/group/WidgetGroup.tsx
 import { makeAutoObservable as makeAutoObservable8 } from "mobx";
 import { nanoid as nanoid6 } from "nanoid";
 var Widget_group = class {
-  constructor(form, parent, config, serial, preHydrate) {
+  constructor(form, parent, spec, serial, preHydrate) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetGroup_LineUI;
+    // prettier-ignore
     this.type = "group";
     this.collapseAllEntries = () => {
       for (const [key, _item] of this.entries) {
@@ -2950,11 +3140,11 @@ var Widget_group = class {
       return;
     return WidgetGroup_BlockUI;
   }
-  static {
-    this.Prop = (config) => new Spec("group", config);
-  }
   get summary() {
     return this.config.summary?.(this.value) ?? "";
+  }
+  get config() {
+    return this.spec.config;
   }
   /** all [key,value] pairs */
   get entries() {
@@ -2965,8 +3155,8 @@ var Widget_group = class {
 registerWidgetClass("group", Widget_group);
 
 // src/controls/widgets/list/ListControlsUI.tsx
-import { observer as observer20 } from "mobx-react-lite";
-var ListControlsUI = observer20(function ListControlsUI_(p) {
+import { observer as observer21 } from "mobx-react-lite";
+var ListControlsUI = observer21(function ListControlsUI_(p) {
   const widget = p.widget;
   const max = widget.config.max;
   const min = widget.config.min;
@@ -3035,11 +3225,11 @@ var ListControlsUI = observer20(function ListControlsUI_(p) {
 });
 
 // src/controls/widgets/list/WidgetListUI.tsx
-import { observer as observer21 } from "mobx-react-lite";
+import { observer as observer22 } from "mobx-react-lite";
 import { forwardRef } from "react";
 import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
 import { ErrorBoundary as ErrorBoundary2 } from "react-error-boundary";
-var WidgetList_LineUI = observer21(function WidgetList_LineUI_(p) {
+var WidgetList_LineUI = observer22(function WidgetList_LineUI_(p) {
   return /* @__PURE__ */ jsxs("div", { tw: "flex flex-1 items-center", children: [
     /* @__PURE__ */ jsxs("div", { tw: "text-sm text-gray-500 italic", children: [
       p.widget.length,
@@ -3048,7 +3238,7 @@ var WidgetList_LineUI = observer21(function WidgetList_LineUI_(p) {
     /* @__PURE__ */ jsx("div", { tw: "ml-auto", children: /* @__PURE__ */ jsx(ListControlsUI, { widget: p.widget }) })
   ] });
 });
-var WidgetList_BodyUI = observer21(function WidgetList_BodyUI_(p) {
+var WidgetList_BodyUI = observer22(function WidgetList_BodyUI_(p) {
   const widget = p.widget;
   const subWidgets = widget.items;
   const min = widget.config.min;
@@ -3089,7 +3279,7 @@ var ListDragHandleUI = forwardRef((p, ref) => {
   const widget = p.widget;
   return /* @__PURE__ */ jsx("div", { tw: "btn btn-narrower btn-ghost btn-square btn-xs", ref, onClick: () => widget.toggleCollapsed(), children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "menu" }) });
 });
-var ListItemCollapseBtnUI = observer21(function ListItemCollapseBtnUI_(p) {
+var ListItemCollapseBtnUI = observer22(function ListItemCollapseBtnUI_(p) {
   const widget = p.widget;
   const isCollapsible = widget.DefaultBodyUI;
   if (!isCollapsible)
@@ -3108,14 +3298,15 @@ var ListItemCollapseBtnUI = observer21(function ListItemCollapseBtnUI_(p) {
 });
 
 // src/controls/widgets/list/WidgetList.ts
-import { makeAutoObservable as makeAutoObservable9, observable as observable5 } from "mobx";
+import { makeAutoObservable as makeAutoObservable9, observable as observable4 } from "mobx";
 import { nanoid as nanoid7 } from "nanoid";
 var Widget_list = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetList_LineUI;
+    // prettier-ignore
     this.type = "list";
     /* override */
     this.background = true;
@@ -3180,7 +3371,7 @@ var Widget_list = class {
       this.bumpValue();
     };
     this.id = serial?.id ?? nanoid7();
-    this.serial = serial ?? observable5({ type: "list", id: this.id, active: true, items_: [] });
+    this.serial = serial ?? observable4({ type: "list", id: this.id, active: true, items_: [] });
     if (this.serial.items_ == null)
       this.serial.items_ = [];
     this.items = [];
@@ -3207,6 +3398,9 @@ var Widget_list = class {
   }
   get DefaultBodyUI() {
     return WidgetList_BodyUI;
+  }
+  get config() {
+    return this.spec.config;
   }
   get length() {
     return this.items.length;
@@ -3240,8 +3434,8 @@ var Widget_list = class {
 registerWidgetClass("list", Widget_list);
 
 // src/controls/widgets/markdown/WidgetMarkdownUI.tsx
-import { observer as observer22 } from "mobx-react-lite";
-var WidgetMardownUI = observer22(function WidgetMardownUI_(p) {
+import { observer as observer23 } from "mobx-react-lite";
+var WidgetMardownUI = observer23(function WidgetMardownUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(MarkdownUI, { tw: [widget.config.inHeader && "bg-base-300", "_WidgetMardownUI w-full"], markdown: widget.markdown });
 });
@@ -3250,11 +3444,13 @@ var WidgetMardownUI = observer22(function WidgetMardownUI_(p) {
 import { makeAutoObservable as makeAutoObservable10 } from "mobx";
 import { nanoid as nanoid8 } from "nanoid";
 var Widget_markdown = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
+    // prettier-ignore
     this.type = "markdown";
+    const config = spec.config;
     this.id = serial?.id ?? nanoid8();
     this.serial = serial ?? { type: "markdown", collapsed: config.startCollapsed, active: true, id: this.id };
     applyWidgetMixinV2(this);
@@ -3274,11 +3470,14 @@ var Widget_markdown = class {
     if (this.config.inHeader)
       return false;
   }
+  get config() {
+    return this.spec.config;
+  }
   get markdown() {
     const md = this.config.markdown;
     if (typeof md === "string")
       return md;
-    return md(this.form._ROOT);
+    return md(this.form);
   }
   get value() {
     return this.serial;
@@ -3287,8 +3486,8 @@ var Widget_markdown = class {
 registerWidgetClass("markdown", Widget_markdown);
 
 // src/controls/widgets/matrix/WidgetMatrixUI.tsx
-import { observer as observer23 } from "mobx-react-lite";
-var WidgetMatrixUI = observer23(function WidgetStrUI_(p) {
+import { observer as observer24 } from "mobx-react-lite";
+var WidgetMatrixUI = observer24(function WidgetStrUI_(p) {
   const widget = p.widget;
   const cols = widget.cols;
   const rows = widget.rows;
@@ -3350,12 +3549,13 @@ var WidgetMatrixUI = observer23(function WidgetStrUI_(p) {
 import { makeAutoObservable as makeAutoObservable11 } from "mobx";
 import { nanoid as nanoid9 } from "nanoid";
 var Widget_matrix = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetMatrixUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "matrix";
     this.alignLabel = false;
     this.sep = " &&& ";
@@ -3393,6 +3593,7 @@ var Widget_matrix = class {
       cell.value = value;
       this.UPDATE();
     };
+    const config = spec.config;
     this.id = serial?.id ?? nanoid9();
     this.serial = serial ?? { type: "matrix", collapsed: config.startCollapsed, id: this.id, active: true, selected: [] };
     const rows = config.rows;
@@ -3411,6 +3612,9 @@ var Widget_matrix = class {
     this.cols = config.cols;
     applyWidgetMixinV2(this);
     makeAutoObservable11(this);
+  }
+  get config() {
+    return this.spec.config;
   }
   get value() {
     return this.serial.selected;
@@ -3438,7 +3642,7 @@ var parseFloatNoRoundingErr = (str, maxDigitsAfterDot = 3) => {
 
 // src/controls/widgets/number/InputNumberUI.tsx
 import { makeAutoObservable as makeAutoObservable12, runInAction as runInAction6 } from "mobx";
-import { observer as observer24 } from "mobx-react-lite";
+import { observer as observer25 } from "mobx-react-lite";
 import React2, { useEffect as useEffect2, useMemo as useMemo4 } from "react";
 var clamp = (x, min, max) => Math.max(min, Math.min(max, x));
 var startValue = 0;
@@ -3578,7 +3782,7 @@ var InputNumberStableState = class {
     return this.mode === "int";
   }
 };
-var InputNumberUI = observer24(function InputNumberUI_(p) {
+var InputNumberUI = observer25(function InputNumberUI_(p) {
   const uist = useMemo4(() => new InputNumberStableState(p), []);
   runInAction6(() => Object.assign(uist.props, p));
   useEffect2(() => uist.onPointerUpListener, []);
@@ -3760,8 +3964,8 @@ var InputNumberUI = observer24(function InputNumberUI_(p) {
 });
 
 // src/controls/widgets/number/WidgetNumberUI.tsx
-import { observer as observer25 } from "mobx-react-lite";
-var WidgetNumberUI = observer25(function WidgetNumberUI_(p) {
+import { observer as observer26 } from "mobx-react-lite";
+var WidgetNumberUI = observer26(function WidgetNumberUI_(p) {
   const widget = p.widget;
   const value = widget.serial.val;
   const mode = widget.config.mode;
@@ -3797,15 +4001,16 @@ var WidgetNumberUI = observer25(function WidgetNumberUI_(p) {
 });
 
 // src/controls/widgets/number/WidgetNumber.tsx
-import { computed as computed2, makeObservable, observable as observable6, runInAction as runInAction7 } from "mobx";
+import { computed as computed2, makeObservable, observable as observable5, runInAction as runInAction7 } from "mobx";
 import { nanoid as nanoid10 } from "nanoid";
 var Widget_number = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetNumberUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "number";
     this.forceSnap = false;
     this.defaultValue = this.config.default ?? 0;
@@ -3815,6 +4020,7 @@ var Widget_number = class {
         return;
       this.value = this.defaultValue;
     };
+    const config = spec.config;
     this.id = serial?.id ?? nanoid10();
     this.serial = serial ?? {
       type: "number",
@@ -3824,9 +4030,12 @@ var Widget_number = class {
     };
     applyWidgetMixinV2(this);
     makeObservable(this, {
-      serial: observable6,
+      serial: observable5,
       value: computed2
     });
+  }
+  get config() {
+    return this.spec.config;
   }
   get isChanged() {
     return this.serial.val !== this.defaultValue;
@@ -3846,15 +4055,16 @@ var Widget_number = class {
 registerWidgetClass("number", Widget_number);
 
 // src/controls/widgets/optional/WidgetOptional.tsx
-import { computed as computed3, makeObservable as makeObservable2, observable as observable7 } from "mobx";
+import { computed as computed3, makeObservable as makeObservable2, observable as observable6 } from "mobx";
 import { nanoid as nanoid11 } from "nanoid";
 var Widget_optional = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = void 0;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "optional";
     this.setActive = (value) => {
       if (this.serial.active === value)
@@ -3882,6 +4092,7 @@ var Widget_optional = class {
         this.serial.child = this.child.serial;
       }
     };
+    const config = spec.config;
     this.id = serial?.id ?? nanoid11();
     const defaultActive = config.startActive;
     this.serial = serial ?? {
@@ -3895,7 +4106,10 @@ var Widget_optional = class {
       this.serial.active = true;
     this._ensureChildIsHydrated();
     applyWidgetMixinV2(this);
-    makeObservable2(this, { serial: observable7, value: computed3 });
+    makeObservable2(this, { serial: observable6, value: computed3 });
+  }
+  get config() {
+    return this.spec.config;
   }
   get childOrThrow() {
     if (this.child == null)
@@ -3911,9 +4125,9 @@ var Widget_optional = class {
 registerWidgetClass("optional", Widget_optional);
 
 // src/controls/widgets/seed/WidgetSeedUI.tsx
-import { observer as observer26 } from "mobx-react-lite";
+import { observer as observer27 } from "mobx-react-lite";
 var isDragging3 = false;
-var WidgetSeedUI = observer26(function WidgetSeedUI_(p) {
+var WidgetSeedUI = observer27(function WidgetSeedUI_(p) {
   const widget = p.widget;
   const val = widget.serial.val;
   const isDraggingListener = (ev) => {
@@ -4029,13 +4243,19 @@ var WidgetSeedUI = observer26(function WidgetSeedUI_(p) {
 // src/controls/widgets/seed/WidgetSeed.ts
 import { makeAutoObservable as makeAutoObservable13 } from "mobx";
 import { nanoid as nanoid12 } from "nanoid";
+var Widget_seed_fromValue = (value) => ({
+  type: "seed",
+  mode: "fixed",
+  val: value
+});
 var Widget_seed = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetSeedUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "seed";
     this.setToFixed = (val) => {
       if (this.serial.mode === "fixed")
@@ -4055,6 +4275,7 @@ var Widget_seed = class {
       this.serial.val = val;
       this.bumpValue();
     };
+    const config = spec.config;
     this.id = serial?.id ?? nanoid12();
     this.serial = serial ?? {
       type: "seed",
@@ -4065,6 +4286,9 @@ var Widget_seed = class {
     applyWidgetMixinV2(this);
     makeAutoObservable13(this);
   }
+  get config() {
+    return this.spec.config;
+  }
   get value() {
     const count = this.form.builder._cache.count;
     return this.serial.mode === "randomize" ? Math.floor(Math.random() * 9999999) : this.serial.val;
@@ -4073,14 +4297,14 @@ var Widget_seed = class {
 registerWidgetClass("seed", Widget_seed);
 
 // src/controls/widgets/selectMany/WidgetSelectManyUI.tsx
-import { observer as observer27 } from "mobx-react-lite";
-var WidgetSelectManyUI = observer27(function WidgetSelectManyUI_(p) {
+import { observer as observer28 } from "mobx-react-lite";
+var WidgetSelectManyUI = observer28(function WidgetSelectManyUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectMany_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectMany_SelectUI, { widget });
 });
-var WidgetSelectMany_TabUI = observer27(function WidgetSelectMany_TabUI_(p) {
+var WidgetSelectMany_TabUI = observer28(function WidgetSelectMany_TabUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsxs("div", { tw: "rounded select-none flex flex-wrap gap-x-0.5 gap-y-0", children: [
@@ -4113,7 +4337,7 @@ var WidgetSelectMany_TabUI = observer27(function WidgetSelectMany_TabUI_(p) {
     widget.errors && /* @__PURE__ */ jsx(MessageErrorUI, { children: /* @__PURE__ */ jsx("ul", { children: widget.errors.map((e, ix) => /* @__PURE__ */ jsx("li", { children: e }, ix)) }) })
   ] });
 });
-var WidgetSelectMany_SelectUI = observer27(function WidgetSelectMany_SelectUI_(p) {
+var WidgetSelectMany_SelectUI = observer28(function WidgetSelectMany_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { tw: "flex-1", children: [
     /* @__PURE__ */ jsx(
@@ -4139,13 +4363,19 @@ var WidgetSelectMany_SelectUI = observer27(function WidgetSelectMany_SelectUI_(p
 // src/controls/widgets/selectMany/WidgetSelectMany.tsx
 import { makeAutoObservable as makeAutoObservable14 } from "mobx";
 import { nanoid as nanoid13 } from "nanoid";
+var Widget_selectMany_fromValue = (values) => ({
+  type: "selectMany",
+  query: "",
+  values
+});
 var Widget_selectMany = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetSelectManyUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "selectMany";
     /** un-select given item */
     this.removeItem = (item) => {
@@ -4174,6 +4404,7 @@ var Widget_selectMany = class {
         this.bumpValue();
       }
     };
+    const config = spec.config;
     this.id = serial?.id ?? nanoid13();
     this.serial = serial ?? {
       type: "selectMany",
@@ -4186,6 +4417,9 @@ var Widget_selectMany = class {
       this.serial.values = [];
     applyWidgetMixinV2(this);
     makeAutoObservable14(this);
+  }
+  get config() {
+    return this.spec.config;
   }
   get choices() {
     const _choices = this.config.choices;
@@ -4211,14 +4445,14 @@ var Widget_selectMany = class {
 registerWidgetClass("selectMany", Widget_selectMany);
 
 // src/controls/widgets/selectOne/WidgetSelectOneUI.tsx
-import { observer as observer28 } from "mobx-react-lite";
-var WidgetSelectOneUI = observer28(function WidgetSelectOneUI_(p) {
+import { observer as observer29 } from "mobx-react-lite";
+var WidgetSelectOneUI = observer29(function WidgetSelectOneUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectOne_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectOne_SelectUI, { widget });
 });
-var WidgetSelectOne_TabUI = observer28(function WidgetSelectOne_TabUI_(p) {
+var WidgetSelectOne_TabUI = observer29(function WidgetSelectOne_TabUI_(p) {
   const widget = p.widget;
   const selected = widget.serial.val;
   return /* @__PURE__ */ jsxs("div", { children: [
@@ -4245,7 +4479,7 @@ var WidgetSelectOne_TabUI = observer28(function WidgetSelectOne_TabUI_(p) {
     ] })
   ] });
 });
-var WidgetSelectOne_SelectUI = observer28(function WidgetSelectOne_SelectUI_(p) {
+var WidgetSelectOne_SelectUI = observer29(function WidgetSelectOne_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { tw: "flex-1", children: [
     /* @__PURE__ */ jsx(
@@ -4280,14 +4514,21 @@ var WidgetSelectOne_SelectUI = observer28(function WidgetSelectOne_SelectUI_(p) 
 // src/controls/widgets/selectOne/WidgetSelectOne.ts
 import { makeAutoObservable as makeAutoObservable15, runInAction as runInAction8 } from "mobx";
 import { nanoid as nanoid14 } from "nanoid";
+var Widget_selectOne_fromValue = (val) => ({
+  type: "selectOne",
+  query: "",
+  val
+});
 var Widget_selectOne = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetSelectOneUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "selectOne";
+    const config = spec.config;
     this.id = serial?.id ?? nanoid14();
     const choices = this.choices;
     this.serial = serial ?? {
@@ -4301,6 +4542,9 @@ var Widget_selectOne = class {
       this.serial.val = choices[0];
     applyWidgetMixinV2(this);
     makeAutoObservable15(this);
+  }
+  get config() {
+    return this.spec.config;
   }
   get errors() {
     if (this.serial.val == null)
@@ -4317,7 +4561,7 @@ var Widget_selectOne = class {
         return [];
       if (this.form._ROOT == null)
         throw new Error("\u274C IMPOSSIBLE: this.form._ROOT is null");
-      return _choices(this.form._ROOT, this);
+      return _choices(this.form, this);
     }
     return _choices;
   }
@@ -4338,20 +4582,33 @@ registerWidgetClass("selectOne", Widget_selectOne);
 // src/controls/widgets/shared/WidgetShared.tsx
 import { makeAutoObservable as makeAutoObservable16 } from "mobx";
 import { nanoid as nanoid15 } from "nanoid";
+var Widget_shared_fromValue = (val) => ({
+  type: "shared"
+});
 var Widget_shared = class _Widget_shared {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
+    // prettier-ignore
     this.type = "shared";
     this.DefaultHeaderUI = void 0;
     this.DefaultBodyUI = void 0;
     // 🔴
-    this.hidden = () => new _Widget_shared(this.form, null, { ...this.config, hidden: true }, this.serial);
+    this.hidden = () => {
+      const ctor = this.form.builder.SpecCtor;
+      const config = { ...this.spec.config, hidden: true };
+      const spec2 = new ctor("shared", config);
+      new _Widget_shared(this.form, null, spec2, this.serial);
+    };
+    const config = spec.config;
     this.id = serial?.id ?? nanoid15();
     this.serial = serial ?? { id: this.id, type: "shared", collapsed: config.startCollapsed };
     applyWidgetMixinV2(this);
     makeAutoObservable16(this);
+  }
+  get config() {
+    return this.spec.config;
   }
   get shared() {
     return this.config.widget;
@@ -4467,14 +4724,14 @@ var ResolutionState = class {
 };
 
 // src/controls/widgets/size/WidgetSizeUI.tsx
-import { observer as observer29 } from "mobx-react-lite";
-var WigetSize_BlockUI = observer29(function WigetSize_BlockUI_(p) {
+import { observer as observer30 } from "mobx-react-lite";
+var WigetSize_BlockUI = observer30(function WigetSize_BlockUI_(p) {
   return /* @__PURE__ */ jsx(WigetSizeXUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WigetSize_LineUI = observer29(function WigetSize_LineUI_(p) {
+var WigetSize_LineUI = observer30(function WigetSize_LineUI_(p) {
   return /* @__PURE__ */ jsx(WidgetSizeX_LineUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WidgetSizeX_LineUI = observer29(function WidgetSize_LineUI_(p) {
+var WidgetSizeX_LineUI = observer30(function WidgetSize_LineUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx("div", { className: "flex flex-1 flex-col gap-1", children: /* @__PURE__ */ jsxs(
     "div",
@@ -4523,7 +4780,7 @@ var WidgetSizeX_LineUI = observer29(function WidgetSize_LineUI_(p) {
     }
   ) });
 });
-var AspectLockButtonUI = observer29(function AspectLockButtonUI_(p) {
+var AspectLockButtonUI = observer30(function AspectLockButtonUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx(
     "button",
@@ -4547,7 +4804,7 @@ var AspectLockButtonUI = observer29(function AspectLockButtonUI_(p) {
     }
   );
 });
-var AspectRatioSquareUI = observer29(function AspectRatioSquareUI_(p) {
+var AspectRatioSquareUI = observer30(function AspectRatioSquareUI_(p) {
   const uist = p.sizeHelper;
   const ratioDisplaySize = 26;
   return /* @__PURE__ */ jsx(
@@ -4578,7 +4835,7 @@ var AspectRatioSquareUI = observer29(function AspectRatioSquareUI_(p) {
     }
   );
 });
-var WigetSizeXUI = observer29(function WigetSizeXUI_(p) {
+var WigetSizeXUI = observer30(function WigetSizeXUI_(p) {
   const uist = p.sizeHelper;
   const resoBtn = (ar) => /* @__PURE__ */ jsx(
     "button",
@@ -4625,14 +4882,19 @@ var WigetSizeXUI = observer29(function WigetSizeXUI_(p) {
 // src/controls/widgets/size/WidgetSize.ts
 import { makeAutoObservable as makeAutoObservable18, runInAction as runInAction9 } from "mobx";
 import { nanoid as nanoid16 } from "nanoid";
+var Widget_size_fromValue = (val) => ({
+  ...val
+});
 var Widget_size = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WigetSize_LineUI;
     this.DefaultBodyUI = WigetSize_BlockUI;
+    // prettier-ignore
     this.type = "size";
+    const config = spec.config;
     this.id = serial?.id ?? nanoid16();
     if (serial) {
       this.serial = serial;
@@ -4683,17 +4945,14 @@ var Widget_size = class {
     Object.defineProperty(this, "sizeHelper", { value: state });
     return state;
   }
+  get config() {
+    return this.spec.config;
+  }
   get value() {
     return this.serial;
   }
 };
 registerWidgetClass("size", Widget_size);
-
-// src/controls/widgets/spacer/SpacerUI.tsx
-import { observer as observer30 } from "mobx-react-lite";
-var SpacerUI = observer30(function SpacerUI_(p) {
-  return /* @__PURE__ */ jsx("div", { tw: ["ml-auto"] });
-});
 
 // src/controls/widgets/spacer/WidgetSpacerUI.tsx
 import { observer as observer31 } from "mobx-react-lite";
@@ -4702,15 +4961,19 @@ var WidgetSpacerUI = observer31(function WidgetSpacerUI_(p) {
 });
 
 // src/controls/widgets/spacer/WidgetSpacer.tsx
-import { makeObservable as makeObservable3, observable as observable8 } from "mobx";
+import { makeObservable as makeObservable3, observable as observable7 } from "mobx";
 import { nanoid as nanoid17 } from "nanoid";
+var Widget_spacer_fromValue = (val) => ({
+  type: "spacer"
+});
 var Widget_spacer = class {
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.DefaultHeaderUI = WidgetSpacerUI;
     this.DefaultBodyUI = void 0;
+    // prettier-ignore
     this.type = "spacer";
     this.id = serial?.id ?? nanoid17();
     this.serial = serial ?? {
@@ -4719,7 +4982,10 @@ var Widget_spacer = class {
       collapsed: false
     };
     applyWidgetMixinV2(this);
-    makeObservable3(this, { serial: observable8 });
+    makeObservable3(this, { serial: observable7 });
+  }
+  get config() {
+    return this.spec.config;
   }
   get value() {
     return false;
@@ -4731,8 +4997,6 @@ registerWidgetClass("spacer", Widget_spacer);
 
 // src/controls/widgets/string/WidgetStringUI.tsx
 import { observer as observer32 } from "mobx-react-lite";
-var startValue2 = "";
-var cancelled2 = false;
 var WidgetString_TextareaHeaderUI = observer32(function WidgetString_TextareaHeaderUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
@@ -4763,9 +5027,21 @@ var WidgetString_TextareaBodyUI = observer32(function WidgetString_TextareaBodyU
 var WidgetString_HeaderUI = observer32(function WidgetStringUI_(p) {
   const widget = p.widget;
   const val = widget.value;
-  const { inputValue, setInputValue, isEditing, setEditing } = widget;
+  let inputTailwind;
+  let visualHelper;
+  let highlight = true;
+  switch (widget.config.inputType) {
+    case "color":
+      inputTailwind = "absolute w-full h-full opacity-0";
+      visualHelper = /* @__PURE__ */ jsx("div", { tw: "w-full h-full", style: { background: val } });
+      highlight = false;
+      break;
+    default:
+      inputTailwind = "input input-sm w-full h-full !outline-none text-shadow";
+      break;
+  }
   return /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsxs(
       "div",
       {
         tw: [
@@ -4773,10 +5049,11 @@ var WidgetString_HeaderUI = observer32(function WidgetStringUI_(p) {
           "h-full w-full",
           "flex flex-1 items-center relative",
           "rounded overflow-clip text-shadow",
-          "border border-base-100 hover:border-base-200",
-          "hover:brightness-110",
+          "border border-base-100 hover:border-base-300",
+          highlight && "hover:brightness-110",
           "bg-primary/5",
-          "border-b-2 border-b-base-200 hover:border-b-base-300"
+          "border-b-2 border-b-base-200 hover:border-b-base-300",
+          "p-0 m-0"
         ],
         onMouseDown: (ev) => {
           if (ev.button == 1) {
@@ -4784,46 +5061,45 @@ var WidgetString_HeaderUI = observer32(function WidgetStringUI_(p) {
             textInput.focus();
           }
         },
-        children: /* @__PURE__ */ jsx(
-          "input",
-          {
-            tw: "input input-sm w-full h-full !outline-none text-shadow",
-            type: widget.config.inputType,
-            placeholder: widget.config.placeHolder,
-            value: isEditing ? inputValue : val,
-            onChange: (ev) => {
-              setInputValue(ev.target.value);
-            },
-            onDragStart: (ev) => {
-              ev.preventDefault();
-            },
-            onFocus: (ev) => {
-              setEditing(true);
-              let textInput = ev.currentTarget;
-              textInput.select();
-              startValue2 = val;
-              setInputValue(val.toString());
-            },
-            onBlur: (ev) => {
-              setEditing(false);
-              const next = ev.currentTarget.value;
-              if (cancelled2) {
-                cancelled2 = false;
-                p.widget.value = startValue2;
-                return;
-              }
-              p.widget.value = inputValue;
-            },
-            onKeyDown: (ev) => {
-              if (ev.key === "Enter") {
-                ev.currentTarget.blur();
-              } else if (ev.key === "Escape") {
-                cancelled2 = true;
-                ev.currentTarget.blur();
+        children: [
+          visualHelper,
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              tw: inputTailwind,
+              type: widget.config.inputType,
+              placeholder: widget.config.placeHolder,
+              value: widget.config.buffered ? widget.temporaryValue ?? val : val,
+              onChange: (ev) => {
+                if (widget.config.buffered) {
+                  widget.setTemporaryValue(ev.target.value);
+                } else {
+                  widget.value = ev.currentTarget.value;
+                }
+              },
+              onDragStart: (ev) => ev.preventDefault(),
+              onFocus: (ev) => {
+                widget.setTemporaryValue(widget.value ?? "");
+                ev.currentTarget.select();
+              },
+              onBlur: () => {
+                if (widget.config.buffered && widget.temporaryValue != null) {
+                  widget.value = widget.temporaryValue;
+                }
+              },
+              onKeyDown: (ev) => {
+                if (ev.key === "Enter") {
+                  ev.currentTarget.blur();
+                } else if (ev.key === "Escape") {
+                  if (!widget.config.buffered && widget.temporaryValue)
+                    widget.value = widget.temporaryValue;
+                  widget.setTemporaryValue(null);
+                  ev.currentTarget.blur();
+                }
               }
             }
-          }
-        )
+          )
+        ]
       }
     ),
     /* @__PURE__ */ jsx(
@@ -4841,24 +5117,28 @@ var WidgetString_HeaderUI = observer32(function WidgetStringUI_(p) {
 // src/controls/widgets/string/WidgetString.tsx
 import { makeAutoObservable as makeAutoObservable19, runInAction as runInAction10 } from "mobx";
 import { nanoid as nanoid18 } from "nanoid";
+var Widget_string_fromValue = (val) => ({
+  type: "str",
+  val
+});
 var Widget_string = class {
   // prettier-ignore
-  constructor(form, parent, config, serial) {
+  constructor(form, parent, spec, serial) {
     this.form = form;
     this.parent = parent;
-    this.config = config;
+    this.spec = spec;
     this.border = false;
+    // prettier-ignore
     this.type = "str";
     // --------------
-    this.inputValue = "";
-    this.setInputValue = (next) => this.inputValue = next;
-    this.isEditing = false;
-    this.setEditing = (next) => this.isEditing = next;
+    this.temporaryValue = null;
+    this.setTemporaryValue = (next) => this.temporaryValue = next;
     this.defaultValue = this.config.default ?? "";
     // prettier-ignore
     this.reset = () => {
       this.value = this.defaultValue;
     };
+    const config = spec.config;
     this.id = serial?.id ?? nanoid18();
     this.serial = serial ?? {
       type: "str",
@@ -4880,6 +5160,9 @@ var Widget_string = class {
       return WidgetString_TextareaBodyUI;
     return void 0;
   }
+  get config() {
+    return this.spec.config;
+  }
   get isChanged() {
     return this.serial.val !== this.defaultValue;
   }
@@ -4899,59 +5182,87 @@ registerWidgetClass("str", Widget_string);
 
 // src/controls/FormBuilder.loco.ts
 import { makeAutoObservable as makeAutoObservable20 } from "mobx";
+var SimpleSpec = class _SimpleSpec {
+  constructor(type, config) {
+    this.type = type;
+    this.config = config;
+    this.LabelExtraUI = (p) => null;
+    this.Make = (type, config) => new _SimpleSpec(type, config);
+    /** wrap widget spec to list stuff */
+    this.list = (config = {}) => new _SimpleSpec("list", {
+      ...config,
+      element: this
+    });
+    this.optional = (startActive = false) => new _SimpleSpec("optional", {
+      widget: this,
+      startActive,
+      label: this.config.label,
+      // requirements: this.config.requirements,
+      startCollapsed: this.config.startCollapsed,
+      collapsed: this.config.collapsed,
+      border: this.config.border
+    });
+    this.shared = (key) => getCurrentForm_IMPL().shared(key, this);
+    /** clone the spec, and patch the cloned config to make it hidden */
+    this.hidden = () => new _SimpleSpec(this.type, { ...this.config, hidden: true });
+  }
+};
 var FormBuilder_Loco = class {
   /** (@internal) don't call this yourself */
   constructor(form) {
     this.form = form;
-    this.time = (config = {}) => new Spec("str", { inputType: "time", ...config });
-    this.date = (config = {}) => new Spec("str", { inputType: "date", ...config });
-    this.datetime = (config = {}) => new Spec("str", { inputType: "datetime-local", ...config });
-    this.password = (config = {}) => new Spec("str", { inputType: "password", ...config });
-    this.email = (config = {}) => new Spec("str", { inputType: "email", ...config });
-    this.url = (config = {}) => new Spec("str", { inputType: "url", ...config });
-    this.string = (config = {}) => new Spec("str", config);
-    this.text = (config = {}) => new Spec("str", config);
-    this.textarea = (config = {}) => new Spec("str", { textarea: true, ...config });
-    this.boolean = (config = {}) => new Spec("bool", config);
-    this.bool = (config = {}) => new Spec("bool", config);
-    this.size = (config = {}) => new Spec("size", config);
-    this.spacer = (config = {}) => new Spec("spacer", { alignLabel: false, label: false, collapsed: false, border: false });
-    this.seed = (config = {}) => new Spec("seed", config);
-    this.color = (config = {}) => new Spec("color", config);
-    this.colorV2 = (config = {}) => new Spec("str", { inputType: "color", ...config });
-    this.matrix = (config) => new Spec("matrix", config);
-    this.button = (config) => new Spec("button", config);
+    /** (@internal) DO NOT USE YOURSELF */
+    this.SpecCtor = SimpleSpec;
+    this.time = (config = {}) => new SimpleSpec("str", { inputType: "time", ...config });
+    this.date = (config = {}) => new SimpleSpec("str", { inputType: "date", ...config });
+    this.datetime = (config = {}) => new SimpleSpec("str", { inputType: "datetime-local", ...config });
+    this.password = (config = {}) => new SimpleSpec("str", { inputType: "password", ...config });
+    this.email = (config = {}) => new SimpleSpec("str", { inputType: "email", ...config });
+    this.url = (config = {}) => new SimpleSpec("str", { inputType: "url", ...config });
+    this.string = (config = {}) => new SimpleSpec("str", config);
+    this.text = (config = {}) => new SimpleSpec("str", config);
+    this.textarea = (config = {}) => new SimpleSpec("str", { textarea: true, ...config });
+    this.boolean = (config = {}) => new SimpleSpec("bool", config);
+    this.bool = (config = {}) => new SimpleSpec("bool", config);
+    this.size = (config = {}) => new SimpleSpec("size", config);
+    this.spacer = (config = {}) => new SimpleSpec("spacer", { alignLabel: false, label: false, collapsed: false, border: false });
+    this.seed = (config = {}) => new SimpleSpec("seed", config);
+    this.color = (config = {}) => new SimpleSpec("color", config);
+    this.colorV2 = (config = {}) => new SimpleSpec("str", { inputType: "color", ...config });
+    this.matrix = (config) => new SimpleSpec("matrix", config);
+    this.button = (config) => new SimpleSpec("button", config);
     /** variants: `header` */
-    this.markdown = (config) => new Spec("markdown", typeof config === "string" ? { markdown: config } : config);
+    this.markdown = (config) => new SimpleSpec("markdown", typeof config === "string" ? { markdown: config } : config);
     /** [markdown variant]: inline=true, label=false */
-    this.header = (config) => new Spec("markdown", typeof config === "string" ? { markdown: config, inHeader: true, label: false } : { inHeader: true, label: false, alignLabel: false, ...config });
+    this.header = (config) => new SimpleSpec(
+      "markdown",
+      typeof config === "string" ? { markdown: config, inHeader: true, label: false } : { inHeader: true, label: false, alignLabel: false, ...config }
+    );
     // image       = (config: Widget_image_config = {})                                                         => new Spec<Widget_image                       >('image'     , config)
-    this.int = (config = {}) => new Spec("number", { mode: "int", ...config });
+    this.int = (config = {}) => new SimpleSpec("number", { mode: "int", ...config });
     /** [number variant] precent = mode=int, default=100, step=10, min=1, max=100, suffix='%', */
-    this.percent = (config = {}) => new Spec("number", { mode: "int", default: 100, step: 10, min: 1, max: 100, suffix: "%", ...config });
-    this.float = (config = {}) => new Spec("number", { mode: "float", ...config });
-    this.number = (config = {}) => new Spec("number", { mode: "float", ...config });
-    this.list = (config) => new Spec("list", config);
-    this.selectOneV2 = (p) => new Spec("selectOne", { choices: p.map((id) => ({ id, label: id })), appearance: "tab" });
+    this.percent = (config = {}) => new SimpleSpec("number", { mode: "int", default: 100, step: 10, min: 1, max: 100, suffix: "%", ...config });
+    this.float = (config = {}) => new SimpleSpec("number", { mode: "float", ...config });
+    this.number = (config = {}) => new SimpleSpec("number", { mode: "float", ...config });
+    this.list = (config) => new SimpleSpec("list", config);
+    this.selectOneV2 = (p) => new SimpleSpec("selectOne", { choices: p.map((id) => ({ id, label: id })), appearance: "tab" });
     // prettier-ignore
-    this.selectOne = (config) => new Spec("selectOne", config);
-    this.selectMany = (config) => new Spec("selectMany", config);
+    this.selectOne = (config) => new SimpleSpec("selectOne", config);
+    this.selectMany = (config) => new SimpleSpec("selectMany", config);
     /** see also: `fields` for a more practical api */
-    this.group = (config = {}) => new Spec("group", config);
-    this.fields = (fields, config = {}) => new Spec("group", { items: fields, ...config });
-    this.choice = (config) => new Spec("choices", { multi: false, ...config });
-    this.choices = (config) => new Spec("choices", { multi: true, ...config });
-    this.ok = (config = {}) => new Spec("group", config);
+    this.group = (config = {}) => new SimpleSpec("group", config);
+    this.fields = (fields, config = {}) => new SimpleSpec("group", { items: fields, ...config });
+    this.choice = (config) => new SimpleSpec("choices", { multi: false, ...config });
+    this.choices = (config) => new SimpleSpec("choices", { multi: true, ...config });
+    this.ok = (config = {}) => new SimpleSpec("group", config);
     /** simple choice alternative api */
-    this.tabs = (items, config = {}) => new Spec("choices", { items, multi: false, ...config, appearance: "tab" });
+    this.tabs = (items, config = {}) => new SimpleSpec("choices", { items, multi: false, ...config, appearance: "tab" });
     // optional wrappers
-    this.optional = (p) => new Spec("optional", p);
+    this.optional = (p) => new SimpleSpec("optional", p);
     this.llmModel = (p = {}) => {
       const choices = Object.entries(openRouterInfos).map(([id, info]) => ({ id, label: info.name }));
       const def = choices ? choices.find((c) => c.id === p.default) : void 0;
-      return this.selectOne(
-        { default: def, choices }
-      );
+      return this.selectOne({ default: def, choices });
     };
     /**
      * Calling this function will mount and instanciate the subform right away
@@ -4961,90 +5272,95 @@ var FormBuilder_Loco = class {
      *  - recursive forms
      *  - dynamic widgets depending on other widgets values
      * */
-    this.shared = (key, unmounted) => {
-      const name = `__${key}__`;
-      const prevSerial = this.form._ROOT.serial.values_[name];
+    this.shared = (key, spec) => {
+      const prevSerial = this.form.shared[key];
       let widget;
-      if (prevSerial && prevSerial.type === unmounted.type) {
-        widget = this._HYDRATE(null, unmounted, prevSerial);
+      if (prevSerial && prevSerial.type === spec.type) {
+        widget = this._HYDRATE(null, spec, prevSerial);
       } else {
-        widget = this._HYDRATE(null, unmounted, null);
-        this.form._ROOT.serial.values_[name] = widget.serial;
+        widget = this._HYDRATE(null, spec, null);
+        this.form.shared[key] = widget.serial;
       }
-      return new Widget_shared(this.form, null, { rootKey: key, widget });
+      const sharedSpec = new SimpleSpec("shared", { rootKey: key, widget });
+      return new Widget_shared(this.form, null, sharedSpec);
     };
+    // --------------------
     this._FIX_INDENTATION = _FIX_INDENTATION;
     /** (@internal); */
     this._cache = { count: 0 };
     /** (@internal) advanced way to restore form state. used internally */
-    this._HYDRATE = (parent, unmounted, serial) => {
-      if (serial != null && serial.type !== unmounted.type) {
-        console.log(`[\u{1F536}] INVALID SERIAL (expected: ${unmounted.type}, got: ${serial.type})`);
+    this._HYDRATE = (parent, spec, serial) => {
+      if (serial != null && serial.type !== spec.type) {
+        console.log(`[\u{1F536}] INVALID SERIAL (expected: ${spec.type}, got: ${serial.type})`);
         serial = null;
       }
-      if (unmounted instanceof Widget_shared) {
-        return unmounted;
+      if (spec instanceof Widget_shared) {
+        return spec;
       }
-      if (!(unmounted instanceof Spec)) {
+      if (!(spec instanceof SimpleSpec)) {
         console.log(`[\u274C] _HYDRATE received an invalid unmounted widget. This is probably a bug.`);
       }
-      const type = unmounted.type;
-      const config = unmounted.config;
+      const type = spec.type;
+      const config = spec.config;
+      const spec2 = spec;
       if (type === "group")
-        return new Widget_group(this.form, parent, config, serial, this.form._ROOT ? void 0 : (x) => {
-          this.form._ROOT = x;
-        });
+        return new Widget_group(
+          this.form,
+          parent,
+          spec2,
+          serial,
+          this.form._ROOT ? void 0 : (x) => {
+            this.form._ROOT = x;
+          }
+        );
       if (type === "shared") {
         throw new Error(`[\u274C] For now, Shared_Widget have been design to bypass spec hydratation completely.`);
       }
       if (type === "optional")
-        return new Widget_optional(this.form, parent, config, serial);
+        return new Widget_optional(this.form, parent, spec2, serial);
       if (type === "bool")
-        return new Widget_bool(this.form, parent, config, serial);
+        return new Widget_bool(this.form, parent, spec2, serial);
       if (type === "str")
-        return new Widget_string(this.form, parent, config, serial);
+        return new Widget_string(this.form, parent, spec2, serial);
       if (type === "choices")
-        return new Widget_choices(this.form, parent, config, serial);
+        return new Widget_choices(this.form, parent, spec2, serial);
       if (type === "number")
-        return new Widget_number(this.form, parent, config, serial);
+        return new Widget_number(this.form, parent, spec2, serial);
       if (type === "color")
-        return new Widget_color(this.form, parent, config, serial);
+        return new Widget_color(this.form, parent, spec2, serial);
       if (type === "list")
-        return new Widget_list(this.form, parent, config, serial);
+        return new Widget_list(this.form, parent, spec2, serial);
       if (type === "button")
-        return new Widget_button(this.form, parent, config, serial);
+        return new Widget_button(this.form, parent, spec2, serial);
       if (type === "seed")
-        return new Widget_seed(this.form, parent, config, serial);
+        return new Widget_seed(this.form, parent, spec2, serial);
       if (type === "matrix")
-        return new Widget_matrix(this.form, parent, config, serial);
+        return new Widget_matrix(this.form, parent, spec2, serial);
       if (type === "selectOne")
-        return new Widget_selectOne(this.form, parent, config, serial);
+        return new Widget_selectOne(this.form, parent, spec2, serial);
       if (type === "selectMany")
-        return new Widget_selectMany(this.form, parent, config, serial);
+        return new Widget_selectMany(this.form, parent, spec2, serial);
       if (type === "size")
-        return new Widget_size(this.form, parent, config, serial);
+        return new Widget_size(this.form, parent, spec2, serial);
       if (type === "spacer")
-        return new Widget_spacer(this.form, parent, config, serial);
+        return new Widget_spacer(this.form, parent, spec2, serial);
       if (type === "markdown")
-        return new Widget_markdown(this.form, parent, config, serial);
+        return new Widget_markdown(this.form, parent, spec2, serial);
       console.log(`\u{1F534} unknown widget "${type}" in serial.`);
-      return new Widget_markdown(this.form, parent, { markdown: `unknown widget "${type}" in serial.` });
+      return new Widget_markdown(
+        this.form,
+        parent,
+        new SimpleSpec("markdown", { markdown: `\u{1F534} unknown widget "${type}" in serial.` })
+      );
     };
-    makeAutoObservable20(this, {});
-  }
-  // --------------------
-  wrapOptional(config, widgetFn) {
-    return this.optional({
-      label: config.label,
-      requirements: config.requirements,
-      startActive: config.startActive,
-      startCollapsed: config.startCollapsed,
-      widget: widgetFn({ ...config, startCollapsed: void 0 })
+    makeAutoObservable20(this, {
+      SpecCtor: false
     });
   }
 };
 var LocoFormManager = new FormManager(FormBuilder_Loco);
 export {
+  $WidgetSym,
   ASSERT_ARRAY,
   ASSERT_EQUAL,
   ASSERT_STRING,
@@ -5091,15 +5407,17 @@ export {
   RadioTile,
   Rate,
   ResolutionState,
+  RevealCtx,
   RevealState,
+  RevealStateLazy,
   RevealUI,
   SelectPicker,
   SelectPopupUI,
   SelectUI,
+  SimpleSpec,
   Slider,
   SpacerUI,
   Speaker,
-  Spec,
   Tag,
   TagPicker,
   Toggle,
@@ -5145,12 +5463,19 @@ export {
   Widget_number,
   Widget_optional,
   Widget_seed,
+  Widget_seed_fromValue,
   Widget_selectMany,
+  Widget_selectMany_fromValue,
   Widget_selectOne,
+  Widget_selectOne_fromValue,
   Widget_shared,
+  Widget_shared_fromValue,
   Widget_size,
+  Widget_size_fromValue,
   Widget_spacer,
+  Widget_spacer_fromValue,
   Widget_string,
+  Widget_string_fromValue,
   WigetSizeXUI,
   WigetSize_BlockUI,
   WigetSize_LineUI,
@@ -5160,8 +5485,10 @@ export {
   bang,
   computePlacement,
   debounce,
-  defaultHideDelay,
-  defaultShowDelay,
+  defaultHideDelay_whenNested,
+  defaultHideDelay_whenRoot,
+  defaultShowDelay_whenNested,
+  defaultShowDelay_whenRoot,
   exhaust,
   getActualWidgetToDisplay,
   getBorderStatusForWidget,
@@ -5169,6 +5496,7 @@ export {
   getIfWidgetIsCollapsible,
   getIfWidgetNeedAlignedLabel,
   getWidgetClass,
+  isWidget,
   isWidgetGroup,
   isWidgetOptional,
   isWidgetShared,
@@ -5180,9 +5508,11 @@ export {
   runWithGlobalForm,
   searchMatches,
   toastError,
+  toastImage,
   toastInfo,
   toastSuccess,
   unaccent,
-  useMemoLazy,
+  useReveal,
+  useRevealOrNull,
   useSizeOf
 };

@@ -49,8 +49,8 @@ export const WidgetWithLabelUI = observer(function WidgetWithLabelUI_(p: {
     const k = widget
     if (
         isWidgetGroup(k) && //
-        Object.keys(k.fields).length === 0 &&
-        k.config.requirements == null
+        Object.keys(k.fields).length === 0 /* &&
+        k.config.requirements == null */
     ) {
         return
     }
@@ -180,6 +180,7 @@ export const WidgetWithLabelUI = observer(function WidgetWithLabelUI_(p: {
                                 requirements={widget.config.requirements}
                             />
                         )} */}
+                        {widget.spec.LabelExtraUI && <widget.spec.LabelExtraUI widget={widget} />}
                         {/* TOOLTIPS  */}
                         {widget.config.tooltip && <WidgetTooltipUI widget={widget} />}
                         {LABEL}

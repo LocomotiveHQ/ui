@@ -143,6 +143,7 @@ class AutoCompleteSelectState<T> {
                 ? placeHolderStr
                 : value.map((i) => {
                       const label = this.p.getLabelText(i)
+                      if (!this.p.multiple) return label
                       return (
                           <div
                               tw='badge badge-primary text-shadow-inv cursor-not-allowed line-clamp-1'
@@ -371,12 +372,12 @@ export const SelectUI = observer(function SelectUI_<T>(p: SelectProps<T>) {
         <div /* Container/Root */
             tabIndex={-1}
             tw={[
-                'WIDGET-FIELD',
-                'flex flex-1 items-center p-0.5 relative',
+                'WIDGET-FIELD bg-base-100',
+                'flex flex-1 items-center relative',
                 'rounded overflow-clip text-shadow',
                 'border border-base-100 hover:brightness-110',
                 'hover:border-base-200',
-                'bg-primary/20 border-1',
+                'border-1',
                 'border-b-2 border-b-base-200 hover:border-b-base-300',
             ]}
             className={p.className}

@@ -1,18 +1,32 @@
 import type { Form } from './Form'
+import type { CSSProperties } from 'react'
 
 import { observer } from 'mobx-react-lite'
 
-import { WidgetGroup_BlockUI } from './widgets/group/WidgetGroupUI'
 import { MessageErrorUI } from '../panels/MessageUI'
 
 export const FormUI = observer(function FormUI_(p: {
-    //
+    // form -----------------------------------
+    form: Maybe<Form>
+    // look and feel --------------------------
+    /** from your daisy-ui config */
+    theme?: string
     className?: string
-    form: Maybe<Form<any, any>>
+    style?: CSSProperties
 }) {
     const form = p.form
     if (form == null) return <MessageErrorUI markdown={`form is not yet initialized`} />
     if (form.error) return <MessageErrorUI markdown={form.error} />
     if (form.root == null) return <MessageErrorUI markdown='form.root is null' />
-    return <WidgetGroup_BlockUI className={p.className} widget={form.root} />
+    return (
+        <div
+            //
+            tw='bg-base-100'
+            data-theme={p.theme}
+            className={p.className}
+            style={p.style}
+        >
+            {form.root.ui()}
+        </div>
+    )
 })

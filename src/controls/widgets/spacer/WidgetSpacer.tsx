@@ -1,4 +1,5 @@
 import type { Form } from '../../Form'
+import type { ISpec } from '../../ISpec'
 import type { IWidget, IWidgetMixins, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
 
 import { makeObservable, observable } from 'mobx'
@@ -16,6 +17,11 @@ export type Widget_spacer_config = WidgetConfigFields<{}, Widget_spacer_types>
 
 // SERIAL
 export type Widget_spacer_serial = WidgetSerialFields<{ type: 'spacer' }>
+
+// SERIAL FROM VALUE
+export const Widget_spacer_fromValue = (val: Widget_spacer_value): Widget_spacer_serial => ({
+    type: 'spacer',
+})
 
 // VALUE
 export type Widget_spacer_value = boolean
@@ -35,6 +41,7 @@ export class Widget_spacer implements IWidget<Widget_spacer_types> {
     DefaultHeaderUI = WidgetSpacerUI
     DefaultBodyUI = undefined
     readonly id: string
+    get config() { return this.spec.config } // prettier-ignore
     readonly type: 'spacer' = 'spacer'
     serial: Widget_spacer_serial
 
@@ -42,7 +49,7 @@ export class Widget_spacer implements IWidget<Widget_spacer_types> {
         //
         public readonly form: Form,
         public readonly parent: IWidget | null,
-        public config: Widget_spacer_config,
+        public readonly spec: ISpec<Widget_spacer>,
         serial?: Widget_spacer_serial,
     ) {
         this.id = serial?.id ?? nanoid()

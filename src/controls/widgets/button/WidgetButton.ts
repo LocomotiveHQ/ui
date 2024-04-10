@@ -1,5 +1,6 @@
 import type { DraftL } from '../../../models/Draft'
 import type { Form } from '../../Form'
+import type { ISpec } from '../../ISpec'
 import type { IWidget, IWidgetMixins, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
 
 import { makeAutoObservable, runInAction } from 'mobx'
@@ -50,15 +51,17 @@ export class Widget_button<K> implements IWidget<Widget_button_types<K>> {
     DefaultHeaderUI = WidgetInlineRunUI
     DefaultBodyUI = undefined
     readonly id: string
+    get config() { return this.spec.config } // prettier-ignore
     readonly type: 'button' = 'button'
     readonly serial: Widget_button_serial
     constructor(
         //
         public readonly form: Form,
         public readonly parent: IWidget | null,
-        public config: Widget_button_config<K>,
+        public readonly spec: ISpec<Widget_button<K>>,
         serial?: Widget_button_serial,
     ) {
+        const config = spec.config
         if (config.text) {
             config.label = config.label ?? ` `
         }

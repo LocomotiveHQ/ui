@@ -1,4 +1,5 @@
 import type { Form } from '../../Form'
+import type { ISpec } from '../../ISpec'
 import type { IWidget, IWidgetMixins, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
 
 import { makeAutoObservable, runInAction } from 'mobx'
@@ -15,12 +16,23 @@ export type Widget_string_config = WidgetConfigFields<
         textarea?: boolean
         placeHolder?: string
         inputType?: 'text' | 'password' | 'email' | 'tel' | 'url' | 'time' | 'date' | 'datetime-local' | 'color'
+        /**
+         * if set to true, widget will commit values on enter; not before.
+         * hitting esc will revert to the last committed value
+         * */
+        buffered?: boolean
     },
     Widget_string_types
 >
 
 // SERIAL
 export type Widget_string_serial = WidgetSerialFields<{ type: 'str'; val?: string }>
+
+// SERIAL FROM VALUE
+export const Widget_string_fromValue = (val: string): Widget_string_serial => ({
+    type: 'str',
+    val,
+})
 
 // VALUE
 export type Widget_string_value = string
@@ -47,13 +59,12 @@ export class Widget_string implements IWidget<Widget_string_types> {
     }
     readonly border = false
     readonly id: string
+    get config() { return this.spec.config } // prettier-ignore
     readonly type: 'str' = 'str'
 
     // --------------
-    inputValue: string = ''
-    setInputValue = (next: string) => (this.inputValue = next)
-    isEditing: boolean = false
-    setEditing = (next: boolean) => (this.isEditing = next)
+    temporaryValue: string | null = null
+    setTemporaryValue = (next: string | null) => (this.temporaryValue = next)
     // --------------
 
     serial: Widget_string_serial
@@ -65,9 +76,10 @@ export class Widget_string implements IWidget<Widget_string_types> {
         //
         public readonly form: Form,
         public readonly parent: IWidget | null,
-        public readonly config: Widget_string_config,
+        public readonly spec: ISpec<Widget_string>,
         serial?: Widget_string_serial,
     ) {
+        const config = spec.config
         this.id = serial?.id ?? nanoid()
         this.serial = serial ?? {
             type: 'str',

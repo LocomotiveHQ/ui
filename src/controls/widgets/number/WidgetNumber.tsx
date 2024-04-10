@@ -1,4 +1,5 @@
 import type { Form } from '../../Form'
+import type { ISpec } from '../../ISpec'
 import type { IWidget, IWidgetMixins, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
 
 import { computed, makeObservable, observable, runInAction } from 'mobx'
@@ -49,6 +50,7 @@ export class Widget_number implements IWidget<Widget_number_types> {
     DefaultHeaderUI = WidgetNumberUI
     DefaultBodyUI = undefined
     readonly id: string
+    get config() { return this.spec.config } // prettier-ignore
     readonly type: 'number' = 'number'
     readonly forceSnap: boolean = false
 
@@ -64,9 +66,10 @@ export class Widget_number implements IWidget<Widget_number_types> {
         //
         public readonly form: Form,
         public readonly parent: IWidget | null,
-        public readonly config: Widget_number_config,
+        public readonly spec: ISpec<Widget_number>,
         serial?: Widget_number_serial,
     ) {
+        const config = spec.config
         this.id = serial?.id ?? nanoid()
         this.serial = serial ?? {
             type: 'number',

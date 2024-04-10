@@ -15,11 +15,6 @@
       "imports": [],
       "format": "esm"
     },
-    "src/utils/misc/makeLabelFromFieldName.tsx": {
-      "bytes": 638,
-      "imports": [],
-      "format": "esm"
-    },
     "src/utils/custom-jsx/jsx-runtime.js": {
       "bytes": 1353,
       "imports": [
@@ -34,6 +29,147 @@
           "external": true
         }
       ],
+      "format": "esm"
+    },
+    "src/rsuite/MarkdownUI.tsx": {
+      "bytes": 410,
+      "imports": [
+        {
+          "path": "marked",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/panels/MessageUI.tsx": {
+      "bytes": 2323,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/rsuite/MarkdownUI.tsx",
+          "kind": "import-statement",
+          "original": "../rsuite/MarkdownUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/FormUI.tsx": {
+      "bytes": 951,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/panels/MessageUI.tsx",
+          "kind": "import-statement",
+          "original": "../panels/MessageUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/WidgetUI.DI.ts": {
+      "bytes": 1540,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/controls/Form.ts": {
+      "bytes": 6748,
+      "imports": [
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/debounce.ts",
+          "kind": "import-statement",
+          "original": "../utils/misc/debounce"
+        },
+        {
+          "path": "src/controls/FormUI.tsx",
+          "kind": "import-statement",
+          "original": "./FormUI"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "./widgets/WidgetUI.DI"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/shared/runWithGlobalForm.ts": {
+      "bytes": 1813,
+      "imports": [
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/FormManager.ts": {
+      "bytes": 2242,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/Form.ts",
+          "kind": "import-statement",
+          "original": "./Form"
+        },
+        {
+          "path": "src/controls/shared/runWithGlobalForm.ts",
+          "kind": "import-statement",
+          "original": "./shared/runWithGlobalForm"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/IWidget.ts": {
+      "bytes": 7093,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/utils/misc/makeLabelFromFieldName.tsx": {
+      "bytes": 638,
+      "imports": [],
       "format": "esm"
     },
     "src/widgets/workspace/JsonViewUI.tsx": {
@@ -58,13 +194,8 @@
       "format": "esm"
     },
     "src/widgets/misc/ErrorBoundary.tsx": {
-      "bytes": 1122,
+      "bytes": 1022,
       "imports": [
-        {
-          "path": "react-error-boundary",
-          "kind": "import-statement",
-          "external": true
-        },
         {
           "path": "src/widgets/workspace/JsonViewUI.tsx",
           "kind": "import-statement",
@@ -84,7 +215,7 @@
       "format": "esm"
     },
     "src/controls/utils/useSizeOf.tsx": {
-      "bytes": 1075,
+      "bytes": 1078,
       "imports": [
         {
           "path": "mobx",
@@ -105,7 +236,7 @@
       "format": "esm"
     },
     "src/controls/utils/AnimatedSizeUI.tsx": {
-      "bytes": 467,
+      "bytes": 472,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -130,11 +261,6 @@
       ],
       "format": "esm"
     },
-    "src/controls/widgets/WidgetUI.DI.ts": {
-      "bytes": 1540,
-      "imports": [],
-      "format": "esm"
-    },
     "src/controls/shared/getActualWidgetToDisplay.tsx": {
       "bytes": 458,
       "imports": [
@@ -147,12 +273,18 @@
       "format": "esm"
     },
     "src/controls/shared/getBorderStatusForWidget.ts": {
-      "bytes": 617,
-      "imports": [],
+      "bytes": 787,
+      "imports": [
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../widgets/WidgetUI.DI"
+        }
+      ],
       "format": "esm"
     },
     "src/controls/shared/getIfWidgetIsCollapsible.tsx": {
-      "bytes": 606,
+      "bytes": 796,
       "imports": [],
       "format": "esm"
     },
@@ -162,7 +294,7 @@
       "format": "esm"
     },
     "src/controls/widgets/bool/InputBoolUI.tsx": {
-      "bytes": 4032,
+      "bytes": 4185,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -204,7 +336,7 @@
       "format": "esm"
     },
     "src/rsuite/reveal/ModalShell.tsx": {
-      "bytes": 912,
+      "bytes": 1156,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -219,13 +351,24 @@
       ],
       "format": "esm"
     },
+    "src/rsuite/reveal/RevealCtx.ts": {
+      "bytes": 674,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
     "src/rsuite/reveal/RevealPlacement.tsx": {
-      "bytes": 2970,
+      "bytes": 3573,
       "imports": [],
       "format": "esm"
     },
     "src/rsuite/reveal/RevealState.tsx": {
-      "bytes": 5362,
+      "bytes": 8124,
       "imports": [
         {
           "path": "mobx",
@@ -241,13 +384,8 @@
       "format": "esm"
     },
     "src/rsuite/reveal/RevealUI.tsx": {
-      "bytes": 6276,
+      "bytes": 7600,
       "imports": [
-        {
-          "path": "mobx",
-          "kind": "import-statement",
-          "external": true
-        },
         {
           "path": "mobx-react-lite",
           "kind": "import-statement",
@@ -267,6 +405,11 @@
           "path": "src/rsuite/reveal/ModalShell.tsx",
           "kind": "import-statement",
           "original": "./ModalShell"
+        },
+        {
+          "path": "src/rsuite/reveal/RevealCtx.ts",
+          "kind": "import-statement",
+          "original": "./RevealCtx"
         },
         {
           "path": "src/rsuite/reveal/RevealState.tsx",
@@ -344,7 +487,7 @@
       "format": "esm"
     },
     "src/controls/shared/WidgetWithLabelUI.tsx": {
-      "bytes": 10168,
+      "bytes": 10273,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -414,176 +557,18 @@
       ],
       "format": "esm"
     },
-    "src/controls/widgets/group/WidgetGroupUI.tsx": {
-      "bytes": 2173,
-      "imports": [
-        {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "src/controls/shared/WidgetWithLabelUI.tsx",
-          "kind": "import-statement",
-          "original": "../../shared/WidgetWithLabelUI"
-        },
-        {
-          "path": "src/utils/misc/bang.ts",
-          "kind": "import-statement",
-          "original": "../../../utils/misc/bang"
-        },
-        {
-          "path": "src/utils/custom-jsx/jsx-runtime.js",
-          "kind": "import-statement",
-          "original": "src/utils/custom-jsx/jsx-runtime"
-        }
-      ],
-      "format": "esm"
-    },
-    "src/rsuite/MarkdownUI.tsx": {
-      "bytes": 410,
-      "imports": [
-        {
-          "path": "marked",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "src/utils/custom-jsx/jsx-runtime.js",
-          "kind": "import-statement",
-          "original": "src/utils/custom-jsx/jsx-runtime"
-        }
-      ],
-      "format": "esm"
-    },
-    "src/panels/MessageUI.tsx": {
-      "bytes": 2323,
-      "imports": [
-        {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "src/rsuite/MarkdownUI.tsx",
-          "kind": "import-statement",
-          "original": "../rsuite/MarkdownUI"
-        },
-        {
-          "path": "src/utils/custom-jsx/jsx-runtime.js",
-          "kind": "import-statement",
-          "original": "src/utils/custom-jsx/jsx-runtime"
-        }
-      ],
-      "format": "esm"
-    },
-    "src/controls/FormUI.tsx": {
-      "bytes": 666,
-      "imports": [
-        {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "src/controls/widgets/group/WidgetGroupUI.tsx",
-          "kind": "import-statement",
-          "original": "./widgets/group/WidgetGroupUI"
-        },
-        {
-          "path": "src/panels/MessageUI.tsx",
-          "kind": "import-statement",
-          "original": "../panels/MessageUI"
-        },
-        {
-          "path": "src/utils/custom-jsx/jsx-runtime.js",
-          "kind": "import-statement",
-          "original": "src/utils/custom-jsx/jsx-runtime"
-        }
-      ],
-      "format": "esm"
-    },
-    "src/controls/shared/runWithGlobalForm.ts": {
-      "bytes": 1805,
-      "imports": [
-        {
-          "path": "nanoid",
-          "kind": "import-statement",
-          "external": true
-        }
-      ],
-      "format": "esm"
-    },
-    "src/controls/Spec.ts": {
-      "bytes": 2163,
-      "imports": [
-        {
-          "path": "src/controls/shared/runWithGlobalForm.ts",
-          "kind": "import-statement",
-          "original": "./shared/runWithGlobalForm"
-        }
-      ],
-      "format": "esm"
-    },
-    "src/controls/Form.ts": {
-      "bytes": 6357,
-      "imports": [
-        {
-          "path": "mobx",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "react",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "src/utils/misc/debounce.ts",
-          "kind": "import-statement",
-          "original": "../utils/misc/debounce"
-        },
-        {
-          "path": "src/controls/FormUI.tsx",
-          "kind": "import-statement",
-          "original": "./FormUI"
-        },
-        {
-          "path": "src/controls/Spec.ts",
-          "kind": "import-statement",
-          "original": "./Spec"
-        }
-      ],
-      "format": "esm"
-    },
-    "src/controls/FormManager.ts": {
-      "bytes": 2153,
-      "imports": [
-        {
-          "path": "react",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "src/controls/Form.ts",
-          "kind": "import-statement",
-          "original": "./Form"
-        }
-      ],
-      "format": "esm"
-    },
     "src/controls/Mixins.tsx": {
-      "bytes": 3168,
+      "bytes": 3374,
       "imports": [
         {
           "path": "mobx-react-lite",
           "kind": "import-statement",
           "external": true
+        },
+        {
+          "path": "src/controls/IWidget.ts",
+          "kind": "import-statement",
+          "original": "./IWidget"
         },
         {
           "path": "src/controls/shared/WidgetWithLabelUI.tsx",
@@ -598,13 +583,34 @@
       ],
       "format": "esm"
     },
-    "src/controls/widgets/bool/WidgetBoolUI.tsx": {
-      "bytes": 1168,
+    "src/controls/widgets/spacer/SpacerUI.tsx": {
+      "bytes": 587,
       "imports": [
         {
           "path": "mobx-react-lite",
           "kind": "import-statement",
           "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/controls/widgets/bool/WidgetBoolUI.tsx": {
+      "bytes": 1271,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/controls/widgets/spacer/SpacerUI.tsx",
+          "kind": "import-statement",
+          "original": "../spacer/SpacerUI"
         },
         {
           "path": "src/controls/widgets/bool/InputBoolUI.tsx",
@@ -620,7 +626,7 @@
       "format": "esm"
     },
     "src/controls/widgets/bool/WidgetBool.tsx": {
-      "bytes": 3545,
+      "bytes": 3677,
       "imports": [
         {
           "path": "mobx",
@@ -672,7 +678,7 @@
       "format": "esm"
     },
     "src/controls/widgets/button/WidgetButton.ts": {
-      "bytes": 2449,
+      "bytes": 2596,
       "imports": [
         {
           "path": "mobx",
@@ -702,13 +708,18 @@
       ],
       "format": "esm"
     },
-    "src/utils/misc/toasts.ts": {
-      "bytes": 396,
+    "src/utils/misc/toasts.tsx": {
+      "bytes": 1037,
       "imports": [
         {
           "path": "react-toastify",
           "kind": "import-statement",
           "external": true
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
         }
       ],
       "format": "esm"
@@ -719,7 +730,7 @@
       "format": "esm"
     },
     "src/rsuite/SelectUI.tsx": {
-      "bytes": 21612,
+      "bytes": 21661,
       "imports": [
         {
           "path": "mobx",
@@ -760,12 +771,17 @@
       "format": "esm"
     },
     "src/controls/widgets/choices/WidgetChoicesUI.tsx": {
-      "bytes": 5544,
+      "bytes": 5545,
       "imports": [
         {
           "path": "mobx-react-lite",
           "kind": "import-statement",
           "external": true
+        },
+        {
+          "path": "src/rsuite/SelectUI.tsx",
+          "kind": "import-statement",
+          "original": "../../../rsuite/SelectUI"
         },
         {
           "path": "src/controls/shared/WidgetWithLabelUI.tsx",
@@ -783,11 +799,6 @@
           "original": "../bool/InputBoolUI"
         },
         {
-          "path": "src/rsuite/SelectUI.tsx",
-          "kind": "import-statement",
-          "original": "../../../rsuite/SelectUI"
-        },
-        {
           "path": "src/utils/custom-jsx/jsx-runtime.js",
           "kind": "import-statement",
           "original": "src/utils/custom-jsx/jsx-runtime"
@@ -796,7 +807,7 @@
       "format": "esm"
     },
     "src/controls/widgets/choices/WidgetChoices.tsx": {
-      "bytes": 8369,
+      "bytes": 8474,
       "imports": [
         {
           "path": "mobx",
@@ -814,7 +825,7 @@
           "original": "../../../utils/misc/makeLabelFromFieldName"
         },
         {
-          "path": "src/utils/misc/toasts.ts",
+          "path": "src/utils/misc/toasts.tsx",
           "kind": "import-statement",
           "original": "../../../utils/misc/toasts"
         },
@@ -853,7 +864,7 @@
       "format": "esm"
     },
     "src/controls/widgets/color/WidgetColor.tsx": {
-      "bytes": 2225,
+      "bytes": 2363,
       "imports": [
         {
           "path": "mobx",
@@ -883,8 +894,34 @@
       ],
       "format": "esm"
     },
+    "src/controls/widgets/group/WidgetGroupUI.tsx": {
+      "bytes": 2174,
+      "imports": [
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/misc/bang.ts",
+          "kind": "import-statement",
+          "original": "../../../utils/misc/bang"
+        },
+        {
+          "path": "src/controls/shared/WidgetWithLabelUI.tsx",
+          "kind": "import-statement",
+          "original": "../../shared/WidgetWithLabelUI"
+        },
+        {
+          "path": "src/utils/custom-jsx/jsx-runtime.js",
+          "kind": "import-statement",
+          "original": "src/utils/custom-jsx/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
     "src/controls/widgets/group/WidgetGroup.tsx": {
-      "bytes": 6806,
+      "bytes": 6749,
       "imports": [
         {
           "path": "mobx",
@@ -922,11 +959,6 @@
           "original": "../../shared/runWithGlobalForm"
         },
         {
-          "path": "src/controls/Spec.ts",
-          "kind": "import-statement",
-          "original": "../../Spec"
-        },
-        {
           "path": "src/controls/widgets/WidgetUI.DI.ts",
           "kind": "import-statement",
           "original": "../WidgetUI.DI"
@@ -956,7 +988,7 @@
       "format": "esm"
     },
     "src/controls/widgets/list/WidgetListUI.tsx": {
-      "bytes": 6673,
+      "bytes": 6677,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -979,6 +1011,11 @@
           "external": true
         },
         {
+          "path": "src/widgets/misc/ErrorBoundary.tsx",
+          "kind": "import-statement",
+          "original": "../../../widgets/misc/ErrorBoundary"
+        },
+        {
           "path": "src/controls/shared/getBorderStatusForWidget.ts",
           "kind": "import-statement",
           "original": "../../shared/getBorderStatusForWidget"
@@ -989,11 +1026,6 @@
           "original": "./ListControlsUI"
         },
         {
-          "path": "src/widgets/misc/ErrorBoundary.tsx",
-          "kind": "import-statement",
-          "original": "../../../widgets/misc/ErrorBoundary"
-        },
-        {
           "path": "src/utils/custom-jsx/jsx-runtime.js",
           "kind": "import-statement",
           "original": "src/utils/custom-jsx/jsx-runtime"
@@ -1002,7 +1034,7 @@
       "format": "esm"
     },
     "src/controls/widgets/list/WidgetList.ts": {
-      "bytes": 7630,
+      "bytes": 7709,
       "imports": [
         {
           "path": "mobx",
@@ -1064,7 +1096,7 @@
       "format": "esm"
     },
     "src/controls/widgets/markdown/WidgetMarkdown.ts": {
-      "bytes": 2324,
+      "bytes": 2391,
       "imports": [
         {
           "path": "mobx",
@@ -1111,7 +1143,7 @@
       "format": "esm"
     },
     "src/controls/widgets/matrix/WidgetMatrix.ts": {
-      "bytes": 4131,
+      "bytes": 4278,
       "imports": [
         {
           "path": "mobx",
@@ -1213,7 +1245,7 @@
       "format": "esm"
     },
     "src/controls/widgets/number/WidgetNumber.tsx": {
-      "bytes": 2711,
+      "bytes": 2849,
       "imports": [
         {
           "path": "mobx",
@@ -1244,7 +1276,7 @@
       "format": "esm"
     },
     "src/controls/widgets/optional/WidgetOptional.tsx": {
-      "bytes": 3519,
+      "bytes": 3949,
       "imports": [
         {
           "path": "mobx",
@@ -1296,7 +1328,7 @@
       "format": "esm"
     },
     "src/controls/widgets/seed/WidgetSeed.ts": {
-      "bytes": 2459,
+      "bytes": 2774,
       "imports": [
         {
           "path": "mobx",
@@ -1358,7 +1390,7 @@
       "format": "esm"
     },
     "src/controls/widgets/selectMany/WidgetSelectMany.tsx": {
-      "bytes": 4349,
+      "bytes": 4708,
       "imports": [
         {
           "path": "mobx",
@@ -1420,7 +1452,7 @@
       "format": "esm"
     },
     "src/controls/widgets/selectOne/WidgetSelectOne.ts": {
-      "bytes": 3331,
+      "bytes": 3609,
       "imports": [
         {
           "path": "mobx",
@@ -1451,7 +1483,7 @@
       "format": "esm"
     },
     "src/controls/widgets/shared/WidgetShared.tsx": {
-      "bytes": 2252,
+      "bytes": 2731,
       "imports": [
         {
           "path": "mobx",
@@ -1514,7 +1546,7 @@
       "format": "esm"
     },
     "src/controls/widgets/size/WidgetSize.ts": {
-      "bytes": 3440,
+      "bytes": 3712,
       "imports": [
         {
           "path": "mobx",
@@ -1549,22 +1581,6 @@
       ],
       "format": "esm"
     },
-    "src/controls/widgets/spacer/SpacerUI.tsx": {
-      "bytes": 587,
-      "imports": [
-        {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "src/utils/custom-jsx/jsx-runtime.js",
-          "kind": "import-statement",
-          "original": "src/utils/custom-jsx/jsx-runtime"
-        }
-      ],
-      "format": "esm"
-    },
     "src/controls/widgets/spacer/WidgetSpacerUI.tsx": {
       "bytes": 258,
       "imports": [
@@ -1587,7 +1603,7 @@
       "format": "esm"
     },
     "src/controls/widgets/spacer/WidgetSpacer.tsx": {
-      "bytes": 1754,
+      "bytes": 2005,
       "imports": [
         {
           "path": "mobx",
@@ -1618,7 +1634,7 @@
       "format": "esm"
     },
     "src/controls/widgets/string/WidgetStringUI.tsx": {
-      "bytes": 4171,
+      "bytes": 5043,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -1639,7 +1655,7 @@
       "format": "esm"
     },
     "src/controls/widgets/string/WidgetString.tsx": {
-      "bytes": 2942,
+      "bytes": 3340,
       "imports": [
         {
           "path": "mobx",
@@ -1678,11 +1694,11 @@
       "imports": []
     },
     "src/theme/form.css": {
-      "bytes": 2179,
+      "bytes": 2178,
       "imports": []
     },
     "src/controls/FormBuilder.loco.ts": {
-      "bytes": 15577,
+      "bytes": 14688,
       "imports": [
         {
           "path": "src/theme/form.vars.css",
@@ -1720,9 +1736,9 @@
           "original": "./FormManager"
         },
         {
-          "path": "src/controls/Spec.ts",
+          "path": "src/controls/shared/runWithGlobalForm.ts",
           "kind": "import-statement",
-          "original": "./Spec"
+          "original": "./shared/runWithGlobalForm"
         },
         {
           "path": "src/controls/widgets/bool/WidgetBool.tsx",
@@ -1813,7 +1829,7 @@
       "format": "esm"
     },
     "src/controls/FormBuilder.loco.LIBRARY.ts": {
-      "bytes": 3715,
+      "bytes": 3761,
       "imports": [
         {
           "path": "src/llm/OpenRouter_infos.ts",
@@ -1829,6 +1845,46 @@
           "path": "src/utils/misc/debounce.ts",
           "kind": "import-statement",
           "original": "../utils/misc/debounce"
+        },
+        {
+          "path": "src/rsuite/MarkdownUI.tsx",
+          "kind": "import-statement",
+          "original": "../rsuite/MarkdownUI"
+        },
+        {
+          "path": "src/panels/MessageUI.tsx",
+          "kind": "import-statement",
+          "original": "../panels/MessageUI"
+        },
+        {
+          "path": "src/controls/FormUI.tsx",
+          "kind": "import-statement",
+          "original": "../controls/FormUI"
+        },
+        {
+          "path": "src/controls/widgets/WidgetUI.DI.ts",
+          "kind": "import-statement",
+          "original": "../controls/widgets/WidgetUI.DI"
+        },
+        {
+          "path": "src/controls/Form.ts",
+          "kind": "import-statement",
+          "original": "../controls/Form"
+        },
+        {
+          "path": "src/controls/shared/runWithGlobalForm.ts",
+          "kind": "import-statement",
+          "original": "../controls/shared/runWithGlobalForm"
+        },
+        {
+          "path": "src/controls/FormManager.ts",
+          "kind": "import-statement",
+          "original": "../controls/FormManager"
+        },
+        {
+          "path": "src/controls/IWidget.ts",
+          "kind": "import-statement",
+          "original": "../controls/IWidget"
         },
         {
           "path": "src/utils/misc/makeLabelFromFieldName.tsx",
@@ -1859,11 +1915,6 @@
           "path": "src/controls/utils/AnimatedSizeUI.tsx",
           "kind": "import-statement",
           "original": "../controls/utils/AnimatedSizeUI"
-        },
-        {
-          "path": "src/controls/widgets/WidgetUI.DI.ts",
-          "kind": "import-statement",
-          "original": "../controls/widgets/WidgetUI.DI"
         },
         {
           "path": "src/controls/shared/getActualWidgetToDisplay.tsx",
@@ -1901,6 +1952,11 @@
           "original": "../rsuite/reveal/ModalShell"
         },
         {
+          "path": "src/rsuite/reveal/RevealCtx.ts",
+          "kind": "import-statement",
+          "original": "../rsuite/reveal/RevealCtx"
+        },
+        {
           "path": "src/rsuite/reveal/RevealPlacement.tsx",
           "kind": "import-statement",
           "original": "../rsuite/reveal/RevealPlacement"
@@ -1936,49 +1992,14 @@
           "original": "../controls/shared/WidgetWithLabelUI"
         },
         {
-          "path": "src/controls/widgets/group/WidgetGroupUI.tsx",
-          "kind": "import-statement",
-          "original": "../controls/widgets/group/WidgetGroupUI"
-        },
-        {
-          "path": "src/rsuite/MarkdownUI.tsx",
-          "kind": "import-statement",
-          "original": "../rsuite/MarkdownUI"
-        },
-        {
-          "path": "src/panels/MessageUI.tsx",
-          "kind": "import-statement",
-          "original": "../panels/MessageUI"
-        },
-        {
-          "path": "src/controls/FormUI.tsx",
-          "kind": "import-statement",
-          "original": "../controls/FormUI"
-        },
-        {
-          "path": "src/controls/shared/runWithGlobalForm.ts",
-          "kind": "import-statement",
-          "original": "../controls/shared/runWithGlobalForm"
-        },
-        {
-          "path": "src/controls/Spec.ts",
-          "kind": "import-statement",
-          "original": "../controls/Spec"
-        },
-        {
-          "path": "src/controls/Form.ts",
-          "kind": "import-statement",
-          "original": "../controls/Form"
-        },
-        {
-          "path": "src/controls/FormManager.ts",
-          "kind": "import-statement",
-          "original": "../controls/FormManager"
-        },
-        {
           "path": "src/controls/Mixins.tsx",
           "kind": "import-statement",
           "original": "../controls/Mixins"
+        },
+        {
+          "path": "src/controls/widgets/spacer/SpacerUI.tsx",
+          "kind": "import-statement",
+          "original": "../controls/widgets/spacer/SpacerUI"
         },
         {
           "path": "src/controls/widgets/bool/WidgetBoolUI.tsx",
@@ -2001,7 +2022,7 @@
           "original": "../controls/widgets/button/WidgetButton"
         },
         {
-          "path": "src/utils/misc/toasts.ts",
+          "path": "src/utils/misc/toasts.tsx",
           "kind": "import-statement",
           "original": "../utils/misc/toasts"
         },
@@ -2034,6 +2055,11 @@
           "path": "src/controls/widgets/color/WidgetColor.tsx",
           "kind": "import-statement",
           "original": "../controls/widgets/color/WidgetColor"
+        },
+        {
+          "path": "src/controls/widgets/group/WidgetGroupUI.tsx",
+          "kind": "import-statement",
+          "original": "../controls/widgets/group/WidgetGroupUI"
         },
         {
           "path": "src/controls/widgets/group/WidgetGroup.tsx",
@@ -2151,11 +2177,6 @@
           "original": "../controls/widgets/size/WidgetSize"
         },
         {
-          "path": "src/controls/widgets/spacer/SpacerUI.tsx",
-          "kind": "import-statement",
-          "original": "../controls/widgets/spacer/SpacerUI"
-        },
-        {
           "path": "src/controls/widgets/spacer/WidgetSpacerUI.tsx",
           "kind": "import-statement",
           "original": "../controls/widgets/spacer/WidgetSpacerUI"
@@ -2188,6 +2209,56 @@
     "@cushy/forms/main.js": {
       "imports": [
         {
+          "path": "marked",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
           "path": "@uiw/react-json-view",
           "kind": "import-statement",
           "external": true
@@ -2198,16 +2269,6 @@
           "external": true
         },
         {
-          "path": "react/jsx-runtime",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "react/jsx-runtime",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
           "path": "mobx",
           "kind": "import-statement",
           "external": true
@@ -2238,7 +2299,7 @@
           "external": true
         },
         {
-          "path": "mobx",
+          "path": "react",
           "kind": "import-statement",
           "external": true
         },
@@ -2284,46 +2345,6 @@
         },
         {
           "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "marked",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "nanoid",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "mobx",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "react",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "react",
           "kind": "import-statement",
           "external": true
         },
@@ -2419,6 +2440,11 @@
         },
         {
           "path": "nanoid",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "mobx-react-lite",
           "kind": "import-statement",
           "external": true
         },
@@ -2618,11 +2644,6 @@
           "external": true
         },
         {
-          "path": "mobx-react-lite",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
           "path": "mobx",
           "kind": "import-statement",
           "external": true
@@ -2654,6 +2675,7 @@
         }
       ],
       "exports": [
+        "$WidgetSym",
         "ASSERT_ARRAY",
         "ASSERT_EQUAL",
         "ASSERT_STRING",
@@ -2700,15 +2722,17 @@
         "RadioTile",
         "Rate",
         "ResolutionState",
+        "RevealCtx",
         "RevealState",
+        "RevealStateLazy",
         "RevealUI",
         "SelectPicker",
         "SelectPopupUI",
         "SelectUI",
+        "SimpleSpec",
         "Slider",
         "SpacerUI",
         "Speaker",
-        "Spec",
         "Tag",
         "TagPicker",
         "Toggle",
@@ -2754,12 +2778,19 @@
         "Widget_number",
         "Widget_optional",
         "Widget_seed",
+        "Widget_seed_fromValue",
         "Widget_selectMany",
+        "Widget_selectMany_fromValue",
         "Widget_selectOne",
+        "Widget_selectOne_fromValue",
         "Widget_shared",
+        "Widget_shared_fromValue",
         "Widget_size",
+        "Widget_size_fromValue",
         "Widget_spacer",
+        "Widget_spacer_fromValue",
         "Widget_string",
+        "Widget_string_fromValue",
         "WigetSizeXUI",
         "WigetSize_BlockUI",
         "WigetSize_LineUI",
@@ -2769,8 +2800,10 @@
         "bang",
         "computePlacement",
         "debounce",
-        "defaultHideDelay",
-        "defaultShowDelay",
+        "defaultHideDelay_whenNested",
+        "defaultHideDelay_whenRoot",
+        "defaultShowDelay_whenNested",
+        "defaultShowDelay_whenRoot",
         "exhaust",
         "getActualWidgetToDisplay",
         "getBorderStatusForWidget",
@@ -2778,6 +2811,7 @@
         "getIfWidgetIsCollapsible",
         "getIfWidgetNeedAlignedLabel",
         "getWidgetClass",
+        "isWidget",
         "isWidgetGroup",
         "isWidgetOptional",
         "isWidgetShared",
@@ -2789,10 +2823,12 @@
         "runWithGlobalForm",
         "searchMatches",
         "toastError",
+        "toastImage",
         "toastInfo",
         "toastSuccess",
         "unaccent",
-        "useMemoLazy",
+        "useReveal",
+        "useRevealOrNull",
         "useSizeOf"
       ],
       "entryPoint": "src/controls/FormBuilder.loco.LIBRARY.ts",
@@ -2810,14 +2846,38 @@
         "src/utils/misc/debounce.ts": {
           "bytesInOutput": 500
         },
+        "src/rsuite/MarkdownUI.tsx": {
+          "bytesInOutput": 343
+        },
+        "src/utils/custom-jsx/jsx-runtime.js": {
+          "bytesInOutput": 1164
+        },
+        "src/panels/MessageUI.tsx": {
+          "bytesInOutput": 2071
+        },
+        "src/controls/FormUI.tsx": {
+          "bytesInOutput": 637
+        },
+        "src/controls/widgets/WidgetUI.DI.ts": {
+          "bytesInOutput": 341
+        },
+        "src/controls/Form.ts": {
+          "bytesInOutput": 4358
+        },
+        "src/controls/shared/runWithGlobalForm.ts": {
+          "bytesInOutput": 656
+        },
+        "src/controls/FormManager.ts": {
+          "bytesInOutput": 1176
+        },
+        "src/controls/IWidget.ts": {
+          "bytesInOutput": 164
+        },
         "src/utils/misc/makeLabelFromFieldName.tsx": {
           "bytesInOutput": 498
         },
         "src/widgets/workspace/JsonViewUI.tsx": {
-          "bytesInOutput": 1444
-        },
-        "src/utils/custom-jsx/jsx-runtime.js": {
-          "bytesInOutput": 1164
+          "bytesInOutput": 1458
         },
         "src/widgets/misc/ErrorBoundary.tsx": {
           "bytesInOutput": 845
@@ -2826,118 +2886,100 @@
           "bytesInOutput": 643
         },
         "src/controls/utils/useSizeOf.tsx": {
-          "bytesInOutput": 657
+          "bytesInOutput": 662
         },
         "src/controls/utils/AnimatedSizeUI.tsx": {
-          "bytesInOutput": 373
-        },
-        "src/controls/widgets/WidgetUI.DI.ts": {
-          "bytesInOutput": 341
+          "bytesInOutput": 378
         },
         "src/controls/shared/getActualWidgetToDisplay.tsx": {
           "bytesInOutput": 276
         },
         "src/controls/shared/getBorderStatusForWidget.ts": {
-          "bytesInOutput": 241
+          "bytesInOutput": 314
         },
         "src/controls/shared/getIfWidgetIsCollapsible.tsx": {
-          "bytesInOutput": 240
+          "bytesInOutput": 305
         },
         "src/controls/shared/getIfWidgetNeedAlignedLabel.tsx": {
           "bytesInOutput": 252
         },
         "src/controls/widgets/bool/InputBoolUI.tsx": {
-          "bytesInOutput": 3239
+          "bytesInOutput": 3362
         },
         "src/controls/shared/Widget_ToggleUI.tsx": {
           "bytesInOutput": 380
         },
         "src/rsuite/reveal/ModalShell.tsx": {
-          "bytesInOutput": 961
+          "bytesInOutput": 1189
+        },
+        "src/rsuite/reveal/RevealCtx.ts": {
+          "bytesInOutput": 341
         },
         "src/rsuite/reveal/RevealPlacement.tsx": {
-          "bytesInOutput": 2067
+          "bytesInOutput": 2641
         },
         "src/rsuite/reveal/RevealState.tsx": {
-          "bytesInOutput": 4797
+          "bytesInOutput": 6959
         },
         "src/rsuite/reveal/RevealUI.tsx": {
-          "bytesInOutput": 4933
+          "bytesInOutput": 5631
         },
         "src/utils/misc/exhaust.ts": {
           "bytesInOutput": 24
         },
         "src/rsuite/shims.tsx": {
-          "bytesInOutput": 5802
+          "bytesInOutput": 5810
         },
         "src/controls/shared/WidgetTooltipUI.tsx": {
-          "bytesInOutput": 466
+          "bytesInOutput": 468
         },
         "src/controls/shared/WidgetWithLabelUI.tsx": {
-          "bytesInOutput": 5133
-        },
-        "src/controls/widgets/group/WidgetGroupUI.tsx": {
-          "bytesInOutput": 1403
-        },
-        "src/rsuite/MarkdownUI.tsx": {
-          "bytesInOutput": 359
-        },
-        "src/panels/MessageUI.tsx": {
-          "bytesInOutput": 2075
-        },
-        "src/controls/FormUI.tsx": {
-          "bytesInOutput": 542
-        },
-        "src/controls/shared/runWithGlobalForm.ts": {
-          "bytesInOutput": 656
-        },
-        "src/controls/Spec.ts": {
-          "bytesInOutput": 788
-        },
-        "src/controls/Form.ts": {
-          "bytesInOutput": 3059
-        },
-        "src/controls/FormManager.ts": {
-          "bytesInOutput": 1111
+          "bytesInOutput": 5209
         },
         "src/controls/Mixins.tsx": {
-          "bytesInOutput": 2002
+          "bytesInOutput": 2088
+        },
+        "src/controls/widgets/spacer/SpacerUI.tsx": {
+          "bytesInOutput": 170
         },
         "src/controls/widgets/bool/WidgetBoolUI.tsx": {
-          "bytesInOutput": 1013
+          "bytesInOutput": 1076
         },
         "src/controls/widgets/bool/WidgetBool.tsx": {
-          "bytesInOutput": 1343
+          "bytesInOutput": 1430
         },
         "src/controls/widgets/button/WidgetButtonUI.tsx": {
           "bytesInOutput": 853
         },
         "src/controls/widgets/button/WidgetButton.ts": {
-          "bytesInOutput": 958
+          "bytesInOutput": 1057
         },
-        "src/utils/misc/toasts.ts": {
-          "bytesInOutput": 281
+        "src/utils/misc/toasts.tsx": {
+          "bytesInOutput": 926
         },
         "src/utils/misc/searchMatches.ts": {
           "bytesInOutput": 275
         },
         "src/rsuite/SelectUI.tsx": {
-          "bytesInOutput": 15698
+          "bytesInOutput": 15740
         },
         "src/controls/widgets/choices/WidgetChoicesUI.tsx": {
           "bytesInOutput": 3485
         },
         "src/controls/widgets/choices/WidgetChoices.tsx": {
-          "bytesInOutput": 4429
+          "bytesInOutput": 4528
         },
         "src/controls/widgets/color/WidgetColorUI.tsx": {
           "bytesInOutput": 719
         },
         "src/controls/widgets/color/WidgetColor.tsx": {
-          "bytesInOutput": 1113
+          "bytesInOutput": 1212
+        },
+        "src/controls/widgets/group/WidgetGroupUI.tsx": {
+          "bytesInOutput": 1403
         },
         "src/controls/widgets/group/WidgetGroup.tsx": {
-          "bytesInOutput": 3325
+          "bytesInOutput": 3322
         },
         "src/controls/widgets/list/ListControlsUI.tsx": {
           "bytesInOutput": 2211
@@ -2946,19 +2988,19 @@
           "bytesInOutput": 3870
         },
         "src/controls/widgets/list/WidgetList.ts": {
-          "bytesInOutput": 4974
+          "bytesInOutput": 5041
         },
         "src/controls/widgets/markdown/WidgetMarkdownUI.tsx": {
           "bytesInOutput": 300
         },
         "src/controls/widgets/markdown/WidgetMarkdown.ts": {
-          "bytesInOutput": 1034
+          "bytesInOutput": 1127
         },
         "src/controls/widgets/matrix/WidgetMatrixUI.tsx": {
           "bytesInOutput": 2049
         },
         "src/controls/widgets/matrix/WidgetMatrix.ts": {
-          "bytesInOutput": 2338
+          "bytesInOutput": 2437
         },
         "src/utils/misc/parseFloatNoRoundingErr.ts": {
           "bytesInOutput": 239
@@ -2973,31 +3015,31 @@
           "bytesInOutput": 1151
         },
         "src/controls/widgets/number/WidgetNumber.tsx": {
-          "bytesInOutput": 1287
+          "bytesInOutput": 1386
         },
         "src/controls/widgets/optional/WidgetOptional.tsx": {
-          "bytesInOutput": 1989
+          "bytesInOutput": 2088
         },
         "src/controls/widgets/seed/WidgetSeedUI.tsx": {
           "bytesInOutput": 4245
         },
         "src/controls/widgets/seed/WidgetSeed.ts": {
-          "bytesInOutput": 1286
+          "bytesInOutput": 1477
         },
         "src/controls/widgets/selectMany/WidgetSelectManyUI.tsx": {
           "bytesInOutput": 2501
         },
         "src/controls/widgets/selectMany/WidgetSelectMany.tsx": {
-          "bytesInOutput": 2403
+          "bytesInOutput": 2599
         },
         "src/controls/widgets/selectOne/WidgetSelectOneUI.tsx": {
           "bytesInOutput": 2460
         },
         "src/controls/widgets/selectOne/WidgetSelectOne.ts": {
-          "bytesInOutput": 1667
+          "bytesInOutput": 1849
         },
         "src/controls/widgets/shared/WidgetShared.tsx": {
-          "bytesInOutput": 848
+          "bytesInOutput": 1153
         },
         "src/controls/widgets/size/ResolutionState.tsx": {
           "bytesInOutput": 3345
@@ -3006,22 +3048,19 @@
           "bytesInOutput": 5568
         },
         "src/controls/widgets/size/WidgetSize.ts": {
-          "bytesInOutput": 1768
-        },
-        "src/controls/widgets/spacer/SpacerUI.tsx": {
-          "bytesInOutput": 170
+          "bytesInOutput": 1920
         },
         "src/controls/widgets/spacer/WidgetSpacerUI.tsx": {
           "bytesInOutput": 168
         },
         "src/controls/widgets/spacer/WidgetSpacer.tsx": {
-          "bytesInOutput": 717
+          "bytesInOutput": 847
         },
         "src/controls/widgets/string/WidgetStringUI.tsx": {
-          "bytesInOutput": 3468
+          "bytesInOutput": 3950
         },
         "src/controls/widgets/string/WidgetString.tsx": {
-          "bytesInOutput": 1570
+          "bytesInOutput": 1667
         },
         "src/theme/form.vars.css": {
           "bytesInOutput": 0
@@ -3033,10 +3072,10 @@
           "bytesInOutput": 0
         },
         "src/controls/FormBuilder.loco.ts": {
-          "bytesInOutput": 7917
+          "bytesInOutput": 8958
         }
       },
-      "bytes": 184960
+      "bytes": 194994
     },
     "@cushy/forms/main.css": {
       "imports": [],
@@ -3051,10 +3090,10 @@
           "bytesInOutput": 983
         },
         "src/theme/form.css": {
-          "bytesInOutput": 1470
+          "bytesInOutput": 1469
         }
       },
-      "bytes": 3062
+      "bytes": 3061
     }
   }
 }
