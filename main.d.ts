@@ -682,6 +682,8 @@ declare const useRevealOrNull: () => Maybe<RevealStack>;
 /** use this to get the current reveal stack, or throw if none yet */
 declare const useReveal: () => RevealStack;
 
+declare const global_RevealStack: RevealState[];
+
 declare const RevealUI: react.FunctionComponent<RevealProps>;
 
 declare const exhaust: (x: never) => never;
@@ -1199,18 +1201,20 @@ declare const WidgetGroup_BlockUI: (<T extends SchemaDict>(p: {
     displayName: string;
 };
 
-declare const ListControlsUI: react.FunctionComponent<{
-    widget: {
-        addItem(): void;
-        removeAllItems(): void;
-        expandAllItems(): void;
-        collapseAllItems(): void;
-        items: unknown[];
-        config: {
-            max?: number;
-            min?: number;
-        };
+type IWidgetListLike = {
+    addItem(): void;
+    removeAllItems(): void;
+    expandAllItems(): void;
+    collapseAllItems(): void;
+    items: unknown[];
+    readonly length: number;
+    config: {
+        max?: number;
+        min?: number;
     };
+};
+declare const ListControlsUI: react.FunctionComponent<{
+    widget: IWidgetListLike;
 }>;
 
 type Widget_list_config<T extends ISpec> = WidgetConfigFields<{
@@ -1233,15 +1237,13 @@ type Widget_list_types<T extends ISpec> = {
 };
 interface Widget_list<T extends ISpec> extends Widget_list_types<T>, IWidgetMixins {
 }
-declare class Widget_list<T extends ISpec> implements IWidget<Widget_list_types<T>> {
+declare class Widget_list<T extends ISpec> implements IWidget<Widget_list_types<T>>, IWidgetListLike {
     readonly form: Form;
     readonly parent: IWidget | null;
     readonly spec: ISpec<Widget_list<T>>;
-    DefaultHeaderUI: (<T_1 extends ISpec<IWidget<$WidgetTypes>>>(p: {
-        widget: Widget_list<T_1> | Widget_listExt<T_1>;
-    }) => react_jsx_runtime.JSX.Element) & {
-        displayName: string;
-    };
+    DefaultHeaderUI: react.FunctionComponent<{
+        widget: Widget_list<any>;
+    }>;
     get DefaultBodyUI(): (<T_1 extends ISpec<IWidget<$WidgetTypes>>>(p: {
         widget: Widget_list<T_1>;
     }) => react_jsx_runtime.JSX.Element) & {
@@ -1269,156 +1271,9 @@ declare class Widget_list<T extends ISpec> implements IWidget<Widget_list_types<
     moveItem: (oldIndex: number, newIndex: number) => void;
 }
 
-type BoardPosition = {
-    x: number;
-    y: number;
-    z: number;
-    width: number;
-    height: number;
-    depth: number;
-    scaleX?: number;
-    scaleY?: number;
-    scaleZ?: number;
-    fill?: string;
-    rotation?: number;
-    isSelected?: boolean;
-    isDragging?: boolean;
-    isResizing?: boolean;
-};
-
-type SDModelType = 'SD1.5 512' | 'SD2.1 768' | 'SDXL 1024';
-type CushySizeByRatio = {
-    modelType?: SDModelType;
-    aspectRatio?: AspectRatio;
-    width?: number;
-    height?: number;
-};
-type CushySize = {
-    type: 'size';
-    width: number;
-    height: number;
-    modelType: SDModelType;
-    aspectRatio: AspectRatio;
-};
-type ModelType = 'xl' | '1.5' | 'custom';
-type AspectRatio = '1:1' | '16:9' | '4:3' | '3:2' | '9:16' | '3:4' | '2:3';
-
-type SizeAble = {
-    width: number;
-    height: number;
-};
-declare class ResolutionState {
-    req: SizeAble;
-    private idealSizeforModelType;
-    flip: () => void;
-    get width(): number;
-    get height(): number;
-    set width(next: number);
-    set height(next: number);
-    desiredModelType: ModelType;
-    desiredAspectRatio: AspectRatio;
-    isAspectRatioLocked: boolean;
-    wasHeightAdjustedLast: boolean;
-    constructor(req: SizeAble);
-    setWidth(width: number): void;
-    setHeight(height: number): void;
-    get realAspectRatio(): number;
-    setModelType(modelType: ModelType): void;
-    setAspectRatio(aspectRatio: AspectRatio): void;
-    private updateHeightBasedOnAspectRatio;
-    private updateWidthBasedOnAspectRatio;
-}
-
-type Widget_listExt_config<T extends ISpec> = WidgetConfigFields<{
-    element: T | ((p: {
-        ix: number;
-        width: number;
-        height: number;
-    }) => T);
-    min?: number;
-    max?: number;
-    defaultLength?: number;
-    initialPosition: (size: {
-        ix: number;
-        width: number;
-        height: number;
-    }) => Partial<BoardPosition>;
-    mode?: 'regional' | 'timeline';
-    width: number; /** default: 100 */
-    height: number; /** default: 100 */
-}, Widget_listExt_types<T>>;
-type Widget_listExt_serial<T extends ISpec> = WidgetSerialFields<{
-    type: 'listExt';
-    entries: {
-        serial: T['$Serial'];
-        shape: BoardPosition;
-    }[];
-    width: number;
-    height: number;
+declare const WidgetList_LineUI: react.FunctionComponent<{
+    widget: Widget_list<any>;
 }>;
-type Widget_listExt_value<T extends ISpec> = {
-    items: {
-        value: T['$Value'];
-        position: BoardPosition;
-    }[];
-    width: number;
-    height: number;
-};
-type Widget_listExt_types<T extends ISpec> = {
-    $Type: 'listExt';
-    $Config: Widget_listExt_config<T>;
-    $Serial: Widget_listExt_serial<T>;
-    $Value: Widget_listExt_value<T>;
-    $Widget: Widget_listExt<T>;
-};
-interface Widget_listExt<T extends ISpec> extends Widget_listExt_types<T>, IWidgetMixins {
-}
-declare class Widget_listExt<T extends ISpec> implements IWidget<Widget_listExt_types<T>> {
-    readonly form: Form;
-    readonly parent: IWidget | null;
-    readonly spec: ISpec<Widget_listExt<T>>;
-    DefaultHeaderUI: (<T_1 extends ISpec<IWidget<$WidgetTypes>>>(p: {
-        widget: Widget_list<T_1> | Widget_listExt<T_1>;
-    }) => react_jsx_runtime.JSX.Element) & {
-        displayName: string;
-    };
-    DefaultBodyUI: (<T_1 extends ISpec<IWidget<$WidgetTypes>>>(p: {
-        widget: Widget_listExt<T_1>;
-    }) => react_jsx_runtime.JSX.Element) & {
-        displayName: string;
-    };
-    readonly id: string;
-    get config(): Widget_listExt_config<T>;
-    readonly type: 'listExt';
-    get width(): number;
-    get height(): number;
-    set width(next: number);
-    set height(next: number);
-    get sizeHelper(): ResolutionState;
-    entries: {
-        widget: T['$Widget'];
-        shape: BoardPosition;
-    }[];
-    serial: Widget_listExt_serial<T>;
-    get items(): T['$Widget'][];
-    get length(): number;
-    constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_listExt<T>>, serial?: Widget_listExt_serial<T>);
-    schemaAt: (ix: number) => T;
-    collapseAllItems: () => void;
-    expandAllItems: () => void;
-    addItem(p?: {
-        skipBump?: true;
-    }): void;
-    removeAllItems: () => void;
-    removeItem: (item: T['$Widget']) => void;
-    get value(): Widget_listExt_value<T>;
-}
-
-declare const WidgetList_LineUI: (<T extends ISpec<IWidget<$WidgetTypes>>>(p: {
-    widget: Widget_list<T> | Widget_listExt<T>;
-}) => react_jsx_runtime.JSX.Element) & {
-    displayName: string;
-};
 declare const WidgetList_BodyUI: (<T extends ISpec<IWidget<$WidgetTypes>>>(p: {
     widget: Widget_list<T>;
 }) => react_jsx_runtime.JSX.Element) & {
@@ -1538,6 +1393,19 @@ declare const WidgetMatrixUI: react.FunctionComponent<{
 }>;
 
 declare const parseFloatNoRoundingErr: (str: string | number, maxDigitsAfterDot?: number) => number;
+
+/**
+ * set of shared configuration used by cushy kit;
+ * to be injected via context
+ * can be configured by project
+ */
+interface CushyKit {
+    clickAndSlideMultiplicator?: number;
+}
+
+declare const CushyKitCtx: react.Context<CushyKit | null>;
+declare const useCushyKit: () => CushyKit;
+declare const useCushyKitOrNull: () => Maybe<CushyKit>;
 
 type InputNumberProps = {
     value?: Maybe<number>;
@@ -1782,6 +1650,49 @@ declare const WidgetSelectOne_SelectUI: (<T extends BaseSelectEntry>(p: {
 }) => react_jsx_runtime.JSX.Element) & {
     displayName: string;
 };
+
+type SDModelType = 'SD1.5 512' | 'SD2.1 768' | 'SDXL 1024';
+type CushySizeByRatio = {
+    modelType?: SDModelType;
+    aspectRatio?: AspectRatio;
+    width?: number;
+    height?: number;
+};
+type CushySize = {
+    type: 'size';
+    width: number;
+    height: number;
+    modelType: SDModelType;
+    aspectRatio: AspectRatio;
+};
+type ModelType = 'xl' | '1.5' | 'custom';
+type AspectRatio = '1:1' | '16:9' | '4:3' | '3:2' | '9:16' | '3:4' | '2:3';
+
+type SizeAble = {
+    width: number;
+    height: number;
+};
+declare class ResolutionState {
+    req: SizeAble;
+    private idealSizeforModelType;
+    flip: () => void;
+    get width(): number;
+    get height(): number;
+    set width(next: number);
+    set height(next: number);
+    desiredModelType: ModelType;
+    desiredAspectRatio: AspectRatio;
+    isAspectRatioLocked: boolean;
+    wasHeightAdjustedLast: boolean;
+    constructor(req: SizeAble);
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    get realAspectRatio(): number;
+    setModelType(modelType: ModelType): void;
+    setAspectRatio(aspectRatio: AspectRatio): void;
+    private updateHeightBasedOnAspectRatio;
+    private updateWidthBasedOnAspectRatio;
+}
 
 type Widget_size_config = WidgetConfigFields<{
     default?: CushySizeByRatio;
@@ -2048,4 +1959,4 @@ declare class FormBuilder_Loco implements IFormBuilder {
 }
 declare const LocoFormManager: FormManager<FormBuilder_Loco>;
 
-export { $WidgetSym, type $WidgetTypes, ASSERT_ARRAY, ASSERT_EQUAL, ASSERT_STRING, AnimatedSizeUI, AspectLockButtonUI, AspectRatioSquareUI, type BaseSelectEntry, Button, DropdownMenu, ErrorBoundaryFallback, Form, FormBuilder_Loco, FormHelpTextUI, FormManager, type FormProperties, FormUI, type GetWidgetResult, type GetWidgetState, GlobalFormCtx, type IWidget, type IWidgetMixins, Input, InputBoolUI, InputNumberBase, InputNumberUI, type InstructType, JsonViewUI, ListControlsUI, ListItemCollapseBtnUI, Loader, LocoFormManager, MarkdownUI, Menu, MenuBar, Message, MessageErrorUI, MessageInfoUI, MessageWarningUI, Modal, ModalBody, ModalFooter, ModalHeader, ModalShellUI, ModalTitle, MultiCascader, NavItem, type OopenRouter_ModelInfo, Panel, Popover, ProgressLine, Radio, RadioTile, Rate, ResolutionState, RevealCtx, type RevealPlacement, type RevealStack, RevealState, RevealStateLazy, RevealUI, SelectPicker, SelectPopupUI, SelectUI, type SharedWidgetConfig, type SharedWidgetSerial, SimpleSpec, type SizeAble, Slider, SpacerUI, Speaker, type TabPositionConfig, Tag, TagPicker, Toggle, Tooltip, Tree, Whisper, WidgetBoolUI, WidgetChoices_BodyUI, WidgetChoices_HeaderUI, WidgetChoices_SelectHeaderUI, WidgetColorUI, type WidgetConfigFields, WidgetGroup_BlockUI, WidgetGroup_LineUI, WidgetInlineRunUI, WidgetList_BodyUI, WidgetList_LineUI, WidgetMardownUI, WidgetMatrixUI, WidgetNumberUI, WidgetSeedUI, WidgetSelectManyUI, WidgetSelectMany_SelectUI, WidgetSelectMany_TabUI, WidgetSelectOneUI, WidgetSelectOne_SelectUI, WidgetSelectOne_TabUI, type WidgetSerialFields, WidgetSizeX_LineUI, WidgetSpacerUI, WidgetString_HeaderUI, WidgetString_TextareaBodyUI, WidgetString_TextareaHeaderUI, WidgetTooltipUI, WidgetWithLabelUI, Widget_ToggleUI, Widget_bool, type Widget_bool_config, type Widget_bool_serial, type Widget_bool_types, type Widget_bool_value, Widget_button, type Widget_button_config, type Widget_button_context, type Widget_button_serial, type Widget_button_types, type Widget_button_value, Widget_choices, type Widget_choices_config, type Widget_choices_serial, type Widget_choices_types, type Widget_choices_value, Widget_color, type Widget_color_config, type Widget_color_serial, type Widget_color_types, type Widget_color_value, Widget_group, type Widget_group_config, type Widget_group_serial, type Widget_group_types, type Widget_group_value, Widget_list, type Widget_list_config, type Widget_list_serial, type Widget_list_types, type Widget_list_value, Widget_markdown, type Widget_markdown_config, type Widget_markdown_serial, type Widget_markdown_types, type Widget_markdown_value, Widget_matrix, type Widget_matrix_cell, type Widget_matrix_config, type Widget_matrix_serial, type Widget_matrix_types, type Widget_matrix_value, Widget_number, type Widget_number_config, type Widget_number_serial, type Widget_number_types, type Widget_number_value, Widget_optional, type Widget_optional_config, type Widget_optional_serial, type Widget_optional_types, type Widget_optional_value, Widget_seed, type Widget_seed_config, Widget_seed_fromValue, type Widget_seed_serial, type Widget_seed_types, type Widget_seed_value, Widget_selectMany, type Widget_selectMany_config, Widget_selectMany_fromValue, type Widget_selectMany_serial, type Widget_selectMany_types, type Widget_selectMany_value, Widget_selectOne, type Widget_selectOne_config, Widget_selectOne_fromValue, type Widget_selectOne_serial, type Widget_selectOne_types, type Widget_selectOne_value, Widget_shared, type Widget_shared_config, Widget_shared_fromValue, type Widget_shared_serial, type Widget_shared_types, type Widget_shared_value, Widget_size, type Widget_size_config, Widget_size_fromValue, type Widget_size_serial, type Widget_size_types, type Widget_size_value, Widget_spacer, type Widget_spacer_config, Widget_spacer_fromValue, type Widget_spacer_serial, type Widget_spacer_types, type Widget_spacer_value, Widget_string, type Widget_string_config, Widget_string_fromValue, type Widget_string_serial, type Widget_string_types, type Widget_string_value, WigetSizeXUI, WigetSize_BlockUI, WigetSize_LineUI, _FIX_INDENTATION, applyWidgetMixinV2, asSTRING_orCrash, bang, computePlacement, debounce, defaultHideDelay_whenNested, defaultHideDelay_whenRoot, defaultShowDelay_whenNested, defaultShowDelay_whenRoot, exhaust, getActualWidgetToDisplay, getBorderStatusForWidget, getCurrentForm_IMPL, getIfWidgetIsCollapsible, getIfWidgetNeedAlignedLabel, getWidgetClass, isWidget, isWidgetGroup, isWidgetOptional, isWidgetShared, makeLabelFromFieldName, normalizeText, openRouterInfos, parseFloatNoRoundingErr, registerWidgetClass, runWithGlobalForm, searchMatches, toastError, toastImage, toastInfo, toastSuccess, unaccent, useReveal, useRevealOrNull, useSizeOf };
+export { $WidgetSym, type $WidgetTypes, ASSERT_ARRAY, ASSERT_EQUAL, ASSERT_STRING, AnimatedSizeUI, AspectLockButtonUI, AspectRatioSquareUI, type BaseSelectEntry, Button, CushyKitCtx, DropdownMenu, ErrorBoundaryFallback, Form, FormBuilder_Loco, FormHelpTextUI, FormManager, type FormProperties, FormUI, type GetWidgetResult, type GetWidgetState, GlobalFormCtx, type IWidget, type IWidgetListLike, type IWidgetMixins, Input, InputBoolUI, InputNumberBase, InputNumberUI, type InstructType, JsonViewUI, ListControlsUI, ListItemCollapseBtnUI, Loader, LocoFormManager, MarkdownUI, Menu, MenuBar, Message, MessageErrorUI, MessageInfoUI, MessageWarningUI, Modal, ModalBody, ModalFooter, ModalHeader, ModalShellUI, ModalTitle, MultiCascader, NavItem, type OopenRouter_ModelInfo, Panel, Popover, ProgressLine, Radio, RadioTile, Rate, ResolutionState, RevealCtx, type RevealPlacement, type RevealStack, RevealState, RevealStateLazy, RevealUI, SelectPicker, SelectPopupUI, SelectUI, type SharedWidgetConfig, type SharedWidgetSerial, SimpleSpec, type SizeAble, Slider, SpacerUI, Speaker, type TabPositionConfig, Tag, TagPicker, Toggle, Tooltip, Tree, Whisper, WidgetBoolUI, WidgetChoices_BodyUI, WidgetChoices_HeaderUI, WidgetChoices_SelectHeaderUI, WidgetColorUI, type WidgetConfigFields, WidgetGroup_BlockUI, WidgetGroup_LineUI, WidgetInlineRunUI, WidgetList_BodyUI, WidgetList_LineUI, WidgetMardownUI, WidgetMatrixUI, WidgetNumberUI, WidgetSeedUI, WidgetSelectManyUI, WidgetSelectMany_SelectUI, WidgetSelectMany_TabUI, WidgetSelectOneUI, WidgetSelectOne_SelectUI, WidgetSelectOne_TabUI, type WidgetSerialFields, WidgetSizeX_LineUI, WidgetSpacerUI, WidgetString_HeaderUI, WidgetString_TextareaBodyUI, WidgetString_TextareaHeaderUI, WidgetTooltipUI, WidgetWithLabelUI, Widget_ToggleUI, Widget_bool, type Widget_bool_config, type Widget_bool_serial, type Widget_bool_types, type Widget_bool_value, Widget_button, type Widget_button_config, type Widget_button_context, type Widget_button_serial, type Widget_button_types, type Widget_button_value, Widget_choices, type Widget_choices_config, type Widget_choices_serial, type Widget_choices_types, type Widget_choices_value, Widget_color, type Widget_color_config, type Widget_color_serial, type Widget_color_types, type Widget_color_value, Widget_group, type Widget_group_config, type Widget_group_serial, type Widget_group_types, type Widget_group_value, Widget_list, type Widget_list_config, type Widget_list_serial, type Widget_list_types, type Widget_list_value, Widget_markdown, type Widget_markdown_config, type Widget_markdown_serial, type Widget_markdown_types, type Widget_markdown_value, Widget_matrix, type Widget_matrix_cell, type Widget_matrix_config, type Widget_matrix_serial, type Widget_matrix_types, type Widget_matrix_value, Widget_number, type Widget_number_config, type Widget_number_serial, type Widget_number_types, type Widget_number_value, Widget_optional, type Widget_optional_config, type Widget_optional_serial, type Widget_optional_types, type Widget_optional_value, Widget_seed, type Widget_seed_config, Widget_seed_fromValue, type Widget_seed_serial, type Widget_seed_types, type Widget_seed_value, Widget_selectMany, type Widget_selectMany_config, Widget_selectMany_fromValue, type Widget_selectMany_serial, type Widget_selectMany_types, type Widget_selectMany_value, Widget_selectOne, type Widget_selectOne_config, Widget_selectOne_fromValue, type Widget_selectOne_serial, type Widget_selectOne_types, type Widget_selectOne_value, Widget_shared, type Widget_shared_config, Widget_shared_fromValue, type Widget_shared_serial, type Widget_shared_types, type Widget_shared_value, Widget_size, type Widget_size_config, Widget_size_fromValue, type Widget_size_serial, type Widget_size_types, type Widget_size_value, Widget_spacer, type Widget_spacer_config, Widget_spacer_fromValue, type Widget_spacer_serial, type Widget_spacer_types, type Widget_spacer_value, Widget_string, type Widget_string_config, Widget_string_fromValue, type Widget_string_serial, type Widget_string_types, type Widget_string_value, WigetSizeXUI, WigetSize_BlockUI, WigetSize_LineUI, _FIX_INDENTATION, applyWidgetMixinV2, asSTRING_orCrash, bang, computePlacement, debounce, defaultHideDelay_whenNested, defaultHideDelay_whenRoot, defaultShowDelay_whenNested, defaultShowDelay_whenRoot, exhaust, getActualWidgetToDisplay, getBorderStatusForWidget, getCurrentForm_IMPL, getIfWidgetIsCollapsible, getIfWidgetNeedAlignedLabel, getWidgetClass, global_RevealStack, isWidget, isWidgetGroup, isWidgetOptional, isWidgetShared, makeLabelFromFieldName, normalizeText, openRouterInfos, parseFloatNoRoundingErr, registerWidgetClass, runWithGlobalForm, searchMatches, toastError, toastImage, toastInfo, toastSuccess, unaccent, useCushyKit, useCushyKitOrNull, useReveal, useRevealOrNull, useSizeOf };

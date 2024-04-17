@@ -28,6 +28,7 @@ INPUT:
     src/controls/shared/Widget_ToggleUI.tsx ([object Set])
     src/rsuite/reveal/ModalShell.tsx ([object Set])
     src/rsuite/reveal/RevealCtx.ts ([object Set])
+    src/rsuite/reveal/RevealStack.ts ([object Set])
     src/rsuite/reveal/RevealPlacement.tsx ([object Set])
     src/rsuite/reveal/RevealState.tsx ([object Set])
     src/rsuite/reveal/RevealUI.tsx ([object Set])
@@ -59,6 +60,7 @@ INPUT:
     src/controls/widgets/matrix/WidgetMatrix.ts ([object Set])
     src/controls/widgets/number/InputNumberUI.css ([object Set])
     src/utils/misc/parseFloatNoRoundingErr.ts ([object Set])
+    src/controls/shared/CushyKitCtx.ts ([object Set])
     src/controls/widgets/number/InputNumberUI.tsx ([object Set])
     src/controls/widgets/number/WidgetNumberUI.tsx ([object Set])
     src/controls/widgets/number/WidgetNumber.tsx ([object Set])
@@ -81,7 +83,7 @@ INPUT:
 
 
 TYPES:
-    [🟢]: src/controls/Form       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/FormUI.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/FormBuilder.loco.d.ts,/lib/controls/IFormBuilder.d.ts,/lib/controls/widgets/listExt/WidgetListExt.d.ts files)
+    [🟢]: src/controls/Form       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/FormUI.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/FormBuilder.loco.d.ts,/lib/controls/IFormBuilder.d.ts files)
         [🔵]: react
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/FormManager
@@ -116,6 +118,83 @@ TYPES:
         [🟢]: src/controls/widgets/size/WidgetSize
         [🟢]: src/controls/widgets/spacer/WidgetSpacer
         [🟢]: src/controls/widgets/string/WidgetString
+    [🟢]: src/controls/FormBuilder.loco.LIBRARY       (from  files)
+        [🟢]: src/llm/OpenRouter_infos
+        [🟢]: src/utils/misc/_FIX_INDENTATION
+        [🟢]: src/utils/misc/debounce
+        [🟢]: src/rsuite/MarkdownUI
+        [🟢]: src/panels/MessageUI
+        [🟢]: src/controls/FormUI
+        [🟢]: src/controls/widgets/WidgetUI.DI
+        [🟢]: src/controls/Form
+        [🟢]: src/controls/shared/runWithGlobalForm
+        [🟢]: src/controls/FormManager
+        [🟢]: src/controls/IWidget
+        [🟢]: src/utils/misc/makeLabelFromFieldName
+        [🟢]: src/widgets/workspace/JsonViewUI
+        [🟢]: src/widgets/misc/ErrorBoundary
+        [🟢]: src/utils/misc/bang
+        [🟢]: src/controls/utils/useSizeOf
+        [🟢]: src/controls/utils/AnimatedSizeUI
+        [🟢]: src/controls/shared/getActualWidgetToDisplay
+        [🟢]: src/controls/shared/getBorderStatusForWidget
+        [🟢]: src/controls/shared/getIfWidgetIsCollapsible
+        [🟢]: src/controls/shared/getIfWidgetNeedAlignedLabel
+        [🟢]: src/controls/widgets/bool/InputBoolUI
+        [🟢]: src/controls/shared/Widget_ToggleUI
+        [🟢]: src/rsuite/reveal/ModalShell
+        [🟢]: src/rsuite/reveal/RevealCtx
+        [🟢]: src/rsuite/reveal/RevealStack
+        [🟢]: src/rsuite/reveal/RevealPlacement
+        [🟢]: src/rsuite/reveal/RevealState
+        [🟢]: src/rsuite/reveal/RevealUI
+        [🟢]: src/utils/misc/exhaust
+        [🟢]: src/rsuite/shims
+        [🟢]: src/controls/shared/WidgetTooltipUI
+        [🟢]: src/controls/shared/WidgetWithLabelUI
+        [🟢]: src/controls/Mixins
+        [🟢]: src/controls/widgets/spacer/SpacerUI
+        [🟢]: src/controls/widgets/bool/WidgetBoolUI
+        [🟢]: src/controls/widgets/bool/WidgetBool
+        [🟢]: src/controls/widgets/button/WidgetButtonUI
+        [🟢]: src/controls/widgets/button/WidgetButton
+        [🟢]: src/utils/misc/toasts
+        [🟢]: src/utils/misc/searchMatches
+        [🟢]: src/rsuite/SelectUI
+        [🟢]: src/controls/widgets/choices/WidgetChoicesUI
+        [🟢]: src/controls/widgets/choices/WidgetChoices
+        [🟢]: src/controls/widgets/color/WidgetColorUI
+        [🟢]: src/controls/widgets/color/WidgetColor
+        [🟢]: src/controls/widgets/group/WidgetGroupUI
+        [🟢]: src/controls/widgets/group/WidgetGroup
+        [🟢]: src/controls/widgets/list/ListControlsUI
+        [🟢]: src/controls/widgets/list/WidgetListUI
+        [🟢]: src/controls/widgets/list/WidgetList
+        [🟢]: src/controls/widgets/markdown/WidgetMarkdownUI
+        [🟢]: src/controls/widgets/markdown/WidgetMarkdown
+        [🟢]: src/controls/widgets/matrix/WidgetMatrixUI
+        [🟢]: src/controls/widgets/matrix/WidgetMatrix
+        [🟢]: src/utils/misc/parseFloatNoRoundingErr
+        [🟢]: src/controls/shared/CushyKitCtx
+        [🟢]: src/controls/widgets/number/InputNumberUI
+        [🟢]: src/controls/widgets/number/WidgetNumberUI
+        [🟢]: src/controls/widgets/number/WidgetNumber
+        [🟢]: src/controls/widgets/optional/WidgetOptional
+        [🟢]: src/controls/widgets/seed/WidgetSeedUI
+        [🟢]: src/controls/widgets/seed/WidgetSeed
+        [🟢]: src/controls/widgets/selectMany/WidgetSelectManyUI
+        [🟢]: src/controls/widgets/selectMany/WidgetSelectMany
+        [🟢]: src/controls/widgets/selectOne/WidgetSelectOneUI
+        [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
+        [🟢]: src/controls/widgets/shared/WidgetShared
+        [🟢]: src/controls/widgets/size/ResolutionState
+        [🟢]: src/controls/widgets/size/WidgetSizeUI
+        [🟢]: src/controls/widgets/size/WidgetSize
+        [🟢]: src/controls/widgets/spacer/WidgetSpacerUI
+        [🟢]: src/controls/widgets/spacer/WidgetSpacer
+        [🟢]: src/controls/widgets/string/WidgetStringUI
+        [🟢]: src/controls/widgets/string/WidgetString
+        [🟢]: src/controls/FormBuilder.loco
     [🟢]: src/controls/FormManager       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🟢]: src/controls/IWidget
         [🔴]: src/controls/IFormBuilder
@@ -126,12 +205,15 @@ TYPES:
     [🟢]: src/controls/FormUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-    [🟢]: src/controls/IWidget       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/shared/getActualWidgetToDisplay.d.ts,/lib/controls/shared/getBorderStatusForWidget.d.ts,/lib/controls/shared/getIfWidgetIsCollapsible.d.ts,/lib/controls/shared/getIfWidgetNeedAlignedLabel.d.ts,/lib/controls/shared/Widget_ToggleUI.d.ts,/lib/controls/shared/WidgetTooltipUI.d.ts,/lib/controls/shared/WidgetWithLabelUI.d.ts,/lib/controls/Mixins.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/FormBuilder.loco.d.ts,/lib/controls/ISpec.d.ts,/lib/controls/FormSerial.d.ts,/lib/controls/IFormBuilder.d.ts,/lib/controls/widgets/listExt/WidgetListExt.d.ts,/lib/controls/widgets/listExt/WidgetListExtTypes.d.ts files)
+    [🟢]: src/controls/IWidget       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/shared/getActualWidgetToDisplay.d.ts,/lib/controls/shared/getBorderStatusForWidget.d.ts,/lib/controls/shared/getIfWidgetIsCollapsible.d.ts,/lib/controls/shared/getIfWidgetNeedAlignedLabel.d.ts,/lib/controls/shared/Widget_ToggleUI.d.ts,/lib/controls/shared/WidgetTooltipUI.d.ts,/lib/controls/shared/WidgetWithLabelUI.d.ts,/lib/controls/Mixins.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/FormBuilder.loco.d.ts,/lib/controls/ISpec.d.ts,/lib/controls/FormSerial.d.ts,/lib/controls/IFormBuilder.d.ts files)
         [🟢]: src/controls/Form
         [🔴]: src/controls/ISpec
         [🔵]: react
     [🟢]: src/controls/Mixins       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🟢]: src/controls/IWidget
+    [🟢]: src/controls/shared/CushyKitCtx       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/controls/shared/CushyKit
     [🟢]: src/controls/shared/getActualWidgetToDisplay       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/shared/getBorderStatusForWidget       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
@@ -200,20 +282,20 @@ TYPES:
         [🔵]: react
         [🔴]: src/controls/ISpec
         [🟢]: src/controls/widgets/group/WidgetGroup
-    [🟢]: src/controls/widgets/list/ListControlsUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
+    [🟢]: src/controls/widgets/list/ListControlsUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/list/WidgetList.d.ts files)
         [🔵]: react
-    [🟢]: src/controls/widgets/list/WidgetList       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/FormBuilder.loco.d.ts,/lib/controls/widgets/listExt/WidgetListExt.d.ts files)
+    [🟢]: src/controls/widgets/list/WidgetList       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟡]: src/controls/widgets/listExt/WidgetListExt
         [🟢]: src/controls/IWidget
+        [🔵]: react
         [🟢]: src/controls/Form
         [🔴]: src/controls/ISpec
+        [🟢]: src/controls/widgets/list/ListControlsUI
     [🟢]: src/controls/widgets/list/WidgetListUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
-        [🔵]: react
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/IWidget
+        [🔵]: react
         [🔴]: src/controls/ISpec
-        [🟡]: src/controls/widgets/listExt/WidgetListExt
         [🟢]: src/controls/widgets/list/WidgetList
     [🟢]: src/controls/widgets/markdown/WidgetMarkdown       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/markdown/WidgetMarkdownUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
@@ -277,7 +359,7 @@ TYPES:
         [🟢]: src/controls/Form
         [🔴]: src/controls/ISpec
         [🟢]: src/controls/IWidget
-    [🟢]: src/controls/widgets/size/ResolutionState       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/listExt/WidgetListExt.d.ts files)
+    [🟢]: src/controls/widgets/size/ResolutionState       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts files)
         [🟡]: src/controls/widgets/size/WidgetSizeTypes
     [🟢]: src/controls/widgets/size/WidgetSize       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
@@ -326,7 +408,9 @@ TYPES:
         [🔵]: react
         [🟢]: src/rsuite/reveal/RevealState
     [🟢]: src/rsuite/reveal/RevealPlacement       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/rsuite/reveal/RevealState.d.ts,/lib/rsuite/reveal/RevealProps.d.ts files)
-    [🟢]: src/rsuite/reveal/RevealState       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/rsuite/reveal/RevealCtx.d.ts files)
+    [🟢]: src/rsuite/reveal/RevealStack       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
+        [🟢]: src/rsuite/reveal/RevealState
+    [🟢]: src/rsuite/reveal/RevealState       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/rsuite/reveal/RevealCtx.d.ts,/lib/rsuite/reveal/RevealStack.d.ts files)
         [🟢]: src/rsuite/reveal/RevealPlacement
         [🟡]: src/rsuite/reveal/RevealProps
         [🔵]: react
@@ -358,117 +442,33 @@ TYPES:
 
 
 ❌ POSSIBLY UNWANTED FILES IN DTS:
-    ❌ /lib/controls/FormBuilder.loco.LIBRARY.d.ts
-    ❌ /lib/controls/FormSerial.d.ts
-        - /lib/controls/Form.d.ts
-    ❌ /lib/controls/IFormBuilder.d.ts
-        - /lib/controls/Form.d.ts
-        - /lib/controls/FormBuilder.loco.d.ts
-        - /lib/controls/FormManager.d.ts
-        - /lib/controls/shared/runWithGlobalForm.d.ts
-    ❌ /lib/controls/ISpec.d.ts
-        - /lib/controls/Form.d.ts
-        - /lib/controls/FormBuilder.loco.d.ts
-        - /lib/controls/FormManager.d.ts
-        - /lib/controls/IFormBuilder.d.ts
-        - /lib/controls/IWidget.d.ts
-        - /lib/controls/widgets/WidgetUI.DI.d.ts
-        - /lib/controls/widgets/bool/WidgetBool.d.ts
-        - /lib/controls/widgets/button/WidgetButton.d.ts
-        - /lib/controls/widgets/choices/WidgetChoices.d.ts
-        - /lib/controls/widgets/choices/WidgetChoicesUI.d.ts
-        - /lib/controls/widgets/color/WidgetColor.d.ts
-        - /lib/controls/widgets/group/WidgetGroup.d.ts
-        - /lib/controls/widgets/group/WidgetGroupUI.d.ts
-        - /lib/controls/widgets/list/WidgetList.d.ts
-        - /lib/controls/widgets/list/WidgetListUI.d.ts
-        - /lib/controls/widgets/listExt/WidgetListExt.d.ts
-        - /lib/controls/widgets/markdown/WidgetMarkdown.d.ts
-        - /lib/controls/widgets/matrix/WidgetMatrix.d.ts
-        - /lib/controls/widgets/number/WidgetNumber.d.ts
-        - /lib/controls/widgets/optional/WidgetOptional.d.ts
-        - /lib/controls/widgets/seed/WidgetSeed.d.ts
-        - /lib/controls/widgets/selectMany/WidgetSelectMany.d.ts
-        - /lib/controls/widgets/selectOne/WidgetSelectOne.d.ts
-        - /lib/controls/widgets/shared/WidgetShared.d.ts
-        - /lib/controls/widgets/size/WidgetSize.d.ts
-        - /lib/controls/widgets/spacer/WidgetSpacer.d.ts
-        - /lib/controls/widgets/string/WidgetString.d.ts
-    ❌ /lib/controls/widgets/listExt/WidgetListExt.d.ts
-        - /lib/controls/widgets/list/WidgetList.d.ts
-        - /lib/controls/widgets/list/WidgetListUI.d.ts
-    ❌ /lib/controls/widgets/listExt/WidgetListExtTypes.d.ts
-        - /lib/controls/widgets/listExt/WidgetListExt.d.ts
-    ❌ /lib/controls/widgets/size/WidgetSizeTypes.d.ts
-        - /lib/controls/widgets/size/ResolutionState.d.ts
-        - /lib/controls/widgets/size/WidgetSize.d.ts
-    ❌ /lib/llm/OpenRouter_models.d.ts
-        - /lib/controls/FormBuilder.loco.d.ts
-        - /lib/llm/OpenRouter_infos.d.ts
-    ❌ /lib/rsuite/RsuiteTypes.d.ts
-        - /lib/rsuite/shims.d.ts
-    ❌ /lib/rsuite/reveal/RevealProps.d.ts
-        - /lib/rsuite/reveal/RevealState.d.ts
-        - /lib/rsuite/reveal/RevealUI.d.ts
-    ❌ react
-        - /lib/controls/Form.d.ts
-        - /lib/controls/FormManager.d.ts
-        - /lib/controls/FormUI.d.ts
-        - /lib/controls/ISpec.d.ts
-        - /lib/controls/IWidget.d.ts
-        - /lib/controls/shared/WidgetTooltipUI.d.ts
-        - /lib/controls/shared/WidgetWithLabelUI.d.ts
-        - /lib/controls/shared/Widget_ToggleUI.d.ts
-        - /lib/controls/utils/AnimatedSizeUI.d.ts
-        - /lib/controls/widgets/bool/InputBoolUI.d.ts
-        - /lib/controls/widgets/bool/WidgetBool.d.ts
-        - /lib/controls/widgets/bool/WidgetBoolUI.d.ts
-        - /lib/controls/widgets/color/WidgetColor.d.ts
-        - /lib/controls/widgets/color/WidgetColorUI.d.ts
-        - /lib/controls/widgets/group/WidgetGroup.d.ts
-        - /lib/controls/widgets/group/WidgetGroupUI.d.ts
-        - /lib/controls/widgets/list/ListControlsUI.d.ts
-        - /lib/controls/widgets/list/WidgetListUI.d.ts
-        - /lib/controls/widgets/markdown/WidgetMarkdown.d.ts
-        - /lib/controls/widgets/markdown/WidgetMarkdownUI.d.ts
-        - /lib/controls/widgets/matrix/WidgetMatrix.d.ts
-        - /lib/controls/widgets/matrix/WidgetMatrixUI.d.ts
-        - /lib/controls/widgets/number/InputNumberUI.d.ts
-        - /lib/controls/widgets/number/WidgetNumber.d.ts
-        - /lib/controls/widgets/number/WidgetNumberUI.d.ts
-        - /lib/controls/widgets/seed/WidgetSeed.d.ts
-        - /lib/controls/widgets/seed/WidgetSeedUI.d.ts
-        - /lib/controls/widgets/size/WidgetSize.d.ts
-        - /lib/controls/widgets/size/WidgetSizeUI.d.ts
-        - /lib/controls/widgets/spacer/SpacerUI.d.ts
-        - /lib/controls/widgets/spacer/WidgetSpacer.d.ts
-        - /lib/controls/widgets/spacer/WidgetSpacerUI.d.ts
-        - /lib/controls/widgets/string/WidgetString.d.ts
-        - /lib/controls/widgets/string/WidgetStringUI.d.ts
-        - /lib/panels/MessageUI.d.ts
-        - /lib/rsuite/MarkdownUI.d.ts
-        - /lib/rsuite/SelectUI.d.ts
-        - /lib/rsuite/reveal/ModalShell.d.ts
-        - /lib/rsuite/reveal/RevealCtx.d.ts
-        - /lib/rsuite/reveal/RevealProps.d.ts
-        - /lib/rsuite/reveal/RevealState.d.ts
-        - /lib/rsuite/reveal/RevealUI.d.ts
-        - /lib/rsuite/shims.d.ts
-        - /lib/widgets/workspace/JsonViewUI.d.ts
-    ❌ react/jsx-runtime
-        - /lib/controls/widgets/button/WidgetButton.d.ts
-        - /lib/controls/widgets/button/WidgetButtonUI.d.ts
-        - /lib/controls/widgets/choices/WidgetChoices.d.ts
-        - /lib/controls/widgets/choices/WidgetChoicesUI.d.ts
-        - /lib/controls/widgets/group/WidgetGroup.d.ts
-        - /lib/controls/widgets/group/WidgetGroupUI.d.ts
-        - /lib/controls/widgets/list/WidgetList.d.ts
-        - /lib/controls/widgets/list/WidgetListUI.d.ts
-        - /lib/controls/widgets/listExt/WidgetListExt.d.ts
-        - /lib/controls/widgets/selectMany/WidgetSelectMany.d.ts
-        - /lib/controls/widgets/selectMany/WidgetSelectManyUI.d.ts
-        - /lib/controls/widgets/selectOne/WidgetSelectOne.d.ts
-        - /lib/controls/widgets/selectOne/WidgetSelectOneUI.d.ts
-        - /lib/rsuite/SelectUI.d.ts
-        - /lib/rsuite/shims.d.ts
-        - /lib/widgets/misc/ErrorBoundary.d.ts
+    🔴 ./src/controls/FormSerial (/lib/controls/FormSerial.d.ts)
+       <- 🟢 src/controls/Form
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🔴 src/controls/IFormBuilder (/lib/controls/IFormBuilder.d.ts)
+       <- 🟢 src/controls/Form
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🔴 src/controls/ISpec (/lib/controls/ISpec.d.ts)
+       <- 🟢 src/controls/widgets/WidgetUI.DI
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🔴 src/controls/shared/CushyKit (/lib/controls/shared/CushyKit.d.ts)
+       <- 🟢 src/controls/shared/CushyKitCtx
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🟡 src/controls/widgets/size/WidgetSizeTypes (/lib/controls/widgets/size/WidgetSizeTypes.d.ts)
+       <- 🟢 src/controls/widgets/size/ResolutionState
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🟡 src/llm/OpenRouter_models (/lib/llm/OpenRouter_models.d.ts)
+       <- 🟢 src/llm/OpenRouter_infos
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🟡 src/rsuite/RsuiteTypes (/lib/rsuite/RsuiteTypes.d.ts)
+       <- 🟢 src/rsuite/shims
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🟡 src/rsuite/reveal/RevealProps (/lib/rsuite/reveal/RevealProps.d.ts)
+       <- 🟢 src/rsuite/reveal/RevealState
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🔵 react (react)
+       <- 🟢 src/rsuite/MarkdownUI
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+    🔵 react/jsx-runtime (react/jsx-runtime)
+       <- 🟢 src/widgets/misc/ErrorBoundary
+       <- 🟢 src/controls/FormBuilder.loco.LIBRARY

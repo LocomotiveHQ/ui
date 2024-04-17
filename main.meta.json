@@ -362,6 +362,11 @@
       ],
       "format": "esm"
     },
+    "src/rsuite/reveal/RevealStack.ts": {
+      "bytes": 102,
+      "imports": [],
+      "format": "esm"
+    },
     "src/rsuite/reveal/RevealPlacement.tsx": {
       "bytes": 3573,
       "imports": [],
@@ -384,7 +389,7 @@
       "format": "esm"
     },
     "src/rsuite/reveal/RevealUI.tsx": {
-      "bytes": 7600,
+      "bytes": 7671,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -410,6 +415,11 @@
           "path": "src/rsuite/reveal/RevealCtx.ts",
           "kind": "import-statement",
           "original": "./RevealCtx"
+        },
+        {
+          "path": "src/rsuite/reveal/RevealStack.ts",
+          "kind": "import-statement",
+          "original": "./RevealStack"
         },
         {
           "path": "src/rsuite/reveal/RevealState.tsx",
@@ -972,7 +982,7 @@
       "format": "esm"
     },
     "src/controls/widgets/list/ListControlsUI.tsx": {
-      "bytes": 2759,
+      "bytes": 2783,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -988,7 +998,7 @@
       "format": "esm"
     },
     "src/controls/widgets/list/WidgetListUI.tsx": {
-      "bytes": 6677,
+      "bytes": 6638,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -1034,7 +1044,7 @@
       "format": "esm"
     },
     "src/controls/widgets/list/WidgetList.ts": {
-      "bytes": 7709,
+      "bytes": 7782,
       "imports": [
         {
           "path": "mobx",
@@ -1183,12 +1193,23 @@
       "imports": [],
       "format": "esm"
     },
+    "src/controls/shared/CushyKitCtx.ts": {
+      "bytes": 434,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
     "src/controls/widgets/number/InputNumberUI.css": {
       "bytes": 536,
       "imports": []
     },
     "src/controls/widgets/number/InputNumberUI.tsx": {
-      "bytes": 17267,
+      "bytes": 17427,
       "imports": [
         {
           "path": "src/controls/widgets/number/InputNumberUI.css",
@@ -1214,6 +1235,11 @@
           "path": "src/utils/misc/parseFloatNoRoundingErr.ts",
           "kind": "import-statement",
           "original": "../../../utils/misc/parseFloatNoRoundingErr"
+        },
+        {
+          "path": "src/controls/shared/CushyKitCtx.ts",
+          "kind": "import-statement",
+          "original": "../../shared/CushyKitCtx"
         },
         {
           "path": "src/utils/custom-jsx/jsx-runtime.js",
@@ -1829,7 +1855,7 @@
       "format": "esm"
     },
     "src/controls/FormBuilder.loco.LIBRARY.ts": {
-      "bytes": 3761,
+      "bytes": 3853,
       "imports": [
         {
           "path": "src/llm/OpenRouter_infos.ts",
@@ -1955,6 +1981,11 @@
           "path": "src/rsuite/reveal/RevealCtx.ts",
           "kind": "import-statement",
           "original": "../rsuite/reveal/RevealCtx"
+        },
+        {
+          "path": "src/rsuite/reveal/RevealStack.ts",
+          "kind": "import-statement",
+          "original": "../rsuite/reveal/RevealStack"
         },
         {
           "path": "src/rsuite/reveal/RevealPlacement.tsx",
@@ -2105,6 +2136,11 @@
           "path": "src/utils/misc/parseFloatNoRoundingErr.ts",
           "kind": "import-statement",
           "original": "../utils/misc/parseFloatNoRoundingErr"
+        },
+        {
+          "path": "src/controls/shared/CushyKitCtx.ts",
+          "kind": "import-statement",
+          "original": "../controls/shared/CushyKitCtx"
         },
         {
           "path": "src/controls/widgets/number/InputNumberUI.tsx",
@@ -2524,6 +2560,11 @@
           "external": true
         },
         {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
           "path": "mobx",
           "kind": "import-statement",
           "external": true
@@ -2683,6 +2724,7 @@
         "AspectLockButtonUI",
         "AspectRatioSquareUI",
         "Button",
+        "CushyKitCtx",
         "DropdownMenu",
         "ErrorBoundaryFallback",
         "Form",
@@ -2811,6 +2853,7 @@
         "getIfWidgetIsCollapsible",
         "getIfWidgetNeedAlignedLabel",
         "getWidgetClass",
+        "global_RevealStack",
         "isWidget",
         "isWidgetGroup",
         "isWidgetOptional",
@@ -2827,6 +2870,8 @@
         "toastInfo",
         "toastSuccess",
         "unaccent",
+        "useCushyKit",
+        "useCushyKitOrNull",
         "useReveal",
         "useRevealOrNull",
         "useSizeOf"
@@ -2915,6 +2960,9 @@
         "src/rsuite/reveal/RevealCtx.ts": {
           "bytesInOutput": 341
         },
+        "src/rsuite/reveal/RevealStack.ts": {
+          "bytesInOutput": 29
+        },
         "src/rsuite/reveal/RevealPlacement.tsx": {
           "bytesInOutput": 2641
         },
@@ -2922,7 +2970,7 @@
           "bytesInOutput": 6959
         },
         "src/rsuite/reveal/RevealUI.tsx": {
-          "bytesInOutput": 5631
+          "bytesInOutput": 5651
         },
         "src/utils/misc/exhaust.ts": {
           "bytesInOutput": 24
@@ -3005,11 +3053,14 @@
         "src/utils/misc/parseFloatNoRoundingErr.ts": {
           "bytesInOutput": 239
         },
+        "src/controls/shared/CushyKitCtx.ts": {
+          "bytesInOutput": 356
+        },
         "src/controls/widgets/number/InputNumberUI.css": {
           "bytesInOutput": 0
         },
         "src/controls/widgets/number/InputNumberUI.tsx": {
-          "bytesInOutput": 13018
+          "bytesInOutput": 12887
         },
         "src/controls/widgets/number/WidgetNumberUI.tsx": {
           "bytesInOutput": 1151
@@ -3075,7 +3126,7 @@
           "bytesInOutput": 8958
         }
       },
-      "bytes": 194994
+      "bytes": 195417
     },
     "@cushy/forms/main.css": {
       "imports": [],

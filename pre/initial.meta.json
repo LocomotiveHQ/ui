@@ -374,6 +374,11 @@
       ],
       "format": "esm"
     },
+    "src/rsuite/reveal/RevealStack.ts": {
+      "bytes": 102,
+      "imports": [],
+      "format": "esm"
+    },
     "src/rsuite/reveal/RevealPlacement.tsx": {
       "bytes": 3573,
       "imports": [],
@@ -396,7 +401,7 @@
       "format": "esm"
     },
     "src/rsuite/reveal/RevealUI.tsx": {
-      "bytes": 7600,
+      "bytes": 7671,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -422,6 +427,11 @@
           "path": "src/rsuite/reveal/RevealCtx.ts",
           "kind": "import-statement",
           "original": "./RevealCtx"
+        },
+        {
+          "path": "src/rsuite/reveal/RevealStack.ts",
+          "kind": "import-statement",
+          "original": "./RevealStack"
         },
         {
           "path": "src/rsuite/reveal/RevealState.tsx",
@@ -984,7 +994,7 @@
       "format": "esm"
     },
     "src/controls/widgets/list/ListControlsUI.tsx": {
-      "bytes": 2759,
+      "bytes": 2783,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -1000,7 +1010,7 @@
       "format": "esm"
     },
     "src/controls/widgets/list/WidgetListUI.tsx": {
-      "bytes": 6677,
+      "bytes": 6638,
       "imports": [
         {
           "path": "mobx-react-lite",
@@ -1046,7 +1056,7 @@
       "format": "esm"
     },
     "src/controls/widgets/list/WidgetList.ts": {
-      "bytes": 7709,
+      "bytes": 7782,
       "imports": [
         {
           "path": "mobx",
@@ -1199,8 +1209,19 @@
       "imports": [],
       "format": "esm"
     },
+    "src/controls/shared/CushyKitCtx.ts": {
+      "bytes": 434,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
     "src/controls/widgets/number/InputNumberUI.tsx": {
-      "bytes": 17267,
+      "bytes": 17427,
       "imports": [
         {
           "path": "src/controls/widgets/number/InputNumberUI.css",
@@ -1226,6 +1247,11 @@
           "path": "src/utils/misc/parseFloatNoRoundingErr.ts",
           "kind": "import-statement",
           "original": "../../../utils/misc/parseFloatNoRoundingErr"
+        },
+        {
+          "path": "src/controls/shared/CushyKitCtx.ts",
+          "kind": "import-statement",
+          "original": "../../shared/CushyKitCtx"
         },
         {
           "path": "src/utils/custom-jsx/jsx-runtime.js",
@@ -2183,6 +2209,11 @@
           "external": true
         },
         {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
           "path": "mobx",
           "kind": "import-statement",
           "external": true
@@ -2403,13 +2434,16 @@
           "bytesInOutput": 468
         },
         "src/rsuite/reveal/RevealUI.tsx": {
-          "bytesInOutput": 5631
+          "bytesInOutput": 5651
         },
         "src/rsuite/reveal/ModalShell.tsx": {
           "bytesInOutput": 1189
         },
         "src/rsuite/reveal/RevealCtx.ts": {
           "bytesInOutput": 172
+        },
+        "src/rsuite/reveal/RevealStack.ts": {
+          "bytesInOutput": 29
         },
         "src/rsuite/reveal/RevealState.tsx": {
           "bytesInOutput": 6959
@@ -2493,10 +2527,13 @@
           "bytesInOutput": 0
         },
         "src/controls/widgets/number/InputNumberUI.tsx": {
-          "bytesInOutput": 13018
+          "bytesInOutput": 12887
         },
         "src/utils/misc/parseFloatNoRoundingErr.ts": {
           "bytesInOutput": 239
+        },
+        "src/controls/shared/CushyKitCtx.ts": {
+          "bytesInOutput": 194
         },
         "src/controls/widgets/optional/WidgetOptional.tsx": {
           "bytesInOutput": 2088
@@ -2544,7 +2581,7 @@
           "bytesInOutput": 3950
         }
       },
-      "bytes": 189464
+      "bytes": 189652
     },
     "@cushy/forms/pre/initial.css": {
       "imports": [],

@@ -1255,6 +1255,9 @@ var useRevealOrNull = () => {
   return val;
 };
 
+// src/rsuite/reveal/RevealStack.ts
+var global_RevealStack = [];
+
 // src/rsuite/reveal/RevealState.tsx
 import { makeAutoObservable as makeAutoObservable2, observable as observable2 } from "mobx";
 
@@ -1603,8 +1606,8 @@ var mkTooltip = (uist) => {
     {
       ref: (e) => {
         if (e == null)
-          return cushy._popups.filter((p2) => p2 !== uist);
-        cushy._popups.push(uist);
+          return global_RevealStack.filter((p2) => p2 !== uist);
+        global_RevealStack.push(uist);
       },
       onKeyUp: (ev) => {
         if (ev.key === "Escape") {
@@ -1628,8 +1631,8 @@ var mkTooltip = (uist) => {
     {
       ref: (e) => {
         if (e == null)
-          return cushy._popups.filter((p2) => p2 !== uist);
-        cushy._popups.push(uist);
+          return global_RevealStack.filter((p2) => p2 !== uist);
+        global_RevealStack.push(uist);
       },
       onKeyUp: (ev) => {
         if (ev.key === "Escape") {
@@ -3602,6 +3605,13 @@ var parseFloatNoRoundingErr = (str, maxDigitsAfterDot = 3) => {
   return out;
 };
 
+// src/controls/shared/CushyKitCtx.ts
+import { createContext as createContext2, useContext as useContext2 } from "react";
+var CushyKitCtx = createContext2(null);
+var useCushyKitOrNull = () => {
+  return useContext2(CushyKitCtx);
+};
+
 // src/controls/widgets/number/InputNumberUI.tsx
 var clamp = (x, min, max) => Math.max(min, Math.min(max, x));
 var startValue = 0;
@@ -3613,9 +3623,9 @@ var lastValue = 0;
 var activeSlider = null;
 var cancelled = false;
 var InputNumberStableState = class {
-  constructor(props) {
+  constructor(props, kit) {
     this.props = props;
-    // prettier-ignore
+    this.kit = kit;
     /* Used for making sure you can type whatever you want in to the value, but it gets validated when pressing Enter. */
     this.inputValue = this.value.toString();
     /* When editing the number <input> this will make it display inputValue instead of val.*/
@@ -3708,41 +3718,34 @@ var InputNumberStableState = class {
   get value() {
     return this.props.value ?? clamp(1, this.props.min ?? -Infinity, this.props.max ?? Infinity);
   }
-  // prettier-ignore
   get mode() {
     return this.props.mode;
   }
-  // prettier-ignore
   get step() {
     return this.props.step ?? (this.mode === "int" ? 1 : 0.1);
   }
-  // prettier-ignore
   get rounding() {
     return Math.ceil(-Math.log10(this.step * 0.01));
   }
-  // prettier-ignore
   get forceSnap() {
     return this.props.forceSnap ?? false;
   }
-  // prettier-ignore
   get rangeMin() {
     return this.props.softMin ?? this.props.min ?? -Infinity;
   }
-  // prettier-ignore
   get rangeMax() {
     return this.props.softMax ?? this.props.max ?? Infinity;
   }
-  // prettier-ignore
   get numberSliderSpeed() {
-    return cushy.configFile.get("numberSliderSpeed") ?? 1;
+    return this.kit?.clickAndSlideMultiplicator ?? 1;
   }
-  // prettier-ignore
   get isInteger() {
     return this.mode === "int";
   }
 };
 var InputNumberUI = observer25(function InputNumberUI_(p) {
-  const uist = useMemo4(() => new InputNumberStableState(p), []);
+  const kit = useCushyKitOrNull();
+  const uist = useMemo4(() => new InputNumberStableState(p, kit), []);
   runInAction6(() => Object.assign(uist.props, p));
   useEffect2(() => uist.onPointerUpListener, []);
   const val = uist.value;

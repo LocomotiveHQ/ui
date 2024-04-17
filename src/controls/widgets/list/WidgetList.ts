@@ -1,6 +1,7 @@
 import type { Form } from '../../Form'
 import type { ISpec } from '../../ISpec'
 import type { IWidget, IWidgetMixins, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
+import type { IWidgetListLike } from './ListControlsUI'
 
 import { makeAutoObservable, observable } from 'mobx'
 import { nanoid } from 'nanoid'
@@ -42,7 +43,7 @@ export type Widget_list_types<T extends ISpec> = {
 
 // STATE
 export interface Widget_list<T extends ISpec> extends Widget_list_types<T>, IWidgetMixins {}
-export class Widget_list<T extends ISpec> implements IWidget<Widget_list_types<T>> {
+export class Widget_list<T extends ISpec> implements IWidget<Widget_list_types<T>>, IWidgetListLike {
     DefaultHeaderUI = WidgetList_LineUI
     get DefaultBodyUI() {
         // if (this.items.length === 0) return
