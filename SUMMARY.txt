@@ -87,9 +87,9 @@ TYPES:
         [🔵]: react
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/FormManager
-        [🔴]: src/controls/FormSerial
-        [🔴]: src/controls/IFormBuilder
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/FormSerial
+        [🟡]: src/controls/IFormBuilder
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/widgets/group/WidgetGroup
     [🟢]: src/controls/FormBuilder.loco       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🟢]: src/controls/IWidget
@@ -98,8 +98,8 @@ TYPES:
         [🟢]: src/theme/form.css
         [🟡]: src/llm/OpenRouter_models
         [🟢]: src/controls/Form
-        [🔴]: src/controls/IFormBuilder
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/IFormBuilder
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/FormManager
         [🟢]: src/controls/widgets/bool/WidgetBool
         [🟢]: src/controls/widgets/button/WidgetButton
@@ -197,8 +197,8 @@ TYPES:
         [🟢]: src/controls/FormBuilder.loco
     [🟢]: src/controls/FormManager       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🟢]: src/controls/IWidget
-        [🔴]: src/controls/IFormBuilder
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/IFormBuilder
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/widgets/group/WidgetGroup
         [🔵]: react
         [🟢]: src/controls/Form
@@ -207,13 +207,13 @@ TYPES:
         [🟢]: src/controls/Form
     [🟢]: src/controls/IWidget       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/shared/getActualWidgetToDisplay.d.ts,/lib/controls/shared/getBorderStatusForWidget.d.ts,/lib/controls/shared/getIfWidgetIsCollapsible.d.ts,/lib/controls/shared/getIfWidgetNeedAlignedLabel.d.ts,/lib/controls/shared/Widget_ToggleUI.d.ts,/lib/controls/shared/WidgetTooltipUI.d.ts,/lib/controls/shared/WidgetWithLabelUI.d.ts,/lib/controls/Mixins.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/FormBuilder.loco.d.ts,/lib/controls/ISpec.d.ts,/lib/controls/FormSerial.d.ts,/lib/controls/IFormBuilder.d.ts files)
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🔵]: react
     [🟢]: src/controls/Mixins       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/shared/CushyKitCtx       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
-        [🔴]: src/controls/shared/CushyKit
+        [🟡]: src/controls/shared/CushyKit
     [🟢]: src/controls/shared/getActualWidgetToDisplay       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/shared/getBorderStatusForWidget       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
@@ -223,7 +223,7 @@ TYPES:
     [🟢]: src/controls/shared/getIfWidgetNeedAlignedLabel       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/shared/runWithGlobalForm       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
-        [🔴]: src/controls/IFormBuilder
+        [🟡]: src/controls/IFormBuilder
     [🟢]: src/controls/shared/Widget_ToggleUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/IWidget
@@ -241,7 +241,7 @@ TYPES:
     [🟢]: src/controls/widgets/bool/WidgetBool       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/bool/WidgetBoolUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/bool/WidgetBoolUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
@@ -249,7 +249,7 @@ TYPES:
     [🟢]: src/controls/widgets/button/WidgetButton       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/button/WidgetButtonUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/button/WidgetButtonUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
@@ -257,16 +257,16 @@ TYPES:
     [🟢]: src/controls/widgets/choices/WidgetChoices       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/choices/WidgetChoicesUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/choices/WidgetChoicesUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/widgets/choices/WidgetChoices
     [🟢]: src/controls/widgets/color/WidgetColor       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/color/WidgetColorUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/color/WidgetColorUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
@@ -276,11 +276,11 @@ TYPES:
         [🔵]: react/jsx-runtime
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
     [🟢]: src/controls/widgets/group/WidgetGroupUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🔵]: react
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/widgets/group/WidgetGroup
     [🟢]: src/controls/widgets/list/ListControlsUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/list/WidgetList.d.ts files)
         [🔵]: react
@@ -289,18 +289,18 @@ TYPES:
         [🟢]: src/controls/IWidget
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/widgets/list/ListControlsUI
     [🟢]: src/controls/widgets/list/WidgetListUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/IWidget
         [🔵]: react
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/widgets/list/WidgetList
     [🟢]: src/controls/widgets/markdown/WidgetMarkdown       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/markdown/WidgetMarkdownUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/markdown/WidgetMarkdownUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
@@ -308,7 +308,7 @@ TYPES:
     [🟢]: src/controls/widgets/matrix/WidgetMatrix       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/matrix/WidgetMatrixUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/matrix/WidgetMatrixUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
@@ -320,19 +320,19 @@ TYPES:
     [🟢]: src/controls/widgets/number/WidgetNumber       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/number/WidgetNumberUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/number/WidgetNumberUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/number/WidgetNumber
     [🟢]: src/controls/widgets/optional/WidgetOptional       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/seed/WidgetSeed       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/seed/WidgetSeedUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/seed/WidgetSeedUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
@@ -340,7 +340,7 @@ TYPES:
     [🟢]: src/controls/widgets/selectMany/WidgetSelectMany       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/selectMany/WidgetSelectManyUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
     [🟢]: src/controls/widgets/selectMany/WidgetSelectManyUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
@@ -350,21 +350,21 @@ TYPES:
     [🟢]: src/controls/widgets/selectOne/WidgetSelectOne       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/selectMany/WidgetSelectManyUI.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOneUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/selectOne/WidgetSelectOneUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
     [🟢]: src/controls/widgets/shared/WidgetShared       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/FormBuilder.loco.d.ts,/lib/controls/IFormBuilder.d.ts files)
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/size/ResolutionState       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts files)
         [🟡]: src/controls/widgets/size/WidgetSizeTypes
     [🟢]: src/controls/widgets/size/WidgetSize       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟡]: src/controls/widgets/size/WidgetSizeTypes
         [🟢]: src/controls/widgets/size/ResolutionState
@@ -378,20 +378,20 @@ TYPES:
         [🟢]: src/controls/IWidget
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
     [🟢]: src/controls/widgets/spacer/WidgetSpacerUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/spacer/WidgetSpacer
     [🟢]: src/controls/widgets/string/WidgetString       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts,/lib/controls/widgets/string/WidgetStringUI.d.ts,/lib/controls/FormBuilder.loco.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
     [🟢]: src/controls/widgets/string/WidgetStringUI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/string/WidgetString
     [🟢]: src/controls/widgets/WidgetUI.DI       (from /lib/controls/FormBuilder.loco.LIBRARY.d.ts files)
-        [🔴]: src/controls/ISpec
+        [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/widgets/group/WidgetGroup
         [🟢]: src/controls/widgets/optional/WidgetOptional
@@ -442,16 +442,16 @@ TYPES:
 
 
 ❌ POSSIBLY UNWANTED FILES IN DTS:
-    🔴 ./src/controls/FormSerial (/lib/controls/FormSerial.d.ts)
+    🟡 src/controls/FormSerial (/lib/controls/FormSerial.d.ts)
        <- 🟢 src/controls/Form
        <- 🟢 src/controls/FormBuilder.loco.LIBRARY
-    🔴 src/controls/IFormBuilder (/lib/controls/IFormBuilder.d.ts)
+    🟡 src/controls/IFormBuilder (/lib/controls/IFormBuilder.d.ts)
        <- 🟢 src/controls/Form
        <- 🟢 src/controls/FormBuilder.loco.LIBRARY
-    🔴 src/controls/ISpec (/lib/controls/ISpec.d.ts)
+    🟡 src/controls/ISpec (/lib/controls/ISpec.d.ts)
        <- 🟢 src/controls/widgets/WidgetUI.DI
        <- 🟢 src/controls/FormBuilder.loco.LIBRARY
-    🔴 src/controls/shared/CushyKit (/lib/controls/shared/CushyKit.d.ts)
+    🟡 src/controls/shared/CushyKit (/lib/controls/shared/CushyKit.d.ts)
        <- 🟢 src/controls/shared/CushyKitCtx
        <- 🟢 src/controls/FormBuilder.loco.LIBRARY
     🟡 src/controls/widgets/size/WidgetSizeTypes (/lib/controls/widgets/size/WidgetSizeTypes.d.ts)
@@ -472,3 +472,4 @@ TYPES:
     🔵 react/jsx-runtime (react/jsx-runtime)
        <- 🟢 src/widgets/misc/ErrorBoundary
        <- 🟢 src/controls/FormBuilder.loco.LIBRARY
+[🟢] all JS files are also present in the bundled DTS
