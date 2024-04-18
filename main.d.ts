@@ -32,8 +32,6 @@ declare const openRouterInfos: {
     [key in OpenRouter_Models]: OopenRouter_ModelInfo;
 };
 
-declare const _FIX_INDENTATION: (str: TemplateStringsArray) => string;
-
 declare function debounce<T extends (...args: any[]) => any>(func: T, delay: number, maxWait?: number): (...funcArgs: Parameters<T>) => void;
 
 declare const MarkdownUI: react.FunctionComponent<{
@@ -74,6 +72,29 @@ interface ISpec<W extends IWidget = IWidget> {
     }) => ReactNode;
 }
 
+/** custom type checking;
+ * valid:
+ *  - true,
+ *  - [],
+ * invalid:
+ *  - false,
+ *  - ["errMsg", ...]
+ *  - "errMsg"
+ * */
+type Problem_Ext = boolean | string | Problem | null | undefined | Problem_Ext[];
+type Problem = {
+    severity?: Severity;
+    message: string;
+    data?: any;
+};
+declare const normalizeProblem: (problem: Problem_Ext) => Problem[];
+declare enum Severity {
+    Error = "Error",
+    Warning = "Warning",
+    Info = "Info",
+    Success = "Success"
+}
+
 /**
  * base widget type; default type-level param when we work with unknown widget
  * still allow to use SharedConfig properties, and SharedSerial properties
@@ -92,6 +113,7 @@ interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends IWidgetMixins {
     $Serial: K['$Serial']; /** type only properties; do not use directly; used to make typings good and fast */
     $Value: K['$Value']; /** type only properties; do not use directly; used to make typings good and fast */
     $Widget: K['$Widget']; /** type only properties; do not use directly; used to make typings good and fast */
+    readonly baseErrors: Problem_Ext;
     /** unique ID; each node in the form tree has one; persisted in serial */
     readonly id: string;
     /** spec used to instanciate this widget */
@@ -118,11 +140,11 @@ interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends IWidgetMixins {
     background?: boolean;
     /** default header UI */
     readonly DefaultHeaderUI: FC<{
-        widget: K['$Widget'];
+        widget: any;
     }> | undefined;
     /** default body UI */
     readonly DefaultBodyUI: FC<{
-        widget: K['$Widget'];
+        widget: any;
     }> | undefined;
 }
 declare const $WidgetSym: unique symbol;
@@ -155,6 +177,9 @@ type IWidgetMixins = {
      * 👉 every widget must call this when non-value serial has been updated
      * */
     bumpSerial(): void;
+    readonly hasErrors: boolean;
+    readonly customErrors: Problem[];
+    readonly errors: Problem[];
 };
 /** 🔶 2024-03-13 rvion: TODO: remove that function; use ['$Value'] instead */
 type GetWidgetResult<Widget> = Widget extends {
@@ -189,8 +214,16 @@ type SharedWidgetConfig<T extends $WidgetTypes> = {
     }) => JSX.Element);
     /** will be called when value changed */
     onValueChange?: (val: T['$Value']) => void;
-    /** custom type checking */
-    check?: (val: T['$Value']) => Maybe<string | boolean>;
+    /** custom type checking;
+     * valid:
+     *  - true,
+     *  - [],
+     * invalid:
+     *  - false,
+     *  - ["errMsg", ...]
+     *  - "errMsg"
+     * */
+    check?: (val: T['$Widget']) => Problem_Ext;
     /**
      * The label to display.
      * If none provided, the parent key is going to be converted as label.
@@ -268,6 +301,7 @@ declare class Widget_group<T extends SchemaDict> implements IWidget<Widget_group
     }) => react_jsx_runtime.JSX.Element) & {
         displayName: string;
     }) | undefined;
+    get baseErrors(): Problem_Ext;
     get summary(): string;
     readonly id: string;
     get config(): Widget_group_config<T>;
@@ -324,6 +358,7 @@ declare class Widget_shared<T extends ISpec = ISpec> implements IWidget<Widget_s
     $Widget: T['$Widget'];
     serial: Widget_shared_serial;
     get shared(): T['$Widget'];
+    get baseErrors(): Problem_Ext;
     hidden: () => void;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_shared<T>>, serial?: Widget_shared_serial);
     get value(): Widget_shared_value<T>;
@@ -358,7 +393,9 @@ declare class FormManager<BUILDER extends IFormBuilder> {
     _builders: WeakMap<Form<ISpec<IWidget<$WidgetTypes>>, IFormBuilder>, BUILDER>;
     getBuilder: (form: Form<any, any>) => BUILDER;
     /** LEGACY API; TYPES ARE COMPLICATED DUE TO MAINTAINING BACKWARD COMPAT */
-    form: <FIELDS extends SchemaDict>(ui: (form: BUILDER) => FIELDS, formProperties?: FormProperties<ISpec<Widget_group<FIELDS>>>) => Form<ISpec<Widget_group<FIELDS>>, BUILDER>;
+    fields: <FIELDS extends SchemaDict>(ui: (form: BUILDER) => FIELDS, formProperties?: FormProperties<ISpec<Widget_group<FIELDS>>>) => Form<ISpec<Widget_group<FIELDS>>, BUILDER>;
+    /** simple alias to create a new Form */
+    form: <ROOT extends ISpec<IWidget<$WidgetTypes>>>(ui: (form: BUILDER) => ROOT, formProperties?: FormProperties<ROOT>) => Form<ROOT, BUILDER>;
     /** simple way to defined forms and in react components */
     use: <ROOT extends ISpec<IWidget<$WidgetTypes>>>(ui: (form: BUILDER) => ROOT, formProperties?: FormProperties<ROOT>, deps?: DependencyList) => Form<ROOT, BUILDER>;
 }
@@ -470,6 +507,7 @@ declare class Widget_optional<T extends ISpec = ISpec> implements IWidget<Widget
     readonly id: string;
     get config(): Widget_optional_config<T>;
     readonly type: 'optional';
+    get baseErrors(): Problem_Ext;
     serial: Widget_optional_serial<T>;
     child: T['$Widget'];
     get childOrThrow(): T['$Widget'];
@@ -515,6 +553,79 @@ declare const runWithGlobalForm: <T>(form: IFormBuilder, f: () => T) => T;
  *
  * */
 declare const getCurrentForm_IMPL: () => IFormBuilder;
+
+type Widget_list_config<T extends ISpec> = WidgetConfigFields<{
+    element: ((ix: number) => T) | T;
+    min?: number;
+    max?: number;
+    defaultLength?: number;
+}, Widget_list_types<T>>;
+type Widget_list_serial<T extends ISpec> = WidgetSerialFields<{
+    type: 'list';
+    items_: T['$Serial'][];
+}>;
+type Widget_list_value<T extends ISpec> = T['$Value'][];
+type Widget_list_types<T extends ISpec> = {
+    $Type: 'list';
+    $Config: Widget_list_config<T>;
+    $Serial: Widget_list_serial<T>;
+    $Value: Widget_list_value<T>;
+    $Widget: Widget_list<T>;
+};
+interface Widget_list<T extends ISpec> extends Widget_list_types<T>, IWidgetMixins {
+}
+declare class Widget_list<T extends ISpec> implements IWidget<Widget_list_types<T>> {
+    readonly form: Form;
+    readonly parent: IWidget | null;
+    readonly spec: ISpec<Widget_list<T>>;
+    DefaultHeaderUI: react.FunctionComponent<{
+        widget: Widget_list<any>;
+    }>;
+    get DefaultBodyUI(): (<T_1 extends ISpec<IWidget<$WidgetTypes>>>(p: {
+        widget: Widget_list<T_1>;
+    }) => react_jsx_runtime.JSX.Element) & {
+        displayName: string;
+    };
+    readonly id: string;
+    get config(): Widget_list_config<T>;
+    readonly type: 'list';
+    get length(): number;
+    items: T['$Widget'][];
+    serial: Widget_list_serial<T>;
+    background: boolean;
+    findItemIndexContaining: (widget: IWidget) => number | null;
+    schemaAt: (ix: number) => T;
+    constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_list<T>>, serial?: Widget_list_serial<T>);
+    get value(): Widget_list_value<T>;
+    collapseAllItems: () => void;
+    expandAllItems: () => void;
+    get baseErrors(): string[];
+    addItem(p?: {
+        skipBump?: true;
+    }): void;
+    removeAllItems: () => void;
+    removeItem: (item: T['$Widget']) => void;
+    moveItem: (oldIndex: number, newIndex: number) => void;
+}
+
+declare class SimpleSpec<W extends IWidget = IWidget> implements ISpec<W> {
+    readonly type: W['type'];
+    readonly config: W['$Config'];
+    $Widget: W;
+    $Type: W['type'];
+    $Config: W['$Config'];
+    $Serial: W['$Serial'];
+    $Value: W['$Value'];
+    LabelExtraUI: (p: {}) => null;
+    Make: <X extends IWidget<$WidgetTypes>>(type: X['type'], config: X['$Config']) => SimpleSpec<X>;
+    constructor(type: W['type'], config: W['$Config']);
+    /** wrap widget spec to list stuff */
+    list: (config?: Omit<Widget_list_config<any>, 'element'>) => SimpleSpec<Widget_list<this>>;
+    optional: <const T extends SimpleSpec<IWidget<$WidgetTypes>>>(startActive?: boolean) => SimpleSpec<Widget_optional<this>>;
+    shared: (key: string) => Widget_shared<this>;
+    /** clone the spec, and patch the cloned config to make it hidden */
+    hidden: () => SimpleSpec<W>;
+}
 
 declare function makeLabelFromFieldName(s: string): string;
 
@@ -862,6 +973,7 @@ declare class Widget_bool implements IWidget<Widget_bool_types> {
     readonly id: string;
     get config(): Widget_bool_config;
     readonly type: 'bool';
+    get baseErrors(): Problem_Ext;
     serial: Widget_bool_serial;
     setOn: () => boolean;
     setOff: () => boolean;
@@ -917,6 +1029,7 @@ declare class Widget_button<K> implements IWidget<Widget_button_types<K>> {
     get config(): Widget_button_config<K>;
     readonly type: 'button';
     readonly serial: Widget_button_serial;
+    get baseErrors(): Problem_Ext;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_button<K>>, serial?: Widget_button_serial);
     get value(): Widget_button_value;
     set value(next: boolean);
@@ -1090,11 +1203,9 @@ declare class Widget_choices<T extends SchemaDict = SchemaDict> implements IWidg
     readonly form: Form;
     readonly parent: IWidget | null;
     readonly spec: ISpec<Widget_choices<T>>;
-    DefaultHeaderUI: (<T_1 extends SchemaDict>(p: {
-        widget: Widget_choices<T_1>;
-    }) => react_jsx_runtime.JSX.Element) & {
-        displayName: string;
-    };
+    DefaultHeaderUI: react.FunctionComponent<{
+        widget: Widget_choices<any>;
+    }>;
     DefaultBodyUI: (<T_1 extends SchemaDict>(p: {
         widget: Widget_choices<T_1>;
     }) => react_jsx_runtime.JSX.Element) & {
@@ -1105,6 +1216,7 @@ declare class Widget_choices<T extends SchemaDict = SchemaDict> implements IWidg
     get config(): Widget_choices_config<T>;
     readonly type: 'choices';
     readonly expand: boolean;
+    get baseErrors(): Problem_Ext;
     get isMulti(): boolean;
     get isSingle(): boolean;
     children: {
@@ -1133,11 +1245,9 @@ declare class Widget_choices<T extends SchemaDict = SchemaDict> implements IWidg
     get value(): Widget_choices_value<T>;
 }
 
-declare const WidgetChoices_HeaderUI: (<T extends SchemaDict>(p: {
-    widget: Widget_choices<T>;
-}) => react_jsx_runtime.JSX.Element) & {
-    displayName: string;
-};
+declare const WidgetChoices_HeaderUI: react.FunctionComponent<{
+    widget: Widget_choices<any>;
+}>;
 declare const WidgetChoices_BodyUI: (<T extends SchemaDict>(p: {
     widget: Widget_choices<T>;
 }) => react_jsx_runtime.JSX.Element) & {
@@ -1178,6 +1288,7 @@ declare class Widget_color implements IWidget<Widget_color_types> {
     readonly id: string;
     get config(): Widget_color_config;
     readonly type: 'color';
+    get baseErrors(): Problem_Ext;
     readonly defaultValue: string;
     get isChanged(): boolean;
     reset: () => string;
@@ -1216,60 +1327,6 @@ type IWidgetListLike = {
 declare const ListControlsUI: react.FunctionComponent<{
     widget: IWidgetListLike;
 }>;
-
-type Widget_list_config<T extends ISpec> = WidgetConfigFields<{
-    element: ((ix: number) => T) | T;
-    min?: number;
-    max?: number;
-    defaultLength?: number;
-}, Widget_list_types<T>>;
-type Widget_list_serial<T extends ISpec> = WidgetSerialFields<{
-    type: 'list';
-    items_: T['$Serial'][];
-}>;
-type Widget_list_value<T extends ISpec> = T['$Value'][];
-type Widget_list_types<T extends ISpec> = {
-    $Type: 'list';
-    $Config: Widget_list_config<T>;
-    $Serial: Widget_list_serial<T>;
-    $Value: Widget_list_value<T>;
-    $Widget: Widget_list<T>;
-};
-interface Widget_list<T extends ISpec> extends Widget_list_types<T>, IWidgetMixins {
-}
-declare class Widget_list<T extends ISpec> implements IWidget<Widget_list_types<T>>, IWidgetListLike {
-    readonly form: Form;
-    readonly parent: IWidget | null;
-    readonly spec: ISpec<Widget_list<T>>;
-    DefaultHeaderUI: react.FunctionComponent<{
-        widget: Widget_list<any>;
-    }>;
-    get DefaultBodyUI(): (<T_1 extends ISpec<IWidget<$WidgetTypes>>>(p: {
-        widget: Widget_list<T_1>;
-    }) => react_jsx_runtime.JSX.Element) & {
-        displayName: string;
-    };
-    readonly id: string;
-    get config(): Widget_list_config<T>;
-    readonly type: 'list';
-    get length(): number;
-    items: T['$Widget'][];
-    serial: Widget_list_serial<T>;
-    background: boolean;
-    findItemIndexContaining: (widget: IWidget) => number | null;
-    schemaAt: (ix: number) => T;
-    constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_list<T>>, serial?: Widget_list_serial<T>);
-    get value(): Widget_list_value<T>;
-    collapseAllItems: () => void;
-    expandAllItems: () => void;
-    get errors(): string[];
-    addItem(p?: {
-        skipBump?: true;
-    }): void;
-    removeAllItems: () => void;
-    removeItem: (item: T['$Widget']) => void;
-    moveItem: (oldIndex: number, newIndex: number) => void;
-}
 
 declare const WidgetList_LineUI: react.FunctionComponent<{
     widget: Widget_list<any>;
@@ -1314,6 +1371,7 @@ declare class Widget_markdown implements IWidget<Widget_markdown_types> {
         widget: Widget_markdown;
     }> | undefined;
     get alignLabel(): false | undefined;
+    get baseErrors(): Problem_Ext;
     readonly id: string;
     get config(): Widget_markdown_config;
     readonly type: 'markdown';
@@ -1369,6 +1427,7 @@ declare class Widget_matrix implements IWidget<Widget_matrix_types> {
     get config(): Widget_matrix_config;
     readonly type: 'matrix';
     readonly serial: Widget_matrix_serial;
+    get baseErrors(): Problem_Ext;
     rows: string[];
     cols: string[];
     alignLabel: boolean;
@@ -1472,6 +1531,7 @@ declare class Widget_number implements IWidget<Widget_number_types> {
     readonly defaultValue: number;
     get isChanged(): boolean;
     reset: () => void;
+    get baseErrors(): string | null;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_number>, serial?: Widget_number_serial);
     set value(next: Widget_number_value);
     get value(): Widget_number_value;
@@ -1512,6 +1572,7 @@ declare class Widget_seed implements IWidget<Widget_seed_types> {
     }>;
     DefaultBodyUI: undefined;
     readonly id: string;
+    get baseErrors(): Problem_Ext;
     get config(): Widget_seed_config;
     readonly type: 'seed';
     readonly serial: Widget_seed_serial;
@@ -1565,7 +1626,7 @@ declare class Widget_selectOne<T extends BaseSelectEntry> implements IWidget<Wid
     get config(): Widget_selectOne_config<T>;
     readonly type: 'selectOne';
     readonly serial: Widget_selectOne_serial<T>;
-    get errors(): Maybe<string>;
+    get baseErrors(): Maybe<string>;
     get choices(): T[];
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_selectOne<T>>, serial?: Widget_selectOne_serial<T>);
     set value(next: Widget_selectOne_value<T>);
@@ -1608,7 +1669,7 @@ declare class Widget_selectMany<T extends BaseSelectEntry> implements IWidget<Wi
     readonly type: 'selectMany';
     readonly serial: Widget_selectMany_serial<T>;
     get choices(): T[];
-    get errors(): Maybe<string[]>;
+    get baseErrors(): Maybe<string[]>;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_selectMany<T>>, serial?: Widget_selectMany_serial<T>);
     /** un-select given item */
     removeItem: (item: T) => void;
@@ -1722,6 +1783,7 @@ declare class Widget_size implements IWidget<Widget_size_types> {
     DefaultBodyUI: react.FunctionComponent<{
         widget: Widget_size;
     }>;
+    get baseErrors(): Problem_Ext;
     get width(): number;
     get height(): number;
     set width(next: number);
@@ -1791,6 +1853,7 @@ declare class Widget_spacer implements IWidget<Widget_spacer_types> {
         widget: Widget_spacer;
     }>;
     DefaultBodyUI: undefined;
+    get baseErrors(): Problem_Ext;
     readonly id: string;
     get config(): SharedWidgetConfig<Widget_spacer_types>;
     readonly type: 'spacer';
@@ -1840,6 +1903,7 @@ declare class Widget_string implements IWidget<Widget_string_types> {
     get DefaultBodyUI(): react.FunctionComponent<{
         widget: Widget_string;
     }> | undefined;
+    get baseErrors(): Problem_Ext;
     readonly border = false;
     readonly id: string;
     get config(): Widget_string_config;
@@ -1865,82 +1929,82 @@ declare const WidgetString_HeaderUI: react.FunctionComponent<{
     widget: Widget_string;
 }>;
 
-declare class SimpleSpec<W extends IWidget = IWidget> implements ISpec<W> {
-    readonly type: W['type'];
-    readonly config: W['$Config'];
-    $Widget: W;
-    $Type: W['type'];
-    $Config: W['$Config'];
-    $Serial: W['$Serial'];
-    $Value: W['$Value'];
-    LabelExtraUI: (p: {}) => null;
-    Make: <X extends IWidget<$WidgetTypes>>(type: X['type'], config: X['$Config']) => SimpleSpec<X>;
-    constructor(type: W['type'], config: W['$Config']);
-    /** wrap widget spec to list stuff */
-    list: (config?: Omit<Widget_list_config<any>, 'element'>) => SimpleSpec<Widget_list<this>>;
-    optional: <const T extends SimpleSpec<IWidget<$WidgetTypes>>>(startActive?: boolean) => SimpleSpec<Widget_optional<this>>;
-    shared: (key: string) => Widget_shared<this>;
-    /** clone the spec, and patch the cloned config to make it hidden */
-    hidden: () => SimpleSpec<W>;
-}
+type SGroup<T extends SchemaDict> = SimpleSpec<Widget_group<T>>;
+type SOptional<T extends ISpec> = SimpleSpec<Widget_optional<T>>;
+type SBool = SimpleSpec<Widget_bool>;
+type SString = SimpleSpec<Widget_string>;
+type SChoices<T extends SchemaDict = SchemaDict> = SimpleSpec<Widget_choices<T>>;
+type SNumber = SimpleSpec<Widget_number>;
+type SColor = SimpleSpec<Widget_color>;
+type SList<T extends ISpec> = SimpleSpec<Widget_list<T>>;
+type SButton<T> = SimpleSpec<Widget_button<T>>;
+type SSeed = SimpleSpec<Widget_seed>;
+type SMatrix = SimpleSpec<Widget_matrix>;
+type SSelectOne<T extends BaseSelectEntry> = SimpleSpec<Widget_selectOne<T>>;
+type SSelectMany<T extends BaseSelectEntry> = SimpleSpec<Widget_selectMany<T>>;
+type SSelectOne_<T extends string> = SimpleSpec<Widget_selectOne<BaseSelectEntry<T>>>;
+type SSelectMany_<T extends string> = SimpleSpec<Widget_selectMany<BaseSelectEntry<T>>>;
+type SSize = SimpleSpec<Widget_size>;
+type SSpacer = SimpleSpec<Widget_spacer>;
+type SMarkdown = SimpleSpec<Widget_markdown>;
 declare class FormBuilder_Loco implements IFormBuilder {
     form: Form<IWidget, FormBuilder_Loco>;
     /** (@internal) DO NOT USE YOURSELF */
     SpecCtor: typeof SimpleSpec;
     /** (@internal) don't call this yourself */
     constructor(form: Form<IWidget, FormBuilder_Loco>);
-    time: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    date: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    datetime: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    password: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    email: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    url: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    string: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    text: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    textarea: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    boolean: (config?: Widget_bool_config) => SimpleSpec<Widget_bool>;
-    bool: (config?: Widget_bool_config) => SimpleSpec<Widget_bool>;
-    size: (config?: Widget_size_config) => SimpleSpec<Widget_size>;
-    spacer: (config?: Widget_spacer_config) => SimpleSpec<Widget_spacer>;
-    seed: (config?: Widget_seed_config) => SimpleSpec<Widget_seed>;
-    color: (config?: Widget_color_config) => SimpleSpec<Widget_color>;
-    colorV2: (config?: Widget_string_config) => SimpleSpec<Widget_string>;
-    matrix: (config: Widget_matrix_config) => SimpleSpec<Widget_matrix>;
-    button: <K>(config: Widget_button_config) => SimpleSpec<Widget_button<K>>;
+    time: (config?: Widget_string_config) => SString;
+    date: (config?: Widget_string_config) => SString;
+    datetime: (config?: Widget_string_config) => SString;
+    password: (config?: Widget_string_config) => SString;
+    email: (config?: Widget_string_config) => SString;
+    url: (config?: Widget_string_config) => SString;
+    string: (config?: Widget_string_config) => SString;
+    text: (config?: Widget_string_config) => SString;
+    textarea: (config?: Widget_string_config) => SString;
+    boolean: (config?: Widget_bool_config) => SBool;
+    bool: (config?: Widget_bool_config) => SBool;
+    size: (config?: Widget_size_config) => SSize;
+    seed: (config?: Widget_seed_config) => SSeed;
+    color: (config?: Widget_color_config) => SColor;
+    colorV2: (config?: Widget_string_config) => SString;
+    matrix: (config: Widget_matrix_config) => SMatrix;
+    button: <K>(config: Widget_button_config) => SButton<K>;
     /** variants: `header` */
-    markdown: (config: Widget_markdown_config | string) => SimpleSpec<Widget_markdown>;
+    markdown: (config: Widget_markdown_config | string) => SMarkdown;
     /** [markdown variant]: inline=true, label=false */
-    header: (config: Widget_markdown_config | string) => SimpleSpec<Widget_markdown>;
-    int: (config?: Omit<Widget_number_config, 'mode'>) => SimpleSpec<Widget_number>;
+    header: (config: Widget_markdown_config | string) => SMarkdown;
+    int: (config?: Omit<Widget_number_config, 'mode'>) => SNumber;
     /** [number variant] precent = mode=int, default=100, step=10, min=1, max=100, suffix='%', */
-    percent: (config?: Omit<Widget_number_config, 'mode'>) => SimpleSpec<Widget_number>;
-    float: (config?: Omit<Widget_number_config, 'mode'>) => SimpleSpec<Widget_number>;
-    number: (config?: Omit<Widget_number_config, 'mode'>) => SimpleSpec<Widget_number>;
-    list: <const T extends ISpec<IWidget<$WidgetTypes>>>(config: Widget_list_config<T>) => SimpleSpec<Widget_list<T>>;
-    selectOneV2: (p: string[]) => SimpleSpec<Widget_selectOne<BaseSelectEntry>>;
-    selectOne: <const T extends BaseSelectEntry>(config: Widget_selectOne_config<T>) => SimpleSpec<Widget_selectOne<T>>;
-    selectMany: <const T extends BaseSelectEntry>(config: Widget_selectMany_config<T>) => SimpleSpec<Widget_selectMany<T>>;
+    percent: (config?: Omit<Widget_number_config, 'mode'>) => SNumber;
+    float: (config?: Omit<Widget_number_config, 'mode'>) => SNumber;
+    number: (config?: Omit<Widget_number_config, 'mode'>) => SNumber;
+    list: <const T extends ISpec<IWidget<$WidgetTypes>>>(config: Widget_list_config<T>) => SList<T>;
+    selectOne: <const T extends BaseSelectEntry>(config: Widget_selectOne_config<T>) => SSelectOne<T>;
+    selectOneV2: (p: string[]) => SSelectOne<BaseSelectEntry>;
+    selectOneV3: <T extends string>(p: T[], config?: Omit<Widget_selectOne_config<BaseSelectEntry<T>>, 'choices'>) => SSelectOne_<T>;
+    selectMany: <const T extends BaseSelectEntry>(config: Widget_selectMany_config<T>) => SSelectMany<T>;
     /** see also: `fields` for a more practical api */
-    group: <const T extends SchemaDict>(config?: Widget_group_config<T>) => SimpleSpec<Widget_group<T>>;
-    fields: <const T extends SchemaDict>(fields: T, config?: Omit<Widget_group_config<T>, 'items'>) => SimpleSpec<Widget_group<T>>;
+    group: <const T extends SchemaDict>(config?: Widget_group_config<T>) => SGroup<T>;
+    fields: <const T extends SchemaDict>(fields: T, config?: Omit<Widget_group_config<T>, 'items'>) => SGroup<T>;
     choice: <const T extends {
         [key: string]: ISpec<IWidget<$WidgetTypes>>;
-    }>(config: Omit<Widget_choices_config<T>, 'multi'>) => SimpleSpec<Widget_choices<T>>;
+    }>(config: Omit<Widget_choices_config<T>, 'multi'>) => SChoices<T>;
     choices: <const T extends {
         [key: string]: ISpec<IWidget<$WidgetTypes>>;
-    }>(config: Omit<Widget_choices_config<T>, 'multi'>) => SimpleSpec<Widget_choices<T>>;
+    }>(config: Omit<Widget_choices_config<T>, 'multi'>) => SChoices<T>;
     ok: <const T extends SchemaDict>(config?: Widget_group_config<T>) => SimpleSpec<Widget_group<T>>;
     /** simple choice alternative api */
     tabs: <const T extends {
         [key: string]: ISpec<IWidget<$WidgetTypes>>;
     }>(items: Widget_choices_config<T>['items'], config?: Omit<Widget_choices_config<T>, 'multi' | 'items'>) => SimpleSpec<Widget_choices<T>>;
-    optional: <const T extends ISpec<IWidget<$WidgetTypes>>>(p: Widget_optional_config<T>) => SimpleSpec<Widget_optional<T>>;
+    optional: <const T extends ISpec<IWidget<$WidgetTypes>>>(p: Widget_optional_config<T>) => SOptional<T>;
     llmModel: (p?: {
         default?: OpenRouter_Models;
-    }) => SimpleSpec<Widget_selectOne<{
+    }) => SSelectOne<{
         id: OpenRouter_Models;
         label: string;
-    }>>;
+    }>;
     /**
      * Calling this function will mount and instanciate the subform right away
      * Subform will be register in the root form `group`, using `__${key}__` as the key
@@ -1950,7 +2014,6 @@ declare class FormBuilder_Loco implements IFormBuilder {
      *  - dynamic widgets depending on other widgets values
      * */
     shared: <W extends ISpec<IWidget<$WidgetTypes>>>(key: string, spec: W) => Widget_shared<W>;
-    _FIX_INDENTATION: (str: TemplateStringsArray) => string;
     /** (@internal); */ _cache: {
         count: number;
     };
@@ -1959,4 +2022,4 @@ declare class FormBuilder_Loco implements IFormBuilder {
 }
 declare const LocoFormManager: FormManager<FormBuilder_Loco>;
 
-export { $WidgetSym, type $WidgetTypes, ASSERT_ARRAY, ASSERT_EQUAL, ASSERT_STRING, AnimatedSizeUI, AspectLockButtonUI, AspectRatioSquareUI, type BaseSelectEntry, Button, CushyKitCtx, DropdownMenu, ErrorBoundaryFallback, Form, FormBuilder_Loco, FormHelpTextUI, FormManager, type FormProperties, FormUI, type GetWidgetResult, type GetWidgetState, GlobalFormCtx, type IWidget, type IWidgetListLike, type IWidgetMixins, Input, InputBoolUI, InputNumberBase, InputNumberUI, type InstructType, JsonViewUI, ListControlsUI, ListItemCollapseBtnUI, Loader, LocoFormManager, MarkdownUI, Menu, MenuBar, Message, MessageErrorUI, MessageInfoUI, MessageWarningUI, Modal, ModalBody, ModalFooter, ModalHeader, ModalShellUI, ModalTitle, MultiCascader, NavItem, type OopenRouter_ModelInfo, Panel, Popover, ProgressLine, Radio, RadioTile, Rate, ResolutionState, RevealCtx, type RevealPlacement, type RevealStack, RevealState, RevealStateLazy, RevealUI, SelectPicker, SelectPopupUI, SelectUI, type SharedWidgetConfig, type SharedWidgetSerial, SimpleSpec, type SizeAble, Slider, SpacerUI, Speaker, type TabPositionConfig, Tag, TagPicker, Toggle, Tooltip, Tree, Whisper, WidgetBoolUI, WidgetChoices_BodyUI, WidgetChoices_HeaderUI, WidgetChoices_SelectHeaderUI, WidgetColorUI, type WidgetConfigFields, WidgetGroup_BlockUI, WidgetGroup_LineUI, WidgetInlineRunUI, WidgetList_BodyUI, WidgetList_LineUI, WidgetMardownUI, WidgetMatrixUI, WidgetNumberUI, WidgetSeedUI, WidgetSelectManyUI, WidgetSelectMany_SelectUI, WidgetSelectMany_TabUI, WidgetSelectOneUI, WidgetSelectOne_SelectUI, WidgetSelectOne_TabUI, type WidgetSerialFields, WidgetSizeX_LineUI, WidgetSpacerUI, WidgetString_HeaderUI, WidgetString_TextareaBodyUI, WidgetString_TextareaHeaderUI, WidgetTooltipUI, WidgetWithLabelUI, Widget_ToggleUI, Widget_bool, type Widget_bool_config, type Widget_bool_serial, type Widget_bool_types, type Widget_bool_value, Widget_button, type Widget_button_config, type Widget_button_context, type Widget_button_serial, type Widget_button_types, type Widget_button_value, Widget_choices, type Widget_choices_config, type Widget_choices_serial, type Widget_choices_types, type Widget_choices_value, Widget_color, type Widget_color_config, type Widget_color_serial, type Widget_color_types, type Widget_color_value, Widget_group, type Widget_group_config, type Widget_group_serial, type Widget_group_types, type Widget_group_value, Widget_list, type Widget_list_config, type Widget_list_serial, type Widget_list_types, type Widget_list_value, Widget_markdown, type Widget_markdown_config, type Widget_markdown_serial, type Widget_markdown_types, type Widget_markdown_value, Widget_matrix, type Widget_matrix_cell, type Widget_matrix_config, type Widget_matrix_serial, type Widget_matrix_types, type Widget_matrix_value, Widget_number, type Widget_number_config, type Widget_number_serial, type Widget_number_types, type Widget_number_value, Widget_optional, type Widget_optional_config, type Widget_optional_serial, type Widget_optional_types, type Widget_optional_value, Widget_seed, type Widget_seed_config, Widget_seed_fromValue, type Widget_seed_serial, type Widget_seed_types, type Widget_seed_value, Widget_selectMany, type Widget_selectMany_config, Widget_selectMany_fromValue, type Widget_selectMany_serial, type Widget_selectMany_types, type Widget_selectMany_value, Widget_selectOne, type Widget_selectOne_config, Widget_selectOne_fromValue, type Widget_selectOne_serial, type Widget_selectOne_types, type Widget_selectOne_value, Widget_shared, type Widget_shared_config, Widget_shared_fromValue, type Widget_shared_serial, type Widget_shared_types, type Widget_shared_value, Widget_size, type Widget_size_config, Widget_size_fromValue, type Widget_size_serial, type Widget_size_types, type Widget_size_value, Widget_spacer, type Widget_spacer_config, Widget_spacer_fromValue, type Widget_spacer_serial, type Widget_spacer_types, type Widget_spacer_value, Widget_string, type Widget_string_config, Widget_string_fromValue, type Widget_string_serial, type Widget_string_types, type Widget_string_value, WigetSizeXUI, WigetSize_BlockUI, WigetSize_LineUI, _FIX_INDENTATION, applyWidgetMixinV2, asSTRING_orCrash, bang, computePlacement, debounce, defaultHideDelay_whenNested, defaultHideDelay_whenRoot, defaultShowDelay_whenNested, defaultShowDelay_whenRoot, exhaust, getActualWidgetToDisplay, getBorderStatusForWidget, getCurrentForm_IMPL, getIfWidgetIsCollapsible, getIfWidgetNeedAlignedLabel, getWidgetClass, global_RevealStack, isWidget, isWidgetGroup, isWidgetOptional, isWidgetShared, makeLabelFromFieldName, normalizeText, openRouterInfos, parseFloatNoRoundingErr, registerWidgetClass, runWithGlobalForm, searchMatches, toastError, toastImage, toastInfo, toastSuccess, unaccent, useCushyKit, useCushyKitOrNull, useReveal, useRevealOrNull, useSizeOf };
+export { $WidgetSym, type $WidgetTypes, ASSERT_ARRAY, ASSERT_EQUAL, ASSERT_STRING, AnimatedSizeUI, AspectLockButtonUI, AspectRatioSquareUI, type BaseSelectEntry, Button, CushyKitCtx, DropdownMenu, ErrorBoundaryFallback, Form, FormBuilder_Loco, FormHelpTextUI, FormManager, type FormProperties, type FormSerial, FormUI, type GetWidgetResult, type GetWidgetState, GlobalFormCtx, type IWidget, type IWidgetListLike, type IWidgetMixins, Input, InputBoolUI, InputNumberBase, InputNumberUI, type InstructType, JsonViewUI, ListControlsUI, ListItemCollapseBtnUI, Loader, LocoFormManager, MarkdownUI, Menu, MenuBar, Message, MessageErrorUI, MessageInfoUI, MessageWarningUI, Modal, ModalBody, ModalFooter, ModalHeader, ModalShellUI, ModalTitle, MultiCascader, NavItem, type OopenRouter_ModelInfo, Panel, Popover, type Problem, type Problem_Ext, ProgressLine, Radio, RadioTile, Rate, ResolutionState, RevealCtx, type RevealPlacement, type RevealStack, RevealState, RevealStateLazy, RevealUI, type SBool, type SButton, type SChoices, type SColor, type SGroup, type SList, type SMarkdown, type SMatrix, type SNumber, type SOptional, type SSeed, type SSelectMany, type SSelectMany_, type SSelectOne, type SSelectOne_, type SSize, type SSpacer, type SString, SelectPicker, SelectPopupUI, SelectUI, Severity, type SharedWidgetConfig, type SharedWidgetSerial, SimpleSpec, type SizeAble, Slider, SpacerUI, Speaker, type TabPositionConfig, Tag, TagPicker, Toggle, Tooltip, Tree, Whisper, WidgetBoolUI, WidgetChoices_BodyUI, WidgetChoices_HeaderUI, WidgetChoices_SelectHeaderUI, WidgetColorUI, type WidgetConfigFields, WidgetGroup_BlockUI, WidgetGroup_LineUI, WidgetInlineRunUI, WidgetList_BodyUI, WidgetList_LineUI, WidgetMardownUI, WidgetMatrixUI, WidgetNumberUI, WidgetSeedUI, WidgetSelectManyUI, WidgetSelectMany_SelectUI, WidgetSelectMany_TabUI, WidgetSelectOneUI, WidgetSelectOne_SelectUI, WidgetSelectOne_TabUI, type WidgetSerialFields, WidgetSizeX_LineUI, WidgetSpacerUI, WidgetString_HeaderUI, WidgetString_TextareaBodyUI, WidgetString_TextareaHeaderUI, WidgetTooltipUI, WidgetWithLabelUI, Widget_ToggleUI, Widget_bool, type Widget_bool_config, type Widget_bool_serial, type Widget_bool_types, type Widget_bool_value, Widget_button, type Widget_button_config, type Widget_button_context, type Widget_button_serial, type Widget_button_types, type Widget_button_value, Widget_choices, type Widget_choices_config, type Widget_choices_serial, type Widget_choices_types, type Widget_choices_value, Widget_color, type Widget_color_config, type Widget_color_serial, type Widget_color_types, type Widget_color_value, Widget_group, type Widget_group_config, type Widget_group_serial, type Widget_group_types, type Widget_group_value, Widget_list, type Widget_list_config, type Widget_list_serial, type Widget_list_types, type Widget_list_value, Widget_markdown, type Widget_markdown_config, type Widget_markdown_serial, type Widget_markdown_types, type Widget_markdown_value, Widget_matrix, type Widget_matrix_cell, type Widget_matrix_config, type Widget_matrix_serial, type Widget_matrix_types, type Widget_matrix_value, Widget_number, type Widget_number_config, type Widget_number_serial, type Widget_number_types, type Widget_number_value, Widget_optional, type Widget_optional_config, type Widget_optional_serial, type Widget_optional_types, type Widget_optional_value, Widget_seed, type Widget_seed_config, Widget_seed_fromValue, type Widget_seed_serial, type Widget_seed_types, type Widget_seed_value, Widget_selectMany, type Widget_selectMany_config, Widget_selectMany_fromValue, type Widget_selectMany_serial, type Widget_selectMany_types, type Widget_selectMany_value, Widget_selectOne, type Widget_selectOne_config, Widget_selectOne_fromValue, type Widget_selectOne_serial, type Widget_selectOne_types, type Widget_selectOne_value, Widget_shared, type Widget_shared_config, Widget_shared_fromValue, type Widget_shared_serial, type Widget_shared_types, type Widget_shared_value, Widget_size, type Widget_size_config, Widget_size_fromValue, type Widget_size_serial, type Widget_size_types, type Widget_size_value, Widget_spacer, type Widget_spacer_config, Widget_spacer_fromValue, type Widget_spacer_serial, type Widget_spacer_types, type Widget_spacer_value, Widget_string, type Widget_string_config, Widget_string_fromValue, type Widget_string_serial, type Widget_string_types, type Widget_string_value, WigetSizeXUI, WigetSize_BlockUI, WigetSize_LineUI, applyWidgetMixinV2, asSTRING_orCrash, bang, computePlacement, debounce, defaultHideDelay_whenNested, defaultHideDelay_whenRoot, defaultShowDelay_whenNested, defaultShowDelay_whenRoot, exhaust, getActualWidgetToDisplay, getBorderStatusForWidget, getCurrentForm_IMPL, getIfWidgetIsCollapsible, getIfWidgetNeedAlignedLabel, getWidgetClass, global_RevealStack, isWidget, isWidgetGroup, isWidgetOptional, isWidgetShared, makeLabelFromFieldName, normalizeProblem, normalizeText, openRouterInfos, parseFloatNoRoundingErr, registerWidgetClass, runWithGlobalForm, searchMatches, toastError, toastImage, toastInfo, toastSuccess, unaccent, useCushyKit, useCushyKitOrNull, useReveal, useRevealOrNull, useSizeOf };

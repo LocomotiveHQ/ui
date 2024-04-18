@@ -545,16 +545,6 @@ var openRouterInfos = {
   }
 };
 
-// src/utils/misc/_FIX_INDENTATION.ts
-var _FIX_INDENTATION = (str) => {
-  if (str.length === 0)
-    return "";
-  let lines = str[0].split("\n").slice(1);
-  const indent = (lines[0] ?? "").match(/^\s*/)[0].length;
-  lines = lines.map((line) => line.slice(indent));
-  return lines.join("\n");
-};
-
 // src/controls/FormManager.ts
 import { useMemo } from "react";
 
@@ -882,7 +872,7 @@ var FormManager = class {
       return builder;
     };
     /** LEGACY API; TYPES ARE COMPLICATED DUE TO MAINTAINING BACKWARD COMPAT */
-    this.form = (ui, formProperties = { name: "unnamed" }) => {
+    this.fields = (ui, formProperties = { name: "unnamed" }) => {
       const FN = (builder) => {
         return runWithGlobalForm(
           builder,
@@ -897,13 +887,43 @@ var FormManager = class {
       const form = new Form(this, FN, formProperties);
       return form;
     };
+    /** simple alias to create a new Form */
+    this.form = (ui, formProperties = { name: "unnamed" }) => {
+      return new Form(this, ui, formProperties);
+    };
     /** simple way to defined forms and in react components */
     this.use = (ui, formProperties = { name: "unnamed" }, deps = []) => {
       return useMemo(() => {
-        const form = new Form(this, ui, formProperties);
-        return form;
+        return new Form(this, ui, formProperties);
       }, deps);
     };
+  }
+};
+
+// src/controls/SimpleSpec.ts
+var SimpleSpec = class _SimpleSpec {
+  constructor(type, config) {
+    this.type = type;
+    this.config = config;
+    this.LabelExtraUI = (p) => null;
+    this.Make = (type, config) => new _SimpleSpec(type, config);
+    /** wrap widget spec to list stuff */
+    this.list = (config = {}) => new _SimpleSpec("list", {
+      ...config,
+      element: this
+    });
+    this.optional = (startActive = false) => new _SimpleSpec("optional", {
+      widget: this,
+      startActive,
+      label: this.config.label,
+      // requirements: this.config.requirements,
+      startCollapsed: this.config.startCollapsed,
+      collapsed: this.config.collapsed,
+      border: this.config.border
+    });
+    this.shared = (key) => getCurrentForm_IMPL().shared(key, this);
+    /** clone the spec, and patch the cloned config to make it hidden */
+    this.hidden = () => new _SimpleSpec(this.type, { ...this.config, hidden: true });
   }
 };
 
@@ -1969,12 +1989,31 @@ var WidgetWithLabelUI = observer12(function WidgetWithLabelUI_(p) {
           }
         ),
         BodyUI && !isCollapsed && /* @__PURE__ */ jsx(ErrorBoundary, { FallbackComponent: ErrorBoundaryFallback, onReset: (details) => {
-        }, children: /* @__PURE__ */ jsx("div", { style: styleDISABLED, tw: [isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) })
+        }, children: /* @__PURE__ */ jsx("div", { style: styleDISABLED, tw: [isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
+        widget.hasErrors && /* @__PURE__ */ jsx("div", { tw: "widget-error-ui", children: widget.errors.map((e, i) => /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
+          /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
+          e.message
+        ] }, i)) })
       ] })
     },
     rootKey
   );
 });
+
+// src/controls/Validation.ts
+var normalizeProblem = (problem) => {
+  if (problem === true)
+    return [];
+  if (problem === false)
+    return [{ message: "Error" }];
+  if (problem == null)
+    return [];
+  if (typeof problem === "string")
+    return [{ message: problem }];
+  if (Array.isArray(problem))
+    return problem.flatMap((p) => normalizeProblem(p));
+  return [problem];
+};
 
 // src/controls/Mixins.tsx
 var ensureObserver = (fn) => {
@@ -1986,6 +2025,26 @@ var ensureObserver = (fn) => {
 };
 var mixin = {
   $WidgetSym,
+  /** true if errors.length > 0 */
+  get hasErrors() {
+    const errors = this.errors;
+    return errors.length > 0;
+  },
+  /** all errors: base (built-in widget) + custom (user-defined in config) */
+  get errors() {
+    const self = this;
+    const baseErrors = normalizeProblem(self.baseErrors);
+    return [...baseErrors, ...this.customErrors];
+  },
+  get customErrors() {
+    const self = this;
+    if (self.config.check == null)
+      return [
+        /* { message: 'No check function provided' } */
+      ];
+    const res = self.config.check(this);
+    return normalizeProblem(res);
+  },
   // BUMP ----------------------------------------------------
   bumpSerial() {
     this.form.serialChanged(this);
@@ -2106,11 +2165,16 @@ var Widget_bool = class {
     applyWidgetMixinV2(this);
     makeAutoObservable3(this, {
       serial: observable3,
-      value: computed
+      value: computed,
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
     });
   }
   get config() {
     return this.spec.config;
+  }
+  get baseErrors() {
+    return null;
   }
   get isChanged() {
     return this.value !== this.defaultValue;
@@ -2179,10 +2243,13 @@ var Widget_button = class {
       val: false
     };
     applyWidgetMixinV2(this);
-    makeAutoObservable4(this);
+    makeAutoObservable4(this, { DefaultHeaderUI: false, DefaultBodyUI: false });
   }
   get config() {
     return this.spec.config;
+  }
+  get baseErrors() {
+    return null;
   }
   get value() {
     return this.serial.val;
@@ -2796,10 +2863,13 @@ var Widget_choices = class {
         this.enableBranch(activeBranch, { skipBump: true });
     }
     applyWidgetMixinV2(this);
-    makeAutoObservable6(this);
+    makeAutoObservable6(this, { DefaultHeaderUI: false, DefaultBodyUI: false });
   }
   get config() {
     return this.spec.config;
+  }
+  get baseErrors() {
+    return null;
   }
   get isMulti() {
     return this.config.multi;
@@ -2935,10 +3005,13 @@ var Widget_color = class {
       value: config.default ?? "#000000"
     };
     applyWidgetMixinV2(this);
-    makeAutoObservable7(this);
+    makeAutoObservable7(this, { DefaultHeaderUI: false, DefaultBodyUI: false });
   }
   get config() {
     return this.spec.config;
+  }
+  get baseErrors() {
+    return null;
   }
   get isChanged() {
     return this.value !== this.defaultValue;
@@ -3084,6 +3157,9 @@ var Widget_group = class {
     if (Object.keys(this.fields).length === 0)
       return;
     return WidgetGroup_BlockUI;
+  }
+  get baseErrors() {
+    return null;
   }
   get summary() {
     return this.config.summary?.(this.value) ?? "";
@@ -3358,7 +3434,7 @@ var Widget_list = class {
     return this.items.map((i) => i.value);
   }
   // ERRORS --------------------------------------------------------
-  get errors() {
+  get baseErrors() {
     let out = [];
     if (this.config.min != null && this.length < this.config.min) {
       out.push(`List is too short`);
@@ -3420,6 +3496,9 @@ var Widget_markdown = class {
   get alignLabel() {
     if (this.config.inHeader)
       return false;
+  }
+  get baseErrors() {
+    return null;
   }
   get config() {
     return this.spec.config;
@@ -3568,6 +3647,9 @@ var Widget_matrix = class {
   }
   get config() {
     return this.spec.config;
+  }
+  get baseErrors() {
+    return null;
   }
   get value() {
     return this.serial.selected;
@@ -3999,6 +4081,13 @@ var Widget_number = class {
   get isChanged() {
     return this.serial.val !== this.defaultValue;
   }
+  get baseErrors() {
+    if (this.config.min !== void 0 && this.value < this.config.min)
+      return `Value is less than ${this.config.min}`;
+    if (this.config.max !== void 0 && this.value > this.config.max)
+      return `Value is greater than ${this.config.max}`;
+    return null;
+  }
   set value(next) {
     if (this.serial.val === next)
       return;
@@ -4069,6 +4158,9 @@ var Widget_optional = class {
   }
   get config() {
     return this.spec.config;
+  }
+  get baseErrors() {
+    return null;
   }
   get childOrThrow() {
     if (this.child == null)
@@ -4242,6 +4334,9 @@ var Widget_seed = class {
     applyWidgetMixinV2(this);
     makeAutoObservable13(this);
   }
+  get baseErrors() {
+    return null;
+  }
   get config() {
     return this.spec.config;
   }
@@ -4294,7 +4389,7 @@ var WidgetSelectMany_TabUI = observer28(function WidgetSelectMany_TabUI_(p) {
         }
       ))
     ] }),
-    widget.errors && /* @__PURE__ */ jsx(MessageErrorUI, { children: /* @__PURE__ */ jsx("ul", { children: widget.errors.map((e, ix) => /* @__PURE__ */ jsx("li", { children: e }, ix)) }) })
+    widget.baseErrors && /* @__PURE__ */ jsx(MessageErrorUI, { children: /* @__PURE__ */ jsx("ul", { children: widget.baseErrors.map((e, ix) => /* @__PURE__ */ jsx("li", { children: e }, ix)) }) })
   ] });
 });
 var WidgetSelectMany_SelectUI = observer28(function WidgetSelectMany_SelectUI_(p) {
@@ -4304,7 +4399,7 @@ var WidgetSelectMany_SelectUI = observer28(function WidgetSelectMany_SelectUI_(p
       SelectUI,
       {
         multiple: true,
-        tw: [widget.errors && "rsx-field-error"],
+        tw: [widget.baseErrors && "rsx-field-error"],
         getLabelText: (t) => t.label ?? t.id,
         getLabelUI: (t) => t.label ?? t.id,
         options: () => widget.choices,
@@ -4313,9 +4408,9 @@ var WidgetSelectMany_SelectUI = observer28(function WidgetSelectMany_SelectUI_(p
         onChange: (selectOption) => widget.toggleItem(selectOption)
       }
     ),
-    widget.errors && /* @__PURE__ */ jsxs("div", { tw: "text-red-500 flex items-center gap-1", children: [
+    widget.baseErrors && /* @__PURE__ */ jsxs("div", { tw: "text-red-500 flex items-center gap-1", children: [
       /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
-      widget.errors
+      widget.baseErrors
     ] })
   ] });
 });
@@ -4378,7 +4473,7 @@ var Widget_selectMany = class {
     const _choices = this.config.choices;
     return typeof _choices === "function" ? _choices(this.form._ROOT) : _choices;
   }
-  get errors() {
+  get baseErrors() {
     if (this.serial.values == null)
       return null;
     let errors = [];
@@ -4430,9 +4525,9 @@ var WidgetSelectOne_TabUI = observer29(function WidgetSelectOne_TabUI_(p) {
         c.id
       );
     }) }),
-    widget.errors && /* @__PURE__ */ jsxs("div", { tw: "text-red-500 flex items-center gap-1", children: [
+    widget.baseErrors && /* @__PURE__ */ jsxs("div", { tw: "text-red-500 flex items-center gap-1", children: [
       /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
-      widget.errors
+      widget.baseErrors
     ] })
   ] });
 });
@@ -4442,7 +4537,7 @@ var WidgetSelectOne_SelectUI = observer29(function WidgetSelectOne_SelectUI_(p) 
     /* @__PURE__ */ jsx(
       SelectUI,
       {
-        tw: [widget.errors && "rsx-field-error"],
+        tw: [widget.baseErrors && "rsx-field-error"],
         getLabelText: (t) => t.label ?? makeLabelFromFieldName(t.id),
         options: () => widget.choices,
         equalityCheck: (a, b) => a.id === b.id,
@@ -4461,9 +4556,9 @@ var WidgetSelectOne_SelectUI = observer29(function WidgetSelectOne_SelectUI_(p) 
       },
       widget.id
     ),
-    widget.errors && /* @__PURE__ */ jsxs("div", { tw: "text-red-500 flex items-center gap-1", children: [
+    widget.baseErrors && /* @__PURE__ */ jsxs("div", { tw: "text-red-500 flex items-center gap-1", children: [
       /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
-      widget.errors
+      widget.baseErrors
     ] })
   ] });
 });
@@ -4496,7 +4591,7 @@ var Widget_selectOne = class {
   get config() {
     return this.spec.config;
   }
-  get errors() {
+  get baseErrors() {
     if (this.serial.val == null)
       return "no value selected";
     const selected = this.choices.find((c) => c.id === this.serial.val.id);
@@ -4559,6 +4654,9 @@ var Widget_shared = class _Widget_shared {
   }
   get shared() {
     return this.config.widget;
+  }
+  get baseErrors() {
+    return null;
   }
   get value() {
     return this.config.widget.value;
@@ -4861,6 +4959,9 @@ var Widget_size = class {
     applyWidgetMixinV2(this);
     makeAutoObservable18(this, { sizeHelper: false });
   }
+  get baseErrors() {
+    return null;
+  }
   get width() {
     return this.serial.width;
   }
@@ -4928,6 +5029,9 @@ var Widget_spacer = class {
     };
     applyWidgetMixinV2(this);
     makeObservable3(this, { serial: observable7 });
+  }
+  get baseErrors() {
+    return null;
   }
   get config() {
     return this.spec.config;
@@ -5103,6 +5207,9 @@ var Widget_string = class {
       return WidgetString_TextareaBodyUI;
     return void 0;
   }
+  get baseErrors() {
+    return null;
+  }
   get config() {
     return this.spec.config;
   }
@@ -5124,55 +5231,63 @@ var Widget_string = class {
 registerWidgetClass("str", Widget_string);
 
 // src/controls/FormBuilder.loco.ts
-var SimpleSpec = class _SimpleSpec {
-  constructor(type, config) {
-    this.type = type;
-    this.config = config;
-    this.LabelExtraUI = (p) => null;
-    this.Make = (type, config) => new _SimpleSpec(type, config);
-    /** wrap widget spec to list stuff */
-    this.list = (config = {}) => new _SimpleSpec("list", {
-      ...config,
-      element: this
-    });
-    this.optional = (startActive = false) => new _SimpleSpec("optional", {
-      widget: this,
-      startActive,
-      label: this.config.label,
-      // requirements: this.config.requirements,
-      startCollapsed: this.config.startCollapsed,
-      collapsed: this.config.collapsed,
-      border: this.config.border
-    });
-    this.shared = (key) => getCurrentForm_IMPL().shared(key, this);
-    /** clone the spec, and patch the cloned config to make it hidden */
-    this.hidden = () => new _SimpleSpec(this.type, { ...this.config, hidden: true });
-  }
-};
 var FormBuilder_Loco = class {
   /** (@internal) don't call this yourself */
   constructor(form) {
     this.form = form;
     /** (@internal) DO NOT USE YOURSELF */
     this.SpecCtor = SimpleSpec;
-    this.time = (config = {}) => new SimpleSpec("str", { inputType: "time", ...config });
-    this.date = (config = {}) => new SimpleSpec("str", { inputType: "date", ...config });
-    this.datetime = (config = {}) => new SimpleSpec("str", { inputType: "datetime-local", ...config });
-    this.password = (config = {}) => new SimpleSpec("str", { inputType: "password", ...config });
-    this.email = (config = {}) => new SimpleSpec("str", { inputType: "email", ...config });
-    this.url = (config = {}) => new SimpleSpec("str", { inputType: "url", ...config });
-    this.string = (config = {}) => new SimpleSpec("str", config);
-    this.text = (config = {}) => new SimpleSpec("str", config);
-    this.textarea = (config = {}) => new SimpleSpec("str", { textarea: true, ...config });
-    this.boolean = (config = {}) => new SimpleSpec("bool", config);
-    this.bool = (config = {}) => new SimpleSpec("bool", config);
-    this.size = (config = {}) => new SimpleSpec("size", config);
-    this.spacer = (config = {}) => new SimpleSpec("spacer", { alignLabel: false, label: false, collapsed: false, border: false });
-    this.seed = (config = {}) => new SimpleSpec("seed", config);
-    this.color = (config = {}) => new SimpleSpec("color", config);
-    this.colorV2 = (config = {}) => new SimpleSpec("str", { inputType: "color", ...config });
-    this.matrix = (config) => new SimpleSpec("matrix", config);
-    this.button = (config) => new SimpleSpec("button", config);
+    this.time = (config = {}) => {
+      return new SimpleSpec("str", { inputType: "time", ...config });
+    };
+    this.date = (config = {}) => {
+      return new SimpleSpec("str", { inputType: "date", ...config });
+    };
+    this.datetime = (config = {}) => {
+      return new SimpleSpec("str", { inputType: "datetime-local", ...config });
+    };
+    this.password = (config = {}) => {
+      return new SimpleSpec("str", { inputType: "password", ...config });
+    };
+    this.email = (config = {}) => {
+      return new SimpleSpec("str", { inputType: "email", ...config });
+    };
+    this.url = (config = {}) => {
+      return new SimpleSpec("str", { inputType: "url", ...config });
+    };
+    this.string = (config = {}) => {
+      return new SimpleSpec("str", config);
+    };
+    this.text = (config = {}) => {
+      return new SimpleSpec("str", config);
+    };
+    this.textarea = (config = {}) => {
+      return new SimpleSpec("str", { textarea: true, ...config });
+    };
+    this.boolean = (config = {}) => {
+      return new SimpleSpec("bool", config);
+    };
+    this.bool = (config = {}) => {
+      return new SimpleSpec("bool", config);
+    };
+    this.size = (config = {}) => {
+      return new SimpleSpec("size", config);
+    };
+    this.seed = (config = {}) => {
+      return new SimpleSpec("seed", config);
+    };
+    this.color = (config = {}) => {
+      return new SimpleSpec("color", config);
+    };
+    this.colorV2 = (config = {}) => {
+      return new SimpleSpec("str", { inputType: "color", ...config });
+    };
+    this.matrix = (config) => {
+      return new SimpleSpec("matrix", config);
+    };
+    this.button = (config) => {
+      return new SimpleSpec("button", config);
+    };
     /** variants: `header` */
     this.markdown = (config) => new SimpleSpec("markdown", typeof config === "string" ? { markdown: config } : config);
     /** [markdown variant]: inline=true, label=false */
@@ -5180,27 +5295,65 @@ var FormBuilder_Loco = class {
       "markdown",
       typeof config === "string" ? { markdown: config, inHeader: true, label: false } : { inHeader: true, label: false, alignLabel: false, ...config }
     );
-    // image       = (config: Widget_image_config = {})                                                         => new Spec<Widget_image                       >('image'     , config)
-    this.int = (config = {}) => new SimpleSpec("number", { mode: "int", ...config });
+    this.int = (config = {}) => {
+      return new SimpleSpec("number", { mode: "int", ...config });
+    };
     /** [number variant] precent = mode=int, default=100, step=10, min=1, max=100, suffix='%', */
-    this.percent = (config = {}) => new SimpleSpec("number", { mode: "int", default: 100, step: 10, min: 1, max: 100, suffix: "%", ...config });
-    this.float = (config = {}) => new SimpleSpec("number", { mode: "float", ...config });
-    this.number = (config = {}) => new SimpleSpec("number", { mode: "float", ...config });
-    this.list = (config) => new SimpleSpec("list", config);
-    this.selectOneV2 = (p) => new SimpleSpec("selectOne", { choices: p.map((id) => ({ id, label: id })), appearance: "tab" });
-    // prettier-ignore
-    this.selectOne = (config) => new SimpleSpec("selectOne", config);
-    this.selectMany = (config) => new SimpleSpec("selectMany", config);
+    this.percent = (config = {}) => {
+      return new SimpleSpec("number", {
+        mode: "int",
+        default: 100,
+        step: 10,
+        min: 1,
+        max: 100,
+        suffix: "%",
+        ...config
+      });
+    };
+    this.float = (config = {}) => {
+      return new SimpleSpec("number", { mode: "float", ...config });
+    };
+    this.number = (config = {}) => {
+      return new SimpleSpec("number", { mode: "float", ...config });
+    };
+    this.list = (config) => {
+      return new SimpleSpec("list", config);
+    };
+    this.selectOne = (config) => {
+      return new SimpleSpec("selectOne", config);
+    };
+    this.selectOneV2 = (p) => {
+      return new SimpleSpec("selectOne", {
+        choices: p.map((id) => ({ id, label: id })),
+        appearance: "tab"
+      });
+    };
+    this.selectOneV3 = (p, config = {}) => {
+      return new SimpleSpec("selectOne", { choices: p.map((id) => ({ id, label: id })), appearance: "tab", ...config });
+    };
+    this.selectMany = (config) => {
+      return new SimpleSpec("selectMany", config);
+    };
     /** see also: `fields` for a more practical api */
-    this.group = (config = {}) => new SimpleSpec("group", config);
-    this.fields = (fields, config = {}) => new SimpleSpec("group", { items: fields, ...config });
-    this.choice = (config) => new SimpleSpec("choices", { multi: false, ...config });
-    this.choices = (config) => new SimpleSpec("choices", { multi: true, ...config });
+    this.group = (config = {}) => {
+      return new SimpleSpec("group", config);
+    };
+    this.fields = (fields, config = {}) => {
+      return new SimpleSpec("group", { items: fields, ...config });
+    };
+    this.choice = (config) => {
+      return new SimpleSpec("choices", { multi: false, ...config });
+    };
+    this.choices = (config) => {
+      return new SimpleSpec("choices", { multi: true, ...config });
+    };
     this.ok = (config = {}) => new SimpleSpec("group", config);
     /** simple choice alternative api */
     this.tabs = (items, config = {}) => new SimpleSpec("choices", { items, multi: false, ...config, appearance: "tab" });
     // optional wrappers
-    this.optional = (p) => new SimpleSpec("optional", p);
+    this.optional = (p) => {
+      return new SimpleSpec("optional", p);
+    };
     this.llmModel = (p = {}) => {
       const choices = Object.entries(openRouterInfos).map(([id, info]) => ({ id, label: info.name }));
       const def = choices ? choices.find((c) => c.id === p.default) : void 0;
@@ -5226,8 +5379,6 @@ var FormBuilder_Loco = class {
       const sharedSpec = new SimpleSpec("shared", { rootKey: key, widget });
       return new Widget_shared(this.form, null, sharedSpec);
     };
-    // --------------------
-    this._FIX_INDENTATION = _FIX_INDENTATION;
     /** (@internal); */
     this._cache = { count: 0 };
     /** (@internal) advanced way to restore form state. used internally */
@@ -5236,12 +5387,10 @@ var FormBuilder_Loco = class {
         console.log(`[\u{1F536}] INVALID SERIAL (expected: ${spec.type}, got: ${serial.type})`);
         serial = null;
       }
-      if (spec instanceof Widget_shared) {
+      if (spec instanceof Widget_shared)
         return spec;
-      }
-      if (!(spec instanceof SimpleSpec)) {
+      if (!(spec instanceof SimpleSpec))
         console.log(`[\u274C] _HYDRATE received an invalid unmounted widget. This is probably a bug.`);
-      }
       const type = spec.type;
       const config = spec.config;
       const spec2 = spec;
@@ -5303,6 +5452,5 @@ var FormBuilder_Loco = class {
 var LocoFormManager = new FormManager(FormBuilder_Loco);
 export {
   FormBuilder_Loco,
-  LocoFormManager,
-  SimpleSpec
+  LocoFormManager
 };
