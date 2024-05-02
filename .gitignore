@@ -1,2 +1,6 @@
 node_modules
 .DS_Store
+
+dts/main.d.rollup-stats.json
+pre/initial.meta.json
+main.meta.json

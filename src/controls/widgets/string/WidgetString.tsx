@@ -16,6 +16,7 @@ export type Widget_string_config = WidgetConfigFields<
         default?: string
         textarea?: boolean
         placeHolder?: string
+        pattern?: string
         inputType?: 'text' | 'password' | 'email' | 'tel' | 'url' | 'time' | 'date' | 'datetime-local' | 'color'
         /**
          * if set to true, widget will commit values on enter; not before.
@@ -94,7 +95,9 @@ export class Widget_string implements IWidget<Widget_string_types> {
         applyWidgetMixinV2(this)
         makeAutoObservable(this)
     }
-
+    setValue(val: Widget_string_value) {
+        this.value = val
+    }
     set value(next: Widget_string_value) {
         if (this.serial.val === next) return
         runInAction(() => {

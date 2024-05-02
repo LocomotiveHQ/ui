@@ -1,3 +1,4 @@
+import type { CovariantFn } from './BivariantHack'
 import type { FormManager } from './FormManager'
 import type { FormSerial } from './FormSerial'
 import type { IFormBuilder } from './IFormBuilder'
@@ -6,6 +7,7 @@ import type { IWidget } from './IWidget'
 import type { Widget_group, Widget_group_serial } from './widgets/group/WidgetGroup'
 
 import { action, isObservable, makeAutoObservable, observable } from 'mobx'
+import { nanoid } from 'nanoid'
 import { createElement, type ReactNode } from 'react'
 
 import { debounce } from '../utils/misc/debounce'
@@ -14,8 +16,8 @@ import { isWidgetGroup } from './widgets/WidgetUI.DI'
 
 export type FormProperties<
     //
-    ROOT extends ISpec<any> = ISpec,
-    BUILDER extends IFormBuilder = IFormBuilder,
+    ROOT extends ISpec<any>,
+    BUILDER extends IFormBuilder,
 > = {
     name: string
     onSerialChange?: (form: Form<ROOT, BUILDER>) => void
@@ -25,14 +27,19 @@ export type FormProperties<
 
 export class Form<
     /** shape of the form, to preserve type safety down to nested children */
-    ROOT extends ISpec<any> = ISpec,
-    /** project-specific builder, allowing to have modular form setups with different widgets */
+    ROOT extends ISpec<any> = ISpec<any>,
+    /**
+     * project-specific builder, allowing to have modular form setups with different widgets
+     * Cushy BUILDER is `FormBuilder` in `src/controls/FormBuilder.ts`
+     * */
     BUILDER extends IFormBuilder = IFormBuilder,
 > {
+    uid = nanoid()
+
     constructor(
         public manager: FormManager<BUILDER>,
-        public ui: (form: BUILDER) => ROOT,
-        public formConfig: FormProperties<ROOT>,
+        public ui: CovariantFn<BUILDER, ROOT>,
+        public formConfig: FormProperties<ROOT, BUILDER>,
     ) {
         this.builder = manager.getBuilder(this)
         makeAutoObservable(this, {
@@ -100,11 +107,11 @@ export class Form<
     /** timestamp at which form serial was last updated, or 0 when form still pristine */
     serialLastUpdatedAt: Timestamp = 0
 
-    private _onSerialChange = this.formConfig.onSerialChange //
+    private _onSerialChange: ((form: Form<ROOT, any>) => void) | null = this.formConfig.onSerialChange //
         ? debounce(this.formConfig.onSerialChange, 200)
         : null
 
-    private _onValueChange = this.formConfig.onValueChange //
+    private _onValueChange: ((form: Form<ROOT, any>) => void) | null = this.formConfig.onValueChange //
         ? debounce(this.formConfig.onValueChange, 200)
         : null
 
@@ -115,6 +122,8 @@ export class Form<
         console.log(`[🦊] value changed`)
         this._onValueChange?.(this)
     }
+
+    knownShared: Map<string, IWidget> = new Map()
 
     /** every widget node must call this function once it's serial changed */
     serialChanged = (_widget: IWidget) => {
@@ -132,7 +141,7 @@ export class Form<
     init = (): ROOT => {
         console.log(`[🥐] Building form ${this.formConfig.name}`)
         const formBuilder = this.builder
-        const spec: ROOT = this.ui?.(formBuilder)
+
         try {
             let formSerial = this.formConfig.initialSerial?.()
             // ensure form serial is observable, so we avoid working with soon to expire refs
@@ -167,7 +176,9 @@ export class Form<
 
             // restore shared serials
             this.shared = formSerial?.shared || {}
+
             // instanciate the root widget
+            const spec: ROOT = this.ui?.(formBuilder)
             const rootWidget: ROOT = formBuilder._HYDRATE(null, spec, formSerial?.root)
 
             this.ready = true
@@ -178,6 +189,7 @@ export class Form<
             console.error(`[👙🔴] Building form ${this.formConfig.name} FAILED`, this)
             console.error(e)
             this.error = 'invalid form definition'
+            const spec: ROOT = this.ui?.(formBuilder)
             return formBuilder._HYDRATE(null, spec, null)
         }
     }

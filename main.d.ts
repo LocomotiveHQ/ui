@@ -1,36 +1,8 @@
 /// <reference types="react" />
 /// <reference types="node" />
 import * as react from 'react';
-import react__default, { ReactNode, FC, DependencyList, CSSProperties } from 'react';
+import react__default, { ReactNode, DependencyList, CSSProperties, FC, KeyboardEvent as KeyboardEvent$1, MouseEvent as MouseEvent$1 } from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
-
-type OpenRouter_Models = 'openrouter/auto' | 'mistralai/mistral-7b-instruct' | 'mistralai/mixtral-8x7b-instruct' | 'mistralai/mistral-large' | 'huggingfaceh4/zephyr-7b-beta' | 'openchat/openchat-7b' | 'undi95/toppy-m-7b' | 'gryphe/mythomist-7b' | 'nousresearch/nous-capybara-34b' | 'jebcarter/psyfighter-13b' | 'nousresearch/nous-hermes-llama2-13b' | 'phind/phind-codellama-34b' | 'intel/neural-chat-7b' | 'haotian-liu/llava-13b' | 'meta-llama/llama-2-13b-chat' | 'alpindale/goliath-120b' | 'lizpreciatior/lzlv-70b-fp16-hf' | 'openai/gpt-3.5-turbo' | 'openai/gpt-3.5-turbo-1106' | 'openai/gpt-3.5-turbo-0301' | 'openai/gpt-3.5-turbo-16k' | 'openai/gpt-4-1106-preview' | 'openai/gpt-4' | 'openai/gpt-4-0314' | 'openai/gpt-4-32k' | 'openai/gpt-4-32k-0314' | 'openai/gpt-4-vision-preview' | 'openai/text-davinci-002' | 'openai/gpt-3.5-turbo-instruct' | 'google/palm-2-chat-bison' | 'google/palm-2-codechat-bison' | 'google/palm-2-chat-bison-32k' | 'google/palm-2-codechat-bison-32k' | 'perplexity/pplx-70b-online' | 'perplexity/pplx-7b-online' | 'perplexity/pplx-7b-chat' | 'perplexity/pplx-70b-chat' | 'meta-llama/llama-2-70b-chat' | 'nousresearch/nous-hermes-llama2-70b' | 'meta-llama/codellama-34b-instruct' | 'jondurbin/airoboros-l2-70b' | 'migtissera/synthia-70b' | 'open-orca/mistral-7b-openorca' | 'teknium/openhermes-2-mistral-7b' | 'teknium/openhermes-2.5-mistral-7b' | 'pygmalionai/mythalion-13b' | 'undi95/remm-slerp-l2-13b' | 'xwin-lm/xwin-lm-70b' | 'gryphe/mythomax-l2-13b-8k' | 'neversleep/noromaid-20b' | 'anthropic/claude-2' | 'anthropic/claude-2.0' | 'anthropic/claude-instant-v1' | 'anthropic/claude-v1' | 'anthropic/claude-1.2' | 'anthropic/claude-instant-v1-100k' | 'anthropic/claude-v1-100k' | 'anthropic/claude-instant-1.0' | 'mancer/weaver' | 'gryphe/mythomax-l2-13b';
-
-type OopenRouter_ModelInfo = {
-    id: OpenRouter_Models;
-    name: string;
-    pricing: {
-        prompt: string;
-        completion: string;
-    };
-    context_length: number;
-    architecture: {
-        tokenizer: string;
-        instruct_type: InstructType | null;
-    };
-    top_provider: {
-        max_completion_tokens: number | null;
-    };
-    per_request_limits?: Maybe<{
-        prompt_tokens: string;
-        completion_tokens: string;
-    }>;
-};
-type InstructType = //
-'llama2' | 'zephyr' | 'openchat' | 'alpaca' | 'vicuna' | 'neural' | 'gpt' | 'airoboros' | 'claude';
-declare const openRouterInfos: {
-    [key in OpenRouter_Models]: OopenRouter_ModelInfo;
-};
 
 declare function debounce<T extends (...args: any[]) => any>(func: T, delay: number, maxWait?: number): (...funcArgs: Parameters<T>) => void;
 
@@ -56,6 +28,14 @@ declare const MessageWarningUI: react.FunctionComponent<{
     markdown?: string | undefined;
 }>;
 
+type CovariantFn<out In, out Out> = {
+    covarianceHack(_: In): Out;
+}['covarianceHack'];
+
+type CovariantFC<out P> = {
+    covarianceHack(_: P): ReactNode;
+}['covarianceHack'];
+
 type SchemaDict = {
     [key: string]: ISpec;
 };
@@ -67,9 +47,9 @@ interface ISpec<W extends IWidget = IWidget> {
     $Config: W['$Config'];
     $Serial: W['$Serial'];
     $Value: W['$Value'];
-    LabelExtraUI?: (p: {
+    LabelExtraUI?: CovariantFC<{
         widget: W;
-    }) => ReactNode;
+    }>;
 }
 
 /** custom type checking;
@@ -104,7 +84,7 @@ type $WidgetTypes = {
     $Config: SharedWidgetConfig<any>;
     $Serial: SharedWidgetSerial;
     $Value: any;
-    $Widget: IWidget<any>;
+    $Widget: IWidget<$WidgetTypes>;
 };
 declare const isWidget: (x: any) => x is IWidget<$WidgetTypes>;
 interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends IWidgetMixins {
@@ -113,7 +93,6 @@ interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends IWidgetMixins {
     $Serial: K['$Serial']; /** type only properties; do not use directly; used to make typings good and fast */
     $Value: K['$Value']; /** type only properties; do not use directly; used to make typings good and fast */
     $Widget: K['$Widget']; /** type only properties; do not use directly; used to make typings good and fast */
-    readonly baseErrors: Problem_Ext;
     /** unique ID; each node in the form tree has one; persisted in serial */
     readonly id: string;
     /** spec used to instanciate this widget */
@@ -130,6 +109,10 @@ interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends IWidgetMixins {
     readonly form: Form;
     /** parent widget of this widget, if any */
     readonly parent: IWidget | null;
+    /** base validation errors specific to this widget; */
+    readonly baseErrors: Problem_Ext;
+    /** unified api to allow setting serial from value */
+    setValue(val: K['$Value']): void;
     /** if specified, override the default algorithm to decide if the widget should have borders */
     border?: boolean;
     /** if specified, override the default algorithm to decide if the widget should have borders */
@@ -139,12 +122,12 @@ interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends IWidgetMixins {
     /** if specified, override the default algorithm to decide if the widget container should have a background of base-100 */
     background?: boolean;
     /** default header UI */
-    readonly DefaultHeaderUI: FC<{
-        widget: any;
+    readonly DefaultHeaderUI: CovariantFC<{
+        widget: K['$Widget'];
     }> | undefined;
     /** default body UI */
-    readonly DefaultBodyUI: FC<{
-        widget: any;
+    readonly DefaultBodyUI: CovariantFC<{
+        widget: K['$Widget'];
     }> | undefined;
 }
 declare const $WidgetSym: unique symbol;
@@ -214,6 +197,7 @@ type SharedWidgetConfig<T extends $WidgetTypes> = {
     }) => JSX.Element);
     /** will be called when value changed */
     onValueChange?: (val: T['$Value']) => void;
+    presets?: Record<string, (form: T['$Widget']) => void>;
     /** custom type checking;
      * valid:
      *  - true,
@@ -322,9 +306,10 @@ declare class Widget_group<T extends SchemaDict> implements IWidget<Widget_group
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_group<T>>, serial?: Widget_group_serial<T>, 
     /** used to register self as the root, before we start instanciating anything */
     preHydrate?: (self: Widget_group<any>) => void);
-    value: {
-        [k in keyof T]: GetWidgetResult<T[k]>;
-    };
+    setValue(val: Widget_group_value<T>): void;
+    set value(val: Widget_group_value<T>);
+    get value(): Widget_group_value<T>;
+    private valueLazy;
 }
 
 type Widget_shared_config<T extends ISpec = ISpec> = WidgetConfigFields<{
@@ -361,6 +346,8 @@ declare class Widget_shared<T extends ISpec = ISpec> implements IWidget<Widget_s
     get baseErrors(): Problem_Ext;
     hidden: () => void;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_shared<T>>, serial?: Widget_shared_serial);
+    setValue(val: Widget_shared_value<T>): void;
+    set value(val: Widget_shared_value<T>);
     get value(): Widget_shared_value<T>;
 }
 
@@ -369,7 +356,7 @@ interface IFormBuilder {
         count: number;
     };
     _HYDRATE: <T extends ISpec<any>>(self: IWidget | null, spec: T, serial: any | null) => T['$Widget'];
-    form: Form<any, any>;
+    form: Form;
     shared: <W extends ISpec<any>>(key: string, spec: W) => Widget_shared<W>;
     group: (config: Widget_group_config<any>) => ISpec<Widget_group<any>>;
     SpecCtor: {
@@ -390,14 +377,14 @@ declare class FormManager<BUILDER extends IFormBuilder> {
     constructor(builderCtor: {
         new (form: Form<any, BUILDER>): BUILDER;
     });
-    _builders: WeakMap<Form<ISpec<IWidget<$WidgetTypes>>, IFormBuilder>, BUILDER>;
-    getBuilder: (form: Form<any, any>) => BUILDER;
+    _builders: WeakMap<Form<ISpec<any>, IFormBuilder>, BUILDER>;
+    getBuilder: (form: Form<any, BUILDER>) => BUILDER;
     /** LEGACY API; TYPES ARE COMPLICATED DUE TO MAINTAINING BACKWARD COMPAT */
-    fields: <FIELDS extends SchemaDict>(ui: (form: BUILDER) => FIELDS, formProperties?: FormProperties<ISpec<Widget_group<FIELDS>>>) => Form<ISpec<Widget_group<FIELDS>>, BUILDER>;
+    fields: <FIELDS extends SchemaDict>(ui: (form: BUILDER) => FIELDS, formProperties?: FormProperties<ISpec<Widget_group<FIELDS>>, BUILDER>) => Form<ISpec<Widget_group<FIELDS>>, BUILDER>;
     /** simple alias to create a new Form */
-    form: <ROOT extends ISpec<IWidget<$WidgetTypes>>>(ui: (form: BUILDER) => ROOT, formProperties?: FormProperties<ROOT>) => Form<ROOT, BUILDER>;
+    form: <ROOT extends ISpec<IWidget<$WidgetTypes>>>(ui: (form: BUILDER) => ROOT, formProperties?: FormProperties<ROOT, BUILDER>) => Form<ROOT, BUILDER>;
     /** simple way to defined forms and in react components */
-    use: <ROOT extends ISpec<IWidget<$WidgetTypes>>>(ui: (form: BUILDER) => ROOT, formProperties?: FormProperties<ROOT>, deps?: DependencyList) => Form<ROOT, BUILDER>;
+    use: <ROOT extends ISpec<IWidget<$WidgetTypes>>>(ui: (form: BUILDER) => ROOT, formProperties?: FormProperties<ROOT, BUILDER>, deps?: DependencyList) => Form<ROOT, BUILDER>;
 }
 
 /** quick type alias used for unknown serial; for now, default to shared fields */
@@ -412,7 +399,7 @@ type FormSerial = {
     serialLastUpdatedAt: Timestamp;
 };
 
-type FormProperties<ROOT extends ISpec<any> = ISpec, BUILDER extends IFormBuilder = IFormBuilder> = {
+type FormProperties<ROOT extends ISpec<any>, BUILDER extends IFormBuilder> = {
     name: string;
     onSerialChange?: (form: Form<ROOT, BUILDER>) => void;
     onValueChange?: (form: Form<ROOT, BUILDER>) => void;
@@ -420,18 +407,22 @@ type FormProperties<ROOT extends ISpec<any> = ISpec, BUILDER extends IFormBuilde
 };
 declare class Form<
 /** shape of the form, to preserve type safety down to nested children */
-ROOT extends ISpec<any> = ISpec, 
-/** project-specific builder, allowing to have modular form setups with different widgets */
+ROOT extends ISpec<any> = ISpec<any>, 
+/**
+ * project-specific builder, allowing to have modular form setups with different widgets
+ * Cushy BUILDER is `FormBuilder` in `src/controls/FormBuilder.ts`
+ * */
 BUILDER extends IFormBuilder = IFormBuilder> {
     manager: FormManager<BUILDER>;
-    ui: (form: BUILDER) => ROOT;
-    formConfig: FormProperties<ROOT>;
-    constructor(manager: FormManager<BUILDER>, ui: (form: BUILDER) => ROOT, formConfig: FormProperties<ROOT>);
+    ui: CovariantFn<BUILDER, ROOT>;
+    formConfig: FormProperties<ROOT, BUILDER>;
+    uid: string;
+    constructor(manager: FormManager<BUILDER>, ui: CovariantFn<BUILDER, ROOT>, formConfig: FormProperties<ROOT, BUILDER>);
     /** loading error  */
     error: Maybe<string>;
     /** shortcut to access the <FormUI /> component without having to import it first */
     FormUI: react.FunctionComponent<{
-        form: Maybe<Form<ISpec<IWidget<$WidgetTypes>>, IFormBuilder>>;
+        form: Maybe<Form<ISpec<any>, IFormBuilder>>;
         theme?: string | undefined;
         className?: string | undefined;
         style?: react.CSSProperties | undefined;
@@ -461,6 +452,7 @@ BUILDER extends IFormBuilder = IFormBuilder> {
     private _onValueChange;
     /** every widget node must call this function once it's value change */
     valueChanged: (widget: IWidget) => void;
+    knownShared: Map<string, IWidget>;
     /** every widget node must call this function once it's serial changed */
     serialChanged: (_widget: IWidget) => void;
     /** from builder, offering simple API for your project specifc widgets  */
@@ -518,6 +510,8 @@ declare class Widget_optional<T extends ISpec = ISpec> implements IWidget<Widget
      */
     private _ensureChildIsHydrated;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_optional<T>>, serial?: Widget_optional_serial<T>);
+    setValue(val: Widget_optional_value<T>): void;
+    set value(next: Widget_optional_value<T>);
     get value(): Widget_optional_value<T>;
 }
 
@@ -553,6 +547,34 @@ declare const runWithGlobalForm: <T>(form: IFormBuilder, f: () => T) => T;
  *
  * */
 declare const getCurrentForm_IMPL: () => IFormBuilder;
+
+type OpenRouter_Models = 'openrouter/auto' | 'mistralai/mistral-7b-instruct' | 'mistralai/mixtral-8x7b-instruct' | 'mistralai/mistral-large' | 'huggingfaceh4/zephyr-7b-beta' | 'openchat/openchat-7b' | 'undi95/toppy-m-7b' | 'gryphe/mythomist-7b' | 'nousresearch/nous-capybara-34b' | 'jebcarter/psyfighter-13b' | 'nousresearch/nous-hermes-llama2-13b' | 'phind/phind-codellama-34b' | 'intel/neural-chat-7b' | 'haotian-liu/llava-13b' | 'meta-llama/llama-2-13b-chat' | 'alpindale/goliath-120b' | 'lizpreciatior/lzlv-70b-fp16-hf' | 'openai/gpt-3.5-turbo' | 'openai/gpt-3.5-turbo-1106' | 'openai/gpt-3.5-turbo-0301' | 'openai/gpt-3.5-turbo-16k' | 'openai/gpt-4-1106-preview' | 'openai/gpt-4' | 'openai/gpt-4-0314' | 'openai/gpt-4-32k' | 'openai/gpt-4-32k-0314' | 'openai/gpt-4-vision-preview' | 'openai/text-davinci-002' | 'openai/gpt-3.5-turbo-instruct' | 'google/palm-2-chat-bison' | 'google/palm-2-codechat-bison' | 'google/palm-2-chat-bison-32k' | 'google/palm-2-codechat-bison-32k' | 'perplexity/pplx-70b-online' | 'perplexity/pplx-7b-online' | 'perplexity/pplx-7b-chat' | 'perplexity/pplx-70b-chat' | 'meta-llama/llama-2-70b-chat' | 'nousresearch/nous-hermes-llama2-70b' | 'meta-llama/codellama-34b-instruct' | 'jondurbin/airoboros-l2-70b' | 'migtissera/synthia-70b' | 'open-orca/mistral-7b-openorca' | 'teknium/openhermes-2-mistral-7b' | 'teknium/openhermes-2.5-mistral-7b' | 'pygmalionai/mythalion-13b' | 'undi95/remm-slerp-l2-13b' | 'xwin-lm/xwin-lm-70b' | 'gryphe/mythomax-l2-13b-8k' | 'neversleep/noromaid-20b' | 'anthropic/claude-2' | 'anthropic/claude-2.0' | 'anthropic/claude-instant-v1' | 'anthropic/claude-v1' | 'anthropic/claude-1.2' | 'anthropic/claude-instant-v1-100k' | 'anthropic/claude-v1-100k' | 'anthropic/claude-instant-1.0' | 'mancer/weaver' | 'gryphe/mythomax-l2-13b';
+
+type OopenRouter_ModelInfo = {
+    id: OpenRouter_Models;
+    name: string;
+    pricing: {
+        prompt: string;
+        completion: string;
+    };
+    context_length: number;
+    architecture: {
+        tokenizer: string;
+        instruct_type: InstructType | null;
+    };
+    top_provider: {
+        max_completion_tokens: number | null;
+    };
+    per_request_limits?: Maybe<{
+        prompt_tokens: string;
+        completion_tokens: string;
+    }>;
+};
+type InstructType = //
+'llama2' | 'zephyr' | 'openchat' | 'alpaca' | 'vicuna' | 'neural' | 'gpt' | 'airoboros' | 'claude';
+declare const openRouterInfos: {
+    [key in OpenRouter_Models]: OopenRouter_ModelInfo;
+};
 
 type Widget_list_config<T extends ISpec> = WidgetConfigFields<{
     element: ((ix: number) => T) | T;
@@ -596,6 +618,7 @@ declare class Widget_list<T extends ISpec> implements IWidget<Widget_list_types<
     findItemIndexContaining: (widget: IWidget) => number | null;
     schemaAt: (ix: number) => T;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_list<T>>, serial?: Widget_list_serial<T>);
+    setValue(val: Widget_list_value<T>): void;
     get value(): Widget_list_value<T>;
     collapseAllItems: () => void;
     expandAllItems: () => void;
@@ -627,64 +650,6 @@ declare class SimpleSpec<W extends IWidget = IWidget> implements ISpec<W> {
     hidden: () => SimpleSpec<W>;
 }
 
-declare function makeLabelFromFieldName(s: string): string;
-
-declare const JsonViewUI: react.FunctionComponent<{
-    value?: Maybe<object>;
-}>;
-
-declare const ErrorBoundaryFallback: (p: {
-    error: any;
-    resetErrorBoundary: (...args: any[]) => void;
-}) => react_jsx_runtime.JSX.Element;
-
-/** assertNotNull */
-declare const bang: <T>(x: Maybe<T>, msg?: string) => T;
-declare function ASSERT_ARRAY(a: any): a is any[];
-declare function ASSERT_EQUAL(a: any, b: any): a is any[];
-declare function ASSERT_STRING(a: any): a is string;
-declare function asSTRING_orCrash(a: any, errMsg?: string): string;
-
-type RefFn = (e: HTMLDivElement | null) => void;
-type DynamicSize = {
-    width: Maybe<number>;
-    height: Maybe<number>;
-    observer: ResizeObserver;
-};
-declare const useSizeOf: () => {
-    ref: RefFn;
-    size: DynamicSize;
-};
-
-declare const AnimatedSizeUI: react.FunctionComponent<{
-    className?: string | undefined;
-    children?: ReactNode;
-}>;
-
-/** allow to handle shared and optionals */
-declare function getActualWidgetToDisplay(originalWidget: IWidget): IWidget;
-
-declare const getBorderStatusForWidget: (widget: IWidget) => boolean;
-
-declare const getIfWidgetIsCollapsible: (widget: IWidget) => boolean;
-
-declare const getIfWidgetNeedAlignedLabel: (widget: IWidget) => boolean;
-
-declare const InputBoolUI: react.FunctionComponent<{
-    active?: Maybe<boolean>;
-    display?: "button" | "check" | undefined;
-    expand?: boolean | undefined;
-    icon?: string | undefined;
-    text?: string | undefined;
-    className?: string | undefined;
-    style?: CSSProperties | undefined;
-    onValueChange?: ((next: boolean) => void) | undefined;
-}>;
-
-declare const Widget_ToggleUI: react.FunctionComponent<{
-    widget: IWidget;
-}>;
-
 declare const ModalShellUI: react.FunctionComponent<{
     title?: React.ReactNode;
     children?: React.ReactNode;
@@ -700,6 +665,11 @@ declare const computePlacement: (placement: RevealPlacement, rect: DOMRect) => {
 };
 
 type RevealProps = {
+    /**
+     * @deprecated
+     * unused for now, backword compatibility with rsuite
+     */
+    enterable?: boolean;
     content: () => react__default.ReactNode;
     children: react__default.ReactNode;
     title?: react__default.ReactNode;
@@ -797,83 +767,351 @@ declare const global_RevealStack: RevealState[];
 
 declare const RevealUI: react.FunctionComponent<RevealProps>;
 
-declare const exhaust: (x: never) => never;
+declare function makeLabelFromFieldName(s: string): string;
 
-type RSSize = 'sm' | 'xs' | 'md' | 'lg';
-type RSAppearance = 'default' | 'subtle' | 'ghost' | 'link' | 'primary';
-
-declare const FormHelpTextUI: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Button: (p: JSX.IntrinsicElements['button'] & {
-    icon?: Maybe<ReactNode>;
-    active?: Maybe<boolean>;
-    size?: Maybe<RSSize>;
-    loading?: boolean;
-    disabled?: boolean;
-    appearance?: Maybe<RSAppearance>;
-}) => react_jsx_runtime.JSX.Element;
-declare const Input: (p: JSX.IntrinsicElements['input']) => react_jsx_runtime.JSX.Element;
-declare const InputNumberBase: react.FunctionComponent<react.ClassAttributes<HTMLInputElement> & react.InputHTMLAttributes<HTMLInputElement> & {
-    _size?: RSSize | undefined;
+declare const JsonViewUI: react.FunctionComponent<{
+    value?: Maybe<object>;
 }>;
-declare const Slider: react.FunctionComponent<react.DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>;
-declare const Radio: react.FunctionComponent<react.DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>;
-declare const Toggle: react.FunctionComponent<react.DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>;
-declare const SelectPicker: (p: any) => react_jsx_runtime.JSX.Element;
-declare const TagPicker: (p: any) => react_jsx_runtime.JSX.Element;
-declare const MultiCascader: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Tree: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Rate: (p: {
-    value?: number;
-    name: string;
-    disabled?: boolean;
-    max?: number;
-    onChange?: (value: number) => void;
+
+declare const ErrorBoundaryFallback: (p: {
+    error: any;
+    resetErrorBoundary: (...args: any[]) => void;
 }) => react_jsx_runtime.JSX.Element;
-declare const Whisper: (p: {
-    /** @deprecated */
-    enterable?: boolean;
-    /** @deprecated */
-    placement?: string;
-    speaker: ReactNode;
-    children: ReactNode;
-}) => react_jsx_runtime.JSX.Element;
-declare const Speaker: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Popover: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Tooltip: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Modal: (p: any) => react_jsx_runtime.JSX.Element;
-declare const ModalHeader: (p: any) => react_jsx_runtime.JSX.Element;
-declare const ModalTitle: (p: any) => react_jsx_runtime.JSX.Element;
-declare const ModalBody: (p: any) => react_jsx_runtime.JSX.Element;
-declare const ModalFooter: (p: any) => react_jsx_runtime.JSX.Element;
-declare const NavItem: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Menu: (p: any) => react_jsx_runtime.JSX.Element;
-declare const MenuBar: (p: any) => react_jsx_runtime.JSX.Element;
-declare const DropdownMenu: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Panel: (p: {
-    header?: ReactNode;
-    className?: string;
-    children: ReactNode;
-}) => react_jsx_runtime.JSX.Element;
-declare const ProgressLine: react.FunctionComponent<{
+
+/** assertNotNull */
+declare const bang: <T>(x: Maybe<T>, msg?: string) => T;
+declare function ASSERT_ARRAY(a: any): a is any[];
+declare function ASSERT_EQUAL(a: any, b: any): a is any[];
+declare function ASSERT_STRING(a: any): a is string;
+declare function asSTRING_orCrash(a: any, errMsg?: string): string;
+
+type RefFn = (e: HTMLDivElement | null) => void;
+type DynamicSize = {
+    width: Maybe<number>;
+    height: Maybe<number>;
+    observer: ResizeObserver;
+};
+declare const useSizeOf: () => {
+    ref: RefFn;
+    size: DynamicSize;
+};
+
+declare const AnimatedSizeUI: react.FunctionComponent<{
     className?: string | undefined;
-    percent?: number | undefined;
-    status: 'success' | 'active';
-}>;
-type MessageType = 'error' | 'info' | 'warning';
-declare const Message: react.FunctionComponent<{
-    type: MessageType;
-    header?: ReactNode;
-    showIcon?: boolean | undefined;
     children?: ReactNode;
 }>;
-declare const Tag: (p: any) => react_jsx_runtime.JSX.Element;
-declare const Loader: ((p: {
-    size?: RSSize;
-    className?: string;
-}) => react_jsx_runtime.JSX.Element) & {
-    displayName: string;
+
+/** allow to handle shared and optionals */
+declare function getActualWidgetToDisplay(originalWidget: IWidget): IWidget;
+
+declare const getBorderStatusForWidget: (widget: IWidget) => boolean;
+
+declare const getIfWidgetIsCollapsible: (widget: IWidget) => boolean;
+
+declare const getIfWidgetNeedAlignedLabel: (widget: IWidget) => boolean;
+
+declare const InputBoolUI: react.FunctionComponent<{
+    active?: Maybe<boolean>;
+    display?: "button" | "check" | undefined;
+    expand?: boolean | undefined;
+    icon?: string | undefined;
+    text?: string | undefined;
+    className?: string | undefined;
+    style?: CSSProperties | undefined;
+    onValueChange?: ((next: boolean) => void) | undefined;
+}>;
+
+declare const Widget_ToggleUI: react.FunctionComponent<{
+    widget: IWidget;
+}>;
+
+type DomId = string;
+declare enum Trigger {
+    UNMATCHED = "UNMATCHED",
+    Success = "SUCCESS",
+    FAILED = "DONE"
+}
+
+declare class ActivityManager {
+    /** currently active activities */
+    stack: Activity[];
+    push: (activity: Activity) => Trigger;
+    pop: () => void;
+    current: () => Activity | undefined;
+    constructor();
+}
+declare const activityManger: ActivityManager;
+interface Activity {
+    /** uniquer activity uid */
+    uid: string;
+    /** if given, the activity is bound the the given ID */
+    bound?: DomId | null;
+    onStart?: () => void;
+    onEvent?: (event: Event) => Trigger | null;
+    onStop?: () => void;
+    UI: FC<{}>;
+}
+
+declare class ManualPromise<T = any> implements PromiseLike<T> {
+    done: boolean;
+    value: T | null;
+    resolve: (t: T | PromiseLike<T>) => void;
+    reject: (err: any) => void;
+    promise: Promise<T>;
+    then: Promise<T>['then'];
+    isRunning: boolean;
+    setValue: (t: T) => void;
+    constructor();
+}
+declare const isPromise: (p: any) => p is Promise<any>;
+
+type Command_<Ctx = any> = {
+    combos?: CushyShortcut | CushyShortcut[];
+    label: string;
+    id: string;
+    description?: string;
+    ctx: CommandContext<Ctx>;
+    action: (t: Ctx) => Trigger | Promise<Trigger>;
+    /** placeholder; unused for now */
+    undo?: (t: Ctx) => Trigger | Promise<Trigger>;
+    validInInput?: boolean;
+    continueAfterSuccess?: boolean;
 };
-declare const RadioTile: (p: any) => react_jsx_runtime.JSX.Element;
+interface Command<Ctx = any> extends Command_<Ctx> {
+}
+declare class Command<Ctx = any> {
+    conf: Command_<Ctx>;
+    $SYM: symbol;
+    constructor(conf: Command_<Ctx>);
+    /** bind a command to a static context, bypassing its context provider */
+    bind(ctx: Ctx): BoundCommand<Ctx>;
+    /**
+     * method to programmatically call a command,
+     * using when to both extract context and check if command can run
+     * */
+    execute(): Trigger | Promise<Trigger>;
+    NavBarBtnUI(p: {
+        label?: string;
+    }): react_jsx_runtime.JSX.Element;
+}
+declare class CommandContext<Ctx = any> {
+    /** display name */
+    name: string;
+    /** actual function code */
+    check: () => Ctx | Trigger.UNMATCHED;
+    constructor(
+    /** display name */
+    name: string, 
+    /** actual function code */
+    check: () => Ctx | Trigger.UNMATCHED);
+}
+declare function command<Ctx extends any>(t: Omit<Command_<Ctx>, 'type'>): Command<Ctx>;
+type BoundCommandOpts = {
+    label?: string;
+};
+declare class BoundCommand<Ctx = any> {
+    private command;
+    private ctx;
+    private ui?;
+    $SYM: symbol;
+    constructor(command: Command<Ctx>, ctx: Ctx, ui?: BoundCommandOpts | undefined);
+    execute: () => Trigger | Promise<Trigger>;
+    NavBarBtnUI: (p: {
+        label?: string;
+    }) => react_jsx_runtime.JSX.Element;
+    get label(): string;
+}
+
+/** @todo improve to detect shortkey without order */
+
+type CushyShortcut = Tagged<string, 'CushyShortcut'>;
+type KeyName = Branded<string, {
+    KeyAllowedInShortcut: true;
+}>;
+type InputToken = Branded<string, {
+    InputToken: true;
+}>;
+type InputSequence = InputToken[];
+declare class CommandManager {
+    conf: {
+        log?: boolean;
+        name?: string;
+    };
+    commands: Map<Command['id'], Command>;
+    commandByShortcut: Map<string, Command[]>;
+    contextByName: Map<string, CommandContext>;
+    get knownContexts(): CommandContext[];
+    registerCommand: (op: Command) => void;
+    getCommandById: (id: string) => Command<any> | undefined;
+    inputHistory: InputSequence;
+    name: string;
+    constructor(conf?: {
+        log?: boolean;
+        name?: string;
+    });
+    log: (...content: any[]) => void;
+    private evInInput;
+    private inputToken;
+    processKeyDownEvent: (ev: KeyboardEvent$1<HTMLElement>) => Trigger;
+    tryToRun: (s: Command, ev: KeyboardEvent$1<HTMLElement>) => boolean;
+}
+declare function parseShortcutToInputSequence(combo: CushyShortcut): InputSequence;
+declare const normalizeCushyShortcut: (combo: CushyShortcut) => CushyShortcut;
+declare const commandManager: CommandManager;
+
+declare const MOD_KEY: KeyName;
+declare const META_NAME: KeyName;
+declare const hasMod: (ev: MouseEvent$1<any, any> | KeyboardEvent) => boolean;
+
+/** this module helps break the import cycle between MenuUI and Command  */
+
+declare const BoundCommandSym: unique symbol;
+declare const isBoundCommand: (x: any) => x is BoundCommand<any>;
+
+/** this module helps break the import cycle between MenuUI and Command  */
+
+declare const CommandSym: unique symbol;
+declare const isCommand: (x: any) => x is Command<any>;
+
+type NO_PROPS = Record<string, never>;
+
+/**
+ * a simple Menu entry for when you don't want to resort to commands nor custom widgets
+ * label will be used for shortcut binding and fuzzy menu search
+ */
+declare class SimpleMenuEntry {
+    label: string;
+    onPick: () => void;
+    constructor(label: string, onPick: () => void);
+}
+
+type MenuEntryWithKey = {
+    entry: MenuEntry;
+    char?: string;
+    charIx?: number;
+};
+type MenuEntry = 
+/** inline subform  */
+IWidget
+/** custom component  */
+ | FC<{}>
+/** a command */
+ | Command | BoundCommand | BoundMenu
+/** simple MenuEntry */
+ | SimpleMenuEntry;
+/** supplied menu definition */
+type MenuDef<Props> = {
+    /**
+     * used to register menu into menu manager so you can open menu by ref
+     * required for hot performant / simple hot reload
+     */
+    id?: string;
+    title: string;
+    entries: (props: Props) => MenuEntry[];
+};
+type MenuID = Tagged<string, 'MenuID'>;
+declare class Menu<Props> {
+    def: MenuDef<Props>;
+    id: MenuID;
+    get title(): string;
+    constructor(def: MenuDef<Props>);
+    UI: (p: {
+        props: Props;
+    }) => JSX.Element;
+    DropDownUI: (p: {
+        props: Props;
+    }) => JSX.Element;
+    /** bind a menu to give props */
+    bind: (props: Props, ui?: BoundMenuOpts) => BoundMenu;
+    /** push the menu to current activity */
+    open(props: Props): Trigger | Promise<Trigger>;
+}
+declare class MenuWithoutProps {
+    def: MenuDef<NO_PROPS>;
+    id: MenuID;
+    get title(): string;
+    constructor(def: MenuDef<NO_PROPS>);
+    UI: () => JSX.Element;
+    DropDownUI: () => JSX.Element;
+    /** bind a menu to give props */
+    bind: (ui?: BoundMenuOpts) => BoundMenu;
+    /** push the menu to current activity */
+    open(): Trigger | Promise<Trigger>;
+}
+declare class MenuInstance<Props> implements Activity {
+    menu: Menu<Props>;
+    props: Props;
+    keysTaken: Set<string>;
+    onStart: () => void;
+    UI: () => react.FunctionComponentElement<{
+        menu: MenuInstance<any>;
+    }>;
+    onEvent: (event: Event) => Trigger | null;
+    onStop: () => void;
+    uid: string;
+    constructor(menu: Menu<Props>, props: Props, keysTaken?: Set<string>);
+    get entries(): MenuEntry[];
+    get entriesWithKb(): MenuEntryWithKey[];
+    get allocatedKeys(): Set<string>;
+    private get acceleratedEntries();
+    findSuitableKeys: (label: string, allocatedKeys: Set<string>) => Maybe<{
+        char: string;
+        pos: number;
+    }>;
+}
+declare const menu: <P>(def: MenuDef<P>) => Menu<P>;
+declare const menuWithoutProps: (def: MenuDef<NO_PROPS>) => MenuWithoutProps;
+type BoundMenuOpts = {
+    title?: string;
+};
+declare class BoundMenu<Ctx = any, Props = any> {
+    menu: Menu<Props>;
+    props: Props;
+    ui?: BoundMenuOpts | undefined;
+    $SYM: symbol;
+    get title(): string;
+    constructor(menu: Menu<Props>, props: Props, ui?: BoundMenuOpts | undefined);
+    open: () => Trigger | Promise<Trigger>;
+    init: (keysTaken?: Set<string>) => MenuInstance<Props>;
+}
+
+/** this module helps break the import cycle between MenuUI and Menu  */
+
+declare const BoundMenuSym: unique symbol;
+declare const isBoundMenu: (x: any) => x is BoundMenu<any, any>;
+
+declare const ComboUI: react.FunctionComponent<{
+    size?: "sm" | "xs" | undefined;
+    primary?: boolean | undefined;
+    combo: CushyShortcut;
+}>;
+
+declare const Dropdown: (p: {
+    className?: string;
+    startIcon?: Maybe<ReactNode>;
+    title: ReactNode;
+    content?: () => ReactNode;
+}) => react_jsx_runtime.JSX.Element;
+declare const MenuItem: react.FunctionComponent<{
+    onClick?: ((ev: React.MouseEvent<HTMLElement, MouseEvent>) => void) | undefined;
+    size?: "sm" | "xs" | "md" | "lg" | undefined;
+    icon?: Maybe<ReactNode>;
+    disabled?: boolean | undefined;
+    active?: boolean | undefined;
+    className?: string | undefined;
+    children?: ReactNode;
+    label?: ReactNode;
+    shortcut?: CushyShortcut | undefined;
+}>;
+
+declare const MenuRootUI: react.FunctionComponent<{
+    menu: MenuInstance<any>;
+}>;
+declare const MenuUI: react.FunctionComponent<{
+    menu: MenuInstance<any>;
+}>;
+
+declare const menu_widgetActions: Menu<IWidget>;
 
 declare const WidgetTooltipUI: react.FunctionComponent<{
     widget: IWidget;
@@ -983,6 +1221,7 @@ declare class Widget_bool implements IWidget<Widget_bool_types> {
     reset: () => boolean;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_bool>, serial?: Widget_bool_serial);
     get value(): Widget_bool_value;
+    setValue(val: Widget_bool_value): void;
     set value(next: Widget_bool_value);
 }
 
@@ -1032,6 +1271,7 @@ declare class Widget_button<K> implements IWidget<Widget_button_types<K>> {
     get baseErrors(): Problem_Ext;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_button<K>>, serial?: Widget_button_serial);
     get value(): Widget_button_value;
+    setValue(val: boolean): void;
     set value(next: boolean);
 }
 
@@ -1061,7 +1301,7 @@ type SelectProps<T> = {
     /** callback when a new option is added */
     onChange: null | ((next: T, self: AutoCompleteSelectState<T>) => void);
     /** list of all options */
-    options?: () => T[];
+    options?: (query: string) => T[];
     /** if provided, is used to compare options with selected values */
     equalityCheck?: (a: T, b: T) => boolean;
     /** used to search/filter & for UI if no getLabelUI provided */
@@ -1087,13 +1327,18 @@ type SelectProps<T> = {
      * (previous default before 2024-02-29: false if multi-select, true if single select)
      */
     resetQueryOnPick?: boolean;
+    /** hooks required to plug search query from/into some other system */
+    getSearchQuery?: () => string;
+    setSearchQuery?: (val: string) => void;
 };
 declare class AutoCompleteSelectState<T> {
     p: SelectProps<T>;
     constructor(p: SelectProps<T>);
     isMultiSelect: boolean;
     get options(): T[];
-    searchQuery: string;
+    private _searchQuery;
+    get searchQuery(): string;
+    set searchQuery(value: string);
     get filteredOptions(): T[];
     /**
      * function to compare value or options,
@@ -1235,12 +1480,14 @@ declare class Widget_choices<T extends SchemaDict = SchemaDict> implements IWidg
     get firstActiveBranchWidget(): T[keyof T]['$Widget'] | undefined;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_choices<T>>, serial?: Widget_choices_serial<T>);
     toggleBranch(branch: keyof T & string): void;
+    isBranchDisabled: (branch: keyof T & string) => boolean;
     disableBranch(branch: keyof T & string, p?: {
         skipBump?: boolean;
     }): void;
     enableBranch(branch: keyof T & string, p?: {
         skipBump?: boolean;
     }): void;
+    setValue(val: Widget_choices_value<T>): void;
     /** results, but only for active branches */
     get value(): Widget_choices_value<T>;
 }
@@ -1295,6 +1542,7 @@ declare class Widget_color implements IWidget<Widget_color_types> {
     serial: Widget_color_serial;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_color>, serial?: Widget_color_serial);
     get value(): Widget_color_value;
+    setValue(val: Widget_color_value): void;
     set value(next: Widget_color_value);
 }
 
@@ -1378,6 +1626,8 @@ declare class Widget_markdown implements IWidget<Widget_markdown_types> {
     readonly serial: Widget_markdown_serial;
     get markdown(): string;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_markdown>, serial?: Widget_markdown_serial);
+    setValue(val: Widget_markdown_value): void;
+    set value(val: Widget_markdown_value);
     get value(): Widget_markdown_value;
 }
 
@@ -1432,19 +1682,26 @@ declare class Widget_matrix implements IWidget<Widget_matrix_types> {
     cols: string[];
     alignLabel: boolean;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_matrix>, serial?: Widget_matrix_serial);
+    setValue(val: Widget_matrix_value): void;
+    /** 🔶 this is inneficient */
+    set value(val: Widget_matrix_value);
     get value(): Widget_matrix_value;
     private sep;
     private store;
     private key;
     get allCells(): Widget_matrix_cell[];
     UPDATE: () => void;
+    /** list of all cells that are ON */
     get RESULT(): Widget_matrix_cell[];
+    /** whether the first grid cell is ON */
     get firstValue(): boolean;
     setAll: (value: boolean) => void;
     setRow: (row: string, val: boolean) => void;
     setCol: (col: string, val: boolean) => void;
-    get: (row: string, col: string) => Widget_matrix_cell;
-    set: (row: string, col: string, value: boolean) => void;
+    /** get cell at {rol x col} */
+    getCell: (row: string, col: string) => Widget_matrix_cell;
+    /** set cell at {rol x col} to given value */
+    setCell: (row: string, col: string, value: boolean) => void;
 }
 
 declare const WidgetMatrixUI: react.FunctionComponent<{
@@ -1533,6 +1790,7 @@ declare class Widget_number implements IWidget<Widget_number_types> {
     reset: () => void;
     get baseErrors(): string | null;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_number>, serial?: Widget_number_serial);
+    setValue(val: Widget_number_value): void;
     set value(next: Widget_number_value);
     get value(): Widget_number_value;
 }
@@ -1540,6 +1798,71 @@ declare class Widget_number implements IWidget<Widget_number_types> {
 declare const WidgetNumberUI: react.FunctionComponent<{
     widget: Widget_number;
 }>;
+
+declare const exhaust: (x: never) => never;
+
+type RSSize = 'sm' | 'xs' | 'md' | 'lg';
+type RSAppearance = 'default' | 'subtle' | 'ghost' | 'link' | 'primary';
+
+declare const FormHelpTextUI: (p: any) => react_jsx_runtime.JSX.Element;
+declare const Button: (p: JSX.IntrinsicElements['button'] & {
+    icon?: Maybe<ReactNode>;
+    active?: Maybe<boolean>;
+    size?: Maybe<RSSize>;
+    loading?: boolean;
+    disabled?: boolean;
+    appearance?: Maybe<RSAppearance>;
+}) => react_jsx_runtime.JSX.Element;
+declare const Input: (p: JSX.IntrinsicElements['input']) => react_jsx_runtime.JSX.Element;
+declare const InputNumberBase: react.FunctionComponent<react.ClassAttributes<HTMLInputElement> & react.InputHTMLAttributes<HTMLInputElement> & {
+    _size?: RSSize | undefined;
+}>;
+declare const Slider: react.FunctionComponent<react.DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>;
+declare const Radio: react.FunctionComponent<react.DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>;
+declare const Toggle: react.FunctionComponent<react.DetailedHTMLProps<react.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>;
+declare const SelectPicker: (p: any) => react_jsx_runtime.JSX.Element;
+declare const TagPicker: (p: any) => react_jsx_runtime.JSX.Element;
+declare const MultiCascader: (p: any) => react_jsx_runtime.JSX.Element;
+declare const Tree: (p: any) => react_jsx_runtime.JSX.Element;
+declare const Rate: (p: {
+    value?: number;
+    name: string;
+    disabled?: boolean;
+    max?: number;
+    onChange?: (value: number) => void;
+}) => react_jsx_runtime.JSX.Element;
+declare const Whisper: (p: {
+    /** @deprecated */
+    enterable?: boolean;
+    /** @deprecated */
+    placement?: string;
+    speaker: ReactNode;
+    children: ReactNode;
+}) => react_jsx_runtime.JSX.Element;
+declare const Panel: (p: {
+    header?: ReactNode;
+    className?: string;
+    children: ReactNode;
+}) => react_jsx_runtime.JSX.Element;
+declare const ProgressLine: react.FunctionComponent<{
+    className?: string | undefined;
+    percent?: number | undefined;
+    status: 'success' | 'active';
+}>;
+type MessageType = 'error' | 'info' | 'warning';
+declare const Message: react.FunctionComponent<{
+    type: MessageType;
+    header?: ReactNode;
+    showIcon?: boolean | undefined;
+    children?: ReactNode;
+}>;
+declare const Tag: (p: any) => react_jsx_runtime.JSX.Element;
+declare const Loader: ((p: {
+    size?: RSSize;
+    className?: string;
+}) => react_jsx_runtime.JSX.Element) & {
+    displayName: string;
+};
 
 type Widget_seed_config = WidgetConfigFields<{
     default?: number;
@@ -1629,6 +1952,7 @@ declare class Widget_selectOne<T extends BaseSelectEntry> implements IWidget<Wid
     get baseErrors(): Maybe<string>;
     get choices(): T[];
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_selectOne<T>>, serial?: Widget_selectOne_serial<T>);
+    setValue(val: Widget_selectOne_value<T>): void;
     set value(next: Widget_selectOne_value<T>);
     get value(): Widget_selectOne_value<T>;
 }
@@ -1677,6 +2001,8 @@ declare class Widget_selectMany<T extends BaseSelectEntry> implements IWidget<Wi
     addItem: (item: T) => void;
     /** select item if item was not selected, un-select if item was selected */
     toggleItem: (item: T) => void;
+    setValue(val: Widget_selectMany_value<T>): void;
+    set value(next: Widget_selectMany_value<T>);
     get value(): Widget_selectMany_value<T>;
 }
 
@@ -1794,6 +2120,8 @@ declare class Widget_size implements IWidget<Widget_size_types> {
     readonly type: 'size';
     readonly serial: Widget_size_serial;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_size>, serial?: Widget_size_serial);
+    setValue(val: Widget_size_value): void;
+    set value(val: Widget_size_value);
     get value(): Widget_size_value;
 }
 
@@ -1860,6 +2188,7 @@ declare class Widget_spacer implements IWidget<Widget_spacer_types> {
     serial: Widget_spacer_serial;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_spacer>, serial?: Widget_spacer_serial);
     get value(): boolean;
+    setValue(val: boolean): void;
     set value(val: boolean);
 }
 
@@ -1871,6 +2200,7 @@ type Widget_string_config = WidgetConfigFields<{
     default?: string;
     textarea?: boolean;
     placeHolder?: string;
+    pattern?: string;
     inputType?: 'text' | 'password' | 'email' | 'tel' | 'url' | 'time' | 'date' | 'datetime-local' | 'color';
     /**
      * if set to true, widget will commit values on enter; not before.
@@ -1915,6 +2245,7 @@ declare class Widget_string implements IWidget<Widget_string_types> {
     get isChanged(): boolean;
     reset: () => void;
     constructor(form: Form, parent: IWidget | null, spec: ISpec<Widget_string>, serial?: Widget_string_serial);
+    setValue(val: Widget_string_value): void;
     set value(next: Widget_string_value);
     get value(): Widget_string_value;
 }
@@ -1947,12 +2278,13 @@ type SSelectMany_<T extends string> = SimpleSpec<Widget_selectMany<BaseSelectEnt
 type SSize = SimpleSpec<Widget_size>;
 type SSpacer = SimpleSpec<Widget_spacer>;
 type SMarkdown = SimpleSpec<Widget_markdown>;
-declare class FormBuilder_Loco implements IFormBuilder {
-    form: Form<IWidget, FormBuilder_Loco>;
+
+declare class SimpleFormBuilder implements IFormBuilder {
+    form: Form<IWidget, SimpleFormBuilder>;
     /** (@internal) DO NOT USE YOURSELF */
     SpecCtor: typeof SimpleSpec;
     /** (@internal) don't call this yourself */
-    constructor(form: Form<IWidget, FormBuilder_Loco>);
+    constructor(form: Form<IWidget, SimpleFormBuilder>);
     time: (config?: Widget_string_config) => SString;
     date: (config?: Widget_string_config) => SString;
     datetime: (config?: Widget_string_config) => SString;
@@ -2020,6 +2352,7 @@ declare class FormBuilder_Loco implements IFormBuilder {
     /** (@internal) advanced way to restore form state. used internally */
     _HYDRATE: <T extends ISpec<IWidget<$WidgetTypes>>>(parent: IWidget | null, spec: T, serial: any | null) => T['$Widget'];
 }
-declare const LocoFormManager: FormManager<FormBuilder_Loco>;
 
-export { $WidgetSym, type $WidgetTypes, ASSERT_ARRAY, ASSERT_EQUAL, ASSERT_STRING, AnimatedSizeUI, AspectLockButtonUI, AspectRatioSquareUI, type BaseSelectEntry, Button, CushyKitCtx, DropdownMenu, ErrorBoundaryFallback, Form, FormBuilder_Loco, FormHelpTextUI, FormManager, type FormProperties, type FormSerial, FormUI, type GetWidgetResult, type GetWidgetState, GlobalFormCtx, type IWidget, type IWidgetListLike, type IWidgetMixins, Input, InputBoolUI, InputNumberBase, InputNumberUI, type InstructType, JsonViewUI, ListControlsUI, ListItemCollapseBtnUI, Loader, LocoFormManager, MarkdownUI, Menu, MenuBar, Message, MessageErrorUI, MessageInfoUI, MessageWarningUI, Modal, ModalBody, ModalFooter, ModalHeader, ModalShellUI, ModalTitle, MultiCascader, NavItem, type OopenRouter_ModelInfo, Panel, Popover, type Problem, type Problem_Ext, ProgressLine, Radio, RadioTile, Rate, ResolutionState, RevealCtx, type RevealPlacement, type RevealStack, RevealState, RevealStateLazy, RevealUI, type SBool, type SButton, type SChoices, type SColor, type SGroup, type SList, type SMarkdown, type SMatrix, type SNumber, type SOptional, type SSeed, type SSelectMany, type SSelectMany_, type SSelectOne, type SSelectOne_, type SSize, type SSpacer, type SString, SelectPicker, SelectPopupUI, SelectUI, Severity, type SharedWidgetConfig, type SharedWidgetSerial, SimpleSpec, type SizeAble, Slider, SpacerUI, Speaker, type TabPositionConfig, Tag, TagPicker, Toggle, Tooltip, Tree, Whisper, WidgetBoolUI, WidgetChoices_BodyUI, WidgetChoices_HeaderUI, WidgetChoices_SelectHeaderUI, WidgetColorUI, type WidgetConfigFields, WidgetGroup_BlockUI, WidgetGroup_LineUI, WidgetInlineRunUI, WidgetList_BodyUI, WidgetList_LineUI, WidgetMardownUI, WidgetMatrixUI, WidgetNumberUI, WidgetSeedUI, WidgetSelectManyUI, WidgetSelectMany_SelectUI, WidgetSelectMany_TabUI, WidgetSelectOneUI, WidgetSelectOne_SelectUI, WidgetSelectOne_TabUI, type WidgetSerialFields, WidgetSizeX_LineUI, WidgetSpacerUI, WidgetString_HeaderUI, WidgetString_TextareaBodyUI, WidgetString_TextareaHeaderUI, WidgetTooltipUI, WidgetWithLabelUI, Widget_ToggleUI, Widget_bool, type Widget_bool_config, type Widget_bool_serial, type Widget_bool_types, type Widget_bool_value, Widget_button, type Widget_button_config, type Widget_button_context, type Widget_button_serial, type Widget_button_types, type Widget_button_value, Widget_choices, type Widget_choices_config, type Widget_choices_serial, type Widget_choices_types, type Widget_choices_value, Widget_color, type Widget_color_config, type Widget_color_serial, type Widget_color_types, type Widget_color_value, Widget_group, type Widget_group_config, type Widget_group_serial, type Widget_group_types, type Widget_group_value, Widget_list, type Widget_list_config, type Widget_list_serial, type Widget_list_types, type Widget_list_value, Widget_markdown, type Widget_markdown_config, type Widget_markdown_serial, type Widget_markdown_types, type Widget_markdown_value, Widget_matrix, type Widget_matrix_cell, type Widget_matrix_config, type Widget_matrix_serial, type Widget_matrix_types, type Widget_matrix_value, Widget_number, type Widget_number_config, type Widget_number_serial, type Widget_number_types, type Widget_number_value, Widget_optional, type Widget_optional_config, type Widget_optional_serial, type Widget_optional_types, type Widget_optional_value, Widget_seed, type Widget_seed_config, Widget_seed_fromValue, type Widget_seed_serial, type Widget_seed_types, type Widget_seed_value, Widget_selectMany, type Widget_selectMany_config, Widget_selectMany_fromValue, type Widget_selectMany_serial, type Widget_selectMany_types, type Widget_selectMany_value, Widget_selectOne, type Widget_selectOne_config, Widget_selectOne_fromValue, type Widget_selectOne_serial, type Widget_selectOne_types, type Widget_selectOne_value, Widget_shared, type Widget_shared_config, Widget_shared_fromValue, type Widget_shared_serial, type Widget_shared_types, type Widget_shared_value, Widget_size, type Widget_size_config, Widget_size_fromValue, type Widget_size_serial, type Widget_size_types, type Widget_size_value, Widget_spacer, type Widget_spacer_config, Widget_spacer_fromValue, type Widget_spacer_serial, type Widget_spacer_types, type Widget_spacer_value, Widget_string, type Widget_string_config, Widget_string_fromValue, type Widget_string_serial, type Widget_string_types, type Widget_string_value, WigetSizeXUI, WigetSize_BlockUI, WigetSize_LineUI, applyWidgetMixinV2, asSTRING_orCrash, bang, computePlacement, debounce, defaultHideDelay_whenNested, defaultHideDelay_whenRoot, defaultShowDelay_whenNested, defaultShowDelay_whenRoot, exhaust, getActualWidgetToDisplay, getBorderStatusForWidget, getCurrentForm_IMPL, getIfWidgetIsCollapsible, getIfWidgetNeedAlignedLabel, getWidgetClass, global_RevealStack, isWidget, isWidgetGroup, isWidgetOptional, isWidgetShared, makeLabelFromFieldName, normalizeProblem, normalizeText, openRouterInfos, parseFloatNoRoundingErr, registerWidgetClass, runWithGlobalForm, searchMatches, toastError, toastImage, toastInfo, toastSuccess, unaccent, useCushyKit, useCushyKitOrNull, useReveal, useRevealOrNull, useSizeOf };
+declare const SimpleFormManager: FormManager<SimpleFormBuilder>;
+
+export { $WidgetSym, type $WidgetTypes, ASSERT_ARRAY, ASSERT_EQUAL, ASSERT_STRING, type Activity, AnimatedSizeUI, AspectLockButtonUI, AspectRatioSquareUI, type BaseSelectEntry, BoundCommand, type BoundCommandOpts, BoundCommandSym, BoundMenu, type BoundMenuOpts, BoundMenuSym, Button, ComboUI, Command, CommandContext, CommandManager, CommandSym, CushyKitCtx, type CushyShortcut, type DomId, Dropdown, ErrorBoundaryFallback, Form, FormHelpTextUI, FormManager, type FormProperties, type FormSerial, FormUI, type GetWidgetResult, type GetWidgetState, GlobalFormCtx, type IFormBuilder, type ISpec, type IWidget, type IWidgetListLike, type IWidgetMixins, Input, InputBoolUI, InputNumberBase, InputNumberUI, type InstructType, JsonViewUI, type KeyName, ListControlsUI, ListItemCollapseBtnUI, Loader, META_NAME, MOD_KEY, ManualPromise, MarkdownUI, Menu, type MenuDef, type MenuEntry, type MenuEntryWithKey, type MenuID, MenuInstance, MenuItem, MenuRootUI, MenuUI, MenuWithoutProps, Message, MessageErrorUI, MessageInfoUI, MessageWarningUI, ModalShellUI, MultiCascader, type OopenRouter_ModelInfo, type OpenRouter_Models, Panel, type Problem, type Problem_Ext, ProgressLine, Radio, Rate, ResolutionState, RevealCtx, type RevealPlacement, type RevealStack, RevealState, RevealStateLazy, RevealUI, type SBool, type SButton, type SChoices, type SColor, type SGroup, type SList, type SMarkdown, type SMatrix, type SNumber, type SOptional, type SSeed, type SSelectMany, type SSelectMany_, type SSelectOne, type SSelectOne_, type SSize, type SSpacer, type SString, type SchemaDict, SelectPicker, SelectPopupUI, SelectUI, Severity, type SharedWidgetConfig, type SharedWidgetSerial, SimpleFormBuilder, SimpleFormManager, SimpleMenuEntry, SimpleSpec, type SizeAble, Slider, SpacerUI, type TabPositionConfig, Tag, TagPicker, Toggle, Tree, Trigger, Whisper, WidgetBoolUI, WidgetChoices_BodyUI, WidgetChoices_HeaderUI, WidgetChoices_SelectHeaderUI, WidgetColorUI, type WidgetConfigFields, WidgetGroup_BlockUI, WidgetGroup_LineUI, WidgetInlineRunUI, WidgetList_BodyUI, WidgetList_LineUI, WidgetMardownUI, WidgetMatrixUI, WidgetNumberUI, WidgetSeedUI, WidgetSelectManyUI, WidgetSelectMany_SelectUI, WidgetSelectMany_TabUI, WidgetSelectOneUI, WidgetSelectOne_SelectUI, WidgetSelectOne_TabUI, type WidgetSerialFields, WidgetSizeX_LineUI, WidgetSpacerUI, WidgetString_HeaderUI, WidgetString_TextareaBodyUI, WidgetString_TextareaHeaderUI, WidgetTooltipUI, WidgetWithLabelUI, Widget_ToggleUI, Widget_bool, type Widget_bool_config, type Widget_bool_serial, type Widget_bool_types, type Widget_bool_value, Widget_button, type Widget_button_config, type Widget_button_context, type Widget_button_serial, type Widget_button_types, type Widget_button_value, Widget_choices, type Widget_choices_config, type Widget_choices_serial, type Widget_choices_types, type Widget_choices_value, Widget_color, type Widget_color_config, type Widget_color_serial, type Widget_color_types, type Widget_color_value, Widget_group, type Widget_group_config, type Widget_group_serial, type Widget_group_types, type Widget_group_value, Widget_list, type Widget_list_config, type Widget_list_serial, type Widget_list_types, type Widget_list_value, Widget_markdown, type Widget_markdown_config, type Widget_markdown_serial, type Widget_markdown_types, type Widget_markdown_value, Widget_matrix, type Widget_matrix_cell, type Widget_matrix_config, type Widget_matrix_serial, type Widget_matrix_types, type Widget_matrix_value, Widget_number, type Widget_number_config, type Widget_number_serial, type Widget_number_types, type Widget_number_value, Widget_optional, type Widget_optional_config, type Widget_optional_serial, type Widget_optional_types, type Widget_optional_value, Widget_seed, type Widget_seed_config, Widget_seed_fromValue, type Widget_seed_serial, type Widget_seed_types, type Widget_seed_value, Widget_selectMany, type Widget_selectMany_config, Widget_selectMany_fromValue, type Widget_selectMany_serial, type Widget_selectMany_types, type Widget_selectMany_value, Widget_selectOne, type Widget_selectOne_config, Widget_selectOne_fromValue, type Widget_selectOne_serial, type Widget_selectOne_types, type Widget_selectOne_value, Widget_shared, type Widget_shared_config, Widget_shared_fromValue, type Widget_shared_serial, type Widget_shared_types, type Widget_shared_value, Widget_size, type Widget_size_config, Widget_size_fromValue, type Widget_size_serial, type Widget_size_types, type Widget_size_value, Widget_spacer, type Widget_spacer_config, Widget_spacer_fromValue, type Widget_spacer_serial, type Widget_spacer_types, type Widget_spacer_value, Widget_string, type Widget_string_config, Widget_string_fromValue, type Widget_string_serial, type Widget_string_types, type Widget_string_value, WigetSizeXUI, WigetSize_BlockUI, WigetSize_LineUI, activityManger, applyWidgetMixinV2, asSTRING_orCrash, bang, command, commandManager, computePlacement, debounce, defaultHideDelay_whenNested, defaultHideDelay_whenRoot, defaultShowDelay_whenNested, defaultShowDelay_whenRoot, exhaust, getActualWidgetToDisplay, getBorderStatusForWidget, getCurrentForm_IMPL, getIfWidgetIsCollapsible, getIfWidgetNeedAlignedLabel, getWidgetClass, global_RevealStack, hasMod, isBoundCommand, isBoundMenu, isCommand, isPromise, isWidget, isWidgetGroup, isWidgetOptional, isWidgetShared, makeLabelFromFieldName, menu, menuWithoutProps, menu_widgetActions, normalizeCushyShortcut, normalizeProblem, normalizeText, openRouterInfos, parseFloatNoRoundingErr, parseShortcutToInputSequence, registerWidgetClass, runWithGlobalForm, searchMatches, toastError, toastImage, toastInfo, toastSuccess, unaccent, useCushyKit, useCushyKitOrNull, useReveal, useRevealOrNull, useSizeOf };
