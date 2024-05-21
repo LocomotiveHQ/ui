@@ -1,4 +1,4 @@
-import type { CovariantFn } from './BivariantHack'
+import type { Channel, ChannelId, Producer } from './Channel'
 import type { CovariantFC } from './CovariantFC'
 import type { IWidget } from './IWidget'
 
@@ -18,4 +18,12 @@ export interface ISpec<W extends IWidget = IWidget> {
 
     LabelExtraUI?: CovariantFC<{ widget: W }> /* 🧮 */
     // Make<X extends IWidget>(type: X['type'], config: X['$Config']): ISpec<X>
+
+    // -----------
+    producers: Producer<any, any>[]
+    publish<T>(chan: Channel<T> | ChannelId, produce: (self: W['$Widget']) => T): this
+    subscribe<T>(chan: Channel<T> | ChannelId, effect: (arg: T, self: W['$Widget']) => void): this
+
+    reactions: { expr: (self: any) => any; effect: (arg: any, self: any) => void }[]
+    addReaction<T>(expr: (self: W['$Widget']) => T, effect: (arg: T, self: W['$Widget']) => void): this
 }

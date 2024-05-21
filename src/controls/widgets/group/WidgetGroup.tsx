@@ -1,13 +1,13 @@
 import type { Form } from '../../Form'
 import type { ISpec, SchemaDict } from '../../ISpec'
-import type { GetWidgetResult, IWidget, IWidgetMixins, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
+import type { GetWidgetResult, IWidget, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
 import type { Problem_Ext } from '../../Validation'
 
-import { makeAutoObservable, runInAction } from 'mobx'
+import { runInAction } from 'mobx'
 import { nanoid } from 'nanoid'
 
 import { bang } from '../../../utils/misc/bang'
-import { applyWidgetMixinV2 } from '../../Mixins'
+import { BaseWidget } from '../../BaseWidget'
 import { getActualWidgetToDisplay } from '../../shared/getActualWidgetToDisplay'
 import { getIfWidgetIsCollapsible } from '../../shared/getIfWidgetIsCollapsible'
 import { runWithGlobalForm } from '../../shared/runWithGlobalForm'
@@ -17,8 +17,21 @@ import { WidgetGroup_BlockUI, WidgetGroup_LineUI } from './WidgetGroupUI'
 // CONFIG
 export type Widget_group_config<T extends SchemaDict> = WidgetConfigFields<
     {
+        /**
+         * lambda function is deprecated, prefer passing the items as an object
+         * directly
+         */
         items?: T | (() => T)
+
+        /**
+         * legacy property, will be removed soon
+         * you can alreay check if you're a top-level property
+         * by checking if this.parent is null
+         * @deprecated
+         */
         topLevel?: boolean
+
+        /** if provided, will be used in the header when fields are folded */
         summary?: (items: { [k in keyof T]: GetWidgetResult<T[k]> }) => string
     },
     Widget_group_types<T>
@@ -45,8 +58,8 @@ export type Widget_group_types<T extends SchemaDict> = {
 }
 
 // STATE
-export interface Widget_group<T extends SchemaDict> extends Widget_group_types<T>, IWidgetMixins {}
-export class Widget_group<T extends SchemaDict> implements IWidget<Widget_group_types<T>> {
+export interface Widget_group<T extends SchemaDict> extends Widget_group_types<T> {}
+export class Widget_group<T extends SchemaDict> extends BaseWidget implements IWidget<Widget_group_types<T>> {
     DefaultHeaderUI = WidgetGroup_LineUI
     get DefaultBodyUI() {
         if (Object.keys(this.fields).length === 0) return
@@ -110,11 +123,9 @@ export class Widget_group<T extends SchemaDict> implements IWidget<Widget_group_
         /** used to register self as the root, before we start instanciating anything */
         preHydrate?: (self: Widget_group<any>) => void,
     ) {
-        // persist id
+        super()
         this.id = serial?.id ?? nanoid()
 
-        // console.log(`[🤠] ASSSIGN SERIAL to ${this.id} 🔴`)
-        // serial
         this.serial =
             serial && serial.type === 'group' //
                 ? serial
@@ -162,27 +173,44 @@ export class Widget_group<T extends SchemaDict> implements IWidget<Widget_group_
         // we keep the old values in case those are just temporarilly removed, or in case
         // those will be lazily added later though global usage
 
-        applyWidgetMixinV2(this)
-        makeAutoObservable(this, { value: false })
+        this.init({
+            value: false,
+            __value: false,
+            DefaultHeaderUI: false,
+        })
     }
 
     setValue(val: Widget_group_value<T>) {
         this.value = val
     }
 
+    setPartialValue(val: Partial<Widget_group_value<T>>) {
+        runInAction(() => {
+            for (const key in val) this.fields[key].setValue(val[key])
+            this.bumpValue()
+        })
+    }
+
+    get subWidgets() {
+        return Object.values(this.fields)
+    }
+
+    get subWidgetsWithKeys() {
+        return Object.entries(this.fields).map(([key, widget]) => ({ key, widget }))
+    }
+
     set value(val: Widget_group_value<T>) {
         runInAction(() => {
-            for (const key in val) {
-                // console.log(`[🤠] (key=A) B.setValue(C)`, key, this.fields[key], val[key])
-                this.fields[key].setValue(val[key])
-            }
+            for (const key in val) this.fields[key].setValue(val[key])
             this.bumpValue()
         })
     }
     get value() {
-        return this.valueLazy
+        return this.__value
     }
-    private valueLazy: { [k in keyof T]: GetWidgetResult<T[k]> } = new Proxy({} as any, {
+
+    // @internal
+    __value: { [k in keyof T]: GetWidgetResult<T[k]> } = new Proxy({} as any, {
         ownKeys: (target) => {
             return Object.keys(this.fields)
         },
@@ -199,7 +227,9 @@ export class Widget_group<T extends SchemaDict> implements IWidget<Widget_group_
             return {
                 enumerable: true,
                 configurable: true,
-                value: subWidget.value,
+                get() {
+                    return subWidget.value
+                },
             }
         },
     })

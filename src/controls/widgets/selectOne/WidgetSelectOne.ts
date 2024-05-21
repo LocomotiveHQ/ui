@@ -1,12 +1,12 @@
 import type { Form } from '../../Form'
 import type { ISpec } from '../../ISpec'
-import type { IWidget, IWidgetMixins, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
+import type { IWidget, WidgetConfigFields, WidgetSerialFields } from '../../IWidget'
 
-import { makeAutoObservable, runInAction } from 'mobx'
+import { runInAction } from 'mobx'
 import { nanoid } from 'nanoid'
-import { createElement } from 'react'
 
-import { applyWidgetMixinV2 } from '../../Mixins'
+import { makeAutoObservableInheritance } from '../../../utils/mobx-store-inheritance'
+import { BaseWidget } from '../../BaseWidget'
 import { registerWidgetClass } from '../WidgetUI.DI'
 import { WidgetSelectOneUI } from './WidgetSelectOneUI'
 
@@ -16,7 +16,24 @@ export type BaseSelectEntry<T = string> = { id: T; label?: string }
 export type Widget_selectOne_config<T extends BaseSelectEntry> = WidgetConfigFields<
     {
         default?: T
-        choices: T[] | ((form: Form, self: Widget_selectOne<T>) => T[])
+        /**
+         * list of all choices
+         * 👉 you can use a lambda if you want the option to to dynamic
+         *    the lambda will receive the widget instance as argument, from
+         *    which you can access variosu stuff like
+         *      - `self.serial.query`: the current filtering text
+         *      - `self.form`: the form instance
+         *      - `self.form.root`: the root of the widget
+         *      - `self.parent...`: natigate the widget tree
+         *      - `self.useKontext('...')`: any named dynamic chanel for cross-widget communication
+         * 👉 If the list of options is generated from the query directly,
+         *    you should also set `disableLocalFiltering: true`, to avoid
+         *    filtering the options twice.
+         */
+        choices: T[] | ((self: Widget_selectOne<T>) => T[])
+        /** set this to true if your choices are dynamically generated from the query directly, to disable local filtering */
+        disableLocalFiltering?: boolean
+        getLabelUI?: (t: T) => React.ReactNode
         appearance?: 'select' | 'tab'
     },
     Widget_selectOne_types<T>
@@ -51,8 +68,8 @@ export type Widget_selectOne_types<T extends BaseSelectEntry> = {
 }
 
 // STATE
-export interface Widget_selectOne<T> extends Widget_selectOne_types<T>, IWidgetMixins {}
-export class Widget_selectOne<T extends BaseSelectEntry> implements IWidget<Widget_selectOne_types<T>> {
+export interface Widget_selectOne<T> extends Widget_selectOne_types<T> {}
+export class Widget_selectOne<T extends BaseSelectEntry> extends BaseWidget implements IWidget<Widget_selectOne_types<T>> {
     DefaultHeaderUI = WidgetSelectOneUI
     DefaultBodyUI = undefined
 
@@ -73,7 +90,7 @@ export class Widget_selectOne<T extends BaseSelectEntry> implements IWidget<Widg
         if (typeof _choices === 'function') {
             if (!this.form.ready) return []
             if (this.form._ROOT == null) throw new Error('❌ IMPOSSIBLE: this.form._ROOT is null')
-            return _choices(this.form, this)
+            return _choices(this)
         }
         return _choices
     }
@@ -85,6 +102,7 @@ export class Widget_selectOne<T extends BaseSelectEntry> implements IWidget<Widg
         public readonly spec: ISpec<Widget_selectOne<T>>,
         serial?: Widget_selectOne_serial<T>,
     ) {
+        super()
         const config = spec.config
         this.id = serial?.id ?? nanoid()
         const choices = this.choices
@@ -96,8 +114,7 @@ export class Widget_selectOne<T extends BaseSelectEntry> implements IWidget<Widg
             val: config.default ?? choices[0]!,
         }
         if (this.serial.val == null && Array.isArray(this.config.choices)) this.serial.val = choices[0]!
-        applyWidgetMixinV2(this)
-        makeAutoObservable(this)
+        makeAutoObservableInheritance(this)
     }
 
     setValue(val: Widget_selectOne_value<T>) {

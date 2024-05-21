@@ -3,16 +3,20 @@ import { observer } from 'mobx-react-lite'
 export const ModalShellUI = observer(function ModalShellUI_(p: {
     //
     title?: React.ReactNode
+    className?: string
     children?: React.ReactNode
-    footer?: React.ReactNode
+    footer?: React.ReactNode | undefined
     close: () => void
 }) {
     return (
         <div
-            onClick={(ev) => {
-                ev.stopPropagation()
-            }}
-            tw={['animate-in fade-in', 'virtualBorder p-4 rounded-xl bg-base-100 shadow-xl']}
+            className={p.className}
+            tw={[
+                //
+                'animate-in fade-in',
+                'virtualBorder p-4 rounded-xl bg-base-100 shadow-xl',
+            ]}
+            onClick={(ev) => ev.stopPropagation()}
         >
             {/* header */}
             <div tw='flex'>

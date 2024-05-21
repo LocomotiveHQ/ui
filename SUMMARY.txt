@@ -1,9 +1,24 @@
 INPUT:
-    src/utils/misc/debounce.ts ([object Set])
     src/utils/custom-jsx/jsx-runtime.js ([object Set])
     src/rsuite/MarkdownUI.tsx ([object Set])
     src/panels/MessageUI.tsx ([object Set])
+    src/theme/colorEngine/AbsoluteStyle.tsx ([object Set])
+    src/controls/widgets/list/clamp.ts ([object Set])
+    src/theme/colorEngine/applyRelative.tsx ([object Set])
+    src/theme/colorEngine/formatColor.tsx ([object Set])
+    src/theme/colorEngine/useColor.tsx ([object Set])
+    src/theme/colorEngine/Box.tsx ([object Set])
     src/controls/FormUI.tsx ([object Set])
+    src/icons/icons.ts ([object Set])
+    src/icons/iconHelpers.tsx ([object Set])
+    src/rsuite/reveal/ModalShell.tsx ([object Set])
+    src/rsuite/reveal/RevealCtx.ts ([object Set])
+    src/rsuite/reveal/RevealStack.ts ([object Set])
+    src/rsuite/reveal/RevealPlacement.tsx ([object Set])
+    src/rsuite/reveal/RevealState.tsx ([object Set])
+    src/rsuite/reveal/RevealUI.tsx ([object Set])
+    src/panels/Panel_Gallery/FormAsDropdownConfigUI.tsx ([object Set])
+    src/utils/misc/debounce.ts ([object Set])
     src/controls/widgets/WidgetUI.DI.ts ([object Set])
     src/controls/Form.ts ([object Set])
     src/controls/shared/runWithGlobalForm.ts ([object Set])
@@ -11,15 +26,12 @@ INPUT:
     src/theme/form.vars.css ([object Set])
     src/theme/markdown.css ([object Set])
     src/theme/form.css ([object Set])
+    src/controls/widgets/number/InputNumberUI.css ([object Set])
     src/llm/OpenRouter_infos.ts ([object Set])
     src/controls/SimpleSpec.ts ([object Set])
+    src/panels/libraryUI/tree/xxx/TreeWidget.tsx ([object Set])
+    src/utils/mobx-store-inheritance.ts ([object Set])
     src/controls/IWidget.ts ([object Set])
-    src/rsuite/reveal/ModalShell.tsx ([object Set])
-    src/rsuite/reveal/RevealCtx.ts ([object Set])
-    src/rsuite/reveal/RevealStack.ts ([object Set])
-    src/rsuite/reveal/RevealPlacement.tsx ([object Set])
-    src/rsuite/reveal/RevealState.tsx ([object Set])
-    src/rsuite/reveal/RevealUI.tsx ([object Set])
     src/utils/misc/makeLabelFromFieldName.tsx ([object Set])
     src/widgets/workspace/JsonViewUI.tsx ([object Set])
     src/widgets/misc/ErrorBoundary.tsx ([object Set])
@@ -35,22 +47,36 @@ INPUT:
     src/operators/RET.ts ([object Set])
     src/operators/Activity.ts ([object Set])
     src/utils/misc/ManualPromise.ts ([object Set])
+    src/app/shortcuts/_OS.ts ([object Set])
     src/app/shortcuts/META_NAME.ts ([object Set])
     src/app/shortcuts/CommandManager.ts ([object Set])
     src/operators/introspect/_isBoundCommand.tsx ([object Set])
     src/operators/introspect/_isCommand.tsx ([object Set])
     src/operators/Command.tsx ([object Set])
     src/operators/introspect/_isBoundMenu.tsx ([object Set])
-    src/operators/menuSystem/SimpleMenuEntry.ts ([object Set])
+    src/operators/menuSystem/SimpleMenuAction.ts ([object Set])
     src/app/shortcuts/ComboUI.tsx ([object Set])
     src/rsuite/Dropdown.tsx ([object Set])
+    src/operators/menuSystem/SimpleMenuModal.ts ([object Set])
     src/operators/MenuUI.tsx ([object Set])
     src/operators/Menu.ts ([object Set])
+    src/db/SQLITE_boolean.ts ([object Set])
+    src/panels/libraryUI/tree/xxx/utils.ts ([object Set])
+    src/panels/libraryUI/tree/xxx/TreeNode.ts ([object Set])
+    src/panels/libraryUI/tree/xxx/Tree.ts ([object Set])
+    src/app/shortcuts/shorcutKeys.ts ([object Set])
+    src/panels/libraryUI/tree/xxx/TreeCtx.ts ([object Set])
+    src/panels/libraryUI/tree/RenderTreeIcon1.tsx ([object Set])
+    src/panels/libraryUI/tree/RenderItemTitleUI.tsx ([object Set])
+    src/panels/libraryUI/tree/xxx/TreeEntryUI.tsx ([object Set])
+    src/panels/libraryUI/tree/xxx/TreeUI.tsx ([object Set])
+    src/panels/libraryUI/tree/xxx/TreeShortcuts.ts ([object Set])
+    src/panels/libraryUI/tree/xxx/TreeView.ts ([object Set])
     src/controls/shared/WidgetMenu.tsx ([object Set])
     src/controls/shared/WidgetTooltipUI.tsx ([object Set])
     src/controls/shared/WidgetWithLabelUI.tsx ([object Set])
     src/controls/Validation.ts ([object Set])
-    src/controls/Mixins.tsx ([object Set])
+    src/controls/BaseWidget.tsx ([object Set])
     src/controls/widgets/spacer/SpacerUI.tsx ([object Set])
     src/controls/widgets/bool/WidgetBoolUI.tsx ([object Set])
     src/controls/widgets/bool/WidgetBool.tsx ([object Set])
@@ -72,7 +98,6 @@ INPUT:
     src/controls/widgets/markdown/WidgetMarkdown.ts ([object Set])
     src/controls/widgets/matrix/WidgetMatrixUI.tsx ([object Set])
     src/controls/widgets/matrix/WidgetMatrix.ts ([object Set])
-    src/controls/widgets/number/InputNumberUI.css ([object Set])
     src/utils/misc/parseFloatNoRoundingErr.ts ([object Set])
     src/controls/shared/CushyKitCtx.ts ([object Set])
     src/controls/widgets/number/InputNumberUI.tsx ([object Set])
@@ -100,6 +125,7 @@ INPUT:
 
 
 TYPES:
+    [🟢]: src/app/shortcuts/_OS       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
     [🟢]: src/app/shortcuts/ComboUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/app/shortcuts/CommandManager
@@ -110,7 +136,15 @@ TYPES:
     [🟢]: src/app/shortcuts/META_NAME       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🟢]: src/app/shortcuts/CommandManager
         [🔵]: react
-    [🟢]: src/controls/Form       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/FormUI.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleForm.d.ts,/lib/controls/IFormBuilder.d.ts files)
+    [🟢]: src/app/shortcuts/shorcutKeys       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/controls/BaseWidget       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts files)
+        [🟢]: src/controls/IWidget
+        [🔴]: src/controls/Channel
+        [🟢]: src/icons/icons
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/Validation
+    [🟢]: src/controls/Form       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/FormUI.d.ts,/lib/panels/Panel_Gallery/FormAsDropdownConfigUI.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleForm.d.ts,/lib/controls/IFormBuilder.d.ts files)
         [🔵]: react
         [🔴]: src/controls/BivariantHack
         [🟢]: src/controls/FormManager
@@ -119,6 +153,7 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/widgets/group/WidgetGroup
+        [🟢]: src/controls/FormUI
     [🟢]: src/controls/FormManager       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/Form.d.ts,/lib/controls/SimpleForm.d.ts files)
         [🟢]: src/controls/IWidget
         [🟡]: src/controls/IFormBuilder
@@ -126,16 +161,21 @@ TYPES:
         [🟢]: src/controls/widgets/group/WidgetGroup
         [🔵]: react
         [🟢]: src/controls/Form
-    [🟢]: src/controls/FormUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/controls/FormUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/Form.d.ts files)
         [🔵]: react
+        [🔴]: src/controls/BivariantHack
+        [🔴]: src/controls/CovariantFC
         [🟢]: src/controls/Form
-    [🟢]: src/controls/IWidget       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/SimpleSpec.d.ts,/lib/controls/shared/getActualWidgetToDisplay.d.ts,/lib/controls/shared/getBorderStatusForWidget.d.ts,/lib/controls/shared/getIfWidgetIsCollapsible.d.ts,/lib/controls/shared/getIfWidgetNeedAlignedLabel.d.ts,/lib/controls/shared/Widget_ToggleUI.d.ts,/lib/operators/Menu.d.ts,/lib/controls/shared/WidgetMenu.d.ts,/lib/controls/shared/WidgetTooltipUI.d.ts,/lib/controls/shared/WidgetWithLabelUI.d.ts,/lib/controls/Mixins.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/ISpec.d.ts,/lib/controls/FormSerial.d.ts,/lib/controls/IFormBuilder.d.ts files)
+        [🟢]: src/theme/colorEngine/Box
+    [🟢]: src/controls/IWidget       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/SimpleSpec.d.ts,/lib/panels/libraryUI/tree/xxx/TreeWidget.d.ts,/lib/controls/shared/getActualWidgetToDisplay.d.ts,/lib/controls/shared/getBorderStatusForWidget.d.ts,/lib/controls/shared/getIfWidgetIsCollapsible.d.ts,/lib/controls/shared/getIfWidgetNeedAlignedLabel.d.ts,/lib/controls/shared/Widget_ToggleUI.d.ts,/lib/operators/Menu.d.ts,/lib/controls/shared/WidgetMenu.d.ts,/lib/controls/shared/WidgetTooltipUI.d.ts,/lib/controls/shared/WidgetWithLabelUI.d.ts,/lib/controls/BaseWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/ISpec.d.ts,/lib/controls/FormSerial.d.ts,/lib/controls/IFormBuilder.d.ts files)
+        [🟢]: src/icons/icons
+        [🟢]: src/theme/colorEngine/Box
+        [🟢]: src/controls/BaseWidget
+        [🔴]: src/controls/BivariantHack
         [🔴]: src/controls/CovariantFC
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/Validation
-    [🟢]: src/controls/Mixins       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
-        [🟢]: src/controls/IWidget
     [🟢]: src/controls/shared/CushyKitCtx       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟡]: src/controls/shared/CushyKit
@@ -171,23 +211,34 @@ TYPES:
         [🟡]: src/llm/OpenRouter_models
         [🔴]: src/controls/SimpleSpecAliases
     [🟢]: src/controls/SimpleForm.LIBRARY       (from  files)
-        [🟢]: src/utils/misc/debounce
         [🟢]: src/rsuite/MarkdownUI
         [🟢]: src/panels/MessageUI
+        [🟢]: src/theme/colorEngine/AbsoluteStyle
+        [🟢]: src/controls/widgets/list/clamp
+        [🟢]: src/theme/colorEngine/applyRelative
+        [🟢]: src/theme/colorEngine/formatColor
+        [🟢]: src/theme/colorEngine/useColor
+        [🟢]: src/theme/colorEngine/Box
         [🟢]: src/controls/FormUI
-        [🟢]: src/controls/widgets/WidgetUI.DI
-        [🟢]: src/controls/Form
-        [🟢]: src/controls/shared/runWithGlobalForm
-        [🟢]: src/controls/FormManager
-        [🟢]: src/llm/OpenRouter_infos
-        [🟢]: src/controls/SimpleSpec
-        [🟢]: src/controls/IWidget
+        [🟢]: src/icons/icons
+        [🟢]: src/icons/iconHelpers
         [🟢]: src/rsuite/reveal/ModalShell
         [🟢]: src/rsuite/reveal/RevealCtx
         [🟢]: src/rsuite/reveal/RevealStack
         [🟢]: src/rsuite/reveal/RevealPlacement
         [🟢]: src/rsuite/reveal/RevealState
         [🟢]: src/rsuite/reveal/RevealUI
+        [🟢]: src/panels/Panel_Gallery/FormAsDropdownConfigUI
+        [🟢]: src/utils/misc/debounce
+        [🟢]: src/controls/widgets/WidgetUI.DI
+        [🟢]: src/controls/Form
+        [🟢]: src/controls/shared/runWithGlobalForm
+        [🟢]: src/controls/FormManager
+        [🟢]: src/llm/OpenRouter_infos
+        [🟢]: src/controls/SimpleSpec
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeWidget
+        [🟢]: src/utils/mobx-store-inheritance
+        [🟢]: src/controls/IWidget
         [🟢]: src/utils/misc/makeLabelFromFieldName
         [🟢]: src/widgets/workspace/JsonViewUI
         [🟢]: src/widgets/misc/ErrorBoundary
@@ -203,22 +254,36 @@ TYPES:
         [🟢]: src/operators/RET
         [🟢]: src/operators/Activity
         [🟢]: src/utils/misc/ManualPromise
+        [🟢]: src/app/shortcuts/_OS
         [🟢]: src/app/shortcuts/META_NAME
         [🟢]: src/app/shortcuts/CommandManager
         [🟢]: src/operators/introspect/_isBoundCommand
         [🟢]: src/operators/introspect/_isCommand
         [🟢]: src/operators/Command
         [🟢]: src/operators/introspect/_isBoundMenu
-        [🟢]: src/operators/menuSystem/SimpleMenuEntry
+        [🟢]: src/operators/menuSystem/SimpleMenuAction
         [🟢]: src/app/shortcuts/ComboUI
         [🟢]: src/rsuite/Dropdown
+        [🟢]: src/operators/menuSystem/SimpleMenuModal
         [🟢]: src/operators/MenuUI
         [🟢]: src/operators/Menu
+        [🟢]: src/db/SQLITE_boolean
+        [🟢]: src/panels/libraryUI/tree/xxx/utils
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+        [🟢]: src/panels/libraryUI/tree/xxx/Tree
+        [🟢]: src/app/shortcuts/shorcutKeys
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeCtx
+        [🟢]: src/panels/libraryUI/tree/RenderTreeIcon1
+        [🟢]: src/panels/libraryUI/tree/RenderItemTitleUI
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeEntryUI
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeUI
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeShortcuts
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeView
         [🟢]: src/controls/shared/WidgetMenu
         [🟢]: src/controls/shared/WidgetTooltipUI
         [🟢]: src/controls/shared/WidgetWithLabelUI
         [🟢]: src/controls/Validation
-        [🟢]: src/controls/Mixins
+        [🟢]: src/controls/BaseWidget
         [🟢]: src/controls/widgets/spacer/SpacerUI
         [🟢]: src/controls/widgets/bool/WidgetBoolUI
         [🟢]: src/controls/widgets/bool/WidgetBool
@@ -269,6 +334,7 @@ TYPES:
         [🟢]: src/theme/form.vars.css
         [🟢]: src/theme/markdown.css
         [🟢]: src/theme/form.css
+        [🟢]: src/controls/widgets/number/InputNumberUI.css
         [🟡]: src/llm/OpenRouter_models
         [🟢]: src/controls/Form
         [🟡]: src/controls/IFormBuilder
@@ -293,14 +359,15 @@ TYPES:
         [🟢]: src/controls/widgets/string/WidgetString
     [🟢]: src/controls/SimpleSpec       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
         [🟢]: src/controls/IWidget
+        [🔴]: src/controls/Channel
         [🟡]: src/controls/ISpec
+        [🔴]: src/controls/SimpleSpecAliases
         [🟢]: src/controls/widgets/list/WidgetList
-        [🟢]: src/controls/widgets/optional/WidgetOptional
         [🟢]: src/controls/widgets/shared/WidgetShared
     [🟢]: src/controls/utils/AnimatedSizeUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/controls/utils/useSizeOf       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
-    [🟢]: src/controls/Validation       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts files)
+    [🟢]: src/controls/Validation       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/BaseWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts files)
     [🟢]: src/controls/widgets/bool/InputBoolUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/controls/widgets/bool/WidgetBool       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/bool/WidgetBoolUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
@@ -309,6 +376,7 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/bool/WidgetBoolUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/bool/WidgetBool
@@ -318,6 +386,7 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/button/WidgetButtonUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/widgets/button/WidgetButton
@@ -328,6 +397,7 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/choices/WidgetChoicesUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🔵]: react
@@ -339,6 +409,7 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/color/WidgetColorUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/color/WidgetColor
@@ -349,11 +420,13 @@ TYPES:
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/group/WidgetGroupUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🔵]: react
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/widgets/group/WidgetGroup
+    [🟢]: src/controls/widgets/list/clamp       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
     [🟢]: src/controls/widgets/list/ListControlsUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/controls/widgets/list/WidgetList       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleSpec.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
@@ -362,6 +435,7 @@ TYPES:
         [🔵]: react
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/list/WidgetListUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/IWidget
@@ -374,6 +448,7 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/markdown/WidgetMarkdownUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/markdown/WidgetMarkdown
@@ -383,32 +458,35 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/matrix/WidgetMatrixUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/matrix/WidgetMatrix
-    [🟢]: src/controls/widgets/number/InputNumberUI.css       (from /lib/controls/widgets/number/InputNumberUI.d.ts files)
+    [🟢]: src/controls/widgets/number/InputNumberUI.css       (from /lib/controls/SimpleFormBuilder.d.ts files)
     [🟢]: src/controls/widgets/number/InputNumberUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
-        [🟢]: src/controls/widgets/number/InputNumberUI.css
         [🔵]: react
     [🟢]: src/controls/widgets/number/WidgetNumber       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/number/WidgetNumberUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/number/WidgetNumberUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/number/WidgetNumber
-    [🟢]: src/controls/widgets/optional/WidgetOptional       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/SimpleSpec.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+    [🟢]: src/controls/widgets/optional/WidgetOptional       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/seed/WidgetSeed       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/seed/WidgetSeedUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/seed/WidgetSeedUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/seed/WidgetSeed
@@ -418,6 +496,7 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/selectMany/WidgetSelectManyUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
@@ -427,6 +506,7 @@ TYPES:
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/selectOne/WidgetSelectOneUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
@@ -435,6 +515,7 @@ TYPES:
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/size/ResolutionState       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts files)
         [🟡]: src/controls/widgets/size/WidgetSizeTypes
     [🟢]: src/controls/widgets/size/WidgetSize       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
@@ -444,6 +525,7 @@ TYPES:
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
         [🟡]: src/controls/widgets/size/WidgetSizeTypes
+        [🟢]: src/controls/BaseWidget
         [🟢]: src/controls/widgets/size/ResolutionState
     [🟢]: src/controls/widgets/size/WidgetSizeUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
@@ -457,15 +539,17 @@ TYPES:
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/spacer/WidgetSpacerUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/spacer/WidgetSpacer
-    [🟢]: src/controls/widgets/string/WidgetString       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/string/WidgetStringUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+    [🟢]: src/controls/widgets/string/WidgetString       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/widgets/string/WidgetStringUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
         [🔵]: react
         [🟢]: src/controls/Form
         [🟡]: src/controls/ISpec
         [🟢]: src/controls/IWidget
         [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
     [🟢]: src/controls/widgets/string/WidgetStringUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/controls/widgets/string/WidgetString
@@ -475,9 +559,18 @@ TYPES:
         [🟢]: src/controls/widgets/group/WidgetGroup
         [🟢]: src/controls/widgets/optional/WidgetOptional
         [🟢]: src/controls/widgets/shared/WidgetShared
+        [🟢]: src/controls/widgets/string/WidgetString
+    [🟢]: src/db/SQLITE_boolean       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/Tree.d.ts files)
+    [🟢]: src/icons/iconHelpers       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🔵]: @mdi/react/dist/IconProps
+        [🔵]: react
+        [🟢]: src/icons/icons
+    [🟢]: src/icons/icons       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/icons/iconHelpers.d.ts,/lib/controls/IWidget.d.ts,/lib/operators/menuSystem/SimpleMenuAction.d.ts,/lib/controls/BaseWidget.d.ts files)
     [🟢]: src/llm/OpenRouter_infos       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🟡]: src/llm/OpenRouter_models
     [🟢]: src/operators/Activity       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/Menu.d.ts files)
+        [🟢]: src/rsuite/reveal/RevealPlacement
         [🔵]: react
         [🟢]: src/operators/RET
     [🟢]: src/operators/Command       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/app/shortcuts/CommandManager.d.ts,/lib/operators/introspect/_isBoundCommand.d.ts,/lib/operators/introspect/_isCommand.d.ts,/lib/operators/Menu.d.ts files)
@@ -493,18 +586,60 @@ TYPES:
     [🟢]: src/operators/Menu       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/introspect/_isBoundMenu.d.ts,/lib/operators/MenuUI.d.ts,/lib/controls/shared/WidgetMenu.d.ts files)
         [🔵]: react
         [🟢]: src/controls/IWidget
+        [🟢]: src/operators/menuSystem/SimpleMenuModal
         [🔴]: src/operators/NO_PROPS
         [🟢]: src/operators/RET
         [🟢]: src/operators/Activity
         [🟢]: src/operators/Command
-        [🟢]: src/operators/menuSystem/SimpleMenuEntry
-    [🟢]: src/operators/menuSystem/SimpleMenuEntry       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/Menu.d.ts files)
+        [🟢]: src/operators/menuSystem/SimpleMenuAction
+    [🟢]: src/operators/menuSystem/SimpleMenuAction       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/Menu.d.ts files)
+        [🟢]: src/icons/icons
+    [🟢]: src/operators/menuSystem/SimpleMenuModal       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/Menu.d.ts files)
+        [🔵]: react
     [🟢]: src/operators/MenuUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/operators/Menu
     [🟢]: src/operators/RET       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/Activity.d.ts,/lib/app/shortcuts/CommandManager.d.ts,/lib/operators/Command.d.ts,/lib/operators/Menu.d.ts files)
+    [🟢]: src/panels/libraryUI/tree/RenderItemTitleUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/RenderTreeIcon1       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/xxx/Tree       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/TreeNode.d.ts,/lib/panels/libraryUI/tree/xxx/TreeView.d.ts files)
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/db/SQLITE_boolean
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeCtx       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeView
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeEntryUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeNode       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/TreeWidget.d.ts,/lib/panels/libraryUI/tree/xxx/Tree.d.ts,/lib/panels/libraryUI/tree/RenderTreeIcon1.d.ts,/lib/panels/libraryUI/tree/RenderItemTitleUI.d.ts,/lib/panels/libraryUI/tree/xxx/TreeEntryUI.d.ts,/lib/panels/libraryUI/tree/xxx/TreeView.d.ts,/lib/panels/libraryUI/tree/TreeEntry.d.ts files)
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/panels/libraryUI/tree/xxx/Tree
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeShortcuts       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/TreeView.d.ts files)
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeView
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeView
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeView       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/TreeCtx.d.ts,/lib/panels/libraryUI/tree/xxx/TreeUI.d.ts,/lib/panels/libraryUI/tree/xxx/TreeShortcuts.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/Tree
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeShortcuts
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeWidget       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/controls/IWidget
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/xxx/utils       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
     [🟢]: src/panels/MessageUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
+    [🟢]: src/panels/Panel_Gallery/FormAsDropdownConfigUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
     [🟢]: src/rsuite/Dropdown       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🔵]: react/jsx-runtime
@@ -516,7 +651,7 @@ TYPES:
     [🟢]: src/rsuite/reveal/RevealCtx       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/rsuite/reveal/RevealState
-    [🟢]: src/rsuite/reveal/RevealPlacement       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/rsuite/reveal/RevealState.d.ts,/lib/rsuite/reveal/RevealProps.d.ts files)
+    [🟢]: src/rsuite/reveal/RevealPlacement       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/rsuite/reveal/RevealState.d.ts,/lib/operators/Activity.d.ts,/lib/rsuite/reveal/RevealProps.d.ts files)
     [🟢]: src/rsuite/reveal/RevealStack       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🟢]: src/rsuite/reveal/RevealState
     [🟢]: src/rsuite/reveal/RevealState       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/rsuite/reveal/RevealCtx.d.ts,/lib/rsuite/reveal/RevealStack.d.ts files)
@@ -533,6 +668,19 @@ TYPES:
         [🔵]: react
         [🔵]: react/jsx-runtime
         [🟡]: src/rsuite/RsuiteTypes
+    [🟢]: src/theme/colorEngine/AbsoluteStyle       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/theme/colorEngine/applyRelative.d.ts,/lib/theme/colorEngine/formatColor.d.ts,/lib/theme/colorEngine/useColor.d.ts,/lib/theme/colorEngine/Box.d.ts files)
+        [🔵]: react
+    [🟢]: src/theme/colorEngine/applyRelative       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/theme/colorEngine/AbsoluteStyle
+    [🟢]: src/theme/colorEngine/Box       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/theme/colorEngine/useColor.d.ts,/lib/controls/FormUI.d.ts,/lib/controls/IWidget.d.ts files)
+        [🔵]: react
+        [🟢]: src/theme/colorEngine/AbsoluteStyle
+    [🟢]: src/theme/colorEngine/formatColor       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/theme/colorEngine/AbsoluteStyle
+    [🟢]: src/theme/colorEngine/useColor       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/theme/colorEngine/Box
+        [🔵]: react
+        [🟢]: src/theme/colorEngine/AbsoluteStyle
     [🟢]: src/theme/form.css       (from /lib/controls/SimpleFormBuilder.d.ts files)
     [🟢]: src/theme/form.vars.css       (from /lib/controls/SimpleFormBuilder.d.ts files)
     [🟢]: src/theme/markdown.css       (from /lib/controls/SimpleFormBuilder.d.ts files)
@@ -544,6 +692,8 @@ TYPES:
     [🟢]: src/utils/misc/parseFloatNoRoundingErr       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
     [🟢]: src/utils/misc/searchMatches       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
     [🟢]: src/utils/misc/toasts       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/utils/mobx-store-inheritance       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: mobx
     [🟢]: src/widgets/misc/ErrorBoundary       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
     [🟢]: src/widgets/workspace/JsonViewUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
@@ -552,10 +702,13 @@ TYPES:
 
 ❌ POSSIBLY UNWANTED FILES IN DTS:
     🔴 src/controls/BivariantHack (/lib/controls/BivariantHack.d.ts)
-       <- 🟢 src/controls/Form
+       <- 🟢 src/controls/FormUI
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/controls/Channel (/lib/controls/Channel.d.ts)
+       <- 🟢 src/controls/SimpleSpec
        <- 🟢 src/controls/SimpleForm.LIBRARY
     🔴 src/controls/CovariantFC (/lib/controls/CovariantFC.d.ts)
-       <- 🟢 src/controls/IWidget
+       <- 🟢 src/controls/FormUI
        <- 🟢 src/controls/SimpleForm.LIBRARY
     🟡 src/controls/FormSerial (/lib/controls/FormSerial.d.ts)
        <- 🟢 src/controls/Form
@@ -567,7 +720,7 @@ TYPES:
        <- 🟢 src/controls/widgets/WidgetUI.DI
        <- 🟢 src/controls/SimpleForm.LIBRARY
     🔴 src/controls/SimpleSpecAliases (/lib/controls/SimpleSpecAliases.d.ts)
-       <- 🟢 src/controls/SimpleFormBuilder
+       <- 🟢 src/controls/SimpleSpec
        <- 🟢 src/controls/SimpleForm.LIBRARY
     🟡 src/controls/shared/CushyKit (/lib/controls/shared/CushyKit.d.ts)
        <- 🟢 src/controls/shared/CushyKitCtx
@@ -581,16 +734,25 @@ TYPES:
     🔴 src/operators/NO_PROPS (/lib/operators/NO_PROPS.d.ts)
        <- 🟢 src/operators/Menu
        <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/panels/libraryUI/tree/TreeEntry (/lib/panels/libraryUI/tree/TreeEntry.d.ts)
+       <- 🟢 src/panels/libraryUI/tree/xxx/TreeWidget
+       <- 🟢 src/controls/SimpleForm.LIBRARY
     🟡 src/rsuite/RsuiteTypes (/lib/rsuite/RsuiteTypes.d.ts)
        <- 🟢 src/rsuite/shims
        <- 🟢 src/controls/SimpleForm.LIBRARY
     🟡 src/rsuite/reveal/RevealProps (/lib/rsuite/reveal/RevealProps.d.ts)
        <- 🟢 src/rsuite/reveal/RevealState
        <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔵 @mdi/react/dist/IconProps (@mdi/react/dist/IconProps.d.ts)
+       <- 🟢 src/icons/iconHelpers
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔵 mobx (mobx)
+       <- 🟢 src/utils/mobx-store-inheritance
+       <- 🟢 src/controls/SimpleForm.LIBRARY
     🔵 react (react)
        <- 🟢 src/rsuite/MarkdownUI
        <- 🟢 src/controls/SimpleForm.LIBRARY
     🔵 react/jsx-runtime (react/jsx-runtime)
-       <- 🟢 src/widgets/misc/ErrorBoundary
+       <- 🟢 src/icons/iconHelpers
        <- 🟢 src/controls/SimpleForm.LIBRARY
 [🟢] all JS files are also present in the bundled DTS

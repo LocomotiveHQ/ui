@@ -1,6 +1,6 @@
 {
     "name": "@cushy/forms",
-    "version": "0.0.1714656180442",
+    "version": "0.0.1716305135903",
     "author": {
         "name": "rvion",
         "url": "https://github.com/rvion/CushyStudio",
@@ -28,9 +28,14 @@
         "react": "*",
         "marked": "*",
         "mobx-react-lite": "*",
+        "colorjs.io": "*",
+        "crypto": "*",
+        "https:": "*",
+        "@mdi/js": "*",
+        "@mdi/react": "*",
         "mobx": "*",
-        "nanoid": "*",
         "react-dom": "*",
+        "nanoid": "*",
         "@uiw/react-json-view": "*",
         "react-error-boundary": "*",
         "react-toastify": "*",

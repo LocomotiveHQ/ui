@@ -58,8 +58,10 @@ export const WidgetSelectOne_SelectUI = observer(function WidgetSelectOne_Select
                 key={widget.id}
                 tw={[widget.baseErrors && 'rsx-field-error']}
                 getLabelText={(t) => t.label ?? makeLabelFromFieldName(t.id)}
+                getLabelUI={widget.config.getLabelUI}
                 getSearchQuery={() => widget.serial.query ?? ''}
                 setSearchQuery={(query) => (widget.serial.query = query)}
+                disableLocalFiltering={widget.config.disableLocalFiltering}
                 options={() => widget.choices}
                 equalityCheck={(a, b) => a.id === b.id}
                 value={() => widget.serial.val}
@@ -78,12 +80,12 @@ export const WidgetSelectOne_SelectUI = observer(function WidgetSelectOne_Select
                     widget.value = next
                 }}
             />
-            {widget.baseErrors && (
+            {/* {widget.baseErrors && (
                 <div tw='text-red-500 flex items-center gap-1'>
                     <span className='material-symbols-outlined'>error</span>
                     {widget.baseErrors}
                 </div>
-            )}
+            )} */}
         </div>
     )
 })

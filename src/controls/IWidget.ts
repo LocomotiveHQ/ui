@@ -1,7 +1,12 @@
+import type { IconName } from '../icons/icons'
+import type { RelativeStyle } from '../theme/colorEngine/AbsoluteStyle'
+import type { BoxProps } from '../theme/colorEngine/Box'
+import type { BaseWidget } from './BaseWidget'
+import type { CovariantFn } from './BivariantHack'
 import type { CovariantFC } from './CovariantFC'
 import type { Form } from './Form'
 import type { ISpec } from './ISpec'
-import type { Problem, Problem_Ext } from './Validation'
+import type { Problem_Ext } from './Validation'
 
 /**
  * base widget type; default type-level param when we work with unknown widget
@@ -24,7 +29,7 @@ export const isWidget = (x: any): x is IWidget => {
     )
 }
 
-export interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends IWidgetMixins {
+export interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends BaseWidget {
     // ---------------------------------------------------------------------------------------------------
     $Type: K['$Type'] /** type only properties; do not use directly; used to make typings good and fast */
     $Config: K['$Config'] /** type only properties; do not use directly; used to make typings good and fast */
@@ -87,51 +92,6 @@ export interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends IWidgetM
 
 export const $WidgetSym = Symbol('Widget')
 
-/**
- * those properties will be dynamically injected in every widget
- * by calling `applyWidgetMixinV2(this)` in the constructor,
- * Before the makeAutoObservable(this) call. If you're adding a new
- * base widget, you're expected to do that too.
- */
-export type IWidgetMixins = {
-    $WidgetSym: typeof $WidgetSym
-
-    // UI ------------------------------------------------------
-    // value stuff
-    ui(): JSX.Element
-    body(): JSX.Element | undefined
-    header(): JSX.Element | undefined
-    defaultBody(): JSX.Element | undefined
-    defaultHeader(): JSX.Element | undefined
-
-    // FOLD ----------------------------------------------------
-    setCollapsed(
-        /** true: collapse; false: expanded */
-        val: boolean | undefined,
-    ): void
-
-    /** toggle widget fold <-> unfolded */
-    toggleCollapsed(): void
-
-    // BUMP ----------------------------------------------------
-    /**
-     * Notify form that the value has been udpated
-     * (and bump serial.lastUpdatedAt to Date.now())
-     * 👉 Every widget must call this when value has been updated
-     * */
-    bumpValue(): void
-
-    /**
-     * Notify form that a non-value serial has been udpated
-     * 👉 every widget must call this when non-value serial has been updated
-     * */
-    bumpSerial(): void
-
-    readonly hasErrors: boolean
-    readonly customErrors: Problem[]
-    readonly errors: Problem[]
-}
-
 /** 🔶 2024-03-13 rvion: TODO: remove that function; use ['$Value'] instead */
 export type GetWidgetResult<Widget> = Widget extends { $Value: infer Value } ? Value : never
 
@@ -149,11 +109,56 @@ export type SharedWidgetSerial = {
     lastUpdatedAt?: number
     /** unused internally, here so you can add whatever you want inside */
     custom?: any
+
+    /**
+     * DO NOT MANUALLY SET THIS VALUE;
+     * this value will be set by the init() function (BaseWidget class)
+     * use to know if the onCreate function should be re-run or not
+     * */
+    _creationKey?: string
 }
 
 export type WidgetSerialFields<X> = X & SharedWidgetSerial
 export type WidgetConfigFields<X, T extends $WidgetTypes> = X & SharedWidgetConfig<T>
+
+export type WidgetMenuAction<T extends $WidgetTypes> = {
+    /** https://pictogrammers.com/library/mdi/ */
+    label: string
+    icon?: IconName
+    apply: (form: T['$Widget']) => void
+}
+
 export type SharedWidgetConfig<T extends $WidgetTypes> = {
+    /**
+     * @since 2024-05-20
+     * @stability beta
+     * Icon name from the icon library.
+     *   - "mdi..." for Material design icons - 7000+ icons https://pictogrammers.com/library/mdi/)
+     *   - "cdi..." for Cushy design icons - 1+ custom icon by the cushy team
+     */
+    icon?: IconName | CovariantFn<T['$Widget'], IconName> // IconName
+    /**
+     * @since 2024-05-19
+     * @stability beta
+     * Appearance box props
+     */
+    box?: BoxProps
+
+    /**
+     * @since 2024-05-14
+     * @stability beta
+     * This function will be executed either on first creation, or when the
+     * evaluationKey changes. The evaluationKey is stored in the group serial.
+     */
+    onCreate?: CovariantFn<T['$Widget'], void> & { evaluationKey?: string }
+
+    /**
+     * @since 2024-05-14
+     * @stability beta
+     * This function will be executed either on every widget instanciation.
+     */
+    onInit?: CovariantFn<T['$Widget'], void>
+
     /** allow to specify custom headers */
     header?: null | ((p: { widget: T['$Widget'] }) => JSX.Element)
 
@@ -161,9 +166,10 @@ export type SharedWidgetConfig<T extends $WidgetTypes> = {
     body?: null | ((p: { widget: T['$Widget'] }) => JSX.Element)
 
     /** will be called when value changed */
-    onValueChange?: (val: T['$Value']) => void
+    onValueChange?: (val: T['$Value'], self: T['$Widget']) => void
 
-    presets?: Record<string, (form: T['$Widget']) => void>
+    /** allow to set custom actions on your widgets */
+    presets?: WidgetMenuAction<T>[]
 
     /** custom type checking;
      * valid:

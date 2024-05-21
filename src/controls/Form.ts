@@ -6,12 +6,13 @@ import type { ISpec } from './ISpec'
 import type { IWidget } from './IWidget'
 import type { Widget_group, Widget_group_serial } from './widgets/group/WidgetGroup'
 
-import { action, isObservable, makeAutoObservable, observable } from 'mobx'
+import { action, isObservable, makeAutoObservable, observable, toJS } from 'mobx'
 import { nanoid } from 'nanoid'
 import { createElement, type ReactNode } from 'react'
 
+import { FormAsDropdownConfigUI } from '../panels/Panel_Gallery/FormAsDropdownConfigUI'
 import { debounce } from '../utils/misc/debounce'
-import { FormUI } from './FormUI'
+import { FormUI, type FormUIProps } from './FormUI'
 import { isWidgetGroup } from './widgets/WidgetUI.DI'
 
 export type FormProperties<
@@ -61,7 +62,11 @@ export class Form<
      * without having to import any component; usage:
      * | <div>{x.render()}</div>
      */
-    render = (): ReactNode => createElement(FormUI, { form: this })
+    render = (p: Omit<FormUIProps, 'form'> = {}): ReactNode => createElement(FormUI, { form: this, ...p })
+    renderAsConfigBtn = (): ReactNode =>
+        createElement(FormAsDropdownConfigUI, {
+            form: this,
+        })
 
     get value(): ROOT['$Value'] {
         return this.root.value
@@ -112,7 +117,7 @@ export class Form<
         : null
 
     private _onValueChange: ((form: Form<ROOT, any>) => void) | null = this.formConfig.onValueChange //
-        ? debounce(this.formConfig.onValueChange, 200)
+        ? debounce(this.formConfig.onValueChange, 5)
         : null
 
     /** every widget node must call this function once it's value change */
@@ -147,8 +152,19 @@ export class Form<
             // ensure form serial is observable, so we avoid working with soon to expire refs
             if (formSerial && !isObservable(formSerial)) formSerial = observable(formSerial)
 
+            // empty object case ---------------------------------------------------------------
+            // if and empty object `{}` is used instead of a real serial, let's pretend it's null
+            if (formSerial != null && Object.keys(formSerial).length === 0) {
+                formSerial = null
+            }
+
             // BACKWARD COMPAT -----------------------------------------------------------------
-            if (formSerial != null && formSerial.type !== 'FormSerial') {
+            if (
+                formSerial != null && //
+                formSerial.type !== 'FormSerial' &&
+                'values_' in formSerial
+            ) {
+                console.log(`[🔴🔴🔴🔴🔴🔴🔴] `, toJS(formSerial))
                 const oldSerial: Widget_group_serial<any> = formSerial as any
                 const oldsharedSerial: { [key: string]: any } = {}
                 for (const [k, v] of Object.entries(oldSerial.values_)) {
@@ -180,7 +196,6 @@ export class Form<
             // instanciate the root widget
             const spec: ROOT = this.ui?.(formBuilder)
             const rootWidget: ROOT = formBuilder._HYDRATE(null, spec, formSerial?.root)
-
             this.ready = true
             this.error = null
             // this.startMonitoring(rootWidget)

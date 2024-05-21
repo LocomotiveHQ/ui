@@ -1,6 +1,7 @@
 import '../theme/form.vars.css'
 import '../theme/markdown.css'
 import '../theme/form.css'
+import '../controls/widgets/number/InputNumberUI.css'
 
 import type { OpenRouter_Models } from '../llm/OpenRouter_models'
 import type { Form } from './Form'
@@ -9,7 +10,7 @@ import type { ISpec, SchemaDict } from './ISpec'
 import type { IWidget } from './IWidget'
 import type * as SS from './SimpleSpecAliases'
 
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, reaction } from 'mobx'
 
 import { openRouterInfos } from '../llm/OpenRouter_infos'
 import { SimpleSpec } from './SimpleSpec'
@@ -37,7 +38,7 @@ export class SimpleFormBuilder implements IFormBuilder {
     SpecCtor = SimpleSpec
 
     /** (@internal) don't call this yourself */
-    constructor(public form: Form<IWidget, SimpleFormBuilder>) {
+    constructor(public form: Form<ISpec, SimpleFormBuilder>) {
         makeAutoObservable(this, {
             SpecCtor: false,
         })
@@ -235,7 +236,7 @@ export class SimpleFormBuilder implements IFormBuilder {
 
     /** (@internal); */ _cache: { count: number } = { count: 0 }
     /** (@internal) advanced way to restore form state. used internally */
-    _HYDRATE = <T extends ISpec>(parent: IWidget | null, spec: T, serial: any | null): T['$Widget'] => {
+    private __HYDRATE = <T extends ISpec>(parent: IWidget | null, spec: T, serial: any | null): T['$Widget'] => {
         // ensure the serial is compatible
         if (serial != null && serial.type !== spec.type) {
             console.log(`[🔶] INVALID SERIAL (expected: ${spec.type}, got: ${serial.type})`)
@@ -297,5 +298,19 @@ export class SimpleFormBuilder implements IFormBuilder {
             parent,
             new SimpleSpec<Widget_markdown>('markdown', { markdown: `🔴 unknown widget "${type}" in serial.` }),
         )
+    }
+
+    _HYDRATE = <T extends ISpec>(parent: IWidget | null, spec: T, serial: any | null): T['$Widget'] => {
+        const w = this.__HYDRATE(parent, spec, serial)
+        w.publishValue()
+        for (const { expr, effect } of spec.reactions) {
+            // 🔴 Need to dispose later
+            reaction(
+                () => expr(w),
+                (arg) => effect(arg, w),
+                { fireImmediately: true },
+            )
+        }
+        return w
     }
 }

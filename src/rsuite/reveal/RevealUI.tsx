@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
+import { Ikon } from '../../icons/iconHelpers'
 import { ModalShellUI } from './ModalShell'
 import { RevealCtx, useRevealOrNull } from './RevealCtx'
 import { global_RevealStack } from './RevealStack'
@@ -48,18 +49,22 @@ export const RevealUI = observer(function RevealUI_(p: RevealProps) {
             ref={ref}
             style={p.style}
             // style={{ ...p.style, ...uistOrNull?.debugColor }}
-            onContextMenu={() => uist2().toggleLock()}
+
+            // lock input on shift+right click
+            onContextMenu={(ev) => {
+                if (ev.shiftKey) {
+                    uist2().toggleLock()
+                    ev.preventDefault() //  = prevent window on non-electron apps
+                    ev.stopPropagation() // = right click is consumed
+                }
+            }}
+            onClick={(ev) => uist2().onLeftClick(ev)}
+            onAuxClick={(ev) => {
+                if (ev.button === 1) return uist2().onMiddleClick(ev)
+                if (ev.button === 2) return uist2().onRightClick(ev)
+            }}
             onMouseEnter={() => uist2().onMouseEnterAnchor()}
             onMouseLeave={() => uist2().onMouseLeaveAnchor()}
-            onClick={(ev) => {
-                const uist = uist2()
-                const toc = uist.triggerOnClick
-                if (!toc) return
-                ev.stopPropagation()
-                // ev.preventDefault()
-                if (uist.visible) uist.leaveAnchor()
-                else uist.enterAnchor()
-            }}
         >
             {content}
             {tooltip}
@@ -184,12 +189,21 @@ const mkTooltip = (uist: RevealState | null) => {
             {hiddenContent}
             {uist._lock ? (
                 <span tw='opacity-50 italic text-sm flex gap-1 items-center justify-center'>
-                    <span className='material-symbols-outlined'>lock</span>
-                    locked; right-click to unlock
+                    <Ikon.mdiLock />
+                    shift+right-click to unlock
                 </span>
-            ) : null}
+            ) : (
+                <span tw='opacity-50 italic text-sm flex gap-1 items-center justify-center'>
+                    <Ikon.mdiLockOff />
+                    shift+right-click to lock
+                </span>
+
+                //
+                // null
+            )}
         </div>
     )
+
     return createPortal(revealedContent, element)
 }
 

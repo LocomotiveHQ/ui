@@ -1,35 +1,16 @@
 // src/controls/FormManager.ts
-import { useMemo } from "react";
+import { useMemo as useMemo2 } from "react";
 
 // src/controls/Form.ts
-import { action, isObservable, makeAutoObservable, observable } from "mobx";
+import { action, isObservable, makeAutoObservable as makeAutoObservable2, observable as observable2, toJS } from "mobx";
 import { nanoid } from "nanoid";
 import { createElement } from "react";
 
-// src/utils/misc/debounce.ts
-function debounce(func, delay, maxWait) {
-  let timeoutId = null;
-  let lastInvokeTime = Date.now();
-  return (...args) => {
-    const now = Date.now();
-    const needInvoke = maxWait !== void 0 && now - lastInvokeTime >= maxWait;
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    if (needInvoke) {
-      func(...args);
-      lastInvokeTime = now;
-    } else {
-      timeoutId = setTimeout(() => {
-        func(...args);
-        lastInvokeTime = Date.now();
-      }, delay);
-    }
-  };
-}
+// src/panels/Panel_Gallery/FormAsDropdownConfigUI.tsx
+import { observer as observer7 } from "mobx-react-lite";
 
 // src/controls/FormUI.tsx
-import { observer as observer3 } from "mobx-react-lite";
+import { observer as observer4 } from "mobx-react-lite";
 
 // src/panels/MessageUI.tsx
 import { observer as observer2 } from "mobx-react-lite";
@@ -39,8 +20,8 @@ import { marked } from "marked";
 import { observer } from "mobx-react-lite";
 
 // src/utils/custom-jsx/jsx-runtime.js
-import { Fragment } from "react/jsx-runtime";
 import { jsx as jsx_, jsxs as jsxs_ } from "react/jsx-runtime";
+import { Fragment } from "react/jsx-runtime";
 var joinCls = (tw) => {
   if (typeof tw === "string")
     return tw;
@@ -63,22 +44,20 @@ var joinCls = (tw) => {
   return "";
 };
 function jsx(type, props, key) {
-  if (!hasOwnProperty.call(props, "tw"))
+  if (props.tw == null)
     return jsx_(type, props, key);
-  let className = props.className ?? "";
-  if (props.tw)
-    className += " " + joinCls(props.tw);
-  const newProps = { ...props, className, tw: void 0 };
-  return jsx_(type, newProps, key);
+  const { tw, className, ...rest } = props;
+  if (className)
+    return jsx_(type, { ...rest, className: `${className} ${joinCls(tw)}` }, key);
+  return jsx_(type, { ...rest, className: joinCls(tw) }, key);
 }
 function jsxs(type, props, key) {
-  if (!hasOwnProperty.call(props, "tw"))
+  if (props.tw == null)
     return jsxs_(type, props, key);
-  let className = props.className ?? "";
-  if (props.tw)
-    className += " " + joinCls(props.tw);
-  const newProps = { ...props, className, tw: void 0 };
-  return jsxs_(type, newProps, key);
+  const { tw, className, ...rest } = props;
+  if (className)
+    return jsxs_(type, { ...rest, className: `${className} ${joinCls(tw)}` }, key);
+  return jsxs_(type, { ...rest, className: joinCls(tw) }, key);
 }
 
 // src/rsuite/MarkdownUI.tsx
@@ -136,8 +115,255 @@ var MessageWarningUI = observer2(function MessageWarningUI_(p) {
   ] });
 });
 
+// src/theme/colorEngine/Box.tsx
+import { observer as observer3 } from "mobx-react-lite";
+
+// src/theme/colorEngine/AbsoluteStyle.tsx
+import { createContext } from "react";
+var ThemeCtx = createContext({
+  background: {
+    type: "absolute",
+    lightness: 0.1,
+    chroma: 0.05,
+    hue: 0
+  },
+  text: {
+    type: "relative",
+    contrast: 1,
+    chromaBlend: 0,
+    hueShift: 0
+  }
+  // text: { type: 'absolute', lightness: 0, chroma: 0.5, hue: 180, },
+  // shadow: null,
+  // border: null,
+});
+
+// src/theme/colorEngine/useColor.tsx
+import Color from "colorjs.io";
+import { createHash } from "crypto";
+import { useContext } from "react";
+
+// src/controls/widgets/list/clamp.ts
+var clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+// src/theme/colorEngine/applyRelative.tsx
+var applyRelative = (a, b) => {
+  const xxx = autoContrast(a.lightness, b.contrast);
+  const lightness = xxx;
+  const chroma = clamp(b.chroma ?? a.chroma * (b.chromaBlend ?? 1), 0, 0.4);
+  const hue = b.hue ?? a.hue + (b.hueShift ?? 0);
+  return { type: "absolute", lightness, chroma, hue };
+};
+function autoContrast(lightness, contrast) {
+  const start = lightness;
+  const end = Math.round(lightness) - Math.sign(lightness - 0.5 + 1e-5);
+  return start * (1 - contrast) + end * contrast;
+}
+
+// src/theme/colorEngine/formatColor.tsx
+function formatColor(col) {
+  return `oklch(${clamp(col.lightness, 1e-4, 0.9999)} ${col.chroma} ${col.hue})`;
+}
+
+// src/theme/colorEngine/useColor.tsx
+var useColor = (p = {}) => {
+  const ctx = useContext(ThemeCtx);
+  const baseStyle = (() => {
+    if (p.base) {
+      if (typeof p.base === "number") {
+        return applyRelative(ctx.background, { contrast: clamp(p.base / 100, 0, 1) });
+      }
+      if (typeof p.base === "string") {
+        const color2 = new Color(p.base);
+        const [l, c, h] = color2.oklch;
+        return { type: "absolute", lightness: l, chroma: c, hue: h };
+      }
+      return applyRelative(ctx.background, p.base);
+    }
+    return ctx.background;
+  })();
+  const textStyle = (() => {
+    if (p.text) {
+      if (typeof p.text === "string") {
+        const color2 = new Color(p.text);
+        const [l, c, h] = color2.oklch;
+        return { type: "absolute", lightness: l, chroma: c, hue: h };
+      }
+      return applyRelative(baseStyle, p.text);
+    } else {
+      if (ctx.text.type === "absolute")
+        return ctx.text;
+      return applyRelative(baseStyle, ctx.text);
+    }
+  })();
+  const borderStyle = (() => {
+    if (p.border) {
+      if (typeof p.border === "boolean") {
+        return applyRelative(baseStyle, { contrast: 0.2 });
+      }
+      if (typeof p.border === "number") {
+        return applyRelative(baseStyle, { contrast: clamp(p.border / 10, 0, 1) });
+      }
+      if (typeof p.border === "string") {
+        const color2 = new Color(p.border);
+        const [l, c, h] = color2.oklch;
+        return { type: "absolute", lightness: l, chroma: c, hue: h };
+      }
+      return applyRelative(baseStyle, p.border);
+    }
+    return null;
+  })();
+  const textForCtx = typeof p.text === "object" ? p.text : ctx.text;
+  const border = borderStyle ? `1px solid ${formatColor(borderStyle)}` : void 0;
+  const color = formatColor(textStyle);
+  const background = p.base != null ? formatColor(baseStyle) : void 0;
+  let baseHover;
+  let textHover;
+  let borderHover;
+  if (p.hover) {
+    const baseHoverStyle = applyRelative(baseStyle, { contrast: 0.2 });
+    baseHover = formatColor(baseHoverStyle);
+    if (borderStyle) {
+      const borderHoverStyle = applyRelative(borderStyle, { contrast: 0.2 });
+      borderHover = formatColor(borderHoverStyle);
+    }
+    const textHoverStyle = applyRelative(baseHoverStyle, { contrast: 0.9, chromaBlend: 2 });
+    textHover = formatColor(textHoverStyle);
+  }
+  const styles = {
+    border,
+    background,
+    color
+  };
+  const variables = {
+    "--box-base": styles.background ?? "initial",
+    "--box-text": styles.color ?? "initial",
+    "--box-border": styles.border ?? "initial",
+    "--box-hover-base": baseHover ?? background ?? "initial",
+    "--box-hover-text": textHover ?? color ?? "initial",
+    "--box-hover-border": borderHover ?? border ?? "initial"
+  };
+  return {
+    background: baseStyle,
+    text: textStyle,
+    textForCtx,
+    border: borderStyle,
+    get className() {
+      return compileOrRetrieveClassName(styles);
+    },
+    styles,
+    variables
+  };
+};
+var cache = {};
+var compileOrRetrieveClassName = (appearance) => {
+  const vals = JSON.stringify(appearance);
+  const hash = "col-" + createHash("md5").update(vals).digest("hex");
+  if (hash in cache)
+    return cache[hash];
+  console.log(`[\u{1F308}] `, `.${hash}`, appearance);
+  const cssBlock = Object.entries(appearance).map(([key, val]) => {
+    if (val == null)
+      return "";
+    return `${key}: ${val};`;
+  }).join("\n");
+  setRule(`.${hash}`, cssBlock);
+  cache[hash] = hash;
+  return hash;
+};
+var styleElement = null;
+function getStyleElement() {
+  if (styleElement != null)
+    return styleElement;
+  if (styleElement) {
+    styleElement = styleElement;
+  } else {
+    styleElement = styleElement ?? document.createElement("style");
+    styleElement.title = "dynamic-theme-css";
+    document.head.appendChild(styleElement);
+  }
+  return styleElement;
+}
+function setRule(selector, block = "") {
+  const styleSheet = getStyleElement().sheet;
+  const rules = styleSheet.cssRules;
+  if (rules == null)
+    throw new Error("\u274C no rules");
+  const rule = Array.from(rules).find((r) => r.selectorText === selector);
+  if (rule == null) {
+    const index = styleSheet.insertRule(`${selector} {${block}}`, styleSheet.cssRules.length);
+    return styleSheet.cssRules[index];
+  } else {
+    rule.style.cssText = block;
+    return rule;
+  }
+}
+
+// src/theme/colorEngine/Box.tsx
+var BoxBase = observer3(function BoxTitleUI_({ children, ...rest }) {
+  return /* @__PURE__ */ jsx(Box, { ...rest, base: { contrast: 0.05 }, children });
+});
+var BoxTitle = observer3(function BoxTitleUI_2({ children, ...rest }) {
+  return /* @__PURE__ */ jsx(Box, { ...rest, text: { contrast: 1, chromaBlend: 100, hueShift: 0 }, children });
+});
+var BoxSubtle = observer3(function BoxSubtle_({ children, ...rest }) {
+  return /* @__PURE__ */ jsx(Box, { ...rest, text: { contrast: 0.4, chromaBlend: 1, hueShift: 0 }, children });
+});
+var Box = observer3(
+  function BoxUI_(p, ref) {
+    const {
+      // to merge:
+      style,
+      className,
+      // to ignore:
+      base,
+      hover,
+      text,
+      shadow,
+      border,
+      // others:
+      ...rest
+    } = p;
+    const {
+      background,
+      textForCtx,
+      /* styles, */
+      variables
+    } = useColor(p);
+    return /* @__PURE__ */ jsx(
+      "div",
+      {
+        ...rest,
+        ref,
+        tw: [
+          /* className, */
+          className,
+          "Box"
+        ],
+        style: {
+          /* ...styles, */
+          ...style,
+          ...variables
+        },
+        children: /* @__PURE__ */ jsx(
+          ThemeCtx.Provider,
+          {
+            value: {
+              background,
+              // ~~text must always remaian relative~~ => nope anymore ? ⁉️
+              text: textForCtx
+            },
+            children: p.children
+          }
+        )
+      }
+    );
+  },
+  { forwardRef: true }
+);
+
 // src/controls/FormUI.tsx
-var FormUI = observer3(function FormUI_(p) {
+var FormUI = observer4(function FormUI_(p) {
   const form = p.form;
   if (form == null)
     return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: `form is not yet initialized` });
@@ -145,17 +371,598 @@ var FormUI = observer3(function FormUI_(p) {
     return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: form.error });
   if (form.root == null)
     return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: "form.root is null" });
-  return /* @__PURE__ */ jsx(
+  const submitAction = p.submitAction;
+  return /* @__PURE__ */ jsxs(Box, { ...p.theme, className: p.className, style: p.style, children: [
+    form.root.ui(),
+    p.submitButton ?? (submitAction == null ? null : submitAction === "confetti" ? /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(
+      "div",
+      {
+        tw: "btn btn-primary ml-auto",
+        onClick: async () => {
+          const fire = (await import("https://cdn.skypack.dev/canvas-confetti")).default;
+          fire({ zIndex: 1e5, particleCount: 100, spread: 70 });
+        },
+        children: p.submitLabel ?? "Submit"
+      }
+    ) }) : /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx("div", { tw: "btn btn-primary ml-auto", onClick: () => submitAction(form), children: p.submitLabel ?? "Submit" }) }))
+  ] });
+});
+
+// src/rsuite/reveal/RevealUI.tsx
+import { observer as observer6 } from "mobx-react-lite";
+import { useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
+
+// src/icons/iconHelpers.tsx
+import * as icons2 from "@mdi/js";
+import { Icon } from "@mdi/react";
+
+// src/icons/icons.ts
+import * as icons from "@mdi/js";
+var myCustomIcons = {
+  cdiTest: "M 2.40,7.20 A 20,20 0,0,1 12.00,7.20 A 20,20 0,0,1 21.60,7.20 Q 21.60,14.40 12.00,21.60 Q 2.40,14.40 2.40,7.20 z"
+};
+var allIcons = {
+  ...icons,
+  ...myCustomIcons
+};
+
+// src/icons/iconHelpers.tsx
+var Ikon = new Proxy({}, {
+  get(target, key) {
+    if (key in target)
+      return target[key];
+    return target[key] = (p) => /* @__PURE__ */ jsx(Icon, { path: allIcons[key], size: "1.1em", ...p });
+  }
+});
+var IkonOf = function IkonOf_({ name, ...p }) {
+  return /* @__PURE__ */ jsx(Icon, { path: allIcons[name], size: "1.1em", ...p });
+};
+
+// src/rsuite/reveal/ModalShell.tsx
+import { observer as observer5 } from "mobx-react-lite";
+var ModalShellUI = observer5(function ModalShellUI_(p) {
+  return /* @__PURE__ */ jsxs(
     "div",
     {
-      tw: "bg-base-100",
-      "data-theme": p.theme,
       className: p.className,
-      style: p.style,
-      children: form.root.ui()
+      tw: [
+        //
+        "animate-in fade-in",
+        "virtualBorder p-4 rounded-xl bg-base-100 shadow-xl"
+      ],
+      onClick: (ev) => ev.stopPropagation(),
+      children: [
+        /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
+          /* @__PURE__ */ jsx("div", { tw: "text-xl", children: p.title }),
+          /* @__PURE__ */ jsx("div", { tw: "flex-1" }),
+          /* @__PURE__ */ jsx(
+            "div",
+            {
+              tw: "btn btn-sm btn-square",
+              onClick: (ev) => {
+                ev.stopPropagation();
+                ev.preventDefault();
+                p.close();
+              },
+              children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "close" })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "divider my-0" }),
+        /* @__PURE__ */ jsx("div", { tw: "_ModalBody", children: p.children }),
+        /* @__PURE__ */ jsx("div", { tw: "_ModalFooter", children: p.footer })
+      ]
     }
   );
 });
+
+// src/rsuite/reveal/RevealCtx.ts
+import { createContext as createContext2, useContext as useContext2 } from "react";
+var RevealCtx = createContext2(null);
+var useRevealOrNull = () => {
+  const val = useContext2(RevealCtx);
+  return val;
+};
+
+// src/rsuite/reveal/RevealStack.ts
+var global_RevealStack = [];
+
+// src/rsuite/reveal/RevealState.tsx
+import { makeAutoObservable, observable } from "mobx";
+
+// src/rsuite/reveal/RevealPlacement.tsx
+var computePlacement = (placement, rect) => {
+  if (placement === "popup-xs")
+    return { top: 0, left: 0 };
+  if (placement === "popup-sm")
+    return { top: 0, left: 0 };
+  if (placement === "popup-lg")
+    return { top: 0, left: 0 };
+  if (placement === "autoHorizontalStart") {
+    placement = rect.left + rect.width / 2 < window.innerWidth / 2 ? "rightStart" : "leftStart";
+  }
+  if (placement === "autoHorizontalEnd") {
+    placement = rect.left + rect.width / 2 < window.innerWidth / 2 ? "rightEnd" : "leftEnd";
+  }
+  if (placement === "autoVerticalStart") {
+    placement = rect.top + rect.height / 2 < window.innerHeight / 2 ? "bottomStart" : "topStart";
+  }
+  if (placement === "autoVerticalEnd") {
+    placement = rect.top + rect.height / 2 < window.innerHeight / 2 ? "bottomEnd" : "topEnd";
+  }
+  if (placement === "auto") {
+    placement = (() => {
+      const top = rect.top;
+      const bottom = window.innerHeight - rect.bottom;
+      const left = rect.left;
+      const right = window.innerWidth - rect.right;
+      const minX = Math.min(left, right);
+      const minY = Math.min(top, bottom);
+      return minY == top ? minX == left ? "bottomStart" : "bottomEnd" : minX == left ? "topStart" : "topEnd";
+    })();
+  }
+  if (placement == "bottomStart")
+    return { top: rect.bottom, left: rect.left };
+  if (placement == "bottom")
+    return { top: rect.bottom, left: rect.left + rect.width / 2, transform: "translate(-50%)" };
+  if (placement == "bottomEnd")
+    return { top: rect.bottom, left: rect.right, transform: "translate(-100%)" };
+  if (placement == "topStart")
+    return { top: rect.top, left: rect.left, transform: "translateY(-100%)" };
+  if (placement == "top")
+    return { top: rect.top, left: rect.left + rect.width / 2, transform: "translate(-50%, -100%)" };
+  if (placement == "topEnd")
+    return { top: rect.top, left: rect.right, transform: "translate(-100%, -100%)" };
+  if (placement == "leftStart")
+    return { top: rect.top, left: rect.left, transform: "translateX(-100%)" };
+  if (placement == "left")
+    return { top: rect.top + rect.height / 2, left: rect.left, transform: "translate(-100%, -50%)" };
+  if (placement == "leftEnd")
+    return { top: rect.bottom, left: rect.left, transform: "translate(-100%, -100%)" };
+  if (placement == "rightStart")
+    return { top: rect.top, left: rect.right };
+  if (placement == "right")
+    return { top: rect.top + rect.height / 2, left: rect.right, transform: "translateY(-50%)" };
+  if (placement == "rightEnd")
+    return { top: rect.bottom, left: rect.right, transform: "translateY(-100%)" };
+  return { top: rect.bottom, left: rect.left };
+};
+
+// src/rsuite/reveal/RevealState.tsx
+var defaultShowDelay_whenRoot = 100;
+var defaultHideDelay_whenRoot = 300;
+var defaultShowDelay_whenNested = 0;
+var defaultHideDelay_whenNested = 0;
+var DEBUG_REVEAL = false;
+var RevealStateLazy = class {
+  constructor(p, parents) {
+    this.p = p;
+    this.parents = parents;
+    this.uistOrNull = null;
+    this.getUist = () => {
+      if (this.uistOrNull)
+        return this.uistOrNull;
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F499}] init RevealUI`);
+      this.uistOrNull = new RevealState({ ...this.p }, this.parents);
+      return this.uistOrNull;
+    };
+    makeAutoObservable(this, { p: false });
+  }
+};
+var RevealState = class _RevealState {
+  constructor(p, parents) {
+    this.p = p;
+    this.parents = parents;
+    this.uid = _RevealState.nextUID++;
+    this.onMiddleClick = (ev) => {
+    };
+    this.onRightClick = (ev) => {
+      this.onLeftClick(ev);
+    };
+    this.onLeftClick = (ev) => {
+      const toc = this.triggerOnClick;
+      if (!toc)
+        return;
+      ev.stopPropagation();
+      if (this.visible)
+        this.leaveAnchor();
+      else
+        this.enterAnchor();
+    };
+    // ------------------------------------------------
+    this.inAnchor = false;
+    this.inTooltip = false;
+    this.inChildren = /* @__PURE__ */ new Set();
+    // prettier-ignore
+    // position --------------------------------------------
+    this.tooltipPosition = { top: 0, left: 0 };
+    this.setPosition = (rect) => {
+      this.tooltipPosition = computePlacement(this.placement, rect);
+    };
+    // lock --------------------------------------------
+    this._lock = false;
+    this.toggleLock = () => {
+      this._lock = !this._lock;
+    };
+    // anchor --------------------------------------------
+    this.enterAnchorTimeoutId = null;
+    this.leaveAnchorTimeoutId = null;
+    this.onMouseEnterAnchor = () => {
+      if (!this.triggerOnHover && !this.visible)
+        return;
+      if (_RevealState.shared.current)
+        return this.enterAnchor();
+      this._resetAllAnchorTimouts();
+      this.enterAnchorTimeoutId = setTimeout(this.enterAnchor, this.showDelay);
+    };
+    this.onMouseLeaveAnchor = () => {
+      if (this.placement.startsWith("popup"))
+        return;
+      this._resetAllAnchorTimouts();
+      this.leaveAnchorTimeoutId = setTimeout(this.leaveAnchor, this.hideDelay);
+    };
+    // ---
+    this.enterAnchor = () => {
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] ENTERING anchor ${this.ix}`);
+      if (_RevealState.shared.current != this && !this.parents.includes(_RevealState.shared.current))
+        _RevealState.shared.current?.close();
+      _RevealState.shared.current = this;
+      this._resetAllAnchorTimouts();
+      this.inAnchor = true;
+    };
+    this.leaveAnchor = () => {
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] LEAVING anchor  ${this.ix}`);
+      if (_RevealState.shared.current == this)
+        _RevealState.shared.current = null;
+      this._resetAllAnchorTimouts();
+      this.inAnchor = false;
+    };
+    // ---
+    this._resetAllAnchorTimouts = () => {
+      this._resetAnchorEnterTimeout();
+      this._resetAnchorLeaveTimeout();
+    };
+    this._resetAnchorEnterTimeout = () => {
+      if (this.enterAnchorTimeoutId) {
+        clearTimeout(this.enterAnchorTimeoutId);
+        this.enterAnchorTimeoutId = null;
+      }
+    };
+    this._resetAnchorLeaveTimeout = () => {
+      if (this.leaveAnchorTimeoutId) {
+        clearTimeout(this.leaveAnchorTimeoutId);
+        this.leaveAnchorTimeoutId = null;
+      }
+    };
+    // tooltip --------------------------------------------
+    this.enterTooltipTimeoutId = null;
+    this.leaveTooltipTimeoutId = null;
+    this.onMouseEnterTooltip = () => {
+      this._resetAllTooltipTimouts();
+      this.enterTooltipTimeoutId = setTimeout(this.enterTooltip, this.showDelay);
+    };
+    this.onMouseLeaveTooltip = () => {
+      if (this.placement.startsWith("popup"))
+        return;
+      this._resetAllTooltipTimouts();
+      this.leaveTooltipTimeoutId = setTimeout(this.leaveTooltip, this.hideDelay);
+    };
+    // ---
+    this.enterTooltip = () => {
+      this._resetAllTooltipTimouts();
+      for (const [ix, p] of this.parents.entries())
+        p.enterChildren(ix);
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] enter tooltip of ${this.ix}`);
+      this.inTooltip = true;
+    };
+    this.leaveTooltip = () => {
+      this._resetAllTooltipTimouts();
+      for (const [ix, p] of this.parents.entries())
+        p.leaveChildren(ix);
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] leaving tooltip of ${this.ix}`);
+      this.inTooltip = false;
+    };
+    // ---
+    this._resetAllTooltipTimouts = () => {
+      this._resetTooltipEnterTimeout();
+      this._resetTooltipLeaveTimeout();
+    };
+    this._resetTooltipEnterTimeout = () => {
+      if (this.enterTooltipTimeoutId) {
+        clearTimeout(this.enterTooltipTimeoutId);
+        this.enterTooltipTimeoutId = null;
+      }
+    };
+    this._resetTooltipLeaveTimeout = () => {
+      if (this.leaveTooltipTimeoutId) {
+        clearTimeout(this.leaveTooltipTimeoutId);
+        this.leaveTooltipTimeoutId = null;
+      }
+    };
+    // --------------------
+    this.enterChildren = (depth) => {
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] entering children (of ${this.ix}) ${depth}`);
+      this.inChildren.add(depth);
+    };
+    this.leaveChildren = (depth) => {
+      if (DEBUG_REVEAL)
+        console.log(`[\u{1F920}] leaving children (of ${this.ix}) ${depth}`);
+      this.inChildren.delete(depth);
+    };
+    this.contentFn = p.content;
+    makeAutoObservable(this, { uid: false, p: false });
+  }
+  static {
+    this.nextUID = 1;
+  }
+  static {
+    this.shared = observable({ current: null }, { current: observable.ref });
+  }
+  /** how deep in the reveal stack we are */
+  get ix() {
+    return this.parents.length;
+  }
+  // prettier-ignore
+  get debugColor() {
+    return {
+      borderLeft: this.inAnchor ? `3px solid red` : void 0,
+      borderTop: this.inTooltip ? `3px solid cyan` : void 0,
+      borderBottom: this.inChildren.size > 0 ? `3px solid orange` : void 0
+    };
+  }
+  /** toolip is visible if either inAnchor or inTooltip */
+  get visible() {
+    if (this._lock)
+      return true;
+    return this.inAnchor || this.inTooltip || this.inChildren.size > 0;
+  }
+  close() {
+    this._resetAllAnchorTimouts();
+    this._resetAllTooltipTimouts();
+    this.inAnchor = false;
+    this.inTooltip = false;
+    this.inChildren.clear();
+  }
+  get triggerOnClick() {
+    return this.p.trigger == null || this.p.trigger == "click" || //
+    this.p.trigger == "clickAndHover";
+  }
+  get triggerOnHover() {
+    return this.p.trigger == "hover" || //
+    this.p.trigger == "clickAndHover";
+  }
+  get showDelay() {
+    return this.p.showDelay ?? (this.ix ? defaultShowDelay_whenNested : defaultShowDelay_whenRoot);
+  }
+  get hideDelay() {
+    return this.p.hideDelay ?? (this.ix ? defaultHideDelay_whenNested : defaultHideDelay_whenRoot);
+  }
+  get placement() {
+    return this.p.placement ?? "auto";
+  }
+  // UI --------------------------------------------
+  get defaultCursor() {
+    if (!this.triggerOnHover)
+      return "cursor-pointer";
+    return "cursor-help";
+  }
+};
+
+// src/rsuite/reveal/RevealUI.tsx
+var RevealUI = observer6(function RevealUI_(p) {
+  const ref = useRef(null);
+  const parents = useRevealOrNull()?.tower ?? [];
+  const self = useMemo(() => new RevealStateLazy(p, parents.map((p2) => p2.getUist())), []);
+  const { uistOrNull, getUist: uist2 } = self;
+  const nextTower = useMemo(() => ({ tower: [...parents, self] }), []);
+  useEffect(() => {
+    const x = uistOrNull;
+    if (x == null)
+      return;
+    if (p.content !== x.p.content)
+      x.contentFn = p.content;
+    if (p.trigger !== x.p.trigger)
+      x.p.trigger = p.trigger;
+    if (p.placement !== x.p.placement)
+      x.p.placement = p.placement;
+    if (p.showDelay !== x.p.showDelay)
+      x.p.showDelay = p.showDelay;
+    if (p.hideDelay !== x.p.hideDelay)
+      x.p.hideDelay = p.hideDelay;
+  }, [p.content, p.trigger, p.placement, p.showDelay, p.hideDelay]);
+  useEffect(() => {
+    if (uistOrNull?.visible && ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      uistOrNull.setPosition(rect);
+    }
+  }, [uistOrNull?.visible]);
+  const content = p.children;
+  const tooltip = mkTooltip(uistOrNull);
+  const anchor = /* @__PURE__ */ jsxs(
+    "span",
+    {
+      tw: ["inline-block ui-reveal-anchor", uistOrNull?.defaultCursor ?? "cursor-pointer"],
+      className: p.className,
+      ref,
+      style: p.style,
+      onContextMenu: (ev) => {
+        if (ev.shiftKey) {
+          uist2().toggleLock();
+          ev.preventDefault();
+          ev.stopPropagation();
+        }
+      },
+      onClick: (ev) => uist2().onLeftClick(ev),
+      onAuxClick: (ev) => {
+        if (ev.button === 1)
+          return uist2().onMiddleClick(ev);
+        if (ev.button === 2)
+          return uist2().onRightClick(ev);
+      },
+      onMouseEnter: () => uist2().onMouseEnterAnchor(),
+      onMouseLeave: () => uist2().onMouseLeaveAnchor(),
+      children: [
+        content,
+        tooltip
+      ]
+    }
+  );
+  return /* @__PURE__ */ jsx(RevealCtx.Provider, { value: nextTower, children: anchor });
+});
+var mkTooltip = (uist) => {
+  if (uist == null)
+    return null;
+  if (!uist?.visible)
+    return null;
+  const element = document.getElementById(
+    uist.p.placement?.startsWith("#") ? uist.p.placement.slice(1) : "tooltip-root"
+  );
+  const pos = uist.tooltipPosition;
+  const p = uist.p;
+  const hiddenContent = uist.contentFn();
+  const revealedContent = uist.placement.startsWith("#") ? /* @__PURE__ */ jsx(
+    "div",
+    {
+      ref: (e) => {
+        if (e == null)
+          return global_RevealStack.filter((p2) => p2 !== uist);
+        global_RevealStack.push(uist);
+      },
+      onKeyUp: (ev) => {
+        if (ev.key === "Escape") {
+          uist.close();
+          ev.stopPropagation();
+          ev.preventDefault();
+        }
+      },
+      onClick: (ev) => {
+        p.onClick?.(ev);
+        uist.close();
+        ev.stopPropagation();
+        ev.preventDefault();
+      },
+      style: { zIndex: 99999999, backgroundColor: "#0000003d" },
+      tw: "pointer-events-auto w-full h-full flex items-center justify-center z-50",
+      children: hiddenContent
+    }
+  ) : uist.placement.startsWith("popup") ? /* @__PURE__ */ jsx(
+    "div",
+    {
+      ref: (e) => {
+        if (e == null)
+          return global_RevealStack.filter((p2) => p2 !== uist);
+        global_RevealStack.push(uist);
+      },
+      onKeyUp: (ev) => {
+        if (ev.key === "Escape") {
+          uist.close();
+          ev.stopPropagation();
+          ev.preventDefault();
+        }
+      },
+      onClick: (ev) => {
+        p.onClick?.(ev);
+        uist.close();
+        ev.stopPropagation();
+      },
+      style: { zIndex: 99999999, backgroundColor: "#0000003d" },
+      tw: "pointer-events-auto absolute w-full h-full flex items-center justify-center z-50",
+      children: /* @__PURE__ */ jsx(
+        ModalShellUI,
+        {
+          close: () => {
+            uist.close();
+          },
+          title: p.title,
+          children: hiddenContent
+        }
+      )
+    }
+  ) : /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: p.tooltipWrapperClassName,
+      tw: ["_RevealUI card card-bordered bg-base-100 shadow-xl pointer-events-auto"],
+      onClick: (ev) => {
+        ev.stopPropagation();
+      },
+      onMouseEnter: uist.onMouseEnterTooltip,
+      onMouseLeave: uist.onMouseLeaveTooltip,
+      onContextMenu: uist.enterAnchor,
+      style: {
+        //   borderTop: uist._lock ? '1px dashed yellow' : undefined,
+        position: "absolute",
+        zIndex: 99999999,
+        top: pos.top ? `${pos.top}px` : void 0,
+        bottom: pos.bottom ? `${pos.bottom}px` : void 0,
+        left: pos.left ? `${pos.left}px` : void 0,
+        right: pos.right ? `${pos.right}px` : void 0,
+        transform: pos.transform
+        // Adjust positioning as needed
+      },
+      children: [
+        p.title ? /* @__PURE__ */ jsxs("div", { tw: "px-2", children: [
+          /* @__PURE__ */ jsx("div", { tw: "py-0.5", children: p.title }),
+          /* @__PURE__ */ jsx("div", { tw: "w-full rounded bg-neutral-content", style: { height: "1px" } })
+        ] }) : /* @__PURE__ */ jsx(Fragment, {}),
+        hiddenContent,
+        uist._lock ? /* @__PURE__ */ jsxs("span", { tw: "opacity-50 italic text-sm flex gap-1 items-center justify-center", children: [
+          /* @__PURE__ */ jsx(Ikon.mdiLock, {}),
+          "shift+right-click to unlock"
+        ] }) : /* @__PURE__ */ jsxs("span", { tw: "opacity-50 italic text-sm flex gap-1 items-center justify-center", children: [
+          /* @__PURE__ */ jsx(Ikon.mdiLockOff, {}),
+          "shift+right-click to lock"
+        ] })
+      ]
+    }
+  );
+  return createPortal(revealedContent, element);
+};
+
+// src/panels/Panel_Gallery/FormAsDropdownConfigUI.tsx
+var FormAsDropdownConfigUI = observer7(function FormAsDropdownConfigUI_(p) {
+  return /* @__PURE__ */ jsx(
+    RevealUI,
+    {
+      tw: "WIDGET-FIELD",
+      title: p.title,
+      content: () => /* @__PURE__ */ jsx("div", { style: { width: "500px" }, tw: "flex-shrink-0", children: /* @__PURE__ */ jsx(FormUI, { form: p.form }) }),
+      children: /* @__PURE__ */ jsxs("div", { tw: "flex px-1 cursor-default bg-base-200 rounded w-full h-full items-center justify-center hover:brightness-125 border border-base-100", children: [
+        /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "settings" }),
+        /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "expand_more" })
+      ] })
+    }
+  );
+});
+
+// src/utils/misc/debounce.ts
+function debounce(func, delay, maxWait) {
+  let timeoutId = null;
+  let lastInvokeTime = Date.now();
+  return (...args) => {
+    const now = Date.now();
+    const needInvoke = maxWait !== void 0 && now - lastInvokeTime >= maxWait;
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    if (needInvoke) {
+      func(...args);
+      lastInvokeTime = now;
+    } else {
+      timeoutId = setTimeout(() => {
+        func(...args);
+        lastInvokeTime = Date.now();
+      }, delay);
+    }
+  };
+}
 
 // src/controls/widgets/WidgetUI.DI.ts
 var WidgetDI = {};
@@ -182,7 +989,10 @@ var Form = class {
      * without having to import any component; usage:
      * | <div>{x.render()}</div>
      */
-    this.render = () => createElement(FormUI, { form: this });
+    this.render = (p = {}) => createElement(FormUI, { form: this, ...p });
+    this.renderAsConfigBtn = () => createElement(FormAsDropdownConfigUI, {
+      form: this
+    });
     /** Out of Tree unmounted serials  */
     this.shared = {};
     // Change tracking ------------------------------------
@@ -191,7 +1001,7 @@ var Form = class {
     /** timestamp at which form serial was last updated, or 0 when form still pristine */
     this.serialLastUpdatedAt = 0;
     this._onSerialChange = this.formConfig.onSerialChange ? debounce(this.formConfig.onSerialChange, 200) : null;
-    this._onValueChange = this.formConfig.onValueChange ? debounce(this.formConfig.onValueChange, 200) : null;
+    this._onValueChange = this.formConfig.onValueChange ? debounce(this.formConfig.onValueChange, 5) : null;
     /** every widget node must call this function once it's value change */
     this.valueChanged = (widget) => {
       this.valueLastUpdatedAt = Date.now();
@@ -212,8 +1022,13 @@ var Form = class {
       try {
         let formSerial = this.formConfig.initialSerial?.();
         if (formSerial && !isObservable(formSerial))
-          formSerial = observable(formSerial);
-        if (formSerial != null && formSerial.type !== "FormSerial") {
+          formSerial = observable2(formSerial);
+        if (formSerial != null && Object.keys(formSerial).length === 0) {
+          formSerial = null;
+        }
+        if (formSerial != null && //
+        formSerial.type !== "FormSerial" && "values_" in formSerial) {
+          console.log(`[\u{1F534}\u{1F534}\u{1F534}\u{1F534}\u{1F534}\u{1F534}\u{1F534}] `, toJS(formSerial));
           const oldSerial = formSerial;
           const oldsharedSerial = {};
           for (const [k, v] of Object.entries(oldSerial.values_)) {
@@ -250,7 +1065,7 @@ var Form = class {
       }
     };
     this.builder = manager.getBuilder(this);
-    makeAutoObservable(this, {
+    makeAutoObservable2(this, {
       //
       // builder: false,
       root: false,
@@ -350,7 +1165,7 @@ var FormManager = class {
     };
     /** simple way to defined forms and in react components */
     this.use = (ui, formProperties = { name: "unnamed" }, deps = []) => {
-      return useMemo(() => {
+      return useMemo2(() => {
         return new Form(this, ui, formProperties);
       }, deps);
     };
@@ -358,7 +1173,7 @@ var FormManager = class {
 };
 
 // src/controls/SimpleFormBuilder.ts
-import { makeAutoObservable as makeAutoObservable21 } from "mobx";
+import { makeAutoObservable as makeAutoObservable11, reaction as reaction2 } from "mobx";
 
 // src/llm/OpenRouter_infos.ts
 var openRouterInfos = {
@@ -905,11 +1720,16 @@ var openRouterInfos = {
 };
 
 // src/controls/SimpleSpec.ts
+import { makeObservable } from "mobx";
 var SimpleSpec = class _SimpleSpec {
   constructor(type, config) {
     this.type = type;
     this.config = config;
     this.LabelExtraUI = (p) => null;
+    // PubSub -----------------------------------------------------
+    this.producers = [];
+    this.reactions = [];
+    // -----------------------------------------------------
     this.Make = (type, config) => new _SimpleSpec(type, config);
     /** wrap widget spec to list stuff */
     this.list = (config = {}) => new _SimpleSpec("list", {
@@ -926,17 +1746,158 @@ var SimpleSpec = class _SimpleSpec {
       border: this.config.border
     });
     this.shared = (key) => getCurrentForm_IMPL().shared(key, this);
-    /** clone the spec, and patch the cloned config to make it hidden */
-    this.hidden = () => new _SimpleSpec(this.type, { ...this.config, hidden: true });
+    /** clone the spec, and patch the cloned config */
+    this.withConfig = (config) => {
+      const mergedConfig = { ...this.config, ...config };
+      const cloned = new _SimpleSpec(this.type, mergedConfig);
+      cloned.producers = this.producers;
+      cloned.reactions = this.reactions;
+      return cloned;
+    };
+    this.hidden = () => this.withConfig({ hidden: true });
+    makeObservable(this, { config: true });
+  }
+  publish(chan, produce) {
+    this.producers.push({ chan, produce });
+    return this;
+  }
+  subscribe(chan, effect) {
+    return this.addReaction(
+      (self) => self.consume(chan),
+      (arg, self) => {
+        if (arg == null)
+          return;
+        effect(arg, self);
+      }
+    );
+  }
+  addReaction(expr, effect) {
+    this.reactions.push({ expr, effect });
+    return this;
   }
 };
 
 // src/controls/widgets/bool/WidgetBool.tsx
-import { computed as computed2, makeAutoObservable as makeAutoObservable4, observable as observable5, runInAction as runInAction3 } from "mobx";
-import { nanoid as nanoid4 } from "nanoid";
+import { computed as computed2, observable as observable6, runInAction as runInAction3 } from "mobx";
+import { nanoid as nanoid6 } from "nanoid";
 
-// src/controls/Mixins.tsx
-import { observer as observer15 } from "mobx-react-lite";
+// src/controls/BaseWidget.tsx
+import { observer as observer21 } from "mobx-react-lite";
+
+// src/panels/libraryUI/tree/xxx/TreeWidget.tsx
+import { makeAutoObservable as makeAutoObservable3 } from "mobx";
+var TreeWidget = class {
+  constructor(widgetWithKey) {
+    this.widgetWithKey = widgetWithKey;
+    /** packed with a bunch of sane default for now; we'll see if this is ever */
+    // get icon() {
+    //     const w = this.widget
+    //     if (w.type === 'choices') return <Ikon.mdiCheckboxMultipleMarked />
+    //     if (w.type === 'choice') return <Ikon.mdiCheckboxMarked />
+    //     if (isWidgetGroup(w)) {
+    //         if (Object.keys(w.fields).length === 0) return <Ikon.mdiCircle />
+    //         return <Ikon.mdiFolder />
+    //     }
+    //     if (w.type === 'optional') return <Ikon.mdiCheckboxBlankOutline />
+    //     if (w.type === 'list') return <Ikon.mdiFormatListBulleted />
+    //     if (w.type === 'enum') return <Ikon.mdiFormatListBulletedSquare />
+    //     if (w.type === 'markdown') return <Ikon.mdiFormatListBulletedSquare />
+    //     if (isWidgetString(w)) {
+    //         const it = w.config.inputType
+    //         if (it === 'color') return <Ikon.mdiPalette />
+    //         if (it === 'date') return <Ikon.mdiCalendar />
+    //         if (it === 'datetime-local') return <Ikon.mdiCalendarClock />
+    //         if (it === 'email') return <Ikon.mdiEmailOutline />
+    //         if (it === 'password') return <Ikon.mdiLockOutline />
+    //         if (it === 'tel') return <Ikon.mdiPhoneOutline />
+    //         if (it === 'text') return <Ikon.mdiTextBoxOutline />
+    //         if (it === 'time') return <Ikon.mdiClockOutline />
+    //         if (it === 'url') return <Ikon.mdiWeb />
+    //         return <Ikon.mdiTextBoxOutline />
+    //     }
+    //     if (w.type === 'number') return <Ikon.mdiNumeric />
+    //     if (w.type === 'boolean') return <Ikon.mdiCheckboxBlankOutline />
+    //     //
+    //     return <Ikon.mdiBatteryUnknown tw='text-red-400' />
+    //     // return <span className='material-symbols-outlined'>Draft</span>
+    // }
+    this.onPrimaryAction = (n) => {
+    };
+    this.children = () => {
+      return this.widget.subWidgetsWithKeys.map((w) => w.widget.asTreeElement(w.key));
+    };
+    // extra = () => (
+    //     <>
+    //         {this.app?.isLoadedInMemory ? <span className='material-symbols-outlined text-green-500'>memory</span> : null}
+    //         <TreeApp_BtnFavUI entry={this} />
+    //     </>
+    // )
+    this.actions = [
+      // {
+      //     name: 'add Draft',
+      //     icon: 'add',
+      //     mode: 'small',
+      //     onClick: (node) => {
+      //         if (this.app == null) return
+      //         this.app.createDraft()
+      //         node.open()
+      //     },
+      // },
+    ];
+    makeAutoObservable3(this);
+  }
+  get widget() {
+    return this.widgetWithKey.widget;
+  }
+  /** config label, or parent key */
+  get label() {
+    if (this.widget.config.label)
+      return this.widget.config.label;
+    return this.widgetWithKey.key;
+  }
+  get name() {
+    return `${this.label} = ${this.widget.summary}`;
+  }
+  get isFolder() {
+    return this.widget.subWidgets.length > 0;
+  }
+};
+
+// src/utils/mobx-store-inheritance.ts
+import { $mobx, isObservable as isObservable2, makeObservable as makeObservable2 } from "mobx";
+var annotationsSymbol = Symbol();
+var objectPrototype = Object.prototype;
+var makeAutoObservableInheritance = (target, overrides, options) => {
+  if (isObservable2(target)) {
+    throw new Error("Target must not be observable");
+  }
+  let annotations = target[annotationsSymbol];
+  if (!annotations) {
+    annotations = {};
+    let current = target;
+    while (current && current !== objectPrototype) {
+      Reflect.ownKeys(current).forEach((key) => {
+        if (key === $mobx || key === "constructor")
+          return;
+        annotations[key] = !overrides ? true : key in overrides ? overrides[key] : true;
+      });
+      current = Object.getPrototypeOf(current);
+    }
+    const proto = Object.getPrototypeOf(target);
+    if (proto && proto !== objectPrototype) {
+      Object.defineProperty(proto, annotationsSymbol, { value: annotations });
+    }
+  } else {
+    const tmp = {};
+    for (const key in target) {
+      if (annotations[key]) {
+        tmp[key] = annotations[key];
+      }
+    }
+    annotations = tmp;
+  }
+  return makeObservable2(target, annotations, options);
+};
 
 // src/controls/IWidget.ts
 var isWidget = (x) => {
@@ -946,497 +1907,8 @@ var isWidget = (x) => {
 var $WidgetSym = Symbol("Widget");
 
 // src/controls/shared/WidgetWithLabelUI.tsx
-import { observer as observer14 } from "mobx-react-lite";
+import { observer as observer20 } from "mobx-react-lite";
 import { ErrorBoundary } from "react-error-boundary";
-
-// src/rsuite/reveal/RevealUI.tsx
-import { observer as observer5 } from "mobx-react-lite";
-import { useEffect, useMemo as useMemo2, useRef } from "react";
-import { createPortal } from "react-dom";
-
-// src/rsuite/reveal/ModalShell.tsx
-import { observer as observer4 } from "mobx-react-lite";
-var ModalShellUI = observer4(function ModalShellUI_(p) {
-  return /* @__PURE__ */ jsxs(
-    "div",
-    {
-      onClick: (ev) => {
-        ev.stopPropagation();
-      },
-      tw: ["animate-in fade-in", "virtualBorder p-4 rounded-xl bg-base-100 shadow-xl"],
-      children: [
-        /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
-          /* @__PURE__ */ jsx("div", { tw: "text-xl", children: p.title }),
-          /* @__PURE__ */ jsx("div", { tw: "flex-1" }),
-          /* @__PURE__ */ jsx(
-            "div",
-            {
-              tw: "btn btn-sm btn-square",
-              onClick: (ev) => {
-                ev.stopPropagation();
-                ev.preventDefault();
-                p.close();
-              },
-              children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "close" })
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsx("div", { className: "divider my-0" }),
-        /* @__PURE__ */ jsx("div", { tw: "_ModalBody", children: p.children }),
-        /* @__PURE__ */ jsx("div", { tw: "_ModalFooter", children: p.footer })
-      ]
-    }
-  );
-});
-
-// src/rsuite/reveal/RevealCtx.ts
-import { createContext, useContext } from "react";
-var RevealCtx = createContext(null);
-var useRevealOrNull = () => {
-  const val = useContext(RevealCtx);
-  return val;
-};
-
-// src/rsuite/reveal/RevealStack.ts
-var global_RevealStack = [];
-
-// src/rsuite/reveal/RevealState.tsx
-import { makeAutoObservable as makeAutoObservable2, observable as observable2 } from "mobx";
-
-// src/rsuite/reveal/RevealPlacement.tsx
-var computePlacement = (placement, rect) => {
-  if (placement === "popup-xs")
-    return { top: 0, left: 0 };
-  if (placement === "popup-sm")
-    return { top: 0, left: 0 };
-  if (placement === "popup-lg")
-    return { top: 0, left: 0 };
-  if (placement === "autoHorizontalStart") {
-    placement = rect.left + rect.width / 2 < window.innerWidth / 2 ? "rightStart" : "leftStart";
-  }
-  if (placement === "autoHorizontalEnd") {
-    placement = rect.left + rect.width / 2 < window.innerWidth / 2 ? "rightEnd" : "leftEnd";
-  }
-  if (placement === "autoVerticalStart") {
-    placement = rect.top + rect.height / 2 < window.innerHeight / 2 ? "bottomStart" : "topStart";
-  }
-  if (placement === "autoVerticalEnd") {
-    placement = rect.top + rect.height / 2 < window.innerHeight / 2 ? "bottomEnd" : "topEnd";
-  }
-  if (placement === "auto") {
-    placement = (() => {
-      const top = rect.top;
-      const bottom = window.innerHeight - rect.bottom;
-      const left = rect.left;
-      const right = window.innerWidth - rect.right;
-      const minX = Math.min(left, right);
-      const minY = Math.min(top, bottom);
-      return minY == top ? minX == left ? "bottomStart" : "bottomEnd" : minX == left ? "topStart" : "topEnd";
-    })();
-  }
-  if (placement == "bottomStart")
-    return { top: rect.bottom, left: rect.left };
-  if (placement == "bottom")
-    return { top: rect.bottom, left: rect.left + rect.width / 2, transform: "translate(-50%)" };
-  if (placement == "bottomEnd")
-    return { top: rect.bottom, left: rect.right, transform: "translate(-100%)" };
-  if (placement == "topStart")
-    return { top: rect.top, left: rect.left, transform: "translateY(-100%)" };
-  if (placement == "top")
-    return { top: rect.top, left: rect.left + rect.width / 2, transform: "translate(-50%, -100%)" };
-  if (placement == "topEnd")
-    return { top: rect.top, left: rect.right, transform: "translate(-100%, -100%)" };
-  if (placement == "leftStart")
-    return { top: rect.top, left: rect.left, transform: "translateX(-100%)" };
-  if (placement == "left")
-    return { top: rect.top + rect.height / 2, left: rect.left, transform: "translate(-100%, -50%)" };
-  if (placement == "leftEnd")
-    return { top: rect.bottom, left: rect.left, transform: "translate(-100%, -100%)" };
-  if (placement == "rightStart")
-    return { top: rect.top, left: rect.right };
-  if (placement == "right")
-    return { top: rect.top + rect.height / 2, left: rect.right, transform: "translateY(-50%)" };
-  if (placement == "rightEnd")
-    return { top: rect.bottom, left: rect.right, transform: "translateY(-100%)" };
-  return { top: rect.bottom, left: rect.left };
-};
-
-// src/rsuite/reveal/RevealState.tsx
-var defaultShowDelay_whenRoot = 100;
-var defaultHideDelay_whenRoot = 300;
-var defaultShowDelay_whenNested = 0;
-var defaultHideDelay_whenNested = 0;
-var DEBUG_REVEAL = false;
-var RevealStateLazy = class {
-  constructor(p, parents) {
-    this.p = p;
-    this.parents = parents;
-    this.uistOrNull = null;
-    this.getUist = () => {
-      if (this.uistOrNull)
-        return this.uistOrNull;
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F499}] init RevealUI`);
-      this.uistOrNull = new RevealState({ ...this.p }, this.parents);
-      return this.uistOrNull;
-    };
-    makeAutoObservable2(this, { p: false });
-  }
-};
-var RevealState = class _RevealState {
-  constructor(p, parents) {
-    this.p = p;
-    this.parents = parents;
-    this.uid = _RevealState.nextUID++;
-    // ------------------------------------------------
-    this.inAnchor = false;
-    this.inTooltip = false;
-    this.inChildren = /* @__PURE__ */ new Set();
-    // prettier-ignore
-    // position --------------------------------------------
-    this.tooltipPosition = { top: 0, left: 0 };
-    this.setPosition = (rect) => {
-      this.tooltipPosition = computePlacement(this.placement, rect);
-    };
-    // lock --------------------------------------------
-    this._lock = false;
-    this.toggleLock = () => {
-      this._lock = !this._lock;
-    };
-    // anchor --------------------------------------------
-    this.enterAnchorTimeoutId = null;
-    this.leaveAnchorTimeoutId = null;
-    this.onMouseEnterAnchor = () => {
-      if (!this.triggerOnHover && !this.visible)
-        return;
-      if (_RevealState.shared.current)
-        return this.enterAnchor();
-      this._resetAllAnchorTimouts();
-      this.enterAnchorTimeoutId = setTimeout(this.enterAnchor, this.showDelay);
-    };
-    this.onMouseLeaveAnchor = () => {
-      if (this.placement.startsWith("popup"))
-        return;
-      this._resetAllAnchorTimouts();
-      this.leaveAnchorTimeoutId = setTimeout(this.leaveAnchor, this.hideDelay);
-    };
-    // ---
-    this.enterAnchor = () => {
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] ENTERING anchor ${this.ix}`);
-      if (_RevealState.shared.current != this && !this.parents.includes(_RevealState.shared.current))
-        _RevealState.shared.current?.close();
-      _RevealState.shared.current = this;
-      this._resetAllAnchorTimouts();
-      this.inAnchor = true;
-    };
-    this.leaveAnchor = () => {
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] LEAVING anchor  ${this.ix}`);
-      if (_RevealState.shared.current == this)
-        _RevealState.shared.current = null;
-      this._resetAllAnchorTimouts();
-      this.inAnchor = false;
-    };
-    // ---
-    this._resetAllAnchorTimouts = () => {
-      this._resetAnchorEnterTimeout();
-      this._resetAnchorLeaveTimeout();
-    };
-    this._resetAnchorEnterTimeout = () => {
-      if (this.enterAnchorTimeoutId) {
-        clearTimeout(this.enterAnchorTimeoutId);
-        this.enterAnchorTimeoutId = null;
-      }
-    };
-    this._resetAnchorLeaveTimeout = () => {
-      if (this.leaveAnchorTimeoutId) {
-        clearTimeout(this.leaveAnchorTimeoutId);
-        this.leaveAnchorTimeoutId = null;
-      }
-    };
-    // tooltip --------------------------------------------
-    this.enterTooltipTimeoutId = null;
-    this.leaveTooltipTimeoutId = null;
-    this.onMouseEnterTooltip = () => {
-      this._resetAllTooltipTimouts();
-      this.enterTooltipTimeoutId = setTimeout(this.enterTooltip, this.showDelay);
-    };
-    this.onMouseLeaveTooltip = () => {
-      if (this.placement.startsWith("popup"))
-        return;
-      this._resetAllTooltipTimouts();
-      this.leaveTooltipTimeoutId = setTimeout(this.leaveTooltip, this.hideDelay);
-    };
-    // ---
-    this.enterTooltip = () => {
-      this._resetAllTooltipTimouts();
-      for (const [ix, p] of this.parents.entries())
-        p.enterChildren(ix);
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] enter tooltip of ${this.ix}`);
-      this.inTooltip = true;
-    };
-    this.leaveTooltip = () => {
-      this._resetAllTooltipTimouts();
-      for (const [ix, p] of this.parents.entries())
-        p.leaveChildren(ix);
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] leaving tooltip of ${this.ix}`);
-      this.inTooltip = false;
-    };
-    // ---
-    this._resetAllTooltipTimouts = () => {
-      this._resetTooltipEnterTimeout();
-      this._resetTooltipLeaveTimeout();
-    };
-    this._resetTooltipEnterTimeout = () => {
-      if (this.enterTooltipTimeoutId) {
-        clearTimeout(this.enterTooltipTimeoutId);
-        this.enterTooltipTimeoutId = null;
-      }
-    };
-    this._resetTooltipLeaveTimeout = () => {
-      if (this.leaveTooltipTimeoutId) {
-        clearTimeout(this.leaveTooltipTimeoutId);
-        this.leaveTooltipTimeoutId = null;
-      }
-    };
-    // --------------------
-    this.enterChildren = (depth) => {
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] entering children (of ${this.ix}) ${depth}`);
-      this.inChildren.add(depth);
-    };
-    this.leaveChildren = (depth) => {
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] leaving children (of ${this.ix}) ${depth}`);
-      this.inChildren.delete(depth);
-    };
-    this.contentFn = p.content;
-    makeAutoObservable2(this, { uid: false, p: false });
-  }
-  static {
-    this.nextUID = 1;
-  }
-  static {
-    this.shared = observable2({ current: null }, { current: observable2.ref });
-  }
-  /** how deep in the reveal stack we are */
-  get ix() {
-    return this.parents.length;
-  }
-  // prettier-ignore
-  get debugColor() {
-    return {
-      borderLeft: this.inAnchor ? `3px solid red` : void 0,
-      borderTop: this.inTooltip ? `3px solid cyan` : void 0,
-      borderBottom: this.inChildren.size > 0 ? `3px solid orange` : void 0
-    };
-  }
-  /** toolip is visible if either inAnchor or inTooltip */
-  get visible() {
-    if (this._lock)
-      return true;
-    return this.inAnchor || this.inTooltip || this.inChildren.size > 0;
-  }
-  close() {
-    this._resetAllAnchorTimouts();
-    this._resetAllTooltipTimouts();
-    this.inAnchor = false;
-    this.inTooltip = false;
-    this.inChildren.clear();
-  }
-  get triggerOnClick() {
-    return this.p.trigger == null || this.p.trigger == "click" || //
-    this.p.trigger == "clickAndHover";
-  }
-  get triggerOnHover() {
-    return this.p.trigger == "hover" || //
-    this.p.trigger == "clickAndHover";
-  }
-  get showDelay() {
-    return this.p.showDelay ?? (this.ix ? defaultShowDelay_whenNested : defaultShowDelay_whenRoot);
-  }
-  get hideDelay() {
-    return this.p.hideDelay ?? (this.ix ? defaultHideDelay_whenNested : defaultHideDelay_whenRoot);
-  }
-  get placement() {
-    return this.p.placement ?? "auto";
-  }
-  // UI --------------------------------------------
-  get defaultCursor() {
-    if (!this.triggerOnHover)
-      return "cursor-pointer";
-    return "cursor-help";
-  }
-};
-
-// src/rsuite/reveal/RevealUI.tsx
-var RevealUI = observer5(function RevealUI_(p) {
-  const ref = useRef(null);
-  const parents = useRevealOrNull()?.tower ?? [];
-  const self = useMemo2(() => new RevealStateLazy(p, parents.map((p2) => p2.getUist())), []);
-  const { uistOrNull, getUist: uist2 } = self;
-  const nextTower = useMemo2(() => ({ tower: [...parents, self] }), []);
-  useEffect(() => {
-    const x = uistOrNull;
-    if (x == null)
-      return;
-    if (p.content !== x.p.content)
-      x.contentFn = p.content;
-    if (p.trigger !== x.p.trigger)
-      x.p.trigger = p.trigger;
-    if (p.placement !== x.p.placement)
-      x.p.placement = p.placement;
-    if (p.showDelay !== x.p.showDelay)
-      x.p.showDelay = p.showDelay;
-    if (p.hideDelay !== x.p.hideDelay)
-      x.p.hideDelay = p.hideDelay;
-  }, [p.content, p.trigger, p.placement, p.showDelay, p.hideDelay]);
-  useEffect(() => {
-    if (uistOrNull?.visible && ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      uistOrNull.setPosition(rect);
-    }
-  }, [uistOrNull?.visible]);
-  const content = p.children;
-  const tooltip = mkTooltip(uistOrNull);
-  const anchor = /* @__PURE__ */ jsxs(
-    "span",
-    {
-      tw: ["inline-block ui-reveal-anchor", uistOrNull?.defaultCursor ?? "cursor-pointer"],
-      className: p.className,
-      ref,
-      style: p.style,
-      onContextMenu: () => uist2().toggleLock(),
-      onMouseEnter: () => uist2().onMouseEnterAnchor(),
-      onMouseLeave: () => uist2().onMouseLeaveAnchor(),
-      onClick: (ev) => {
-        const uist = uist2();
-        const toc = uist.triggerOnClick;
-        if (!toc)
-          return;
-        ev.stopPropagation();
-        if (uist.visible)
-          uist.leaveAnchor();
-        else
-          uist.enterAnchor();
-      },
-      children: [
-        content,
-        tooltip
-      ]
-    }
-  );
-  return /* @__PURE__ */ jsx(RevealCtx.Provider, { value: nextTower, children: anchor });
-});
-var mkTooltip = (uist) => {
-  if (uist == null)
-    return null;
-  if (!uist?.visible)
-    return null;
-  const element = document.getElementById(
-    uist.p.placement?.startsWith("#") ? uist.p.placement.slice(1) : "tooltip-root"
-  );
-  const pos = uist.tooltipPosition;
-  const p = uist.p;
-  const hiddenContent = uist.contentFn();
-  const revealedContent = uist.placement.startsWith("#") ? /* @__PURE__ */ jsx(
-    "div",
-    {
-      ref: (e) => {
-        if (e == null)
-          return global_RevealStack.filter((p2) => p2 !== uist);
-        global_RevealStack.push(uist);
-      },
-      onKeyUp: (ev) => {
-        if (ev.key === "Escape") {
-          uist.close();
-          ev.stopPropagation();
-          ev.preventDefault();
-        }
-      },
-      onClick: (ev) => {
-        p.onClick?.(ev);
-        uist.close();
-        ev.stopPropagation();
-        ev.preventDefault();
-      },
-      style: { zIndex: 99999999, backgroundColor: "#0000003d" },
-      tw: "pointer-events-auto w-full h-full flex items-center justify-center z-50",
-      children: hiddenContent
-    }
-  ) : uist.placement.startsWith("popup") ? /* @__PURE__ */ jsx(
-    "div",
-    {
-      ref: (e) => {
-        if (e == null)
-          return global_RevealStack.filter((p2) => p2 !== uist);
-        global_RevealStack.push(uist);
-      },
-      onKeyUp: (ev) => {
-        if (ev.key === "Escape") {
-          uist.close();
-          ev.stopPropagation();
-          ev.preventDefault();
-        }
-      },
-      onClick: (ev) => {
-        p.onClick?.(ev);
-        uist.close();
-        ev.stopPropagation();
-      },
-      style: { zIndex: 99999999, backgroundColor: "#0000003d" },
-      tw: "pointer-events-auto absolute w-full h-full flex items-center justify-center z-50",
-      children: /* @__PURE__ */ jsx(
-        ModalShellUI,
-        {
-          close: () => {
-            uist.close();
-          },
-          title: p.title,
-          children: hiddenContent
-        }
-      )
-    }
-  ) : /* @__PURE__ */ jsxs(
-    "div",
-    {
-      className: p.tooltipWrapperClassName,
-      tw: ["_RevealUI card card-bordered bg-base-100 shadow-xl pointer-events-auto"],
-      onClick: (ev) => {
-        ev.stopPropagation();
-      },
-      onMouseEnter: uist.onMouseEnterTooltip,
-      onMouseLeave: uist.onMouseLeaveTooltip,
-      onContextMenu: uist.enterAnchor,
-      style: {
-        //   borderTop: uist._lock ? '1px dashed yellow' : undefined,
-        position: "absolute",
-        zIndex: 99999999,
-        top: pos.top ? `${pos.top}px` : void 0,
-        bottom: pos.bottom ? `${pos.bottom}px` : void 0,
-        left: pos.left ? `${pos.left}px` : void 0,
-        right: pos.right ? `${pos.right}px` : void 0,
-        transform: pos.transform
-        // Adjust positioning as needed
-      },
-      children: [
-        p.title ? /* @__PURE__ */ jsxs("div", { tw: "px-2", children: [
-          /* @__PURE__ */ jsx("div", { tw: "py-0.5", children: p.title }),
-          /* @__PURE__ */ jsx("div", { tw: "w-full rounded bg-neutral-content", style: { height: "1px" } })
-        ] }) : /* @__PURE__ */ jsx(Fragment, {}),
-        hiddenContent,
-        uist._lock ? /* @__PURE__ */ jsxs("span", { tw: "opacity-50 italic text-sm flex gap-1 items-center justify-center", children: [
-          /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "lock" }),
-          "locked; right-click to unlock"
-        ] }) : null
-      ]
-    }
-  );
-  return createPortal(revealedContent, element);
-};
 
 // src/utils/misc/makeLabelFromFieldName.tsx
 function makeLabelFromFieldName(s) {
@@ -1457,8 +1929,8 @@ function makeLabelFromFieldName(s) {
 
 // src/widgets/workspace/JsonViewUI.tsx
 import JsonView from "@uiw/react-json-view";
-import { observer as observer6 } from "mobx-react-lite";
-var JsonViewUI = observer6(function JsonViewUI_(p) {
+import { observer as observer8 } from "mobx-react-lite";
+var JsonViewUI = observer8(function JsonViewUI_(p) {
   JSON.stringify(p.value);
   return /* @__PURE__ */ jsx(
     JsonView,
@@ -1513,7 +1985,7 @@ var ErrorBoundaryFallback = (p) => {
 };
 
 // src/controls/utils/AnimatedSizeUI.tsx
-import { observer as observer7 } from "mobx-react-lite";
+import { observer as observer9 } from "mobx-react-lite";
 
 // src/controls/utils/useSizeOf.tsx
 import { runInAction } from "mobx";
@@ -1555,7 +2027,7 @@ var useSizeOf = () => {
 };
 
 // src/controls/utils/AnimatedSizeUI.tsx
-var AnimatedSizeUI = observer7(function AnimatedSizeUI_(p) {
+var AnimatedSizeUI = observer9(function AnimatedSizeUI_(p) {
   const { ref: refFn, size } = useSizeOf();
   return /* @__PURE__ */ jsx("div", { className: p.className, tw: "animated overflow-hidden", style: { height: `${size.height}px` }, children: /* @__PURE__ */ jsx("div", { ref: refFn, children: p.children }) });
 });
@@ -1607,13 +2079,13 @@ var getIfWidgetNeedAlignedLabel = (widget) => {
 };
 
 // src/controls/shared/Widget_ToggleUI.tsx
-import { observer as observer9 } from "mobx-react-lite";
+import { observer as observer11 } from "mobx-react-lite";
 
 // src/controls/widgets/bool/InputBoolUI.tsx
-import { observer as observer8 } from "mobx-react-lite";
+import { observer as observer10 } from "mobx-react-lite";
 var isDragging = false;
 var wasEnabled = false;
-var InputBoolUI = observer8(function InputBoolUI_(p) {
+var InputBoolUI = observer10(function InputBoolUI_(p) {
   const isActive = p.active ?? false;
   const display = p.display ?? "check";
   const expand = p.expand;
@@ -1626,8 +2098,9 @@ var InputBoolUI = observer8(function InputBoolUI_(p) {
     }
   };
   return /* @__PURE__ */ jsx(
-    "div",
+    Box,
     {
+      base: { contrast: 0.1 },
       className: p.className,
       style: p.style,
       tw: [
@@ -1683,14 +2156,15 @@ var InputBoolUI = observer8(function InputBoolUI_(p) {
         icon && /* @__PURE__ */ jsx("span", { tw: "pl-1.5", className: "material-symbols-outlined", children: icon }),
         label && /* @__PURE__ */ jsx("div", { tw: ["line-clamp-1", icon ? "pl-1" : "pl-1.5"], children: label })
       ] }) : /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs(
-        "div",
+        Box,
         {
+          base: { contrast: isActive ? 0.5 : 0 },
           tw: [
             //
             "flex items-center h-full p-1 px-2 rounded",
             "bg-base-200 border border-base-100 text-shadow",
             "border-b-2 border-b-base-300",
-            isActive && "bg-primary text-primary-content text-shadow-inv",
+            isActive && "text-shadow-inv",
             icon && "pl-1.5",
             expand && "w-full justify-center",
             "grid gap-0"
@@ -1707,7 +2181,7 @@ var InputBoolUI = observer8(function InputBoolUI_(p) {
 });
 
 // src/controls/shared/Widget_ToggleUI.tsx
-var Widget_ToggleUI = observer9(function Widget_ToggleUI_(p) {
+var Widget_ToggleUI = observer11(function Widget_ToggleUI_(p) {
   if (!isWidgetOptional(p.widget))
     return null;
   const widget = p.widget;
@@ -1726,39 +2200,74 @@ import { nanoid as nanoid3 } from "nanoid";
 import { createElement as createElement3, useMemo as useMemo3 } from "react";
 
 // src/operators/Activity.ts
-import { makeAutoObservable as makeAutoObservable3 } from "mobx";
+import { makeAutoObservable as makeAutoObservable4 } from "mobx";
 var ActivityManager = class {
   constructor() {
     /** currently active activities */
-    this.stack = [];
-    this.push = (activity) => {
-      this.stack.push(activity);
+    this._stack = [];
+    this.startActivity = (activity) => {
+      this._stack.push(activity);
       activity.onStart?.();
       return "SUCCESS" /* Success */;
     };
-    this.pop = () => {
-      const activity = this.stack.pop();
+    this.stopCurrentActivity = () => {
+      const activity = this._stack.pop();
       activity?.onStop?.();
     };
-    this.current = () => this.stack[this.stack.length - 1];
-    makeAutoObservable3(this);
+    this.current = () => this._stack[this._stack.length - 1];
+    makeAutoObservable4(this);
+  }
+  stopActivity(activity) {
+    const ix = this._stack.indexOf(activity);
+    if (ix === -1)
+      return;
+    this._stack.splice(ix, 1);
+    activity.onStop?.();
   }
 };
-var activityManger = new ActivityManager();
+var activityManager = new ActivityManager();
 
 // src/app/shortcuts/CommandManager.ts
-import { computed, makeObservable as makeObservable2, observable as observable4 } from "mobx";
+import { computed, makeObservable as makeObservable4, observable as observable4 } from "mobx";
 
 // src/utils/misc/ManualPromise.ts
-import { action as action2, makeObservable, observable as observable3, runInAction as runInAction2 } from "mobx";
+import { action as action2, makeObservable as makeObservable3, observable as observable3, runInAction as runInAction2 } from "mobx";
 var isPromise = (p) => {
   return p != null && typeof p.then === "function";
 };
 
+// src/app/shortcuts/_OS.ts
+var _os;
+function getOS() {
+  if (_os)
+    return _os;
+  _os = getOS_();
+  return _os;
+}
+function getOS_() {
+  try {
+    const userAgent = window.navigator.userAgent;
+    const platform2 = window.navigator.platform;
+    if (["Macintosh", "MacIntel", "MacPPC", "Mac68K"].indexOf(platform2) !== -1)
+      return "Mac";
+    else if (["iPhone", "iPad", "iPod"].indexOf(platform2) !== -1)
+      return "iOS";
+    else if (["Win32", "Win64", "Windows", "WinCE"].indexOf(platform2) !== -1)
+      return "Windows";
+    else if (/Android/.test(userAgent))
+      return "Android";
+    else if (/Linux/.test(platform2))
+      return "Linux";
+    return "unknown";
+  } catch (e) {
+    return "unknown";
+  }
+}
+
 // src/app/shortcuts/META_NAME.ts
-var platform = process.platform;
-var MOD_KEY = platform === "darwin" ? "cmd" : "ctrl";
-var META_NAME = platform === "darwin" ? "cmd" : "win";
+var platform = getOS();
+var MOD_KEY = platform === "Mac" ? "cmd" : "ctrl";
+var META_NAME = platform === "Mac" ? "cmd" : "win";
 
 // src/app/shortcuts/CommandManager.ts
 var CommandManager = class {
@@ -1858,7 +2367,7 @@ var CommandManager = class {
       exhaust(res);
       throw new Error(`INVALID CASE`);
     };
-    makeObservable2(this, {
+    makeObservable4(this, {
       inputHistory: true,
       contextByName: observable4.shallow,
       commandByShortcut: observable4.shallow,
@@ -1932,28 +2441,28 @@ var Command = class {
   constructor(conf) {
     this.conf = conf;
     this.$SYM = CommandSym;
+    /**
+     * method to programmatically call a command,
+     * using when to both extract context and check if command can run
+     * */
+    this.execute = () => {
+      console.warn(`[CMD] \u2623\uFE0F TRYING TO RUN... ${this.label}`);
+      const context = this.conf.ctx.check();
+      if (context === "UNMATCHED" /* UNMATCHED */) {
+        console.warn(`[CMD] \u{1F534} FAILED TO RUN`);
+        return "UNMATCHED" /* UNMATCHED */;
+      }
+      const res = this.conf.action?.(context);
+      return res;
+    };
+    this.NavBarBtnUI = (p) => {
+      return /* @__PURE__ */ jsx("div", { onClick: () => this.execute(), children: p.label ?? this.label });
+    };
     Object.assign(this, conf);
   }
   /** bind a command to a static context, bypassing its context provider */
   bind(ctx) {
     return new BoundCommand(this, ctx);
-  }
-  /**
-   * method to programmatically call a command,
-   * using when to both extract context and check if command can run
-   * */
-  execute() {
-    console.warn(`[CMD] \u2623\uFE0F TRYING TO RUN... ${this.label}`);
-    const context = this.conf.ctx.check();
-    if (context === "UNMATCHED" /* UNMATCHED */) {
-      console.warn(`[CMD] \u{1F534} FAILED TO RUN`);
-      return "UNMATCHED" /* UNMATCHED */;
-    }
-    const res = this.conf.action?.(context);
-    return res;
-  }
-  NavBarBtnUI(p) {
-    return /* @__PURE__ */ jsx("div", { onClick: () => this.execute(), children: p.label ?? this.label });
   }
 };
 var BoundCommand = class {
@@ -1979,26 +2488,25 @@ var BoundMenuSym = Symbol("BoundMenu");
 var isBoundMenu = (x) => x != null && //
 typeof x === "object" && "$SYM" in x && x.$SYM === BoundMenuSym;
 
-// src/operators/menuSystem/SimpleMenuEntry.ts
-var SimpleMenuEntry = class {
-  constructor(label, onPick) {
-    this.label = label;
-    this.onPick = onPick;
+// src/operators/menuSystem/SimpleMenuAction.ts
+var SimpleMenuAction = class {
+  constructor(opts) {
+    this.opts = opts;
   }
 };
 
 // src/operators/MenuUI.tsx
-import { observer as observer12 } from "mobx-react-lite";
+import { observer as observer14 } from "mobx-react-lite";
 import { createElement as createElement2 } from "react";
 import { Fragment as Fragment3 } from "react/jsx-runtime";
 
 // src/rsuite/Dropdown.tsx
-import { observer as observer11 } from "mobx-react-lite";
+import { observer as observer13 } from "mobx-react-lite";
 
 // src/app/shortcuts/ComboUI.tsx
-import { observer as observer10 } from "mobx-react-lite";
+import { observer as observer12 } from "mobx-react-lite";
 import { Fragment as Fragment2 } from "react";
-var ComboUI = observer10(function ComboUI_(p) {
+var ComboUI = observer12(function ComboUI_(p) {
   if (p.combo == null)
     return null;
   const iss = parseShortcutToInputSequence(p.combo);
@@ -2045,50 +2553,60 @@ var formatKeyName = (keyName) => {
 };
 
 // src/rsuite/Dropdown.tsx
-var MenuItem = observer11(function DropdownItem_(p) {
+var MenuItem = observer13(function DropdownItem_(p) {
   const { size, label, disabled, icon, children, active, onClick, ...rest } = p;
-  return /* @__PURE__ */ jsx(
-    "li",
+  return /* @__PURE__ */ jsxs(
+    Box,
     {
+      text: { contrast: disabled ? 0.5 : 1 },
+      base: {
+        contrast: active ? 0.9 : 0.05,
+        chroma: active ? 0.5 : void 0
+      },
+      hover: true,
       onClick: (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
         p.onClick?.(ev);
       },
-      tw: [
-        //
-        "_MenuItem",
-        active && "bg-primary text-primary-content",
-        disabled && "text-neutral-content"
-      ],
+      style: { lineHeight: "1.6rem" },
+      tw: ["_MenuItem", "px-1 flex items-center gap-2 whitespace-nowrap cursor-pointer"],
       ...rest,
-      children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 whitespace-nowrap", children: [
-        icon ?? null,
+      children: [
+        icon,
         label,
         children,
         p.shortcut ? /* @__PURE__ */ jsx("div", { tw: "ml-auto pl-2 text-xs italic", children: p.shortcut && /* @__PURE__ */ jsx(ComboUI, { combo: p.shortcut }) }) : null
-      ] })
+      ]
     }
   );
 });
 
+// src/operators/menuSystem/SimpleMenuModal.ts
+var SimpleMenuModal = class {
+  constructor(p) {
+    this.p = p;
+  }
+};
+
 // src/operators/MenuUI.tsx
-var MenuRootUI = observer12(function MenuRootUI_(p) {
+var MenuRootUI = observer14(function MenuRootUI_(p) {
   return /* @__PURE__ */ jsx(RevealUI, { className: "dropdown", placement: "bottomStart", content: () => /* @__PURE__ */ jsx(p.menu.UI, {}), children: /* @__PURE__ */ jsx("label", { tabIndex: 0, tw: [`flex-nowrap btn btn-ghost btn-sm py-0 px-1.5`], children: p.menu.menu.title }) });
 });
-var MenuUI = observer12(function MenuUI_(p) {
+var MenuUI = observer14(function MenuUI_(p) {
   return /* @__PURE__ */ jsx(
     "div",
     {
+      className: "_MenuUI",
       tabIndex: -1,
       autoFocus: true,
-      tw: "w-fit active:bg-red-300 hover:bg-blue-300",
+      tw: "w-fit",
       onKeyDown: (ev) => {
         const key = ev.key;
         for (const entry of p.menu.entriesWithKb) {
           if (entry.char === key) {
-            if (entry.entry instanceof SimpleMenuEntry)
-              entry.entry.onPick();
+            if (entry.entry instanceof SimpleMenuAction)
+              entry.entry.opts.onPick();
             else if (isBoundCommand(entry.entry))
               entry.entry.execute();
             else if (isCommand(entry.entry))
@@ -2100,17 +2618,45 @@ var MenuUI = observer12(function MenuUI_(p) {
           }
         }
       },
-      children: /* @__PURE__ */ jsx("ul", { tw: "dropdown menu bg-neutral", children: p.menu.entriesWithKb.map(({ entry, char, charIx }, ix) => {
-        if (entry instanceof SimpleMenuEntry) {
+      children: p.menu.entriesWithKb.map(({ entry, char, charIx }, ix) => {
+        if (entry instanceof SimpleMenuAction) {
           return /* @__PURE__ */ jsx(
             MenuItem,
             {
-              tw: "min-w-60",
+              tw: "_SimpleMenuAction min-w-60",
               shortcut: char,
-              label: entry.label,
+              label: entry.opts.label,
+              icon: entry.opts.icon ? /* @__PURE__ */ jsx(IkonOf, { name: entry.opts.icon }) : void 0,
               onClick: () => {
-                entry.onPick();
+                entry.opts.onPick();
                 p.menu.onStop();
+              }
+            },
+            ix
+          );
+        }
+        if (entry instanceof SimpleMenuModal) {
+          return /* @__PURE__ */ jsx(
+            MenuItem,
+            {
+              tw: "_SimpleMenuModal min-w-60",
+              shortcut: char,
+              label: entry.p.label,
+              onClick: (event) => {
+                activityManager.startActivity({
+                  event,
+                  uid: "createPreset",
+                  placement: "auto",
+                  shell: "popup-lg",
+                  UI: (p2) => /* @__PURE__ */ jsx(
+                    entry.p.UI,
+                    {
+                      close: () => p2.stop(),
+                      submit: entry.p.submit,
+                      submitLabel: entry.p.submitLabel
+                    }
+                  )
+                });
               }
             },
             ix
@@ -2166,7 +2712,7 @@ var MenuUI = observer12(function MenuUI_(p) {
         } else {
           return /* @__PURE__ */ jsx(Fragment3, { children: createElement2(entry) }, ix);
         }
-      }) })
+      })
     }
   );
 });
@@ -2198,7 +2744,7 @@ var Menu = class {
   /** push the menu to current activity */
   open(props) {
     const instance = new MenuInstance(this, props);
-    return activityManger.push(instance);
+    return activityManager.startActivity(instance);
   }
 };
 var MenuInstance = class {
@@ -2243,8 +2789,8 @@ var MenuInstance = class {
     const allocatedKeys = /* @__PURE__ */ new Set([...this.keysTaken]);
     const out = [];
     for (const entry of this.entries) {
-      if (entry instanceof SimpleMenuEntry) {
-        const res = this.findSuitableKeys(entry.label, allocatedKeys);
+      if (entry instanceof SimpleMenuAction) {
+        const res = this.findSuitableKeys(entry.opts.label, allocatedKeys);
         if (res == null)
           continue;
         out.push({ entry, char: res.char, charIx: res.pos });
@@ -2280,30 +2826,669 @@ var BoundMenu = class {
   }
 };
 
+// src/panels/libraryUI/tree/xxx/Tree.ts
+import { makeAutoObservable as makeAutoObservable6, observable as observable5 } from "mobx";
+import { nanoid as nanoid4 } from "nanoid";
+
+// src/db/SQLITE_boolean.ts
+var SQLITE_true = 1;
+var SQLITE_false = 0;
+
+// src/panels/libraryUI/tree/xxx/TreeNode.ts
+import { makeAutoObservable as makeAutoObservable5 } from "mobx";
+
+// src/panels/libraryUI/tree/xxx/utils.ts
+import { customAlphabet } from "nanoid";
+var genUID = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 5);
+var FAIL = (msg, data) => {
+  throw new Error(`\u{1F534} ${msg}`, data);
+};
+
+// src/panels/libraryUI/tree/xxx/TreeNode.ts
+var TreeNode = class _TreeNode {
+  constructor(tree, elem, parent) {
+    this.tree = tree;
+    this.elem = elem;
+    this.parent = parent;
+    this.onPrimaryAction = () => this.data.onPrimaryAction?.(this);
+    this.onFocusItem = () => this.data.onFocusItem?.(this);
+    this._children_ = {};
+    /** remove node from module */
+    this.delete = () => {
+      return this.data.delete?.(this) ?? false;
+    };
+    const key = elem.key;
+    this.id = (parent?.id ?? "") + "/" + key;
+    this.entryL = tree.config.getNodeState(this);
+    const ctor = elem.ctor;
+    const isRealClass = Boolean(Object.getOwnPropertyDescriptors(ctor).prototype);
+    this.data = isRealClass ? (
+      // @ts-ignore
+      new ctor(elem.props)
+    ) : (
+      // @ts-ignore
+      ctor(elem.props)
+    );
+    makeAutoObservable5(this, { _children_: false });
+  }
+  scrollIntoView(p) {
+    document.getElementById(this.id)?.scrollIntoView({
+      behavior: p?.behavior ?? "instant",
+      block: p?.block ?? "nearest"
+    });
+  }
+  get isOpen() {
+    return this.entryL.data.isExpanded ?? false;
+  }
+  open() {
+    this.data.onExpand?.(this);
+    this.entryL.update({ isExpanded: SQLITE_true });
+  }
+  close() {
+    this.entryL.update({ isExpanded: SQLITE_false });
+  }
+  toggle() {
+    if (this.isOpen)
+      this.close();
+    else
+      this.open();
+  }
+  get valid() {
+    return true;
+  }
+  // intermediary representation
+  get childElements() {
+    return this.data.children?.() ?? [];
+  }
+  get childKeys() {
+    return this.childElements.map((i) => i.key);
+  }
+  get children() {
+    const childElements = this.childElements;
+    const out = [];
+    for (const childElem of childElements) {
+      const childKey = childElem.key;
+      const child = this._children_[childKey];
+      if (child) {
+        out.push(child);
+      } else {
+        const node = new _TreeNode(this.tree, childElem, this);
+        this._children_[childKey] = node;
+        out.push(node);
+      }
+    }
+    return out;
+  }
+  get depth() {
+    if (this.parent == null)
+      return 0;
+    return 1 + this.parent.depth;
+  }
+  get siblingsIncludingSelf() {
+    if (this.parent == null)
+      return this.tree.topLevelNodes;
+    return this.parent.children;
+  }
+  get siblingsExcludingSelf() {
+    return this.siblingsIncludingSelf.filter((i) => i !== this);
+  }
+  get nextSibling() {
+    let siblings = this.siblingsIncludingSelf;
+    if (siblings.length === 0)
+      FAIL("IMPOSSIBLE 1");
+    if (siblings[siblings.length - 1] === this)
+      return;
+    for (let i = 0; i < siblings.length - 1; i++) {
+      if (siblings[i] === this)
+        return siblings[i + 1];
+    }
+    return;
+  }
+  get prevSibling() {
+    let siblings = this.siblingsIncludingSelf;
+    let SELF = this;
+    if (siblings.length === 0)
+      FAIL("IMPOSSIBLE 2");
+    if (siblings[0] === SELF)
+      return;
+    for (let i = siblings.length - 1; i > 0; i--) {
+      if (siblings[i] === SELF)
+        return siblings[i - 1];
+    }
+    return;
+  }
+  /** return the first child of a given node
+   * or undefined if node has no child */
+  get firstChild() {
+    const children = this.children;
+    if (children.length === 0)
+      return;
+    return children[0];
+  }
+  get_descendant_and_self(mode) {
+    const stack = [this];
+    let ix = 0;
+    let at;
+    while (at = stack[ix++]) {
+      if (mode === "bfs")
+        stack.push(...at.children);
+      else
+        stack.splice(ix, 0, ...at.children);
+    }
+    return stack;
+  }
+  get lastChild() {
+    if (this.children.length === 0)
+      return;
+    return this.children[this.children.length - 1];
+  }
+  /** return the last descendant
+   * [a[b,c],x[y,z]] => z */
+  get lastDescendant() {
+    let at = this;
+    let out;
+    while (at = at.lastChild)
+      out = at;
+    return out;
+  }
+  get isRoot() {
+    return this.parent == null;
+  }
+  get root() {
+    let at = this;
+    while (at.parent) {
+      at = at.parent;
+    }
+    return at;
+  }
+  get rootOrSelf() {
+    return this.root ?? this;
+  }
+  get path_v1() {
+    return this.parent ? [this.elem.key, this.parent.path_v1] : [this.elem.key];
+  }
+  get path_v2() {
+    return this.parent ? [...this.parent.path_v2, this.elem.key] : [this.elem.key];
+  }
+  get lastOpenedDescendant() {
+    let at = this;
+    let out;
+    if (!at.isOpen)
+      return;
+    while (at = at.lastChild) {
+      out = at;
+      if (!at.isOpen)
+        break;
+    }
+    return out;
+  }
+  get_descendant(mode) {
+    return this.get_descendant_and_self(mode).slice(1);
+  }
+  get descendantBFS() {
+    return this.get_descendant("bfs");
+  }
+  get descendantDFS() {
+    return this.get_descendant("dfs");
+  }
+  get nodeAboveInView() {
+    return this.prevSibling?.lastOpenedDescendant ?? this.prevSibling ?? this.parent;
+  }
+  get nodeBelowInView() {
+    if (this.isOpen && this.firstChild)
+      return this.firstChild;
+    if (this.nextSibling)
+      return this.nextSibling;
+    let at = this;
+    while (at = at.parent)
+      if (at.nextSibling)
+        return at.nextSibling;
+  }
+};
+
+// src/panels/libraryUI/tree/xxx/Tree.ts
+var defaultTreeStorage = (node) => {
+  const data = { isExpanded: SQLITE_false };
+  return observable5({
+    data,
+    update: (next) => data.isExpanded = next.isExpanded
+  });
+};
+var Tree = class {
+  constructor(rootNodes, config = { getNodeState: defaultTreeStorage }) {
+    this.config = config;
+    this.topLevelNodes = [];
+    this.KeyboardNavigableDomNodeID = nanoid4();
+    for (let uid of rootNodes) {
+      const node = new TreeNode(this, uid, void 0);
+      this.topLevelNodes.push(node);
+    }
+    makeAutoObservable6(this, {
+      // indexNode: action
+    });
+  }
+};
+
+// src/panels/libraryUI/tree/xxx/TreeUI.tsx
+import { observer as observer18 } from "mobx-react-lite";
+
+// src/app/shortcuts/shorcutKeys.ts
+var KEYS = {
+  search: "mod+f",
+  // misc
+  closeCurrentTab: "mod+w",
+  closeDialogOrPopupsOrFullScreenPanel: "escape",
+  // tree navigation -------------------------------------------------------------------------------
+  // navigation -------------------------------------------------------------------------------------
+  openFull_Library: "mod+p",
+  openPage_Config: "mod+,",
+  openPage_Hosts: "mod+shift+,",
+  openPage_Shortcuts: "mod+k mod+s",
+  //
+  openPage_Civitai: "mod+k 1",
+  openPage_Squoosh: "mod+k 2",
+  openPage_Posemy: "mod+k 3",
+  openPage_Paint: "mod+k 4",
+  openPage_Unsplash: "mod+k 5",
+  openPage_ComfyUI: "mod+4",
+  openPage_Gallery: "mod+5",
+  openPage_Models: "mod+6",
+  openPage_Marketplace: "mod+7",
+  // draft actions
+  duplicateCurrentDraft: "mod+shift+d",
+  resizeWindowForVideoCapture: "mod+u mod+2",
+  resizeWindowForLaptop: "mod+u mod+3",
+  resetLayout: "mod+u mod+1",
+  // tree actions
+  // global
+  focusAppAndDraftTree: ["mod+1", "mod+shift+e", "mod+b"],
+  focusFileExplorerTree: "mod+2",
+  collapseAllTree: "mod+shift+k",
+  // in-tree stuff
+  // tree_focusFilter:                 '/',
+  tree_moveUp: "ArrowUp",
+  tree_moveDown: "ArrowDown",
+  tree_moveRight: "ArrowRight",
+  tree_moveLeft: "ArrowLeft",
+  tree_deleteNodeAndFocusNodeAbove: "Backspace",
+  tree_deleteNodeAndFocusNodeBelow: "Delete",
+  tree_onPrimaryAction: "Enter",
+  tree_movePageUp: "PageUp",
+  tree_movePageDown: "PageDown"
+};
+
+// src/panels/libraryUI/tree/xxx/TreeCtx.ts
+import { createContext as createContext3, useContext as useContext3 } from "react";
+var TreeViewCtx = createContext3(null);
+var useTreeView = () => {
+  const val = useContext3(TreeViewCtx);
+  if (val == null)
+    throw new Error("missing editor in current widget react contexts");
+  return val;
+};
+
+// src/panels/libraryUI/tree/xxx/TreeEntryUI.tsx
+import { observer as observer17 } from "mobx-react-lite";
+import { Fragment as Fragment4 } from "react";
+
+// src/panels/libraryUI/tree/RenderItemTitleUI.tsx
+import { observer as observer16 } from "mobx-react-lite";
+
+// src/panels/libraryUI/tree/RenderTreeIcon1.tsx
+import { observer as observer15 } from "mobx-react-lite";
+var TreeIcon1UI = observer15(function TreeIcon1UI_(p) {
+  const action3 = p;
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: p.className,
+      tw: "btn btn-xs btn-square btn-ghost",
+      onClick: (e) => {
+        e.stopPropagation();
+        action3.onClick?.(p.node);
+      },
+      children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: action3.icon })
+    },
+    action3.name
+  );
+});
+
+// src/panels/libraryUI/tree/RenderItemTitleUI.tsx
+var RenderItemTitleUI = observer16(function RenderItemTitleUI_(p) {
+  const node = p.node;
+  const item = node.data;
+  let icon = node.isOpen ? item.iconExpanded ?? item.icon : item.icon ?? item.iconExpanded;
+  if (typeof icon === "string") {
+    icon = /* @__PURE__ */ jsx("img", { src: icon, style: { width: "1.3rem", height: "1.3rem" } });
+  }
+  return /* @__PURE__ */ jsxs("div", { tw: "flex flex-grow items-center gap-0.5 whitespace-nowrap overflow-ellipsis", children: [
+    icon,
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        tw: [
+          //
+          "_TreeItemTitle",
+          "cursor-pointer",
+          "flex-grow relative overflow-hidden overflow-ellipsis"
+        ],
+        onClick: () => {
+          item.onPrimaryAction?.(node);
+        },
+        children: [
+          "\xA0",
+          /* @__PURE__ */ jsx("div", { tw: "absolute inset-0", children: item.name })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { tw: "ml-auto opacity-40 hover:opacity-100", children: [
+      item.extra?.(),
+      item.actions?.map((action3, ix) => {
+        return /* @__PURE__ */ jsx(TreeIcon1UI, { node, ...action3 }, ix);
+      })
+    ] })
+  ] });
+});
+
+// src/panels/libraryUI/tree/xxx/TreeEntryUI.tsx
+var TreeEntryUI = observer17(function TreeEntryUI_(p) {
+  const n = p.node;
+  const children = n.childKeys;
+  const hasChildren = children.length > 0;
+  const tv = useTreeView();
+  const selected = tv.at === n;
+  return /* @__PURE__ */ jsxs(Fragment4, { children: [
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        id: n.id,
+        style: { paddingLeft: `${p.depth ?? 0}rem` },
+        onClick: () => tv.setFocusAt(n),
+        tw: [
+          // 'py-1',
+          // selected ? 'virtualBorder' : null,
+          {
+            _line: true,
+            _hasChildren: hasChildren,
+            _selected: selected,
+            _opened: n.isOpen,
+            _closed: !n.isOpen
+          }
+        ],
+        children: [
+          hasChildren ? /* @__PURE__ */ jsx("label", { onClick: () => n.toggle(), className: "swap swap-rotate opacity-50", children: n.isOpen ? /* @__PURE__ */ jsx(Ikon.mdiChevronDown, {}) : /* @__PURE__ */ jsx(Ikon.mdiChevronRight, {}) }) : /* @__PURE__ */ jsx("div", { tw: "[width:1.3rem]", children: "\xA0" }),
+          tv.conf.selectable && /* @__PURE__ */ jsx("input", { checked: true, type: "checkbox", tw: "checkbox" }),
+          /* @__PURE__ */ jsx(RenderItemTitleUI, { node: n })
+        ]
+      }
+    ),
+    hasChildren && n.isOpen ? (
+      //
+      /* @__PURE__ */ jsx(
+        "div",
+        {
+          tw: "cushy-borderLeft",
+          style: {
+            // marginLeft: '.5rem',
+            marginLeft: ".5rem",
+            paddingLeft: ".5rem"
+          },
+          children: n.children.map((c) => /* @__PURE__ */ jsx(TreeEntryUI, { node: c }, c.id))
+        }
+      )
+    ) : null
+  ] }, n.id);
+});
+
+// src/panels/libraryUI/tree/xxx/TreeUI.tsx
+var TreeUI = observer18(function TreeEditorUI_(p) {
+  const tv = p.treeView;
+  return /* @__PURE__ */ jsx(TreeViewCtx.Provider, { value: tv, children: /* @__PURE__ */ jsxs("div", { tw: "_TreeUI flex flex-col", className: p.className, children: [
+    /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1 bg-base-300", children: [
+      /* @__PURE__ */ jsx("div", { className: "flex flex-1 gap-1 items-center", children: p.title && /* @__PURE__ */ jsx("div", { tw: "text-sm", children: p.title }) }),
+      p.shortcut && /* @__PURE__ */ jsx(ComboUI, { primary: true, size: "xs", combo: p.shortcut }),
+      /* @__PURE__ */ jsx(
+        RevealUI,
+        {
+          trigger: "hover",
+          content: () => /* @__PURE__ */ jsxs("div", { tw: "flex gap-1 whitespace-nowrap p-2", children: [
+            "collapse tree: ",
+            /* @__PURE__ */ jsx(ComboUI, { combo: KEYS.collapseAllTree })
+          ] }),
+          children: tv.tree.config.updateAll && /* @__PURE__ */ jsx(
+            "div",
+            {
+              tw: "btn btn-square btn-ghost btn-xs shrink-0",
+              onClick: () => tv.tree.config.updateAll?.({ isExpanded: null }),
+              children: /* @__PURE__ */ jsx(Ikon.mdiUnfoldLessHorizontal, {})
+            }
+          )
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        tw: "flex-1 overflow-auto",
+        id: tv.tree.KeyboardNavigableDomNodeID,
+        onKeyDown: tv.onKeyDown,
+        tabIndex: -1,
+        autoFocus: p.autofocus,
+        children: tv.nodes.map((n) => /* @__PURE__ */ jsx(TreeEntryUI, { node: n }, n.id))
+      }
+    )
+  ] }) });
+});
+
+// src/panels/libraryUI/tree/xxx/TreeView.ts
+import { makeAutoObservable as makeAutoObservable7 } from "mobx";
+import { nanoid as nanoid5 } from "nanoid";
+import { createRef } from "react";
+
+// src/panels/libraryUI/tree/xxx/TreeShortcuts.ts
+var onKeyDownHandlers = (ev, view) => {
+  if (ev.key === KEYS.tree_deleteNodeAndFocusNodeAbove)
+    return view.deleteNodeAndFocusNodeAbove;
+  if (ev.key === KEYS.tree_deleteNodeAndFocusNodeBelow)
+    return view.deleteNodeAndFocusNodeBelow;
+  if (ev.key === KEYS.tree_onPrimaryAction)
+    return view.at?.onPrimaryAction;
+  if (ev.key === KEYS.tree_movePageUp)
+    return view.movePageUp;
+  if (ev.key === KEYS.tree_movePageDown)
+    return view.movePageDown;
+  if (ev.key === KEYS.tree_moveUp)
+    return view.moveUp;
+  if (ev.key === KEYS.tree_moveDown)
+    return view.moveDown;
+  if (ev.key === KEYS.tree_moveRight)
+    return view.moveRight;
+  if (ev.key === KEYS.tree_moveLeft)
+    return view.moveLeft;
+};
+
+// src/panels/libraryUI/tree/xxx/TreeView.ts
+var TreeView = class {
+  constructor(tree, conf = {}) {
+    this.tree = tree;
+    this.conf = conf;
+    /** treeview id; only for debugging purpose */
+    this.id = nanoid5(4);
+    this.filterRef = createRef();
+    this.updateFilter = (xPath) => this.filter = xPath;
+    this.focusFilter = () => {
+      const curr = this.filterRef.current;
+      if (!(curr instanceof HTMLElement))
+        return;
+      curr.focus();
+    };
+    this.revealAndFocusAtPath = (path_v2) => {
+      const [k, ...rest] = path_v2;
+      let at = this.tree.topLevelNodes.find((i) => i.elem.key === k);
+      if (at == null) {
+        console.log(`[\u274C] no top level node matching first key "${k}"`);
+        return;
+      }
+      at.open();
+      for (const x of rest) {
+        const children = at.children;
+        at = children.find((i) => i.elem.key === x);
+        if (at == null) {
+          console.log(`[\u274C] no child node matching key "${x}" (available: ${children.map((i) => i.elem.key).join(", ")})`);
+          return;
+        }
+        at.open();
+      }
+      this.setFocusAt(at, { block: "nearest" });
+      return at;
+    };
+    this.setFocusAt = (at, p) => {
+      this.at = at;
+      this.at?.scrollIntoView(p);
+      this.conf.onFocusChange?.(at);
+    };
+    this.onKeyDown = (ev) => {
+      const handler = this.onKeyDownHandlers(ev);
+      if (handler) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        return handler();
+      }
+      console.log("key-pressed:", ev.key);
+    };
+    this.onKeyDownHandlers = (ev) => onKeyDownHandlers(ev, this);
+    this.deleteNodeAndFocusNodeAbove = () => {
+      if (this.at == null)
+        return this.resetCaretPos();
+      const parent = this.at.nodeAboveInView;
+      this.at.delete();
+      this.setFocusAt(parent);
+    };
+    this.deleteNodeAndFocusNodeBelow = () => {
+      if (this.at == null)
+        return this.resetCaretPos();
+      let parent = this.at.nodeAboveInView;
+      this.at.delete();
+      this.setFocusAt(parent?.nodeBelowInView ?? parent);
+    };
+    this.resetCaretPos = () => {
+      this.setFocusAt(this.tree.topLevelNodes[0]);
+    };
+    this.moveUp = () => {
+      if (this.at == null)
+        return this.resetCaretPos();
+      const nextAt = this.at.nodeAboveInView;
+      if (nextAt)
+        this.setFocusAt(nextAt);
+    };
+    this.movePageUp = () => {
+      return this.resetCaretPos();
+    };
+    this.movePageDown = () => {
+      if (this.at == null)
+        return this.resetCaretPos();
+      let ptr = this.at;
+      let max = 100;
+      let final = this.at;
+      while ((ptr = ptr.nodeBelowInView) && max-- > 0) {
+        final = ptr;
+      }
+      this.setFocusAt(final);
+    };
+    this.moveDown = () => {
+      if (this.at == null)
+        return this.resetCaretPos();
+      const nextAt = this.at.nodeBelowInView;
+      if (nextAt)
+        this.setFocusAt(nextAt);
+    };
+    this.moveRight = () => {
+      if (this.at == null)
+        return this.resetCaretPos();
+      const children = this.at.children;
+      if (children.length > 0) {
+        if (this.at.isOpen)
+          return this.setFocusAt(children[0]);
+        else
+          return this.at.open();
+      }
+      return this.moveDown();
+    };
+    this.moveLeft = () => {
+      if (this.at == null)
+        return this.resetCaretPos();
+      if (this.at.isOpen)
+        return this.at.close();
+      if (this.at.parent)
+        return this.at = this.at.parent;
+    };
+    this.resetCaretPos();
+    makeAutoObservable7(this, { filterRef: false, id: false });
+  }
+  get nodes() {
+    return this.tree.topLevelNodes;
+  }
+  get cursorInfos() {
+    const at = this.at;
+    if (at == null)
+      return null;
+    return {
+      nodeAboveInTreeview: at.nodeAboveInView?.id,
+      nodeBelowInTreeview: at.nodeBelowInView?.id,
+      lastDescendant: at.lastDescendant?.id,
+      lastChild: at.lastChild?.id,
+      descendant_bfs: at.descendantBFS.map((i) => i.id),
+      descendant_dfs: at.descendantDFS.map((i) => i.id),
+      depth: at.depth,
+      parent: at.parent?.id,
+      pathStr: at.id,
+      siblingsIncludingSelf: at.siblingsIncludingSelf.map((i) => i.id),
+      siblingsExcludingSelf: at.siblingsExcludingSelf.map((i) => i.id),
+      nextSibling: at.nextSibling?.id,
+      prevSibling: at.prevSibling?.id,
+      firstChild: at.firstChild?.id
+    };
+  }
+};
+
 // src/controls/shared/WidgetMenu.tsx
 var menu_widgetActions = menu({
   title: "widget actions",
   entries: (widget) => {
-    const createPreset = new SimpleMenuEntry("Create Preset", () => {
-      console.log("Create Preset");
+    const createPreset = new SimpleMenuModal({
+      label: "Create Preset",
+      submit: () => {
+        console.log(`[\u{1F920}] values`);
+      },
+      UI: () => {
+        const tree = new Tree([widget.asTreeElement("root")]);
+        const treeView = new TreeView(tree, { selectable: true });
+        return /* @__PURE__ */ jsx(TreeUI, { title: "Select values to include in preset", treeView });
+      }
     });
     const presets = widget.config.presets;
     if (presets == null)
       return [createPreset];
-    const entries = Object.entries(presets);
+    const entries = presets;
     if (entries.length === 0)
       return [createPreset];
     return [
       //
       createPreset,
-      ...entries.map(([key, value]) => new SimpleMenuEntry(key, () => value(widget)))
+      ...entries.map(
+        (entry) => new SimpleMenuAction({
+          label: entry.label,
+          icon: entry.icon,
+          onPick: () => entry.apply(widget)
+        })
+      )
     ];
   }
 });
 
 // src/controls/shared/WidgetTooltipUI.tsx
-import { observer as observer13 } from "mobx-react-lite";
-var WidgetTooltipUI = observer13(function WidgetTooltipUI_(p) {
+import { observer as observer19 } from "mobx-react-lite";
+var WidgetTooltipUI = observer19(function WidgetTooltipUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx("div", { children: widget.config.tooltip }), children: /* @__PURE__ */ jsx("div", { className: "btn btn-sm btn-square btn-ghost", children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "info" }) }) });
 });
@@ -2311,7 +3496,7 @@ var WidgetTooltipUI = observer13(function WidgetTooltipUI_(p) {
 // src/controls/shared/WidgetWithLabelUI.tsx
 var isDragging2 = false;
 var wasEnabled2 = false;
-var WidgetWithLabelUI = observer14(function WidgetWithLabelUI_(p) {
+var WidgetWithLabelUI = observer20(function WidgetWithLabelUI_(p) {
   if (p.widget.config.hidden)
     return null;
   const rootKey = p.rootKey;
@@ -2361,15 +3546,18 @@ var WidgetWithLabelUI = observer14(function WidgetWithLabelUI_(p) {
       window.removeEventListener("mouseup", isDraggingListener, true);
     }
   };
+  const iconName = widget.icon;
   return /* @__PURE__ */ jsx(
-    "div",
+    Box,
     {
       tw: [
-        widget.background && (isCollapsible || showBorder) && "bg-base-100",
+        // widget.background && (isCollapsible || showBorder) && 'bg-base-100',
         showBorder && "WIDGET-GROUP-BORDERED",
         p.isTopLevel ? "TOP-LEVEL-FIELD" : "SUB-FIELD",
         widget.type
       ],
+      base: widget.background && (isCollapsible || showBorder) ? { contrast: 0.04 } : void 0,
+      ...p.widget.config.box,
       children: /* @__PURE__ */ jsxs(AnimatedSizeUI, { children: [
         /* @__PURE__ */ jsxs(
           "div",
@@ -2397,9 +3585,10 @@ var WidgetWithLabelUI = observer14(function WidgetWithLabelUI_(p) {
                 "span",
                 {
                   tw: [
-                    "flex justify-end gap-0.5 flex-none items-center shrink-0",
+                    "flex justify-end gap-0.5 flex-none items-center shrink-0"
                     // p.isTopLevel && !isDisabled ? 'font-bold' : 'text-base',
-                    isDisabled ? void 0 : "text-primary"
+                    // 🔴 label COLOR here
+                    // isDisabled ? undefined : 'text-primary',
                   ],
                   style: alignLabel ? {
                     textAlign: "right",
@@ -2408,11 +3597,14 @@ var WidgetWithLabelUI = observer14(function WidgetWithLabelUI_(p) {
                     marginRight: alignLabel && HeaderUI ? "0.25rem" : void 0
                   } : void 0,
                   children: [
-                    (isCollapsed || isCollapsible) && /* @__PURE__ */ jsx("span", { className: "WIDGET-COLLAPSE-BTN COLLAPSE-PASSTHROUGH material-symbols-outlined opacity-70 hover:opacity-100 cursor-pointer", children: isCollapsed ? "chevron_right" : "expand_more" }),
-                    BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: originalWidget }),
-                    widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
-                    widget.config.tooltip && /* @__PURE__ */ jsx(WidgetTooltipUI, { widget }),
-                    LABEL,
+                    /* @__PURE__ */ jsxs(Box, { tw: "flex items-center", text: { hueShift: 0, contrast: 0.9, chromaBlend: 1 }, children: [
+                      (isCollapsed || isCollapsible) && /* @__PURE__ */ jsx("span", { className: "WIDGET-COLLAPSE-BTN COLLAPSE-PASSTHROUGH material-symbols-outlined opacity-70 hover:opacity-100 cursor-pointer", children: isCollapsed ? "chevron_right" : "expand_more" }),
+                      iconName && /* @__PURE__ */ jsx(Box, { tw: "mr-1", text: { chroma: 0.2, contrast: 0.9 }, children: /* @__PURE__ */ jsx(IkonOf, { name: iconName }) }),
+                      BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: originalWidget }),
+                      widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
+                      widget.config.tooltip && /* @__PURE__ */ jsx(WidgetTooltipUI, { widget }),
+                      LABEL
+                    ] }),
                     !BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: originalWidget })
                   ]
                 }
@@ -2423,7 +3615,7 @@ var WidgetWithLabelUI = observer14(function WidgetWithLabelUI_(p) {
                 RevealUI,
                 {
                   content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: widget }),
-                  children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "more_vert" })
+                  children: /* @__PURE__ */ jsx(Ikon.mdiBook, {})
                 }
               )
             ]
@@ -2456,101 +3648,214 @@ var normalizeProblem = (problem) => {
   return [problem];
 };
 
-// src/controls/Mixins.tsx
+// src/controls/BaseWidget.tsx
 var ensureObserver = (fn) => {
   if (fn == null)
     return null;
   const isObserver = "$$typeof" in fn && fn.$$typeof === Symbol.for("react.memo");
-  const FmtUI = isObserver ? fn : observer15(fn);
+  const FmtUI = isObserver ? fn : observer21(fn);
   return FmtUI;
 };
-var mixin = {
-  $WidgetSym,
+var BaseWidget = class {
+  constructor() {
+    this.$WidgetSym = $WidgetSym;
+    /**
+     * when this widget or one of its descendant publishes a value,
+     * it will be stored here and possibly consumed by other descendants
+     */
+    this._advertisedValues = {};
+  }
+  // abstract readonly id: string
+  asTreeElement(key) {
+    return {
+      key: this.id,
+      ctor: TreeWidget,
+      props: { key, widget: this }
+    };
+  }
+  /**
+   * when consuming an advertised value, walk upward the parent chain, and look for
+   * a value stored in the advsertised values
+   */
+  // 🚴🏠 -> consume / pull / receive / fetch / ... ?
+  consume(chan) {
+    const channelId = typeof chan === "string" ? chan : chan.id;
+    let at = this;
+    while (at != null) {
+      if (channelId in at._advertisedValues)
+        return at._advertisedValues[channelId];
+      at = at.parent;
+    }
+    return null;
+  }
   /** true if errors.length > 0 */
   get hasErrors() {
     const errors = this.errors;
     return errors.length > 0;
-  },
+  }
+  /**
+   * return a short string summary
+   * expected to be overriden in child classes
+   */
+  get summary() {
+    return JSON.stringify(this.value);
+  }
   /** all errors: base (built-in widget) + custom (user-defined in config) */
   get errors() {
-    const self = this;
-    const baseErrors = normalizeProblem(self.baseErrors);
+    const SELF = this;
+    const baseErrors = normalizeProblem(SELF.baseErrors);
     return [...baseErrors, ...this.customErrors];
-  },
+  }
   get customErrors() {
-    const self = this;
-    if (self.config.check == null)
+    const SELF = this;
+    if (SELF.config.check == null)
       return [
         /* { message: 'No check function provided' } */
       ];
-    const res = self.config.check(this);
+    const res = SELF.config.check(this);
     return normalizeProblem(res);
-  },
+  }
   // BUMP ----------------------------------------------------
   bumpSerial() {
     this.form.serialChanged(this);
-  },
+  }
   // 💬 2024-03-15 rvion: use this regexp to quickly review manual serial set patterns
   // | `serial\.[a-zA-Z_]+(\[[a-zA-Z_]+\])? = `
   bumpValue() {
     this.serial.lastUpdatedAt = Date.now();
     this.form.valueChanged(this);
-    this.config.onValueChange?.(this.value);
-  },
+    this.config.onValueChange?.(this.value, this);
+    this.publishValue();
+  }
+  /**
+   * this method can be heavilly optimized
+   * todo:
+   *  - by storing the published value locally
+   *  - by defining a getter on the _advertisedValues object of all parents
+   *  - by only setting this getter up once.
+   * */
+  publishValue() {
+    const producers = this.spec.producers;
+    if (producers.length === 0)
+      return;
+    const producedValues = {};
+    for (const producer of producers) {
+      const channelId = typeof producer.chan === "string" ? producer.chan : producer.chan.id;
+      producedValues[channelId] = producer.produce(this);
+    }
+    let at = this;
+    while (at != null) {
+      Object.assign(at._advertisedValues, producedValues);
+      at = at.parent;
+    }
+  }
   // FOLD ----------------------------------------------------
   setCollapsed(val) {
     if (this.serial.collapsed === val)
       return;
     this.serial.collapsed = val;
     this.form.serialChanged(this);
-  },
+  }
   toggleCollapsed() {
     this.serial.collapsed = !this.serial.collapsed;
     this.form.serialChanged(this);
-  },
+  }
   // UI ----------------------------------------------------
   ui() {
     return /* @__PURE__ */ jsx(WidgetWithLabelUI, { isTopLevel: true, widget: this, rootKey: "_" }, this.id);
-  },
+  }
   defaultHeader() {
     if (this.DefaultHeaderUI == null)
       return;
     return /* @__PURE__ */ jsx(this.DefaultHeaderUI, { widget: this });
-  },
+  }
   defaultBody() {
     if (this.DefaultBodyUI == null)
       return;
     return /* @__PURE__ */ jsx(this.DefaultBodyUI, { widget: this });
-  },
+  }
   header() {
     const HeaderUI = "header" in this.config ? ensureObserver(this.config.header) : this.DefaultHeaderUI;
     if (HeaderUI == null)
       return;
     return /* @__PURE__ */ jsx(HeaderUI, { widget: this });
-  },
+  }
   body() {
     const BodyUI = "body" in this.config ? ensureObserver(this.config.body) : this.DefaultBodyUI;
     if (BodyUI == null)
       return;
     return /* @__PURE__ */ jsx(BodyUI, { widget: this });
   }
-};
-var descriptors = Object.getOwnPropertyDescriptors(mixin);
-var applyWidgetMixinV2 = (self) => {
-  Object.defineProperties(self, descriptors);
+  /** list of all subwidgets, without named keys */
+  get subWidgets() {
+    return [];
+  }
+  /** list of all subwidgets, without named keys */
+  get subWidgetsWithKeys() {
+    return [];
+  }
+  // --------------------------------------------------------------------------------
+  // 🔶 the 5 getters bellow are temporary hacks to make shared keep working
+  // until every shared usage has been migrated
+  /** getter that resolve to `this.spec.producers` */
+  get producers() {
+    return this.spec.producers;
+  }
+  /** getter that resolve to `this.spec.publish` */
+  get publish() {
+    return this.spec.publish;
+  }
+  /** getter that resolve to `this.spec.subscribe` */
+  get subscribe() {
+    return this.spec.subscribe;
+  }
+  /** getter that resolve to `this.spec.reactions` */
+  get reactions() {
+    return this.spec.reactions;
+  }
+  /** getter that resolve to `this.spec.addReaction` */
+  get addReaction() {
+    return this.spec.addReaction;
+  }
+  get icon() {
+    const x = this.spec.config.icon;
+    if (x == null)
+      return null;
+    if (typeof x === "string")
+      return x;
+    return x(this);
+  }
+  /** this function MUST be called at the end of every widget constructor */
+  init(mobxOverrides) {
+    makeAutoObservableInheritance(this, mobxOverrides);
+    const self = this;
+    const config = self.config;
+    const serial = self.serial;
+    if (config.onCreate) {
+      const oldKey = serial._creationKey;
+      const newKey = config.onCreate.evaluationKey ?? "default";
+      if (oldKey !== newKey) {
+        config.onCreate(this);
+        serial._creationKey = newKey;
+      }
+    }
+    if (config.onInit) {
+      config.onInit(this);
+    }
+  }
 };
 
 // src/controls/widgets/bool/WidgetBoolUI.tsx
-import { observer as observer17 } from "mobx-react-lite";
+import { observer as observer23 } from "mobx-react-lite";
 
 // src/controls/widgets/spacer/SpacerUI.tsx
-import { observer as observer16 } from "mobx-react-lite";
-var SpacerUI = observer16(function SpacerUI_(p) {
+import { observer as observer22 } from "mobx-react-lite";
+var SpacerUI = observer22(function SpacerUI_(p) {
   return /* @__PURE__ */ jsx("div", { tw: ["ml-auto"] });
 });
 
 // src/controls/widgets/bool/WidgetBoolUI.tsx
-var WidgetBoolUI = observer17(function WidgetBoolUI_(p) {
+var WidgetBoolUI = observer23(function WidgetBoolUI_(p) {
   const widget = p.widget;
   if (widget.config.label2) {
     console.warn("label2 is deprecated, please use the text option instead. label2 will be removed in the future");
@@ -2561,7 +3866,7 @@ var WidgetBoolUI = observer17(function WidgetBoolUI_(p) {
       {
         display: widget.config.display,
         expand: widget.config.expand,
-        icon: widget.config.icon,
+        icon: widget.icon,
         text: widget.config.text ?? widget.config.label2,
         active: widget.value,
         onValueChange: (value) => widget.value = value
@@ -2581,8 +3886,9 @@ var WidgetBoolUI = observer17(function WidgetBoolUI_(p) {
 });
 
 // src/controls/widgets/bool/WidgetBool.tsx
-var Widget_bool = class {
+var Widget_bool = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -2596,16 +3902,15 @@ var Widget_bool = class {
     this.defaultValue = this.config.default ?? false;
     // prettier-ignore
     this.reset = () => this.value = this.defaultValue;
-    this.id = serial?.id ?? nanoid4();
+    this.id = serial?.id ?? nanoid6();
     this.serial = serial ?? {
       id: this.id,
       type: "bool",
       active: this.spec.config.default ?? false,
       collapsed: this.spec.config.startCollapsed
     };
-    applyWidgetMixinV2(this);
-    makeAutoObservable4(this, {
-      serial: observable5,
+    this.init({
+      serial: observable6,
       value: computed2,
       DefaultHeaderUI: false,
       DefaultBodyUI: false
@@ -2638,17 +3943,16 @@ var Widget_bool = class {
 registerWidgetClass("bool", Widget_bool);
 
 // src/controls/widgets/button/WidgetButton.ts
-import { makeAutoObservable as makeAutoObservable5, runInAction as runInAction5 } from "mobx";
-import { nanoid as nanoid5 } from "nanoid";
+import { runInAction as runInAction5 } from "mobx";
+import { nanoid as nanoid7 } from "nanoid";
 
 // src/controls/widgets/button/WidgetButtonUI.tsx
 import { runInAction as runInAction4 } from "mobx";
-import { observer as observer18 } from "mobx-react-lite";
-var WidgetInlineRunUI = observer18(function WidgetInlineRunUI_(p) {
+import { observer as observer24 } from "mobx-react-lite";
+var WidgetInlineRunUI = observer24(function WidgetInlineRunUI_(p) {
   const extra = p.widget.config.useContext?.();
   const context = { widget: p.widget, context: extra };
-  const icon = p.widget.config.icon?.(context);
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(
     "div",
     {
       tw: [
@@ -2657,17 +3961,15 @@ var WidgetInlineRunUI = observer18(function WidgetInlineRunUI_(p) {
       ],
       className: "self-start",
       onClick: () => runInAction4(() => p.widget.config.onClick?.(context)),
-      children: [
-        icon && /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: icon }),
-        p.widget.config.text ?? `Run`
-      ]
+      children: p.widget.config.text ?? `Run`
     }
   );
 });
 
 // src/controls/widgets/button/WidgetButton.ts
-var Widget_button = class {
+var Widget_button = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -2679,15 +3981,17 @@ var Widget_button = class {
     if (config.text) {
       config.label = config.label ?? ` `;
     }
-    this.id = serial?.id ?? nanoid5();
+    this.id = serial?.id ?? nanoid7();
     this.serial = serial ?? {
       type: "button",
       collapsed: config.startCollapsed,
       id: this.id,
       val: false
     };
-    applyWidgetMixinV2(this);
-    makeAutoObservable5(this, { DefaultHeaderUI: false, DefaultBodyUI: false });
+    this.init({
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
   get config() {
     return this.spec.config;
@@ -2713,8 +4017,7 @@ var Widget_button = class {
 registerWidgetClass("button", Widget_button);
 
 // src/controls/widgets/choices/WidgetChoices.tsx
-import { makeAutoObservable as makeAutoObservable7 } from "mobx";
-import { nanoid as nanoid6 } from "nanoid";
+import { nanoid as nanoid8 } from "nanoid";
 
 // src/utils/misc/toasts.tsx
 import { toast } from "react-toastify";
@@ -2722,11 +4025,11 @@ var position = "bottom-right";
 var toastError = (msg) => void toast(msg, { type: "error", position });
 
 // src/controls/widgets/choices/WidgetChoicesUI.tsx
-import { observer as observer20 } from "mobx-react-lite";
+import { observer as observer26 } from "mobx-react-lite";
 
 // src/rsuite/SelectUI.tsx
-import { makeAutoObservable as makeAutoObservable6 } from "mobx";
-import { observer as observer19 } from "mobx-react-lite";
+import { makeAutoObservable as makeAutoObservable8 } from "mobx";
+import { observer as observer25 } from "mobx-react-lite";
 import React, { useMemo as useMemo4 } from "react";
 import { createPortal as createPortal2 } from "react-dom";
 
@@ -2838,8 +4141,8 @@ var AutoCompleteSelectState = class {
     // | as soon as the moouse move just one pixel, popup close.
     // |  =>  commenting it out until we find a solution confortable in all cases
     this.MouseMoveTooFar = (event) => {
-      let popup = this.popupRef?.current;
-      let anchor = this.anchorRef?.current;
+      const popup = this.popupRef?.current;
+      const anchor = this.anchorRef?.current;
       if (!popup || !anchor || !this.hasMouseEntered) {
         return;
       }
@@ -2885,7 +4188,7 @@ var AutoCompleteSelectState = class {
         ev.stopPropagation();
       }
     };
-    makeAutoObservable6(this, {
+    makeAutoObservable8(this, {
       popupRef: false,
       anchorRef: false,
       inputRef: false
@@ -2905,6 +4208,8 @@ var AutoCompleteSelectState = class {
   }
   get filteredOptions() {
     if (this.searchQuery === "")
+      return this.options;
+    if (this.p.disableLocalFiltering)
       return this.options;
     return this.options.filter((p) => {
       const label = this.p.getLabelText(p);
@@ -2991,7 +4296,7 @@ var AutoCompleteSelectState = class {
   }
   selectOption(index) {
     const selectedOption = this.filteredOptions[index];
-    if (selectedOption) {
+    if (selectedOption != null) {
       this.p.onChange?.(selectedOption, this);
       const shouldResetQuery = this.p.resetQueryOnPick ?? false;
       const shouldCloseMenu = this.p.closeOnPick ?? !this.isMultiSelect;
@@ -3014,7 +4319,7 @@ var AutoCompleteSelectState = class {
     this.selectedIndex = value;
   }
 };
-var SelectUI = observer19(function SelectUI_(p) {
+var SelectUI = observer25(function SelectUI_(p) {
   const s = useMemo4(() => new AutoCompleteSelectState(
     /* st, */
     p
@@ -3084,7 +4389,7 @@ var SelectUI = observer19(function SelectUI_(p) {
     }
   );
 });
-var SelectPopupUI = observer19(function SelectPopupUI_(p) {
+var SelectPopupUI = observer25(function SelectPopupUI_(p) {
   const s = p.s;
   const isDraggingListener = (ev) => {
     if (ev.button != 0)
@@ -3100,18 +4405,18 @@ var SelectPopupUI = observer19(function SelectPopupUI_(p) {
         tw: [
           "MENU-ROOT _SelectPopupUI bg-base-100 flex",
           "border-l border-r border-base-300 overflow-auto",
-          s.tooltipPosition.bottom ? "rounded-t border-t" : "rounded-b border-b"
+          s.tooltipPosition.bottom != null ? "rounded-t border-t" : "rounded-b border-b"
         ],
         style: {
           minWidth: s.anchorRef.current?.clientWidth ?? "100%",
-          maxWidth: window.innerWidth - (s.tooltipPosition.left ? s.tooltipPosition.left : s.tooltipPosition.right ?? 0),
+          maxWidth: window.innerWidth - (s.tooltipPosition.left != null ? s.tooltipPosition.left : s.tooltipPosition.right ?? 0),
           pointerEvents: "initial",
           position: "absolute",
           zIndex: 99999999,
-          top: s.tooltipPosition.top ? `${s.tooltipPosition.top}px` : "unset",
-          bottom: s.tooltipPosition.bottom ? `${s.tooltipPosition.bottom}px` : "unset",
-          left: s.tooltipPosition.left ? `${s.tooltipPosition.left}px` : "unset",
-          right: s.tooltipPosition.right ? `${s.tooltipPosition.right}px` : "unset",
+          top: s.tooltipPosition.top != null ? `${s.tooltipPosition.top}px` : "unset",
+          bottom: s.tooltipPosition.bottom != null ? `${s.tooltipPosition.bottom}px` : "unset",
+          left: s.tooltipPosition.left != null ? `${s.tooltipPosition.left}px` : "unset",
+          right: s.tooltipPosition.right != null ? `${s.tooltipPosition.right}px` : "unset",
           maxHeight: `${s.tooltipMaxHeight}px`
           // Adjust positioning as needed
         },
@@ -3162,7 +4467,7 @@ var SelectPopupUI = observer19(function SelectPopupUI_(p) {
                     ],
                     children: [
                       /* @__PURE__ */ jsx(InputBoolUI, { active: isSelected, expand: false }),
-                      /* @__PURE__ */ jsx("div", { tw: "pl-0.5 flex h-full items-center truncate", children: s.p.getLabelUI ? s.p.getLabelUI(option) : s.p.getLabelText(option) })
+                      /* @__PURE__ */ jsx("div", { tw: "pl-0.5 flex w-full h-full items-center truncate", children: s.p.getLabelUI ? s.p.getLabelUI(option) : s.p.getLabelText(option) })
                     ]
                   }
                 )
@@ -3178,13 +4483,13 @@ var SelectPopupUI = observer19(function SelectPopupUI_(p) {
 });
 
 // src/controls/widgets/choices/WidgetChoicesUI.tsx
-var WidgetChoices_HeaderUI = observer20(function WidgetChoices_LineUI_(p) {
+var WidgetChoices_HeaderUI = observer26(function WidgetChoices_LineUI_(p) {
   if (p.widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { widget: p.widget });
   else
     return /* @__PURE__ */ jsx(WidgetChoices_SelectHeaderUI, { widget: p.widget });
 });
-var WidgetChoices_BodyUI = observer20(function WidgetChoices_BodyUI_(p) {
+var WidgetChoices_BodyUI = observer26(function WidgetChoices_BodyUI_(p) {
   const widget = p.widget;
   const activeSubwidgets = Object.entries(widget.children).map(([branch, subWidget]) => ({ branch, subWidget }));
   return /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(AnimatedSizeUI, { children: /* @__PURE__ */ jsx(
@@ -3209,7 +4514,7 @@ var WidgetChoices_BodyUI = observer20(function WidgetChoices_BodyUI_(p) {
     }
   ) }) });
 });
-var WidgetChoices_TabHeaderUI = observer20(function WidgetChoicesTab_LineUI_(p) {
+var WidgetChoices_TabHeaderUI = observer26(function WidgetChoicesTab_LineUI_(p) {
   const widget = p.widget;
   const choices = widget.choicesWithLabels;
   return /* @__PURE__ */ jsx(
@@ -3239,7 +4544,7 @@ var WidgetChoices_TabHeaderUI = observer20(function WidgetChoicesTab_LineUI_(p) 
     }
   );
 });
-var WidgetChoices_SelectHeaderUI = observer20(function WidgetChoices_SelectLineUI_(p) {
+var WidgetChoices_SelectHeaderUI = observer26(function WidgetChoices_SelectLineUI_(p) {
   const widget = p.widget;
   const choices = widget.choicesWithLabels;
   return /* @__PURE__ */ jsx(
@@ -3275,8 +4580,9 @@ var WidgetChoices_SelectHeaderUI = observer20(function WidgetChoices_SelectLineU
 });
 
 // src/controls/widgets/choices/WidgetChoices.tsx
-var Widget_choices = class {
+var Widget_choices = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -3290,7 +4596,7 @@ var Widget_choices = class {
     this.children = {};
     this.isBranchDisabled = (branch) => !this.serial.branches[branch];
     const config = spec.config;
-    this.id = serial?.id ?? nanoid6();
+    this.id = serial?.id ?? nanoid8();
     if (typeof config.items === "function") {
       toastError('\u{1F534} ChoicesWidget "items" property should now be an object, not a function');
       debugger;
@@ -3319,8 +4625,10 @@ var Widget_choices = class {
       else
         this.enableBranch(activeBranch, { skipBump: true });
     }
-    applyWidgetMixinV2(this);
-    makeAutoObservable7(this, { DefaultHeaderUI: false, DefaultBodyUI: false });
+    this.init({
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
   get config() {
     return this.spec.config;
@@ -3360,6 +4668,12 @@ var Widget_choices = class {
     if (this.firstActiveBranchName == null)
       return void 0;
     return this.children[this.firstActiveBranchName];
+  }
+  get subWidgets() {
+    return Object.values(this.children);
+  }
+  get subWidgetsWithKeys() {
+    return Object.entries(this.children).map(([key, widget]) => ({ key, widget }));
   }
   toggleBranch(branch) {
     if (this.children[branch]) {
@@ -3409,10 +4723,11 @@ var Widget_choices = class {
       } else {
         if (this.isBranchDisabled(branch)) {
           this.enableBranch(branch);
-          this.children[branch].setValue(val[branch]);
         }
+        this.children[branch].setValue(val[branch]);
       }
     }
+    this.bumpValue();
   }
   /** results, but only for active branches */
   get value() {
@@ -3426,12 +4741,12 @@ var Widget_choices = class {
 registerWidgetClass("choices", Widget_choices);
 
 // src/controls/widgets/color/WidgetColor.tsx
-import { makeAutoObservable as makeAutoObservable8, runInAction as runInAction6 } from "mobx";
-import { nanoid as nanoid7 } from "nanoid";
+import { runInAction as runInAction6 } from "mobx";
+import { nanoid as nanoid9 } from "nanoid";
 
 // src/controls/widgets/color/WidgetColorUI.tsx
-import { observer as observer21 } from "mobx-react-lite";
-var WidgetColorUI = observer21(function WidgetColorUI_(p) {
+import { observer as observer27 } from "mobx-react-lite";
+var WidgetColorUI = observer27(function WidgetColorUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsx(
@@ -3455,8 +4770,9 @@ var WidgetColorUI = observer21(function WidgetColorUI_(p) {
 });
 
 // src/controls/widgets/color/WidgetColor.tsx
-var Widget_color = class {
+var Widget_color = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -3468,15 +4784,17 @@ var Widget_color = class {
     // prettier-ignore
     this.reset = () => this.value = this.defaultValue;
     const config = spec.config;
-    this.id = serial?.id ?? nanoid7();
+    this.id = serial?.id ?? nanoid9();
     this.serial = serial ?? {
       type: "color",
       collapsed: config.startCollapsed,
       id: this.id,
       value: config.default ?? "#000000"
     };
-    applyWidgetMixinV2(this);
-    makeAutoObservable8(this, { DefaultHeaderUI: false, DefaultBodyUI: false });
+    this.init({
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
   get config() {
     return this.spec.config;
@@ -3505,23 +4823,23 @@ var Widget_color = class {
 registerWidgetClass("color", Widget_color);
 
 // src/controls/widgets/group/WidgetGroup.tsx
-import { makeAutoObservable as makeAutoObservable9, runInAction as runInAction7 } from "mobx";
-import { nanoid as nanoid8 } from "nanoid";
+import { runInAction as runInAction7 } from "mobx";
+import { nanoid as nanoid10 } from "nanoid";
 
 // src/controls/widgets/group/WidgetGroupUI.tsx
-import { observer as observer22 } from "mobx-react-lite";
-var WidgetGroup_LineUI = observer22(function WidgetGroup_LineUI_(p) {
+import { observer as observer28 } from "mobx-react-lite";
+var WidgetGroup_LineUI = observer28(function WidgetGroup_LineUI_(p) {
   if (!p.widget.serial.collapsed)
     return null;
-  return /* @__PURE__ */ jsx("div", { className: "COLLAPSE-PASSTHROUGH", tw: "line-clamp-1 italic opacity-50", children: p.widget.summary });
+  return /* @__PURE__ */ jsx(BoxSubtle, { className: "COLLAPSE-PASSTHROUGH", tw: "line-clamp-1 italic", children: p.widget.summary });
 });
-var WidgetGroup_BlockUI = observer22(function WidgetGroup_BlockUI_(p) {
+var WidgetGroup_BlockUI = observer28(function WidgetGroup_BlockUI_(p) {
   const widget = p.widget;
   const isTopLevel = widget.config.topLevel;
   const groupFields = Object.entries(widget.fields);
   const isHorizontal = widget.config.layout === "H";
   return /* @__PURE__ */ jsx(
-    "div",
+    Box,
     {
       className: p.className,
       tw: ["WIDGET-GROUP", "flex items-start w-full text-base-content"],
@@ -3550,8 +4868,9 @@ var WidgetGroup_BlockUI = observer22(function WidgetGroup_BlockUI_(p) {
 });
 
 // src/controls/widgets/group/WidgetGroup.tsx
-var Widget_group = class {
+var Widget_group = class extends BaseWidget {
   constructor(form, parent, spec, serial, preHydrate) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -3590,7 +4909,8 @@ var Widget_group = class {
         values_: {}
       };
     };
-    this.valueLazy = new Proxy({}, {
+    // @internal
+    this.__value = new Proxy({}, {
       ownKeys: (target) => {
         return Object.keys(this.fields);
       },
@@ -3611,11 +4931,13 @@ var Widget_group = class {
         return {
           enumerable: true,
           configurable: true,
-          value: subWidget.value
+          get() {
+            return subWidget.value;
+          }
         };
       }
     });
-    this.id = serial?.id ?? nanoid8();
+    this.id = serial?.id ?? nanoid10();
     this.serial = serial && serial.type === "group" ? serial : this._defaultSerial();
     if (this.serial.values_ == null)
       this.serial.values_ = {};
@@ -3639,8 +4961,11 @@ var Widget_group = class {
         this.serial.values_[key] = this.fields[key].serial;
       }
     }
-    applyWidgetMixinV2(this);
-    makeAutoObservable9(this, { value: false });
+    this.init({
+      value: false,
+      __value: false,
+      DefaultHeaderUI: false
+    });
   }
   get DefaultBodyUI() {
     if (Object.keys(this.fields).length === 0)
@@ -3663,34 +4988,45 @@ var Widget_group = class {
   setValue(val) {
     this.value = val;
   }
+  setPartialValue(val) {
+    runInAction7(() => {
+      for (const key in val)
+        this.fields[key].setValue(val[key]);
+      this.bumpValue();
+    });
+  }
+  get subWidgets() {
+    return Object.values(this.fields);
+  }
+  get subWidgetsWithKeys() {
+    return Object.entries(this.fields).map(([key, widget]) => ({ key, widget }));
+  }
   set value(val) {
     runInAction7(() => {
-      for (const key in val) {
+      for (const key in val)
         this.fields[key].setValue(val[key]);
-      }
       this.bumpValue();
     });
   }
   get value() {
-    return this.valueLazy;
+    return this.__value;
   }
   // 💬 2024-03-13 rvion: no setter for groups; groups can not be set; only their child can
 };
 registerWidgetClass("group", Widget_group);
 
 // src/controls/widgets/list/WidgetList.ts
-import { makeAutoObservable as makeAutoObservable10, observable as observable6 } from "mobx";
-import { nanoid as nanoid9 } from "nanoid";
+import { observable as observable7, reaction } from "mobx";
+import { nanoid as nanoid11 } from "nanoid";
 
 // src/controls/widgets/list/WidgetListUI.tsx
-import { observer as observer24 } from "mobx-react-lite";
 import { forwardRef } from "react";
-import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
+import { observer as observer30 } from "mobx-react-lite";
 import { ErrorBoundary as ErrorBoundary2 } from "react-error-boundary";
 
 // src/controls/widgets/list/ListControlsUI.tsx
-import { observer as observer23 } from "mobx-react-lite";
-var ListControlsUI = observer23(function ListControlsUI_(p) {
+import { observer as observer29 } from "mobx-react-lite";
+var ListControlsUI = observer29(function ListControlsUI_(p) {
   const widget = p.widget;
   const max = widget.config.max;
   const min = widget.config.min;
@@ -3759,16 +5095,17 @@ var ListControlsUI = observer23(function ListControlsUI_(p) {
 });
 
 // src/controls/widgets/list/WidgetListUI.tsx
-var WidgetList_LineUI = observer24(function WidgetList_LineUI_(p) {
+var { default: SortableList, SortableItem, SortableKnob } = await import("react-easy-sort");
+var WidgetList_LineUI = observer30(function WidgetList_LineUI_(p) {
   return /* @__PURE__ */ jsxs("div", { tw: "flex flex-1 items-center", children: [
     /* @__PURE__ */ jsxs("div", { tw: "text-sm text-gray-500 italic", children: [
       p.widget.length,
       " items"
     ] }),
-    /* @__PURE__ */ jsx("div", { tw: "ml-auto", children: /* @__PURE__ */ jsx(ListControlsUI, { widget: p.widget }) })
+    p.widget.isAuto ? null : /* @__PURE__ */ jsx("div", { tw: "ml-auto", children: /* @__PURE__ */ jsx(ListControlsUI, { widget: p.widget }) })
   ] });
 });
-var WidgetList_BodyUI = observer24(function WidgetList_BodyUI_(p) {
+var WidgetList_BodyUI = observer30(function WidgetList_BodyUI_(p) {
   const widget = p.widget;
   const subWidgets = widget.items;
   const min = widget.config.min;
@@ -3787,20 +5124,27 @@ var WidgetList_BodyUI = observer24(function WidgetList_BodyUI_(p) {
         ] }) }) : null,
         widgetHeader && /* @__PURE__ */ jsx(ErrorBoundary2, { FallbackComponent: ErrorBoundaryFallback, onReset: (details) => {
         }, children: widgetHeader }),
-        /* @__PURE__ */ jsx(
+        subWidget.config.presets && /* @__PURE__ */ jsx(
+          RevealUI,
+          {
+            content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: subWidget }),
+            children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "more_vert" })
+          }
+        ),
+        p.widget.isAuto ? null : /* @__PURE__ */ jsx(
           "div",
           {
             tw: [
               "btn btn-sm btn-narrower btn-ghost opacity-50",
-              min && widget.items.length <= min ? "btn-disabled" : null
+              min != null && widget.items.length <= min ? "btn-disabled" : null
             ],
             onClick: () => widget.removeItem(subWidget),
             children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "delete" })
           }
         ),
-        /* @__PURE__ */ jsx(ListItemCollapseBtnUI, { widget: subWidget })
+        subWidget.collapsible && /* @__PURE__ */ jsx(ListItemCollapseBtnUI, { widget: subWidget })
       ] }),
-      widgetBody && !collapsed && subWidget && /* @__PURE__ */ jsx(ErrorBoundary2, { FallbackComponent: ErrorBoundaryFallback, onReset: (details) => {
+      widgetBody && !collapsed && subWidget != null && /* @__PURE__ */ jsx(ErrorBoundary2, { FallbackComponent: ErrorBoundaryFallback, onReset: (details) => {
       }, children: /* @__PURE__ */ jsx("div", { tw: "ml-2 pl-2", children: widgetBody }) })
     ] }) }, subWidget.id);
   }) }) }) });
@@ -3809,7 +5153,7 @@ var ListDragHandleUI = forwardRef((p, ref) => {
   const widget = p.widget;
   return /* @__PURE__ */ jsx("div", { tw: "btn btn-narrower btn-ghost btn-square btn-xs", ref, onClick: () => widget.toggleCollapsed(), children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "menu" }) });
 });
-var ListItemCollapseBtnUI = observer24(function ListItemCollapseBtnUI_(p) {
+var ListItemCollapseBtnUI = observer30(function ListItemCollapseBtnUI_(p) {
   const widget = p.widget;
   const isCollapsible = widget.DefaultBodyUI;
   if (!isCollapsible)
@@ -3828,12 +5172,14 @@ var ListItemCollapseBtnUI = observer24(function ListItemCollapseBtnUI_(p) {
 });
 
 // src/controls/widgets/list/WidgetList.ts
-var Widget_list = class {
+var Widget_list = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
     this.DefaultHeaderUI = WidgetList_LineUI;
+    this.DefaultBodyUI = WidgetList_BodyUI;
     // prettier-ignore
     this.type = "list";
     /* override */
@@ -3854,6 +5200,35 @@ var Widget_list = class {
       const _schema = this.config.element;
       const schema = typeof _schema === "function" ? runWithGlobalForm(this.form.builder, () => _schema(ix)) : _schema;
       return schema;
+    };
+    // probably slow and clunky; TODO: rewrite this piece of crap
+    this.startAutoBehaviour = () => {
+      const auto = this.config.auto;
+      if (auto == null)
+        return;
+      reaction(
+        () => auto.keys(this),
+        (keys) => {
+          const currentKeys = this.items.map((i, ix2) => auto.getKey(i, ix2));
+          const missingKeys = keys.filter((k) => !currentKeys.includes(k));
+          let needBump = false;
+          for (const k of missingKeys) {
+            this.addItem({ value: auto.init(k), skipBump: true });
+            needBump = true;
+          }
+          let ix = 0;
+          for (const item of this.items.slice()) {
+            const isExtra = !keys.includes(auto.getKey(item, ix++));
+            if (!isExtra)
+              continue;
+            this.removeItem(item);
+            needBump = true;
+          }
+          if (needBump)
+            this.bumpValue();
+        },
+        { fireImmediately: true }
+      );
     };
     // HELPERS =======================================================
     // FOLDING -------------------------------------------------------
@@ -3898,8 +5273,8 @@ var Widget_list = class {
       instances.splice(newIndex, 0, bang(instances.splice(oldIndex, 1)[0]));
       this.bumpValue();
     };
-    this.id = serial?.id ?? nanoid9();
-    this.serial = serial ?? observable6({ type: "list", id: this.id, active: true, items_: [] });
+    this.id = serial?.id ?? nanoid11();
+    this.serial = serial ?? observable7({ type: "list", id: this.id, active: true, items_: [] });
     if (this.serial.items_ == null)
       this.serial.items_ = [];
     this.items = [];
@@ -3921,17 +5296,26 @@ var Widget_list = class {
     const missingItems = (this.config.min ?? 0) - this.items.length;
     for (let i = 0; i < missingItems; i++)
       this.addItem({ skipBump: true });
-    applyWidgetMixinV2(this);
-    makeAutoObservable10(this);
-  }
-  get DefaultBodyUI() {
-    return WidgetList_BodyUI;
+    this.init({
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
+    this.startAutoBehaviour();
   }
   get config() {
     return this.spec.config;
   }
   get length() {
     return this.items.length;
+  }
+  get subWidgets() {
+    return this.items;
+  }
+  get subWidgetsWithKeys() {
+    return this.items.map((widget, ix) => ({ key: ix.toString(), widget }));
+  }
+  get isAuto() {
+    return this.config.auto != null;
   }
   setValue(val) {
     for (let i = 0; i < val.length; i++) {
@@ -3942,13 +5326,16 @@ var Widget_list = class {
         this.items[i].setValue(val[i]);
       }
     }
+    this.serial.items_.splice(val.length);
+    this.items.splice(val.length);
+    this.bumpValue();
   }
   get value() {
     return this.items.map((i) => i.value);
   }
   // ERRORS --------------------------------------------------------
   get baseErrors() {
-    let out = [];
+    const out = [];
     if (this.config.min != null && this.length < this.config.min) {
       out.push(`List is too short`);
     }
@@ -3958,13 +5345,25 @@ var Widget_list = class {
     return out;
   }
   // ADDING ITEMS -------------------------------------------------
-  addItem(p) {
+  addItem(p = {}) {
     if (this.config.max != null && this.items.length >= this.config.max)
       return console.log(`[\u{1F536}] list.addItem: list is already at max length`);
-    const schema = this.schemaAt(this.serial.items_.length);
+    if (p.at != null && p.at < 0)
+      return console.log(`[\u{1F536}] list.addItem: at is negative`);
+    if (p.at != null && p.at > this.items.length)
+      return console.log(`[\u{1F536}] list.addItem: at is out of bounds`);
+    const schema = this.schemaAt(p.at ?? this.serial.items_.length);
     const element = this.form.builder._HYDRATE(this, schema, null);
-    this.items.push(element);
-    this.serial.items_.push(element.serial);
+    if (p.value) {
+      element.setValue(p.value);
+    }
+    if (p.at == null) {
+      this.items.push(element);
+      this.serial.items_.push(element.serial);
+    } else {
+      this.items.splice(p.at, 0, element);
+      this.serial.items_.splice(p.at, 0, element.serial);
+    }
     if (!p?.skipBump)
       this.bumpValue();
   }
@@ -3972,29 +5371,28 @@ var Widget_list = class {
 registerWidgetClass("list", Widget_list);
 
 // src/controls/widgets/markdown/WidgetMarkdown.ts
-import { makeAutoObservable as makeAutoObservable11 } from "mobx";
-import { nanoid as nanoid10 } from "nanoid";
+import { nanoid as nanoid12 } from "nanoid";
 
 // src/controls/widgets/markdown/WidgetMarkdownUI.tsx
-import { observer as observer25 } from "mobx-react-lite";
-var WidgetMardownUI = observer25(function WidgetMardownUI_(p) {
+import { observer as observer31 } from "mobx-react-lite";
+var WidgetMardownUI = observer31(function WidgetMardownUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(MarkdownUI, { tw: [widget.config.inHeader && "bg-base-300", "_WidgetMardownUI w-full"], markdown: widget.markdown });
 });
 
 // src/controls/widgets/markdown/WidgetMarkdown.ts
-var Widget_markdown = class {
+var Widget_markdown = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
     // prettier-ignore
     this.type = "markdown";
     const config = spec.config;
-    this.id = serial?.id ?? nanoid10();
+    this.id = serial?.id ?? nanoid12();
     this.serial = serial ?? { type: "markdown", collapsed: config.startCollapsed, active: true, id: this.id };
-    applyWidgetMixinV2(this);
-    makeAutoObservable11(this);
+    makeAutoObservableInheritance(this);
   }
   get DefaultHeaderUI() {
     if (this.config.inHeader)
@@ -4034,12 +5432,12 @@ var Widget_markdown = class {
 registerWidgetClass("markdown", Widget_markdown);
 
 // src/controls/widgets/matrix/WidgetMatrix.ts
-import { makeAutoObservable as makeAutoObservable12, runInAction as runInAction8 } from "mobx";
-import { nanoid as nanoid11 } from "nanoid";
+import { runInAction as runInAction8 } from "mobx";
+import { nanoid as nanoid13 } from "nanoid";
 
 // src/controls/widgets/matrix/WidgetMatrixUI.tsx
-import { observer as observer26 } from "mobx-react-lite";
-var WidgetMatrixUI = observer26(function WidgetStrUI_(p) {
+import { observer as observer32 } from "mobx-react-lite";
+var WidgetMatrixUI = observer32(function WidgetStrUI_(p) {
   const widget = p.widget;
   const cols = widget.cols;
   const rows = widget.rows;
@@ -4098,8 +5496,9 @@ var WidgetMatrixUI = observer26(function WidgetStrUI_(p) {
 });
 
 // src/controls/widgets/matrix/WidgetMatrix.ts
-var Widget_matrix = class {
+var Widget_matrix = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -4146,7 +5545,7 @@ var Widget_matrix = class {
       this.UPDATE();
     };
     const config = spec.config;
-    this.id = serial?.id ?? nanoid11();
+    this.id = serial?.id ?? nanoid13();
     this.serial = serial ?? { type: "matrix", collapsed: config.startCollapsed, id: this.id, active: true, selected: [] };
     const rows = config.rows;
     const cols = config.cols;
@@ -4162,8 +5561,7 @@ var Widget_matrix = class {
       }
     this.rows = config.rows;
     this.cols = config.cols;
-    applyWidgetMixinV2(this);
-    makeAutoObservable12(this);
+    makeAutoObservableInheritance(this);
   }
   get config() {
     return this.spec.config;
@@ -4204,15 +5602,15 @@ var Widget_matrix = class {
 registerWidgetClass("matrix", Widget_matrix);
 
 // src/controls/widgets/number/WidgetNumber.tsx
-import { computed as computed3, makeObservable as makeObservable3, observable as observable7, runInAction as runInAction10 } from "mobx";
-import { nanoid as nanoid12 } from "nanoid";
+import { computed as computed3, observable as observable8, runInAction as runInAction10 } from "mobx";
+import { nanoid as nanoid14 } from "nanoid";
 
 // src/controls/widgets/number/WidgetNumberUI.tsx
-import { observer as observer28 } from "mobx-react-lite";
+import { observer as observer34 } from "mobx-react-lite";
 
 // src/controls/widgets/number/InputNumberUI.tsx
-import { makeAutoObservable as makeAutoObservable13, runInAction as runInAction9 } from "mobx";
-import { observer as observer27 } from "mobx-react-lite";
+import { makeAutoObservable as makeAutoObservable9, runInAction as runInAction9 } from "mobx";
+import { observer as observer33 } from "mobx-react-lite";
 import React2, { useEffect as useEffect2, useMemo as useMemo5 } from "react";
 
 // src/utils/misc/parseFloatNoRoundingErr.ts
@@ -4225,14 +5623,14 @@ var parseFloatNoRoundingErr = (str, maxDigitsAfterDot = 3) => {
 };
 
 // src/controls/shared/CushyKitCtx.ts
-import { createContext as createContext2, useContext as useContext2 } from "react";
-var CushyKitCtx = createContext2(null);
+import { createContext as createContext4, useContext as useContext4 } from "react";
+var CushyKitCtx = createContext4(null);
 var useCushyKitOrNull = () => {
-  return useContext2(CushyKitCtx);
+  return useContext4(CushyKitCtx);
 };
 
 // src/controls/widgets/number/InputNumberUI.tsx
-var clamp = (x, min, max) => Math.max(min, Math.min(max, x));
+var clamp2 = (x, min, max) => Math.max(min, Math.min(max, x));
 var startValue = 0;
 var dragged = false;
 var cumulativeOffset = 0;
@@ -4265,9 +5663,9 @@ var InputNumberStableState = class {
       if (this.mode === "int")
         num = Math.round(num);
       if (soft && startValue <= this.rangeMax && startValue >= this.rangeMin) {
-        num = clamp(num, this.rangeMin, this.rangeMax);
+        num = clamp2(num, this.rangeMin, this.rangeMax);
       } else {
-        num = clamp(num, this.props.min ?? -Infinity, this.props.max ?? Infinity);
+        num = clamp2(num, this.props.min ?? -Infinity, this.props.max ?? Infinity);
       }
       if (!skipRounding) {
         const roundingPrecise = Math.ceil(-Math.log10(this.step * 0.01 * roundingModifier));
@@ -4288,14 +5686,14 @@ var InputNumberStableState = class {
     };
     this.mouseMoveListener = (e) => {
       if (dragged && (lastShiftState !== e.shiftKey || lastControlState !== e.ctrlKey)) {
-        startValue = lastValue;
+        lastValue = this.value;
         cumulativeOffset = 0;
       }
       dragged = true;
       cumulativeOffset += e.movementX;
       let precision = (e.shiftKey ? 1e-3 : 0.01) * this.step;
       let offset = this.numberSliderSpeed * cumulativeOffset * precision;
-      const next = startValue + offset;
+      const next = lastValue + offset;
       let num = typeof next === "string" ? this.mode == "int" ? parseInt(next, 10) : parseFloatNoRoundingErr(next, this.rounding) : next;
       if (e.ctrlKey) {
         const inverval = e.shiftKey ? 0.1 * this.step : this.step;
@@ -4303,7 +5701,6 @@ var InputNumberStableState = class {
       }
       lastShiftState = e.shiftKey;
       lastControlState = e.ctrlKey;
-      lastValue = num;
       this.syncValues(num, { soft: true, roundingModifier: e.shiftKey ? 0.01 : 1 });
     };
     this.cancelListener = (e) => {
@@ -4332,10 +5729,10 @@ var InputNumberStableState = class {
         this.syncValues(startValue);
       }
     };
-    makeAutoObservable13(this);
+    makeAutoObservable9(this);
   }
   get value() {
-    return this.props.value ?? clamp(1, this.props.min ?? -Infinity, this.props.max ?? Infinity);
+    return this.props.value ?? clamp2(1, this.props.min ?? -Infinity, this.props.max ?? Infinity);
   }
   get mode() {
     return this.props.mode;
@@ -4362,7 +5759,7 @@ var InputNumberStableState = class {
     return this.mode === "int";
   }
 };
-var InputNumberUI = observer27(function InputNumberUI_(p) {
+var InputNumberUI = observer33(function InputNumberUI_(p) {
   const kit = useCushyKitOrNull();
   const uist = useMemo5(() => new InputNumberStableState(p, kit), []);
   runInAction9(() => Object.assign(uist.props, p));
@@ -4371,15 +5768,19 @@ var InputNumberUI = observer27(function InputNumberUI_(p) {
   const step = uist.step;
   const rounding = uist.rounding;
   const isEditing = uist.isEditing;
+  const kolor = useColor({ base: 5, border: true });
   return /* @__PURE__ */ jsxs(
     "div",
     {
       className: p.className,
+      style: kolor.styles,
       tw: [
         "WIDGET-FIELD relative",
+        // 'theme-number-field',
+        // '!shadow-md !shadow-white',
         "input-number-ui input-number-roundness",
         "flex-1 select-none min-w-16 cursor-ew-resize overflow-clip",
-        "bg-primary/30 border border-base-100 border-b-2 border-b-base-200",
+        // 'bg-primary/30 border border-base-100 border-b-2 border-b-base-200',
         !isEditing && "hover:border-base-200 hover:border-b-base-300 hover:bg-primary/40"
       ],
       onWheel: (ev) => {
@@ -4387,21 +5788,17 @@ var InputNumberUI = observer27(function InputNumberUI_(p) {
           let num = uist.isInteger ? step * -Math.sign(ev.deltaY) : step * -Math.sign(ev.deltaY) * 0.1;
           num = val + num;
           num = uist.isInteger ? Math.round(num) : parseFloatNoRoundingErr(num, rounding);
-          num = clamp(num, p.min ?? -Infinity, p.max ?? Infinity);
+          num = clamp2(num, p.min ?? -Infinity, p.max ?? Infinity);
           uist.syncValues(num, void 0);
         }
       },
       children: [
         /* @__PURE__ */ jsx(
-          "div",
+          Box,
           {
             className: "inui-foreground",
-            tw: [
-              //
-              "absolute left-0 WIDGET-FIELD",
-              !p.hideSlider && !isEditing && "bg-primary/40",
-              "z-10"
-            ],
+            base: { contrast: !p.hideSlider && !isEditing ? 0.4 : 0 },
+            tw: ["z-10 absolute left-0 WIDGET-FIELD"],
             style: { width: `${(val - uist.rangeMin) / (uist.rangeMax - uist.rangeMin) * 100}%` }
           }
         ),
@@ -4423,13 +5820,14 @@ var InputNumberUI = observer27(function InputNumberUI_(p) {
             {
               tw: [
                 //
-                `flex px-1 items-center justify-center text-sm text-shadow truncate z-20`
+                "th-text",
+                `flex px-1 items-center justify-center text-sm text-shadow truncate z-20 h-full`
               ],
               onMouseDown: (ev) => {
                 if (isEditing || ev.button != 0)
                   return;
                 activeSlider = ev.currentTarget;
-                startValue = val;
+                lastValue = startValue = val;
                 cumulativeOffset = 0;
                 dragged = false;
                 window.addEventListener("mousemove", uist.mouseMoveListener, true);
@@ -4545,7 +5943,7 @@ var InputNumberUI = observer27(function InputNumberUI_(p) {
 });
 
 // src/controls/widgets/number/WidgetNumberUI.tsx
-var WidgetNumberUI = observer28(function WidgetNumberUI_(p) {
+var WidgetNumberUI = observer34(function WidgetNumberUI_(p) {
   const widget = p.widget;
   const value = widget.serial.val;
   const mode = widget.config.mode;
@@ -4581,8 +5979,9 @@ var WidgetNumberUI = observer28(function WidgetNumberUI_(p) {
 });
 
 // src/controls/widgets/number/WidgetNumber.tsx
-var Widget_number = class {
+var Widget_number = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -4599,16 +5998,15 @@ var Widget_number = class {
       this.value = this.defaultValue;
     };
     const config = spec.config;
-    this.id = serial?.id ?? nanoid12();
+    this.id = serial?.id ?? nanoid14();
     this.serial = serial ?? {
       type: "number",
       collapsed: config.startCollapsed,
       id: this.id,
       val: config.default ?? 0
     };
-    applyWidgetMixinV2(this);
-    makeObservable3(this, {
-      serial: observable7,
+    this.init({
+      serial: observable8,
       value: computed3
     });
   }
@@ -4643,10 +6041,11 @@ var Widget_number = class {
 registerWidgetClass("number", Widget_number);
 
 // src/controls/widgets/optional/WidgetOptional.tsx
-import { computed as computed4, makeObservable as makeObservable4, observable as observable8 } from "mobx";
-import { nanoid as nanoid13 } from "nanoid";
-var Widget_optional = class {
+import { computed as computed4, observable as observable9 } from "mobx";
+import { nanoid as nanoid15 } from "nanoid";
+var Widget_optional = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -4681,7 +6080,7 @@ var Widget_optional = class {
       }
     };
     const config = spec.config;
-    this.id = serial?.id ?? nanoid13();
+    this.id = serial?.id ?? nanoid15();
     const defaultActive = config.startActive;
     this.serial = serial ?? {
       id: this.id,
@@ -4693,8 +6092,7 @@ var Widget_optional = class {
     if (isActive)
       this.serial.active = true;
     this._ensureChildIsHydrated();
-    applyWidgetMixinV2(this);
-    makeObservable4(this, { serial: observable8, value: computed4 });
+    this.init({ serial: observable9, value: computed4 });
   }
   get config() {
     return this.spec.config;
@@ -4709,6 +6107,12 @@ var Widget_optional = class {
   }
   setValue(val) {
     this.value = val;
+  }
+  get subWidgets() {
+    return this.serial.active ? [this.child] : [];
+  }
+  get subWidgetsWithKeys() {
+    return this.serial.active ? [{ key: "child", widget: this.child }] : [];
   }
   set value(next) {
     if (next == null) {
@@ -4728,14 +6132,13 @@ var Widget_optional = class {
 registerWidgetClass("optional", Widget_optional);
 
 // src/controls/widgets/seed/WidgetSeed.ts
-import { makeAutoObservable as makeAutoObservable14 } from "mobx";
-import { nanoid as nanoid14 } from "nanoid";
+import { nanoid as nanoid16 } from "nanoid";
 
 // src/controls/widgets/seed/WidgetSeedUI.tsx
-import { observer as observer30 } from "mobx-react-lite";
+import { observer as observer36 } from "mobx-react-lite";
 
 // src/rsuite/shims.tsx
-import { observer as observer29 } from "mobx-react-lite";
+import { observer as observer35 } from "mobx-react-lite";
 
 // src/utils/misc/exhaust.ts
 var exhaust2 = (x) => x;
@@ -4784,7 +6187,7 @@ var Button = (p) => {
     }
   );
 };
-var InputNumberBase = observer29(function InputNumberBase_(p) {
+var InputNumberBase = observer35(function InputNumberBase_(p) {
   const sizeClass = p._size ? `input-${p._size}` : null;
   return /* @__PURE__ */ jsx(
     "input",
@@ -4795,7 +6198,7 @@ var InputNumberBase = observer29(function InputNumberBase_(p) {
     }
   );
 });
-var Slider = observer29(function Slider_(p) {
+var Slider = observer35(function Slider_(p) {
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -4805,7 +6208,7 @@ var Slider = observer29(function Slider_(p) {
     }
   );
 });
-var Radio = observer29(function Radio_(p) {
+var Radio = observer35(function Radio_(p) {
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -4814,7 +6217,7 @@ var Radio = observer29(function Radio_(p) {
     }
   );
 });
-var Toggle = observer29(function Toggle_(p) {
+var Toggle = observer35(function Toggle_(p) {
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -4828,7 +6231,7 @@ var Toggle = observer29(function Toggle_(p) {
     }
   );
 });
-var ProgressLine = observer29(function ProgressLine_(p) {
+var ProgressLine = observer35(function ProgressLine_(p) {
   const status = p.status === "success" ? "progress-success" : "progress-info";
   return /* @__PURE__ */ jsx(
     "progress",
@@ -4849,7 +6252,7 @@ var messageIcon = (type) => {
   exhaust2(type);
   return null;
 };
-var Message = observer29(function Message_(p) {
+var Message = observer35(function Message_(p) {
   const { showIcon, ...rest } = p;
   return /* @__PURE__ */ jsxs(
     "div",
@@ -4874,7 +6277,7 @@ var Message = observer29(function Message_(p) {
     }
   );
 });
-var Loader = observer29((p) => /* @__PURE__ */ jsx(
+var Loader = observer35((p) => /* @__PURE__ */ jsx(
   "span",
   {
     className: p.className,
@@ -4884,7 +6287,7 @@ var Loader = observer29((p) => /* @__PURE__ */ jsx(
 
 // src/controls/widgets/seed/WidgetSeedUI.tsx
 var isDragging3 = false;
-var WidgetSeedUI = observer30(function WidgetSeedUI_(p) {
+var WidgetSeedUI = observer36(function WidgetSeedUI_(p) {
   const widget = p.widget;
   const val = widget.serial.val;
   const isDraggingListener = (ev) => {
@@ -4998,8 +6401,9 @@ var WidgetSeedUI = observer30(function WidgetSeedUI_(p) {
 });
 
 // src/controls/widgets/seed/WidgetSeed.ts
-var Widget_seed = class {
+var Widget_seed = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -5026,15 +6430,14 @@ var Widget_seed = class {
       this.bumpValue();
     };
     const config = spec.config;
-    this.id = serial?.id ?? nanoid14();
+    this.id = serial?.id ?? nanoid16();
     this.serial = serial ?? {
       type: "seed",
       id: this.id,
       val: config.default ?? 0,
       mode: config.defaultMode ?? "randomize"
     };
-    applyWidgetMixinV2(this);
-    makeAutoObservable14(this);
+    makeAutoObservableInheritance(this);
   }
   get baseErrors() {
     return null;
@@ -5050,18 +6453,18 @@ var Widget_seed = class {
 registerWidgetClass("seed", Widget_seed);
 
 // src/controls/widgets/selectMany/WidgetSelectMany.tsx
-import { makeAutoObservable as makeAutoObservable15, runInAction as runInAction11 } from "mobx";
-import { nanoid as nanoid15 } from "nanoid";
+import { runInAction as runInAction11 } from "mobx";
+import { nanoid as nanoid17 } from "nanoid";
 
 // src/controls/widgets/selectMany/WidgetSelectManyUI.tsx
-import { observer as observer31 } from "mobx-react-lite";
-var WidgetSelectManyUI = observer31(function WidgetSelectManyUI_(p) {
+import { observer as observer37 } from "mobx-react-lite";
+var WidgetSelectManyUI = observer37(function WidgetSelectManyUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectMany_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectMany_SelectUI, { widget });
 });
-var WidgetSelectMany_TabUI = observer31(function WidgetSelectMany_TabUI_(p) {
+var WidgetSelectMany_TabUI = observer37(function WidgetSelectMany_TabUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsxs("div", { tw: "rounded select-none flex flex-wrap gap-x-0.5 gap-y-0", children: [
@@ -5094,7 +6497,7 @@ var WidgetSelectMany_TabUI = observer31(function WidgetSelectMany_TabUI_(p) {
     widget.baseErrors && /* @__PURE__ */ jsx(MessageErrorUI, { children: /* @__PURE__ */ jsx("ul", { children: widget.baseErrors.map((e, ix) => /* @__PURE__ */ jsx("li", { children: e }, ix)) }) })
   ] });
 });
-var WidgetSelectMany_SelectUI = observer31(function WidgetSelectMany_SelectUI_(p) {
+var WidgetSelectMany_SelectUI = observer37(function WidgetSelectMany_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { tw: "flex-1", children: [
     /* @__PURE__ */ jsx(
@@ -5103,7 +6506,10 @@ var WidgetSelectMany_SelectUI = observer31(function WidgetSelectMany_SelectUI_(p
         multiple: true,
         tw: [widget.baseErrors && "rsx-field-error"],
         getLabelText: (t) => t.label ?? t.id,
-        getLabelUI: (t) => t.label ?? t.id,
+        getLabelUI: widget.config.getLabelUI,
+        getSearchQuery: () => widget.serial.query ?? "",
+        setSearchQuery: (query) => widget.serial.query = query,
+        disableLocalFiltering: widget.config.disableLocalFiltering,
         options: () => widget.choices,
         value: () => widget.serial.values,
         equalityCheck: (a, b) => a.id === b.id,
@@ -5118,8 +6524,9 @@ var WidgetSelectMany_SelectUI = observer31(function WidgetSelectMany_SelectUI_(p
 });
 
 // src/controls/widgets/selectMany/WidgetSelectMany.tsx
-var Widget_selectMany = class {
+var Widget_selectMany = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -5155,7 +6562,7 @@ var Widget_selectMany = class {
       }
     };
     const config = spec.config;
-    this.id = serial?.id ?? nanoid15();
+    this.id = serial?.id ?? nanoid17();
     this.serial = serial ?? {
       type: "selectMany",
       collapsed: config.startCollapsed,
@@ -5165,20 +6572,19 @@ var Widget_selectMany = class {
     };
     if (this.serial.values == null)
       this.serial.values = [];
-    applyWidgetMixinV2(this);
-    makeAutoObservable15(this);
+    makeAutoObservableInheritance(this);
   }
   get config() {
     return this.spec.config;
   }
   get choices() {
     const _choices = this.config.choices;
-    return typeof _choices === "function" ? _choices(this.form._ROOT) : _choices;
+    return typeof _choices === "function" ? _choices(this) : _choices;
   }
   get baseErrors() {
     if (this.serial.values == null)
       return null;
-    let errors = [];
+    const errors = [];
     for (const value of this.serial.values) {
       if (!this.choices.find((choice) => choice.id === value.id)) {
         errors.push(`value ${value.id} (label: ${value.label}) not in choices`);
@@ -5206,18 +6612,18 @@ var Widget_selectMany = class {
 registerWidgetClass("selectMany", Widget_selectMany);
 
 // src/controls/widgets/selectOne/WidgetSelectOne.ts
-import { makeAutoObservable as makeAutoObservable16, runInAction as runInAction12 } from "mobx";
-import { nanoid as nanoid16 } from "nanoid";
+import { runInAction as runInAction12 } from "mobx";
+import { nanoid as nanoid18 } from "nanoid";
 
 // src/controls/widgets/selectOne/WidgetSelectOneUI.tsx
-import { observer as observer32 } from "mobx-react-lite";
-var WidgetSelectOneUI = observer32(function WidgetSelectOneUI_(p) {
+import { observer as observer38 } from "mobx-react-lite";
+var WidgetSelectOneUI = observer38(function WidgetSelectOneUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectOne_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectOne_SelectUI, { widget });
 });
-var WidgetSelectOne_TabUI = observer32(function WidgetSelectOne_TabUI_(p) {
+var WidgetSelectOne_TabUI = observer38(function WidgetSelectOne_TabUI_(p) {
   const widget = p.widget;
   const selected = widget.serial.val;
   return /* @__PURE__ */ jsxs("div", { children: [
@@ -5244,43 +6650,40 @@ var WidgetSelectOne_TabUI = observer32(function WidgetSelectOne_TabUI_(p) {
     ] })
   ] });
 });
-var WidgetSelectOne_SelectUI = observer32(function WidgetSelectOne_SelectUI_(p) {
+var WidgetSelectOne_SelectUI = observer38(function WidgetSelectOne_SelectUI_(p) {
   const widget = p.widget;
-  return /* @__PURE__ */ jsxs("div", { tw: "flex-1", children: [
-    /* @__PURE__ */ jsx(
-      SelectUI,
-      {
-        tw: [widget.baseErrors && "rsx-field-error"],
-        getLabelText: (t) => t.label ?? makeLabelFromFieldName(t.id),
-        getSearchQuery: () => widget.serial.query ?? "",
-        setSearchQuery: (query) => widget.serial.query = query,
-        options: () => widget.choices,
-        equalityCheck: (a, b) => a.id === b.id,
-        value: () => widget.serial.val,
-        onChange: (selectOption) => {
-          if (selectOption == null) {
-            return;
-          }
-          const next = widget.choices.find((c) => c.id === selectOption.id);
-          if (next == null) {
-            console.log(`\u274C WidgetSelectOneUI: could not find choice for ${JSON.stringify(selectOption)}`);
-            return;
-          }
-          widget.value = next;
+  return /* @__PURE__ */ jsx("div", { tw: "flex-1", children: /* @__PURE__ */ jsx(
+    SelectUI,
+    {
+      tw: [widget.baseErrors && "rsx-field-error"],
+      getLabelText: (t) => t.label ?? makeLabelFromFieldName(t.id),
+      getLabelUI: widget.config.getLabelUI,
+      getSearchQuery: () => widget.serial.query ?? "",
+      setSearchQuery: (query) => widget.serial.query = query,
+      disableLocalFiltering: widget.config.disableLocalFiltering,
+      options: () => widget.choices,
+      equalityCheck: (a, b) => a.id === b.id,
+      value: () => widget.serial.val,
+      onChange: (selectOption) => {
+        if (selectOption == null) {
+          return;
         }
-      },
-      widget.id
-    ),
-    widget.baseErrors && /* @__PURE__ */ jsxs("div", { tw: "text-red-500 flex items-center gap-1", children: [
-      /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
-      widget.baseErrors
-    ] })
-  ] });
+        const next = widget.choices.find((c) => c.id === selectOption.id);
+        if (next == null) {
+          console.log(`\u274C WidgetSelectOneUI: could not find choice for ${JSON.stringify(selectOption)}`);
+          return;
+        }
+        widget.value = next;
+      }
+    },
+    widget.id
+  ) });
 });
 
 // src/controls/widgets/selectOne/WidgetSelectOne.ts
-var Widget_selectOne = class {
+var Widget_selectOne = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -5289,7 +6692,7 @@ var Widget_selectOne = class {
     // prettier-ignore
     this.type = "selectOne";
     const config = spec.config;
-    this.id = serial?.id ?? nanoid16();
+    this.id = serial?.id ?? nanoid18();
     const choices = this.choices;
     this.serial = serial ?? {
       type: "selectOne",
@@ -5300,8 +6703,7 @@ var Widget_selectOne = class {
     };
     if (this.serial.val == null && Array.isArray(this.config.choices))
       this.serial.val = choices[0];
-    applyWidgetMixinV2(this);
-    makeAutoObservable16(this);
+    makeAutoObservableInheritance(this);
   }
   get config() {
     return this.spec.config;
@@ -5321,7 +6723,7 @@ var Widget_selectOne = class {
         return [];
       if (this.form._ROOT == null)
         throw new Error("\u274C IMPOSSIBLE: this.form._ROOT is null");
-      return _choices(this.form, this);
+      return _choices(this);
     }
     return _choices;
   }
@@ -5343,10 +6745,10 @@ var Widget_selectOne = class {
 registerWidgetClass("selectOne", Widget_selectOne);
 
 // src/controls/widgets/shared/WidgetShared.tsx
-import { makeAutoObservable as makeAutoObservable17 } from "mobx";
-import { nanoid as nanoid17 } from "nanoid";
-var Widget_shared = class _Widget_shared {
+import { nanoid as nanoid19 } from "nanoid";
+var Widget_shared = class _Widget_shared extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -5362,10 +6764,9 @@ var Widget_shared = class _Widget_shared {
       new _Widget_shared(this.form, null, spec2, this.serial);
     };
     const config = spec.config;
-    this.id = serial?.id ?? nanoid17();
+    this.id = serial?.id ?? nanoid19();
     this.serial = serial ?? { id: this.id, type: "shared", collapsed: config.startCollapsed };
-    applyWidgetMixinV2(this);
-    makeAutoObservable17(this);
+    makeAutoObservableInheritance(this);
   }
   get config() {
     return this.spec.config;
@@ -5389,11 +6790,11 @@ var Widget_shared = class _Widget_shared {
 registerWidgetClass("shared", Widget_shared);
 
 // src/controls/widgets/size/WidgetSize.ts
-import { makeAutoObservable as makeAutoObservable19, runInAction as runInAction13 } from "mobx";
-import { nanoid as nanoid18 } from "nanoid";
+import { runInAction as runInAction13 } from "mobx";
+import { nanoid as nanoid20 } from "nanoid";
 
 // src/controls/widgets/size/ResolutionState.tsx
-import { makeAutoObservable as makeAutoObservable18 } from "mobx";
+import { makeAutoObservable as makeAutoObservable10 } from "mobx";
 var ResolutionState = class {
   constructor(req) {
     this.req = req;
@@ -5432,7 +6833,7 @@ var ResolutionState = class {
         return "3:2";
       return "1:1";
     })();
-    makeAutoObservable18(this);
+    makeAutoObservable10(this);
   }
   get width() {
     return this.req.width;
@@ -5497,14 +6898,14 @@ var ResolutionState = class {
 };
 
 // src/controls/widgets/size/WidgetSizeUI.tsx
-import { observer as observer33 } from "mobx-react-lite";
-var WigetSize_BlockUI = observer33(function WigetSize_BlockUI_(p) {
+import { observer as observer39 } from "mobx-react-lite";
+var WigetSize_BlockUI = observer39(function WigetSize_BlockUI_(p) {
   return /* @__PURE__ */ jsx(WigetSizeXUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WigetSize_LineUI = observer33(function WigetSize_LineUI_(p) {
+var WigetSize_LineUI = observer39(function WigetSize_LineUI_(p) {
   return /* @__PURE__ */ jsx(WidgetSizeX_LineUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WidgetSizeX_LineUI = observer33(function WidgetSize_LineUI_(p) {
+var WidgetSizeX_LineUI = observer39(function WidgetSize_LineUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx("div", { className: "flex flex-1 flex-col gap-1", children: /* @__PURE__ */ jsxs(
     "div",
@@ -5553,7 +6954,7 @@ var WidgetSizeX_LineUI = observer33(function WidgetSize_LineUI_(p) {
     }
   ) });
 });
-var AspectLockButtonUI = observer33(function AspectLockButtonUI_(p) {
+var AspectLockButtonUI = observer39(function AspectLockButtonUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx(
     "button",
@@ -5577,23 +6978,25 @@ var AspectLockButtonUI = observer33(function AspectLockButtonUI_(p) {
     }
   );
 });
-var AspectRatioSquareUI = observer33(function AspectRatioSquareUI_(p) {
+var AspectRatioSquareUI = observer39(function AspectRatioSquareUI_(p) {
   const uist = p.sizeHelper;
   const ratioDisplaySize = 26;
   return /* @__PURE__ */ jsx(
-    "div",
+    Box,
     {
+      border: true,
       tw: [
         //
-        "flex rounded-sm virtualBorder bg-base-300",
+        "flex rounded-sm",
         "overflow-clip",
         "items-center justify-center"
       ],
       style: { width: `${ratioDisplaySize}px`, height: `${ratioDisplaySize}px` },
       children: /* @__PURE__ */ jsx(
-        "div",
+        Box,
         {
-          tw: "relative bg-primary",
+          base: { contrast: 0.5 },
+          tw: "relative",
           style: {
             //
             width: "100%",
@@ -5608,7 +7011,7 @@ var AspectRatioSquareUI = observer33(function AspectRatioSquareUI_(p) {
     }
   );
 });
-var WigetSizeXUI = observer33(function WigetSizeXUI_(p) {
+var WigetSizeXUI = observer39(function WigetSizeXUI_(p) {
   const uist = p.sizeHelper;
   const resoBtn = (ar) => /* @__PURE__ */ jsx(
     "button",
@@ -5653,8 +7056,9 @@ var WigetSizeXUI = observer33(function WigetSizeXUI_(p) {
 });
 
 // src/controls/widgets/size/WidgetSize.ts
-var Widget_size = class {
+var Widget_size = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -5663,7 +7067,7 @@ var Widget_size = class {
     // prettier-ignore
     this.type = "size";
     const config = spec.config;
-    this.id = serial?.id ?? nanoid18();
+    this.id = serial?.id ?? nanoid20();
     if (serial) {
       this.serial = serial;
     } else {
@@ -5680,8 +7084,7 @@ var Widget_size = class {
         width
       };
     }
-    applyWidgetMixinV2(this);
-    makeAutoObservable19(this, { sizeHelper: false });
+    this.init({ sizeHelper: false });
   }
   get baseErrors() {
     return null;
@@ -5711,7 +7114,6 @@ var Widget_size = class {
     });
   }
   get sizeHelper() {
-    const self = this;
     const state = new ResolutionState(this);
     Object.defineProperty(this, "sizeHelper", { value: state });
     return state;
@@ -5739,18 +7141,19 @@ var Widget_size = class {
 registerWidgetClass("size", Widget_size);
 
 // src/controls/widgets/spacer/WidgetSpacer.tsx
-import { makeObservable as makeObservable5, observable as observable9 } from "mobx";
-import { nanoid as nanoid19 } from "nanoid";
+import { observable as observable10 } from "mobx";
+import { nanoid as nanoid21 } from "nanoid";
 
 // src/controls/widgets/spacer/WidgetSpacerUI.tsx
-import { observer as observer34 } from "mobx-react-lite";
-var WidgetSpacerUI = observer34(function WidgetSpacerUI_(p) {
+import { observer as observer40 } from "mobx-react-lite";
+var WidgetSpacerUI = observer40(function WidgetSpacerUI_(p) {
   return /* @__PURE__ */ jsx(SpacerUI, {});
 });
 
 // src/controls/widgets/spacer/WidgetSpacer.tsx
-var Widget_spacer = class {
+var Widget_spacer = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -5758,14 +7161,13 @@ var Widget_spacer = class {
     this.DefaultBodyUI = void 0;
     // prettier-ignore
     this.type = "spacer";
-    this.id = serial?.id ?? nanoid19();
+    this.id = serial?.id ?? nanoid21();
     this.serial = serial ?? {
       id: this.id,
       type: "spacer",
       collapsed: false
     };
-    applyWidgetMixinV2(this);
-    makeObservable5(this, { serial: observable9 });
+    this.init({ serial: observable10 });
   }
   get baseErrors() {
     return null;
@@ -5784,12 +7186,12 @@ var Widget_spacer = class {
 registerWidgetClass("spacer", Widget_spacer);
 
 // src/controls/widgets/string/WidgetString.tsx
-import { makeAutoObservable as makeAutoObservable20, runInAction as runInAction14 } from "mobx";
-import { nanoid as nanoid20 } from "nanoid";
+import { runInAction as runInAction14 } from "mobx";
+import { nanoid as nanoid22 } from "nanoid";
 
 // src/controls/widgets/string/WidgetStringUI.tsx
-import { observer as observer35 } from "mobx-react-lite";
-var WidgetString_TextareaHeaderUI = observer35(function WidgetString_TextareaHeaderUI_(p) {
+import { observer as observer41 } from "mobx-react-lite";
+var WidgetString_TextareaHeaderUI = observer41(function WidgetString_TextareaHeaderUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
     return null;
@@ -5797,15 +7199,21 @@ var WidgetString_TextareaHeaderUI = observer35(function WidgetString_TextareaHea
     return null;
   return /* @__PURE__ */ jsx("div", { tw: "line-clamp-1 italic opacity-50", children: p.widget.value });
 });
-var WidgetString_TextareaBodyUI = observer35(function WidgetString_TextareaBodyUI_(p) {
+var WidgetString_TextareaBodyUI = observer41(function WidgetString_TextareaBodyUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
     return null;
   const val = widget.value;
+  const kolor = useColor({ base: 5 });
   return /* @__PURE__ */ jsx(
     "textarea",
     {
-      style: { lineHeight: "1.3rem" },
+      style: {
+        ...kolor.styles,
+        /* ...p.widget.config.style, */
+        lineHeight: "1.3rem",
+        resize: p.widget.config.resize ?? "both"
+      },
       tw: "textarea textarea-bordered textarea-sm w-full ",
       placeholder: widget.config.placeHolder,
       rows: 3,
@@ -5816,12 +7224,21 @@ var WidgetString_TextareaBodyUI = observer35(function WidgetString_TextareaBodyU
     }
   );
 });
-var WidgetString_HeaderUI = observer35(function WidgetStringUI_(p) {
+var WidgetString_HeaderUI = observer41(function WidgetStringUI_(p) {
   const widget = p.widget;
   const val = widget.value;
   let inputTailwind;
   let visualHelper;
   let highlight = true;
+  const color = useColor({
+    base: 5,
+    text: {
+      contrast: 1,
+      /* hueShift: 150, chromaBlend: 899 */
+      chromaBlend: 1
+    },
+    border: true
+  });
   switch (widget.config.inputType) {
     case "color":
       inputTailwind = "absolute w-full h-full opacity-0";
@@ -5836,20 +7253,22 @@ var WidgetString_HeaderUI = observer35(function WidgetStringUI_(p) {
     /* @__PURE__ */ jsxs(
       "div",
       {
+        style: color.styles,
         tw: [
+          // color.className,
           "WIDGET-FIELD",
           "h-full w-full",
           "flex flex-1 items-center relative",
           "rounded overflow-clip text-shadow",
-          "border border-base-100 hover:border-base-300",
+          // 'border border-base-100 hover:border-base-300',
+          // 'bg-primary/5',
           highlight && "hover:brightness-110",
-          "bg-primary/5",
-          "border-b-2 border-b-base-200 hover:border-b-base-300",
+          // 'border-b-2 border-b-base-200 hover:border-b-base-300',
           "p-0 m-0"
         ],
         onMouseDown: (ev) => {
           if (ev.button == 1) {
-            let textInput = ev.currentTarget.querySelector('input[type="text"');
+            const textInput = ev.currentTarget.querySelector('input[type="text"');
             textInput.focus();
           }
         },
@@ -5908,9 +7327,10 @@ var WidgetString_HeaderUI = observer35(function WidgetStringUI_(p) {
 });
 
 // src/controls/widgets/string/WidgetString.tsx
-var Widget_string = class {
+var Widget_string = class extends BaseWidget {
   // prettier-ignore
   constructor(form, parent, spec, serial) {
+    super();
     this.form = form;
     this.parent = parent;
     this.spec = spec;
@@ -5926,15 +7346,14 @@ var Widget_string = class {
       this.value = this.defaultValue;
     };
     const config = spec.config;
-    this.id = serial?.id ?? nanoid20();
+    this.id = serial?.id ?? nanoid22();
     this.serial = serial ?? {
       type: "str",
       val: this.config.default,
       collapsed: config.startCollapsed,
       id: this.id
     };
-    applyWidgetMixinV2(this);
-    makeAutoObservable20(this);
+    makeAutoObservableInheritance(this);
   }
   get DefaultHeaderUI() {
     if (this.config.textarea)
@@ -6126,7 +7545,7 @@ var SimpleFormBuilder = class {
     /** (@internal); */
     this._cache = { count: 0 };
     /** (@internal) advanced way to restore form state. used internally */
-    this._HYDRATE = (parent, spec, serial) => {
+    this.__HYDRATE = (parent, spec, serial) => {
       if (serial != null && serial.type !== spec.type) {
         console.log(`[\u{1F536}] INVALID SERIAL (expected: ${spec.type}, got: ${serial.type})`);
         serial = null;
@@ -6188,7 +7607,19 @@ var SimpleFormBuilder = class {
         new SimpleSpec("markdown", { markdown: `\u{1F534} unknown widget "${type}" in serial.` })
       );
     };
-    makeAutoObservable21(this, {
+    this._HYDRATE = (parent, spec, serial) => {
+      const w = this.__HYDRATE(parent, spec, serial);
+      w.publishValue();
+      for (const { expr, effect } of spec.reactions) {
+        reaction2(
+          () => expr(w),
+          (arg) => effect(arg, w),
+          { fireImmediately: true }
+        );
+      }
+      return w;
+    };
+    makeAutoObservable11(this, {
       SpecCtor: false
     });
   }
