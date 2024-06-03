@@ -29,7 +29,7 @@ export const WidgetString_TextareaBodyUI = observer(function WidgetString_Textar
                     lineHeight: '1.3rem',
                     resize: p.widget.config.resize ?? 'both',
                 }}
-                tw='textarea textarea-bordered textarea-sm w-full '
+                tw='cushy-basic-input w-full p-2'
                 placeholder={widget.config.placeHolder}
                 rows={3}
                 value={val}
@@ -54,10 +54,10 @@ export const WidgetString_HeaderUI = observer(function WidgetStringUI_(p: { widg
             inputTailwind = 'absolute w-full h-full !bg-transparent opacity-0 !p-0'
             visualHelper = (
                 <Frame //
-                    tw='w-full h-full text-xs justify-between'
+                    tw='w-full h-full text-xs flex items-center font-mono'
                     base={val ? val : undefined}
                     text={{ contrast: 1 }}
-                    textShadow={{ contrast: 0.5 }}
+                    // textShadow={{ contrast: 1 }}
                 >
                     {/* <div>{val}</div> */}
                     <div>{getLCHFromStringAsString(val)}</div>

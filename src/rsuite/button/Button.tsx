@@ -4,10 +4,16 @@ import { useEffect, useMemo } from 'react'
 
 import { Frame, FrameProps } from '../frame/Frame'
 
-export const Button = observer(function Button_(p: FrameProps) {
+export const Button = observer(function Button_(
+    p: FrameProps & {
+        subtle?: boolean
+    },
+) {
     const uist = useMemo(() => new ButtonState(p), [])
+
     // ensure new properties that could change during lifetime of the component stays up-to-date in the stable state.
     runInAction(() => (uist.props = p))
+
     // ensure any unmounting of this component will properly clean-up
     useEffect(() => uist.release, [])
     const { size, square, look, ...rest } = p
@@ -15,9 +21,11 @@ export const Button = observer(function Button_(p: FrameProps) {
         <Frame //
             size={size ?? 'sm'}
             look={look}
-            base={5}
+            // base={5}
+            base={p.subtle ? 0 : 5}
             border={10}
-            hover={p.disabled ? false : undefined}
+            // border={p.subtle ? 0 : 10}
+            hover={p.disabled ? false : 3}
             active={uist.visuallyActive}
             loading={p.loading}
             tabIndex={p.tabIndex ?? -1}

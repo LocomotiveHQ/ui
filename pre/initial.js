@@ -163,7 +163,10 @@ function normalizeBoxKolor(kolor) {
   if (kolor == null)
     return null;
   if (typeof kolor === "boolean")
-    return { contrast: kolor ? 0.2 : 0 };
+    return { contrast: kolor ? (
+      /* 0.2 */
+      0.03
+    ) : 0 };
   if (typeof kolor === "number")
     return { contrast: clamp(kolor / 100, 0, 1) };
   if (typeof kolor === "string")
@@ -247,10 +250,12 @@ var overrideKolor = (a, b) => {
 // src/rsuite/box/compileBoxClassName.tsx
 var applyBoxToCtx = (ctx, box) => {
   const nextBase = applyKolorToOKLCH(ctx.base, box.base);
+  const nextBaseH = applyKolorToOKLCH(nextBase, box.hover);
   const lightness = nextBase.lightness;
   return {
     dir: ctx.dir === 1 && lightness > 0.7 ? -1 : ctx.dir === -1 && lightness < 0.45 ? 1 : ctx.dir,
     base: nextBase,
+    baseH: nextBaseH,
     text: overrideKolor(ctx.text, box.text)
   };
 };
@@ -275,11 +280,20 @@ var hashKolor = (k) => {
 import { createContext } from "react";
 var CurrentStyleCtx = createContext({
   base: { lightness: 0.1, chroma: 0.05, hue: 0 },
+  baseH: { lightness: 0.1, chroma: 0.05, hue: 0 },
   text: { contrast: 1, chromaBlend: 0, hueShift: 0 },
   dir: 1
-  // text: { type: 'absolute', lightness: 0, chroma: 0.5, hue: 180, },
-  // shadow: null,
-  // border: null,
+  /**
+   * if we want to handle that though CSS, it HAS to always be present
+   * so we can seamlessly switch to it, when any part of the tree becomes hovered;
+   *
+   * potential problems
+   * 🔶 it may not handle properly Reveals:
+   *       => 2024-06-03 rvion: I think we should be good to go to force override
+   *          the revealed content context to the base non-hovered color in every
+   *          situation; should be the safest option to assumem hover must be
+   *          computed from the last DOM root only
+   */
 });
 
 // src/rsuite/button/usePressLogic.ts
@@ -490,6 +504,7 @@ var Frame = observer(
     const nextCtx = applyBoxToCtx(prevCtx, box);
     const variables = {
       "--KLR": formatOKLCH(nextCtx.base),
+      "--KLRH": formatOKLCH(nextCtx.baseH),
       "--DIR": nextCtx.dir?.toString()
       // === -1 ? -1 : 1,
       // '--PREV_BASE_L': prevCtx.base.lightness, // === -1 ? -1 : 1,
@@ -516,13 +531,6 @@ var Frame = observer(
       const selector = `.${CSS.escape(clsName)}`;
       if (!hasRule(selector))
         addRule(selector, `border: 1px solid ${compileKolorToCSSExpression("KLR", box.border)};`);
-      classes.push(clsName);
-    }
-    if (box.hover) {
-      const clsName = "h" + hashKolor(box.hover);
-      const selector = `.${CSS.escape(clsName)}:hover`;
-      if (!hasRule(selector))
-        addRule(selector, `background: red`);
       classes.push(clsName);
     }
     return /* @__PURE__ */ jsx(
@@ -565,9 +573,9 @@ var Button = observer2(function Button_(p) {
     {
       size: size ?? "sm",
       look,
-      base: 5,
+      base: p.subtle ? 0 : 5,
       border: 10,
-      hover: p.disabled ? false : void 0,
+      hover: p.disabled ? false : 3,
       active: uist.visuallyActive,
       loading: p.loading,
       tabIndex: p.tabIndex ?? -1,
@@ -1038,7 +1046,7 @@ var RevealUI = observer7(function RevealUI_(p) {
   return /* @__PURE__ */ jsx(RevealCtx.Provider, { value: nextTower, children: /* @__PURE__ */ jsxs(
     "div",
     {
-      tw: ["inline-block", uistOrNull?.defaultCursor ?? "cursor-pointer"],
+      tw: ["inline-flex", uistOrNull?.defaultCursor ?? "cursor-pointer"],
       className: p.className,
       ref,
       style: p.style,
@@ -2179,11 +2187,7 @@ var InputBoolCheckboxUI = observer9(function InputBoolCheckboxUI_(p) {
           Frame,
           {
             icon: p.icon ?? (isActive ? "mdiCheckBold" : null),
-            tw: [
-              //
-              "!select-none object-contain WIDGET-FIELD",
-              mode === "radio" ? "rounded-full" : "rounded-sm"
-            ],
+            tw: ["!select-none object-contain WIDGET-FIELD", mode === "radio" ? "rounded-full" : "rounded-sm"],
             border: { contrast: 0.2, chroma },
             style: {
               width: "var(--input-height)"
@@ -2191,6 +2195,7 @@ var InputBoolCheckboxUI = observer9(function InputBoolCheckboxUI_(p) {
             },
             base: { contrast: isActive ? 0.09 : 0, chroma },
             size: "sm",
+            hover: true,
             ...p.box
           }
         ),
@@ -2216,6 +2221,7 @@ var InputBoolToggleButtonUI = observer10(function InputBoolToggleButtonUI_(p) {
       look: "default",
       base: { contrast: isActive ? 0.09 : 0.05, chroma },
       border: isActive ? 20 : 0,
+      hover: !p.disabled,
       expand,
       style: p.style,
       icon: p.icon,
@@ -2540,7 +2546,7 @@ var useSizeOf = () => {
 // src/controls/utils/AnimatedSizeUI.tsx
 var AnimatedSizeUI = observer20(function AnimatedSizeUI_(p) {
   const { ref: refFn, size } = useSizeOf();
-  return /* @__PURE__ */ jsx("div", { className: p.className, tw: "animated overflow-hidden", style: { height: `${size.height}px` }, children: /* @__PURE__ */ jsx("div", { ref: refFn, children: p.children }) });
+  return /* @__PURE__ */ jsx("div", { className: p.className, tw: "smooth-resize-container animated overflow-hidden", style: { height: `${size.height}px` }, children: /* @__PURE__ */ jsx("div", { className: "smooth-resize-content", ref: refFn, children: p.children }) });
 });
 
 // src/controls/shared/getIfWidgetNeedAlignedLabel.tsx
@@ -3826,7 +3832,7 @@ function MenuDividerUI_() {
 
 // src/controls/shared/WidgetMenu.tsx
 var WidgetMenuUI = observer29(function WidgetMenuUI_(p) {
-  return /* @__PURE__ */ jsx(RevealUI, { className: p.className, content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: p.widget }), children: /* @__PURE__ */ jsx(Button, { icon: "mdiDotsVertical", look: "ghost", square: true, size: "input" }) });
+  return /* @__PURE__ */ jsx(RevealUI, { className: p.className, content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: p.widget }), children: /* @__PURE__ */ jsx(Button, { subtle: true, icon: "mdiDotsVertical", look: "ghost", square: true, size: "input" }) });
 });
 var menu_widgetActions = menu({
   title: "widget actions",
@@ -3905,6 +3911,7 @@ var WidgetUndoChangesButtonUI = observer31(function WidgetUndoChangesButtonUI_(p
   return /* @__PURE__ */ jsx(
     Button,
     {
+      subtle: true,
       className: p.className,
       onClick: () => widget?.reset(),
       disabled: !(widget?.hasChanges ?? false),
@@ -3973,8 +3980,8 @@ var WidgetWithLabelUI = observer32(function WidgetWithLabelUI_(p) {
           HeaderUI && /* @__PURE__ */ jsx(WidgetHeaderControlsContainerUI, { className: extraClass, children: /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: HeaderUI }) }),
           /* @__PURE__ */ jsx("div", { tw: "ml-auto" }),
           widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
-          kit.showWidgetUndo && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { tw: "self-start", widget }),
-          kit.showWidgetMenu && /* @__PURE__ */ jsx(WidgetMenuUI, { tw: "self-start", widget })
+          kit.showWidgetUndo && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { widget }),
+          kit.showWidgetMenu && /* @__PURE__ */ jsx(WidgetMenuUI, { widget })
         ] }),
         BodyUI && !widget.isCollapsed && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { className: extraClass, tw: [widget.isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
         /* @__PURE__ */ jsx(WidgetErrorsUI, { widget })
@@ -4970,7 +4977,7 @@ var WidgetFieldsContainerUI = observer40(function WidgetFieldsContainerUI_(p) {
       tw: [
         //
         isHorizontal ? `flex gap-1 flex-wrap` : `flex gap-1 flex-col`,
-        "w-full text-base-content",
+        "w-full",
         p.className
       ],
       children: p.children
@@ -7002,6 +7009,7 @@ var WidgetSelectOne_SelectUI = observer51(function WidgetSelectOne_SelectUI_(p) 
 });
 
 // src/controls/widgets/selectOne/WidgetSelectOne.ts
+var FAILOVER_VALUE = Object.freeze({ id: "\u274C", label: "\u274C" });
 var Widget_selectOne = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -7022,10 +7030,10 @@ var Widget_selectOne = class extends BaseWidget {
       collapsed: config.startCollapsed,
       id: this.id,
       query: "",
-      val: config.default ?? choices[0]
+      val: config.default ?? choices[0] ?? FAILOVER_VALUE
     };
     if (this.serial.val == null && Array.isArray(this.config.choices))
-      this.serial.val = choices[0];
+      this.serial.val = choices[0] ?? FAILOVER_VALUE;
     makeAutoObservableInheritance(this);
   }
   get baseErrors() {
@@ -7037,7 +7045,7 @@ var Widget_selectOne = class extends BaseWidget {
     return;
   }
   get defaultValue() {
-    return this.config.default ?? this.choices[0];
+    return this.config.default ?? this.choices[0] ?? FAILOVER_VALUE;
   }
   get hasChanges() {
     return this.serial.val.id !== this.defaultValue.id;
@@ -7606,7 +7614,7 @@ var WidgetString_TextareaBodyUI = observer54(function WidgetString_TextareaBodyU
         lineHeight: "1.3rem",
         resize: p.widget.config.resize ?? "both"
       },
-      tw: "textarea textarea-bordered textarea-sm w-full ",
+      tw: "cushy-basic-input w-full p-2",
       placeholder: widget.config.placeHolder,
       rows: 3,
       value: val,
@@ -7627,10 +7635,9 @@ var WidgetString_HeaderUI = observer54(function WidgetStringUI_(p) {
       visualHelper = /* @__PURE__ */ jsx(
         Frame,
         {
-          tw: "w-full h-full text-xs justify-between",
+          tw: "w-full h-full text-xs flex items-center font-mono",
           base: val ? val : void 0,
           text: { contrast: 1 },
-          textShadow: { contrast: 0.5 },
           children: /* @__PURE__ */ jsx("div", { children: getLCHFromStringAsString(val) })
         }
       );

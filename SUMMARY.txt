@@ -720,8 +720,9 @@ TYPES:
         [🔴]: src/rsuite/kolor/Kolor
         [🔴]: src/rsuite/kolor/OKLCH
     [🟢]: src/rsuite/button/Button       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/rsuite/frame/FrameSize
         [🔵]: react
-        [🟢]: src/rsuite/frame/Frame
+        [🔴]: src/rsuite/box/Box
     [🟢]: src/rsuite/button/usePressLogic       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
     [🟢]: src/rsuite/checkbox/InputBoolCheckboxUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
@@ -742,13 +743,13 @@ TYPES:
         [🔵]: react/jsx-runtime
     [🟢]: src/rsuite/errors/ErrorBoundaryUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
-    [🟢]: src/rsuite/frame/Frame       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/rsuite/button/Button.d.ts files)
+    [🟢]: src/rsuite/frame/Frame       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/icons/icons
         [🔴]: src/rsuite/box/BoxUIProps
         [🟢]: src/rsuite/frame/FrameSize
         [🟢]: src/rsuite/frame/FrameTemplates
-    [🟢]: src/rsuite/frame/FrameSize       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/rsuite/frame/Frame.d.ts files)
+    [🟢]: src/rsuite/frame/FrameSize       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/rsuite/frame/Frame.d.ts,/lib/rsuite/button/Button.d.ts files)
         [🟡]: src/rsuite/RsuiteTypes
     [🟢]: src/rsuite/frame/FrameTemplates       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/rsuite/frame/Frame.d.ts files)
         [🟢]: src/rsuite/box/BoxNormalized

@@ -106,10 +106,12 @@
   min-height: var(--input-height);
 }
 .w-input {
-  width: var(--input-width);
+  width: var(--input-height);
+  min-width: var(--input-height);
 }
 .h-input {
   height: var(--input-height);
+  min-height: var(--input-height);
 }
 .COLLAPSE-PASSTHROUGH:hover .WIDGET-COLLAPSE-BTN {
   opacity: 100% !important;
@@ -121,8 +123,10 @@
   margin-left: .6rem;
   margin-top: .1rem;
 }
-.input {
-  background-color: oklch(var( --p)/.15) !important;
+.cushy-basic-input {
+  background: oklch(from var(--KLR) calc(l + 0.03 * var(--DIR)) c h);
+  border: 1px solid oklch(from var(--KLR) calc(l + 0.1 * var(--DIR)) c h);
+  border-radius: .2rem;
 }
 .text-shadow {
   text-shadow:
@@ -151,7 +155,7 @@ input::-webkit-inner-spin-button {
   height: 0;
   margin: 0;
 }
-.input-number-ui:hover .Box {
+.input-number-ui:hover .BOX {
   opacity: 100;
 }
 .input-number-ui:hover .inui-foreground {

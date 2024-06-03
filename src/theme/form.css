@@ -43,8 +43,8 @@
     min-height: var(--input-height);
 }
 
-.w-input { width: var(--input-width); }
-.h-input { height: var(--input-height); }
+.w-input { width: var(--input-height);  min-width: var(--input-height); }
+.h-input { height: var(--input-height);  min-height: var(--input-height); }
 
 /* .WIDGET-FIELD *::selection {
     background-color: oklch(var(--pc));
@@ -66,8 +66,11 @@
 }
 
 /* ------------------------------------------------------------------------------------------- */
-.input {
-    background-color: oklch(var( --p)/.15) !important;
+.cushy-basic-input {
+    /* 🔴 FINISH ME */
+    background: oklch(from var(--KLR) calc(l + 0.03 * var(--DIR)) c h);
+    border: 1px solid oklch(from var(--KLR) calc(l + 0.1 * var(--DIR)) c h);;
+    border-radius: .2rem;
 }
 
 /* //InputNumberUI */

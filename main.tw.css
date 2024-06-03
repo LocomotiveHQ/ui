@@ -2573,10 +2573,6 @@ details.collapse summary::-webkit-details-marker {
   border-top-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-border-opacity)));
 }
 
-.textarea-bordered {
-  border-color: var(--fallback-bc,oklch(var(--bc)/0.2));
-}
-
 .textarea:focus {
   box-shadow: none;
   border-color: var(--fallback-bc,oklch(var(--bc)/0.2));
@@ -2846,15 +2842,6 @@ details.collapse summary::-webkit-details-marker {
   font-size: 0.75rem;
   line-height: .75rem;
   --tab-padding: 0.5rem;
-}
-
-.textarea-sm {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  font-size: 0.875rem;
-  line-height: 2rem;
 }
 
 :where(.toast) {
@@ -3184,10 +3171,6 @@ details.collapse summary::-webkit-details-marker {
 
 .block {
   display: block;
-}
-
-.inline-block {
-  display: inline-block;
 }
 
 .inline {
@@ -3699,6 +3682,10 @@ details.collapse summary::-webkit-details-marker {
   text-align: right;
 }
 
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -3734,11 +3721,6 @@ details.collapse summary::-webkit-details-marker {
 
 .italic {
   font-style: italic;
-}
-
-.text-base-content {
-  --tw-text-opacity: 1;
-  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
 }
 
 .text-gray-500 {
