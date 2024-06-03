@@ -1,11 +1,11 @@
 import type { IconName } from '../icons/icons'
-import type { RelativeStyle } from '../theme/colorEngine/AbsoluteStyle'
-import type { BoxProps } from '../theme/colorEngine/Box'
+import type { Box } from '../rsuite/box/Box'
+import type { Kolor } from '../rsuite/kolor/Kolor'
 import type { BaseWidget } from './BaseWidget'
-import type { CovariantFn } from './BivariantHack'
-import type { CovariantFC } from './CovariantFC'
 import type { Form } from './Form'
 import type { ISpec } from './ISpec'
+import type { CovariantFn } from './utils/BivariantHack'
+import type { CovariantFC } from './utils/CovariantFC'
 import type { Problem_Ext } from './Validation'
 
 /**
@@ -56,12 +56,6 @@ export interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends BaseWidg
     /** wiget serial is the full serialized representation of that widget  */
     readonly serial: K['$Serial']
 
-    /** root form this widget has benn registered to */
-    readonly form: Form
-
-    /** parent widget of this widget, if any */
-    readonly parent: IWidget | null
-
     /** base validation errors specific to this widget; */
     readonly baseErrors: Problem_Ext
 
@@ -69,11 +63,6 @@ export interface IWidget<K extends $WidgetTypes = $WidgetTypes> extends BaseWidg
     setValue(val: K['$Value']): void
 
     // ---------------------------------------------------------------------------------------------------
-    /** if specified, override the default algorithm to decide if the widget should have borders */
-    border?: boolean
-
-    /** if specified, override the default algorithm to decide if the widget should have borders */
-    collapsible?: boolean
 
     /** if specified, override the default algorithm to decide if the widget should have label aligned */
     alignLabel?: boolean
@@ -142,7 +131,7 @@ export type SharedWidgetConfig<T extends $WidgetTypes> = {
      * @stability beta
      * Appearance box props
      */
-    box?: BoxProps
+    box?: Box
 
     /**
      * @since 2024-05-14

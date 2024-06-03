@@ -3,7 +3,7 @@ import type { Widget_group } from './WidgetGroup'
 
 import { observer } from 'mobx-react-lite'
 
-import { Box, BoxSubtle } from '../../../theme/colorEngine/Box'
+import { BoxSubtle } from '../../../rsuite/box/BoxMisc'
 import { bang } from '../../../utils/misc/bang'
 import { WidgetWithLabelUI } from '../../shared/WidgetWithLabelUI'
 
@@ -27,43 +27,42 @@ export const WidgetGroup_BlockUI = observer(function WidgetGroup_BlockUI_<T exte
 }) {
     const widget = p.widget
     const isTopLevel = widget.config.topLevel
-    // Alt
-    // | const groupKeys = widget.childKeys
-    // | const groupFields = groupKeys.map((k) => [k, widget.values[k]])
     const groupFields = Object.entries(widget.fields)
     const isHorizontal = widget.config.layout === 'H'
 
-    // const color = useColor({ base: 10 })
     return (
-        <Box
-            // base={4}
-            // {...widget.config.box}
+        <WidgetFieldsContainerUI layout={p.widget.config.layout} tw={[widget.config.className, p.className]}>
+            {groupFields.map(([rootKey, sub], ix) => (
+                <WidgetWithLabelUI //
+                    isTopLevel={isTopLevel}
+                    key={rootKey}
+                    rootKey={rootKey}
+                    alignLabel={isHorizontal ? false : widget.config.alignLabel}
+                    widget={bang(sub)}
+                />
+            ))}
+        </WidgetFieldsContainerUI>
+    )
+})
+
+export const WidgetFieldsContainerUI = observer(function WidgetFieldsContainerUI_(p: {
+    layout?: 'H' | 'V'
+    className?: string
+    children?: React.ReactNode
+}) {
+    const isHorizontal = p.layout === 'H'
+
+    return (
+        <div
             className={p.className}
-            tw={['WIDGET-GROUP', 'flex items-start w-full text-base-content']}
-            // style={color.styles}
-            // style={{ position: 'relative' }}
+            tw={[
+                //
+                isHorizontal ? `flex gap-1 flex-wrap` : `flex gap-1 flex-col`,
+                'w-full text-base-content',
+                p.className,
+            ]}
         >
-            {widget.serial.collapsed ? null : (
-                <div
-                    className={widget.config.className}
-                    tw={[
-                        '_WidgetGroupUI w-full',
-                        isHorizontal //
-                            ? `GROUP-HORIZONTAL flex gap-1 flex-wrap`
-                            : `GROUP-VERTICAL   flex gap-1 flex-col`,
-                    ]}
-                >
-                    {groupFields.map(([rootKey, sub], ix) => (
-                        <WidgetWithLabelUI //
-                            isTopLevel={isTopLevel}
-                            key={rootKey}
-                            rootKey={rootKey}
-                            alignLabel={isHorizontal ? false : widget.config.alignLabel}
-                            widget={bang(sub)}
-                        />
-                    ))}
-                </div>
-            )}
-        </Box>
+            {p.children}
+        </div>
     )
 })

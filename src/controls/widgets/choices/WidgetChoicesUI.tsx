@@ -3,10 +3,11 @@ import type { Widget_choices } from './WidgetChoices'
 
 import { observer } from 'mobx-react-lite'
 
-import { SelectUI } from '../../../rsuite/SelectUI'
+import { InputBoolUI } from '../../../rsuite/checkbox/InputBoolUI'
+import { SelectUI } from '../../../rsuite/select/SelectUI'
+import { useTheme } from '../../../rsuite/theme/useTheme'
 import { WidgetWithLabelUI } from '../../shared/WidgetWithLabelUI'
-import { AnimatedSizeUI } from '../../utils/AnimatedSizeUI'
-import { InputBoolUI } from '../bool/InputBoolUI'
+import { WidgetFieldsContainerUI } from '../group/WidgetGroupUI'
 
 // UI
 export const WidgetChoices_HeaderUI = observer(function WidgetChoices_LineUI_(p: { widget: Widget_choices<any> }) {
@@ -16,45 +17,46 @@ export const WidgetChoices_HeaderUI = observer(function WidgetChoices_LineUI_(p:
 
 export const WidgetChoices_BodyUI = observer(function WidgetChoices_BodyUI_<T extends SchemaDict>(p: {
     widget: Widget_choices<T>
+    alignLabel?: boolean
+    className?: string
 }) {
     const widget = p.widget
     const activeSubwidgets = Object.entries(widget.children) //
         .map(([branch, subWidget]) => ({ branch, subWidget }))
 
     return (
-        <div>
-            <AnimatedSizeUI>
-                <div //
-                    tw={[widget.config.layout === 'H' ? 'flex' : null]}
-                    className={widget.config.className}
-                >
-                    {activeSubwidgets.map((val) => {
-                        const subWidget = val.subWidget
-                        if (subWidget == null) return <>❌ error</>
-                        return (
-                            <WidgetWithLabelUI //
-                                key={val.branch}
-                                rootKey={val.branch}
-                                widget={subWidget}
-                                label={widget.isSingle ? false : undefined}
-                            />
-                        )
-                    })}
-                </div>
-            </AnimatedSizeUI>
-        </div>
+        <WidgetFieldsContainerUI //
+            layout={widget.config.layout}
+            tw={[widget.config.className, p.className]}
+        >
+            {activeSubwidgets.map((val) => {
+                const subWidget = val.subWidget
+                if (subWidget == null) return <>❌ error</>
+                return (
+                    <WidgetWithLabelUI //
+                        alignLabel={p.alignLabel}
+                        key={val.branch}
+                        rootKey={val.branch}
+                        widget={subWidget}
+                        label={widget.isSingle ? false : undefined}
+                    />
+                )
+            })}
+        </WidgetFieldsContainerUI>
     )
 })
 
 // ============================================================================================================
 
-const WidgetChoices_TabHeaderUI = observer(function WidgetChoicesTab_LineUI_<T extends SchemaDict>(p: {
+export const WidgetChoices_TabHeaderUI = observer(function WidgetChoicesTab_LineUI_<T extends SchemaDict>(p: {
     widget: Widget_choices<T>
 }) {
     const widget = p.widget
     const choices = widget.choicesWithLabels // choicesStr.map((v) => ({ key: v }))
+    const theme = useTheme()
     return (
         <div
+            tw='rounded select-none flex flex-1 flex-wrap gap-x-1 gap-y-0'
             style={{
                 justifyContent:
                     widget.config.tabPosition === 'start' //
@@ -65,22 +67,23 @@ const WidgetChoices_TabHeaderUI = observer(function WidgetChoicesTab_LineUI_<T e
                             ? 'flex-end'
                             : 'flex-end',
             }}
-            tw='rounded select-none flex flex-1 flex-wrap gap-x-0.5 gap-y-0'
         >
             {choices.map((c) => {
                 const isSelected = widget.serial.branches[c.key]
                 return (
                     <InputBoolUI
                         key={c.key}
-                        active={isSelected}
+                        value={isSelected}
                         display='button'
+                        mode={p.widget.isMulti ? 'checkbox' : 'radio'}
                         text={c.label}
+                        box={isSelected ? undefined : { text: theme.value.labelText }}
                         onValueChange={(value) => {
                             if (value != isSelected) {
                                 widget.toggleBranch(c.key)
                             }
                         }}
-                    ></InputBoolUI>
+                    />
                 )
             })}
         </div>

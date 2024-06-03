@@ -1,9 +1,10 @@
-import type { CovariantFn } from './BivariantHack'
+import type { BaseWidget } from './BaseWidget'
 import type { FormManager } from './FormManager'
 import type { FormSerial } from './FormSerial'
 import type { IFormBuilder } from './IFormBuilder'
 import type { ISpec } from './ISpec'
 import type { IWidget } from './IWidget'
+import type { CovariantFn } from './utils/BivariantHack'
 import type { Widget_group, Widget_group_serial } from './widgets/group/WidgetGroup'
 
 import { action, isObservable, makeAutoObservable, observable, toJS } from 'mobx'
@@ -63,18 +64,18 @@ export class Form<
      * | <div>{x.render()}</div>
      */
     render = (p: Omit<FormUIProps, 'form'> = {}): ReactNode => createElement(FormUI, { form: this, ...p })
-    renderAsConfigBtn = (): ReactNode =>
-        createElement(FormAsDropdownConfigUI, {
-            form: this,
-        })
+
+    /**
+     * allow to quickly render the form in a dropdown button
+     * without having to import any component; usage:
+     * | <div>{x.renderAsConfigBtn()}</div>
+     */
+    renderAsConfigBtn = (): ReactNode => createElement(FormAsDropdownConfigUI, { form: this })
 
     get value(): ROOT['$Value'] {
         return this.root.value
     }
 
-    // get rootSerial(): ROOT['$Serial'] {
-    //     return this.root.serial
-    // }
     get serial(): FormSerial {
         return {
             type: 'FormSerial',
@@ -124,14 +125,13 @@ export class Form<
     valueChanged = (widget: IWidget) => {
         this.valueLastUpdatedAt = Date.now()
         this.serialChanged(widget)
-        console.log(`[🦊] value changed`)
         this._onValueChange?.(this)
     }
 
     knownShared: Map<string, IWidget> = new Map()
 
     /** every widget node must call this function once it's serial changed */
-    serialChanged = (_widget: IWidget) => {
+    serialChanged = (_widget: BaseWidget) => {
         this.serialLastUpdatedAt = Date.now()
         this._onSerialChange?.(this)
     }

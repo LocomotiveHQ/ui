@@ -1,7 +1,8 @@
 /* src/theme/form.vars.css */
 :root {
   --roundness: 5px;
-  --input-height: 28px;
+  --input-height: 1.6rem;
+  --input-border: none;
 }
 
 /* src/theme/markdown.css */
@@ -104,15 +105,11 @@
   height: var(--input-height);
   min-height: var(--input-height);
 }
-.WIDGET-FIELD *::selection {
-  background-color: oklch(var(--pc));
+.w-input {
+  width: var(--input-width);
 }
-.WIDGET-GROUP-BORDERED {
-  border-radius: .3rem;
-  border-top: 1px solid oklch(var(--p)/.4);
-  border-left: 1px solid oklch(var(--p)/.4);
-  border-right: 1px solid oklch(var(--p)/.2);
-  border-bottom: 1px solid oklch(var(--p)/.2);
+.h-input {
+  height: var(--input-height);
 }
 .COLLAPSE-PASSTHROUGH:hover .WIDGET-COLLAPSE-BTN {
   opacity: 100% !important;
@@ -122,7 +119,6 @@
 }
 .WIDGET-BLOCK {
   margin-left: .6rem;
-  margin-right: .4rem;
   margin-top: .1rem;
 }
 .input {
@@ -155,7 +151,7 @@ input::-webkit-inner-spin-button {
   height: 0;
   margin: 0;
 }
-.input-number-ui:hover button {
+.input-number-ui:hover .Box {
   opacity: 100;
 }
 .input-number-ui:hover .inui-foreground {

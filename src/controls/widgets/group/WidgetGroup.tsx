@@ -8,9 +8,7 @@ import { nanoid } from 'nanoid'
 
 import { bang } from '../../../utils/misc/bang'
 import { BaseWidget } from '../../BaseWidget'
-import { getActualWidgetToDisplay } from '../../shared/getActualWidgetToDisplay'
-import { getIfWidgetIsCollapsible } from '../../shared/getIfWidgetIsCollapsible'
-import { runWithGlobalForm } from '../../shared/runWithGlobalForm'
+import { runWithGlobalForm } from '../../context/runWithGlobalForm'
 import { registerWidgetClass } from '../WidgetUI.DI'
 import { WidgetGroup_BlockUI, WidgetGroup_LineUI } from './WidgetGroupUI'
 
@@ -70,28 +68,20 @@ export class Widget_group<T extends SchemaDict> extends BaseWidget implements IW
         return null
     }
 
+    get hasChanges() {
+        return Object.values(this.fields).some((f) => f.hasChanges)
+    }
+    reset = () => {
+        for (const sub of this.subWidgets) sub.reset()
+    }
+
     get summary(): string {
         return this.config.summary?.(this.value) ?? ''
         // return this.config.summary?.(this.value) ?? Object.keys(this.fields).length + ' fields'
     }
     readonly id: string
-    get config() { return this.spec.config } // prettier-ignore
-    readonly type: 'group' = 'group'
 
-    collapseAllEntries = () => {
-        for (const [key, _item] of this.entries) {
-            const item = getActualWidgetToDisplay(_item)
-            if (item.serial.collapsed) continue
-            const isCollapsible = getIfWidgetIsCollapsible(item)
-            if (isCollapsible) item.setCollapsed(true)
-        }
-    }
-    expandAllEntries = () => {
-        for (const [key, _item] of this.entries) {
-            const item = getActualWidgetToDisplay(_item)
-            item.setCollapsed(undefined)
-        }
-    }
+    readonly type: 'group' = 'group'
 
     /** all [key,value] pairs */
     get entries() {

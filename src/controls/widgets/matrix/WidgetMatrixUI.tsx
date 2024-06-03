@@ -11,13 +11,13 @@ export const WidgetMatrixUI = observer(function WidgetStrUI_(p: { widget: Widget
     // const collapsed = widget.state.collapsed
     // if (collapsed)
     //     return (
-    //         <Button appearance='subtle' tw='' size='xs' onClick={() => (req.state.collapsed = !Boolean(req.state.collapsed))}>
+    //         <Button look='subtle' tw='' size='xs' onClick={() => (req.state.collapsed = !Boolean(req.state.collapsed))}>
     //             {collapsed ? '▸' : '▿'}
     //         </Button>
     //     )
     return (
         <>
-            {/* <Button appearance='subtle' tw='' size='xs' onClick={() => (req.state.collapsed = !Boolean(req.state.collapsed))}>
+            {/* <Button look='subtle' tw='' size='xs' onClick={() => (req.state.collapsed = !Boolean(req.state.collapsed))}>
                 {collapsed ? '▸' : '▿'}
             </Button> */}
             <table cellSpacing={0} cellPadding={0}>
@@ -33,7 +33,7 @@ export const WidgetMatrixUI = observer(function WidgetStrUI_(p: { widget: Widget
                         {cols.map((col, ix) => (
                             <th
                                 //
-                                className='bg-base-200 virtualBorder'
+                                className='virtualBorder'
                                 key={ix}
                                 onClick={() => widget.setCol(col, !widget.getCell(rows[0]!, col).value)}
                             >

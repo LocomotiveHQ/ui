@@ -57,12 +57,14 @@ export class Widget_seed extends BaseWidget implements IWidget<Widget_seed_types
         return null
     }
 
-    get config() { return this.spec.config } // prettier-ignore
+    readonly defaultValue: number = this.config.default ?? 0
+    get hasChanges() { return this.value !== this.defaultValue } // prettier-ignore
+    reset = () => (this.value = this.defaultValue)
+
     readonly type: 'seed' = 'seed'
     readonly serial: Widget_seed_serial
 
     setToFixed = (val?: number) => {
-        if (this.serial.mode === 'fixed') return
         this.serial.mode = 'fixed'
         if (val) this.serial.val = val
         this.bumpValue()
@@ -74,11 +76,6 @@ export class Widget_seed extends BaseWidget implements IWidget<Widget_seed_types
         this.bumpValue()
     }
 
-    setValue = (val: number) => {
-        this.serial.val = val
-        this.bumpValue()
-    }
-
     constructor(
         //
         public readonly form: Form,
@@ -87,15 +84,28 @@ export class Widget_seed extends BaseWidget implements IWidget<Widget_seed_types
         serial?: Widget_seed_serial,
     ) {
         super()
-        const config = spec.config
         this.id = serial?.id ?? nanoid()
+        const config = spec.config
         this.serial = serial ?? {
             type: 'seed',
             id: this.id,
             val: config.default ?? 0,
             mode: config.defaultMode ?? 'randomize',
         }
-        makeAutoObservableInheritance(this)
+        makeAutoObservableInheritance(this, {
+            DefaultHeaderUI: false,
+            DefaultBodyUI: false,
+        })
+    }
+
+    setValue = (val: number) => {
+        this.serial.val = val
+        this.bumpValue()
+    }
+
+    set value(val: number) {
+        this.serial.val = val
+        this.bumpValue()
     }
 
     get value(): Widget_seed_value {

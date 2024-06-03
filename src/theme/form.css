@@ -43,17 +43,12 @@
     min-height: var(--input-height);
 }
 
-.WIDGET-FIELD *::selection {
-    background-color: oklch(var(--pc));
-}
+.w-input { width: var(--input-width); }
+.h-input { height: var(--input-height); }
 
-.WIDGET-GROUP-BORDERED {
-    border-radius: .3rem;
-    border-top: 1px solid oklch(var(--p)/.4);
-    border-left: 1px solid oklch(var(--p)/.4);
-    border-right: 1px solid oklch(var(--p)/.2);
-    border-bottom: 1px solid oklch(var(--p)/.2);
-}
+/* .WIDGET-FIELD *::selection {
+    background-color: oklch(var(--pc));
+} */
 
 .COLLAPSE-PASSTHROUGH:hover .WIDGET-COLLAPSE-BTN {
     opacity: 100% !important;
@@ -65,7 +60,7 @@
 
 .WIDGET-BLOCK {
     margin-left: .6rem;
-    margin-right: .4rem;
+    /* margin-right: .4rem; */
     margin-top: .1rem;
     /* padding: .4rem; */
 }

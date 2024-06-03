@@ -1,6 +1,44 @@
-// src/rsuite/MarkdownUI.tsx
-import { marked } from "marked";
-import { observer } from "mobx-react-lite";
+// src/controls/context/runWithGlobalForm.ts
+import { nanoid } from "nanoid";
+var GlobalFormCtx = class {
+  constructor() {
+    this.id = nanoid();
+    this.currentForm = null;
+  }
+};
+var globalCtx = new GlobalFormCtx();
+globalThis.globalCtx = globalCtx;
+var runWithGlobalForm = (form, f) => {
+  if (globalCtx.currentForm === form)
+    return f();
+  const prev = globalCtx.currentForm;
+  globalCtx.currentForm = form;
+  const res = f();
+  globalCtx.currentForm = prev;
+  return res;
+};
+var getCurrentForm_IMPL = () => {
+  if (globalCtx.currentForm == null) {
+    console.log(`[\u{1F459}] `, globalCtx);
+    debugger;
+    throw new Error(`No form in context !`);
+  }
+  return globalCtx.currentForm;
+};
+
+// src/icons/icons.ts
+import * as icons from "@mdi/js";
+var myCustomIcons = {
+  cdiTest: "M 2.40,7.20 A 20,20 0,0,1 12.00,7.20 A 20,20 0,0,1 21.60,7.20 Q 21.60,14.40 12.00,21.60 Q 2.40,14.40 2.40,7.20 z"
+};
+var allIcons = {
+  ...icons,
+  ...myCustomIcons
+};
+
+// src/icons/iconHelpers.tsx
+import * as icons2 from "@mdi/js";
+import { Icon } from "@mdi/react";
 
 // src/utils/custom-jsx/jsx-runtime.js
 import { jsx as jsx_, jsxs as jsxs_ } from "react/jsx-runtime";
@@ -43,345 +81,7 @@ function jsxs(type, props, key) {
   return jsxs_(type, { ...rest, className: joinCls(tw) }, key);
 }
 
-// src/rsuite/MarkdownUI.tsx
-var MarkdownUI = observer(function MarkdownUI_(p) {
-  if (p.markdown == null)
-    return null;
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      tw: "_MD",
-      className: p.className,
-      dangerouslySetInnerHTML: { __html: marked(p.markdown) }
-    }
-  );
-});
-
-// src/panels/MessageUI.tsx
-import { observer as observer2 } from "mobx-react-lite";
-var MessageInfoUI = observer2(function MessageInfoUI_(p) {
-  return /* @__PURE__ */ jsxs("div", { className: p.className, tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-info-2", children: [
-    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "info" }),
-    p.title ? /* @__PURE__ */ jsxs("div", { children: [
-      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] })
-  ] });
-});
-var MessageErrorUI = observer2(function MessageErrorUI_(p) {
-  return /* @__PURE__ */ jsxs("div", { tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-error-2", children: [
-    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
-    p.title ? /* @__PURE__ */ jsxs("div", { children: [
-      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] })
-  ] });
-});
-var MessageWarningUI = observer2(function MessageWarningUI_(p) {
-  return /* @__PURE__ */ jsxs("div", { tw: "virtualBorder p-1 rounded flex items-center gap-2 bg-warning-2", children: [
-    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "warning" }),
-    p.title ? /* @__PURE__ */ jsxs("div", { children: [
-      /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-      p.children,
-      /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-    ] })
-  ] });
-});
-
-// src/theme/colorEngine/AbsoluteStyle.tsx
-import { createContext } from "react";
-var ThemeCtx = createContext({
-  background: {
-    type: "absolute",
-    lightness: 0.1,
-    chroma: 0.05,
-    hue: 0
-  },
-  text: {
-    type: "relative",
-    contrast: 1,
-    chromaBlend: 0,
-    hueShift: 0
-  }
-  // text: { type: 'absolute', lightness: 0, chroma: 0.5, hue: 180, },
-  // shadow: null,
-  // border: null,
-});
-
-// src/controls/widgets/list/clamp.ts
-var clamp = (v, min, max) => Math.min(Math.max(v, min), max);
-
-// src/theme/colorEngine/applyRelative.tsx
-var applyRelative = (a, b) => {
-  const xxx = autoContrast(a.lightness, b.contrast);
-  const lightness = xxx;
-  const chroma = clamp(b.chroma ?? a.chroma * (b.chromaBlend ?? 1), 0, 0.4);
-  const hue = b.hue ?? a.hue + (b.hueShift ?? 0);
-  return { type: "absolute", lightness, chroma, hue };
-};
-function autoContrast(lightness, contrast) {
-  const start = lightness;
-  const end = Math.round(lightness) - Math.sign(lightness - 0.5 + 1e-5);
-  return start * (1 - contrast) + end * contrast;
-}
-
-// src/theme/colorEngine/formatColor.tsx
-function formatColor(col) {
-  return `oklch(${clamp(col.lightness, 1e-4, 0.9999)} ${col.chroma} ${col.hue})`;
-}
-
-// src/theme/colorEngine/useColor.tsx
-import Color from "colorjs.io";
-import { createHash } from "crypto";
-import { useContext } from "react";
-var useColor = (p = {}) => {
-  const ctx = useContext(ThemeCtx);
-  const baseStyle = (() => {
-    if (p.base) {
-      if (typeof p.base === "number") {
-        return applyRelative(ctx.background, { contrast: clamp(p.base / 100, 0, 1) });
-      }
-      if (typeof p.base === "string") {
-        const color2 = new Color(p.base);
-        const [l, c, h] = color2.oklch;
-        return { type: "absolute", lightness: l, chroma: c, hue: h };
-      }
-      return applyRelative(ctx.background, p.base);
-    }
-    return ctx.background;
-  })();
-  const textStyle = (() => {
-    if (p.text) {
-      if (typeof p.text === "string") {
-        const color2 = new Color(p.text);
-        const [l, c, h] = color2.oklch;
-        return { type: "absolute", lightness: l, chroma: c, hue: h };
-      }
-      return applyRelative(baseStyle, p.text);
-    } else {
-      if (ctx.text.type === "absolute")
-        return ctx.text;
-      return applyRelative(baseStyle, ctx.text);
-    }
-  })();
-  const borderStyle = (() => {
-    if (p.border) {
-      if (typeof p.border === "boolean") {
-        return applyRelative(baseStyle, { contrast: 0.2 });
-      }
-      if (typeof p.border === "number") {
-        return applyRelative(baseStyle, { contrast: clamp(p.border / 10, 0, 1) });
-      }
-      if (typeof p.border === "string") {
-        const color2 = new Color(p.border);
-        const [l, c, h] = color2.oklch;
-        return { type: "absolute", lightness: l, chroma: c, hue: h };
-      }
-      return applyRelative(baseStyle, p.border);
-    }
-    return null;
-  })();
-  const textForCtx = typeof p.text === "object" ? p.text : ctx.text;
-  const border = borderStyle ? `1px solid ${formatColor(borderStyle)}` : void 0;
-  const color = formatColor(textStyle);
-  const background = p.base != null ? formatColor(baseStyle) : void 0;
-  let baseHover;
-  let textHover;
-  let borderHover;
-  if (p.hover) {
-    const baseHoverStyle = applyRelative(baseStyle, { contrast: 0.2 });
-    baseHover = formatColor(baseHoverStyle);
-    if (borderStyle) {
-      const borderHoverStyle = applyRelative(borderStyle, { contrast: 0.2 });
-      borderHover = formatColor(borderHoverStyle);
-    }
-    const textHoverStyle = applyRelative(baseHoverStyle, { contrast: 0.9, chromaBlend: 2 });
-    textHover = formatColor(textHoverStyle);
-  }
-  const styles = {
-    border,
-    background,
-    color
-  };
-  const variables = {
-    "--box-base": styles.background ?? "initial",
-    "--box-text": styles.color ?? "initial",
-    "--box-border": styles.border ?? "initial",
-    "--box-hover-base": baseHover ?? background ?? "initial",
-    "--box-hover-text": textHover ?? color ?? "initial",
-    "--box-hover-border": borderHover ?? border ?? "initial"
-  };
-  return {
-    background: baseStyle,
-    text: textStyle,
-    textForCtx,
-    border: borderStyle,
-    get className() {
-      return compileOrRetrieveClassName(styles);
-    },
-    styles,
-    variables
-  };
-};
-var cache = {};
-var compileOrRetrieveClassName = (appearance) => {
-  const vals = JSON.stringify(appearance);
-  const hash = "col-" + createHash("md5").update(vals).digest("hex");
-  if (hash in cache)
-    return cache[hash];
-  console.log(`[\u{1F308}] `, `.${hash}`, appearance);
-  const cssBlock = Object.entries(appearance).map(([key, val]) => {
-    if (val == null)
-      return "";
-    return `${key}: ${val};`;
-  }).join("\n");
-  setRule(`.${hash}`, cssBlock);
-  cache[hash] = hash;
-  return hash;
-};
-var styleElement = null;
-function getStyleElement() {
-  if (styleElement != null)
-    return styleElement;
-  if (styleElement) {
-    styleElement = styleElement;
-  } else {
-    styleElement = styleElement ?? document.createElement("style");
-    styleElement.title = "dynamic-theme-css";
-    document.head.appendChild(styleElement);
-  }
-  return styleElement;
-}
-function setRule(selector, block = "") {
-  const styleSheet = getStyleElement().sheet;
-  const rules = styleSheet.cssRules;
-  if (rules == null)
-    throw new Error("\u274C no rules");
-  const rule = Array.from(rules).find((r) => r.selectorText === selector);
-  if (rule == null) {
-    const index = styleSheet.insertRule(`${selector} {${block}}`, styleSheet.cssRules.length);
-    return styleSheet.cssRules[index];
-  } else {
-    rule.style.cssText = block;
-    return rule;
-  }
-}
-
-// src/theme/colorEngine/Box.tsx
-import { observer as observer3 } from "mobx-react-lite";
-var BoxBase = observer3(function BoxTitleUI_({ children, ...rest }) {
-  return /* @__PURE__ */ jsx(Box, { ...rest, base: { contrast: 0.05 }, children });
-});
-var BoxTitle = observer3(function BoxTitleUI_2({ children, ...rest }) {
-  return /* @__PURE__ */ jsx(Box, { ...rest, text: { contrast: 1, chromaBlend: 100, hueShift: 0 }, children });
-});
-var BoxSubtle = observer3(function BoxSubtle_({ children, ...rest }) {
-  return /* @__PURE__ */ jsx(Box, { ...rest, text: { contrast: 0.4, chromaBlend: 1, hueShift: 0 }, children });
-});
-var Box = observer3(
-  function BoxUI_(p, ref) {
-    const {
-      // to merge:
-      style,
-      className,
-      // to ignore:
-      base,
-      hover,
-      text,
-      shadow,
-      border,
-      // others:
-      ...rest
-    } = p;
-    const {
-      background,
-      textForCtx,
-      /* styles, */
-      variables
-    } = useColor(p);
-    return /* @__PURE__ */ jsx(
-      "div",
-      {
-        ...rest,
-        ref,
-        tw: [
-          /* className, */
-          className,
-          "Box"
-        ],
-        style: {
-          /* ...styles, */
-          ...style,
-          ...variables
-        },
-        children: /* @__PURE__ */ jsx(
-          ThemeCtx.Provider,
-          {
-            value: {
-              background,
-              // ~~text must always remaian relative~~ => nope anymore ? ⁉️
-              text: textForCtx
-            },
-            children: p.children
-          }
-        )
-      }
-    );
-  },
-  { forwardRef: true }
-);
-
-// src/controls/FormUI.tsx
-import { observer as observer4 } from "mobx-react-lite";
-var FormUI = observer4(function FormUI_(p) {
-  const form = p.form;
-  if (form == null)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: `form is not yet initialized` });
-  if (form.error)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: form.error });
-  if (form.root == null)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: "form.root is null" });
-  const submitAction = p.submitAction;
-  return /* @__PURE__ */ jsxs(Box, { ...p.theme, className: p.className, style: p.style, children: [
-    form.root.ui(),
-    p.submitButton ?? (submitAction == null ? null : submitAction === "confetti" ? /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(
-      "div",
-      {
-        tw: "btn btn-primary ml-auto",
-        onClick: async () => {
-          const fire = (await import("https://cdn.skypack.dev/canvas-confetti")).default;
-          fire({ zIndex: 1e5, particleCount: 100, spread: 70 });
-        },
-        children: p.submitLabel ?? "Submit"
-      }
-    ) }) : /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx("div", { tw: "btn btn-primary ml-auto", onClick: () => submitAction(form), children: p.submitLabel ?? "Submit" }) }))
-  ] });
-});
-
-// src/icons/icons.ts
-import * as icons from "@mdi/js";
-var myCustomIcons = {
-  cdiTest: "M 2.40,7.20 A 20,20 0,0,1 12.00,7.20 A 20,20 0,0,1 21.60,7.20 Q 21.60,14.40 12.00,21.60 Q 2.40,14.40 2.40,7.20 z"
-};
-var allIcons = {
-  ...icons,
-  ...myCustomIcons
-};
-
 // src/icons/iconHelpers.tsx
-import * as icons2 from "@mdi/js";
-import { Icon } from "@mdi/react";
 var Ikon = new Proxy({}, {
   get(target, key) {
     if (key in target)
@@ -394,42 +94,594 @@ var IkonOf = function IkonOf_({ name, ...p }) {
 };
 var getAllIcons = () => Object.keys(icons2);
 
-// src/rsuite/reveal/ModalShell.tsx
-import { observer as observer5 } from "mobx-react-lite";
-var ModalShellUI = observer5(function ModalShellUI_(p) {
-  return /* @__PURE__ */ jsxs(
+// src/controls/utils/clamp.ts
+var clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+var clampOpt = (v, min, max) => {
+  if (v == null)
+    return min ?? 0;
+  if (min == null && max == null)
+    return v;
+  if (min == null)
+    return Math.min(v, max);
+  if (max == null)
+    return Math.max(v, min);
+  return Math.min(Math.max(v, min), max);
+};
+
+// src/rsuite/kolor/getLCHFromString.tsx
+import Color from "colorjs.io";
+function getLCHFromString(str) {
+  try {
+    const color = new Color(str);
+    const [l, c, h] = color.oklch;
+    return {
+      lightness: l,
+      chroma: c,
+      hue: isNaN(h) ? 0 : h
+    };
+  } catch (e) {
+    console.error(`[\u{1F534}] getLCHFromString FAILURE (string is: "${str}")`);
+    return { lightness: 0.5, chroma: 0.1, hue: 0 };
+  }
+}
+
+// src/rsuite/box/BoxNormalized.tsx
+function extractNormalizeBox(box) {
+  return {
+    base: normalizeBoxKolor(box.base),
+    hover: normalizeBoxKolor(box.hover),
+    // ----------
+    text: normalizeBoxKolor(box.text),
+    textShadow: normalizeBoxKolor(box.textShadow),
+    shadow: normalizeBoxKolor(box.shadow),
+    border: normalizeBoxKolor(box.border)
+  };
+}
+function normalizeBoxKolor(kolor) {
+  if (kolor == null)
+    return null;
+  if (typeof kolor === "boolean")
+    return { contrast: kolor ? 0.2 : 0 };
+  if (typeof kolor === "number")
+    return { contrast: clamp(kolor / 100, 0, 1) };
+  if (typeof kolor === "string")
+    return getLCHFromString(kolor);
+  return kolor;
+}
+
+// src/rsuite/theme/CSSVar.tsx
+import { computed, makeObservable, observable } from "mobx";
+var NumberVar = class {
+  constructor(name, value_) {
+    this.name = name;
+    this.value_ = value_;
+    makeObservable(this, { value_: observable, value: computed });
+  }
+  get value() {
+    return this.value_ instanceof Function ? this.value_() : this.value_;
+  }
+  toString() {
+    return `var(--${this.name})`;
+  }
+};
+function getNum(a, def) {
+  if (a == null)
+    return def;
+  return typeof a === "number" ? a : a.value;
+}
+
+// src/rsuite/kolor/applyRelative.tsx
+var applyKolorToOKLCH = (a, b) => {
+  if (b == null)
+    return a;
+  const lightness = getNum(b.lightness) ?? _autoContrast(a.lightness, getNum(b.contrast, 0));
+  const chroma = getNum(b.chroma) ?? a.chroma * getNum(b.chromaBlend, 1);
+  const hue = getNum(b.hue) ?? a.hue + getNum(b.hueShift, 0);
+  return { lightness, chroma: clamp(chroma, 0, 0.4), hue };
+};
+function _autoContrast(lightness, contrast) {
+  const start = lightness;
+  const dir = Math.sign(0.5 - lightness - 1e-5);
+  const final = start + dir * contrast;
+  return clamp(final, 0, 1);
+}
+
+// src/rsuite/kolor/overrideKolor.tsx
+var overrideKolor = (a, b) => {
+  if (a == null && b == null)
+    return null;
+  if (a == null)
+    return b;
+  if (b == null)
+    return a;
+  let out = {};
+  if (b.lightness != null)
+    out.lightness = b.lightness;
+  else if (b.contrast != null)
+    out.contrast = b.contrast;
+  else if (a.lightness != null)
+    out.lightness = a.lightness;
+  else if (a.contrast != null)
+    out.contrast = a.contrast;
+  if (b.chroma != null)
+    out.chroma = b.chroma;
+  else if (b.chromaBlend != null)
+    out.chromaBlend = b.chromaBlend;
+  else if (a.chroma != null)
+    out.chroma = a.chroma;
+  else if (a.chromaBlend != null)
+    out.chromaBlend = a.chromaBlend;
+  if (b.hue != null)
+    out.hue = b.hue;
+  else if (b.hueShift != null)
+    out.hueShift = b.hueShift;
+  else if (a.hue != null)
+    out.hue = a.hue;
+  else if (a.hueShift != null)
+    out.hueShift = a.hueShift;
+  return out;
+};
+
+// src/rsuite/box/compileBoxClassName.tsx
+var applyBoxToCtx = (ctx, box) => {
+  const nextBase = applyKolorToOKLCH(ctx.base, box.base);
+  const lightness = nextBase.lightness;
+  return {
+    dir: ctx.dir === 1 && lightness > 0.7 ? -1 : ctx.dir === -1 && lightness < 0.45 ? 1 : ctx.dir,
+    base: nextBase,
+    text: overrideKolor(ctx.text, box.text)
+  };
+};
+var hashKolor = (k) => {
+  let out = [];
+  if (k.lightness)
+    out.push(`l=${k.lightness}`);
+  else if (k.contrast)
+    out.push(`l->${k.contrast}`);
+  if (k.chroma)
+    out.push(`c=${k.chroma}`);
+  else if (k.chromaBlend)
+    out.push(`c*${k.chromaBlend}`);
+  if (k.hue)
+    out.push(`h=${k.hue}`);
+  else if (k.hueShift)
+    out.push(`h->${k.hueShift}`);
+  return `(${out.join(",")})`;
+};
+
+// src/rsuite/box/CurrentStyleCtx.tsx
+import { createContext } from "react";
+var CurrentStyleCtx = createContext({
+  base: { lightness: 0.1, chroma: 0.05, hue: 0 },
+  text: { contrast: 1, chromaBlend: 0, hueShift: 0 },
+  dir: 1
+  // text: { type: 'absolute', lightness: 0, chroma: 0.5, hue: 180, },
+  // shadow: null,
+  // border: null,
+});
+
+// src/rsuite/button/usePressLogic.ts
+var draggedElement = null;
+var startingState = false;
+var isDraggingListener = (ev) => {
+  if (ev.button == 0) {
+    draggedElement = null;
+    window.removeEventListener("mouseup", isDraggingListener, true);
+  }
+};
+var usePressLogic = (p, value) => {
+  if (p.onClick == null)
+    return {
+      onMouseDown: p.onMouseDown,
+      onMouseEnter: p.onMouseEnter
+    };
+  return {
+    onMouseDown: (ev) => {
+      if (ev.button == 0) {
+        p.onMouseDown?.(ev);
+        p.onClick?.(ev);
+        draggedElement = ev.currentTarget;
+        startingState = !value;
+        window.addEventListener("mouseup", isDraggingListener, true);
+      }
+    },
+    onMouseEnter: (ev) => {
+      if (startingState === value)
+        return;
+      if (draggedElement != null)
+        p.onClick?.(ev);
+    }
+  };
+};
+
+// src/rsuite/kolor/compileKolorToCSSExpression.tsx
+var compileKolorToCSSExpression = (from, kolor) => {
+  const l = kolor.lightness != null ? kolor.lightness : kolor.contrast ? `calc(l + ${kolor.contrast} * var(--DIR))` : "l";
+  const c = kolor.chroma != null ? kolor.chroma : kolor.chromaBlend ? `calc(c * ${kolor.chromaBlend})` : "c";
+  const h = kolor.hue != null ? kolor.hue : kolor.hueShift ? `calc(l + ${kolor.hueShift})` : "h";
+  return `oklch(from var(--${from}) ${l} ${c} ${h})`;
+};
+
+// src/rsuite/kolor/formatOKLCH.tsx
+function formatOKLCH(col) {
+  const l = clamp(col.lightness, 1e-4, 0.9999).toFixed(3);
+  const c = col.chroma.toFixed(3);
+  const h = col.hue.toFixed(3);
+  return `oklch(${l} ${c} ${h})`;
+}
+
+// src/rsuite/tinyCSS/compileOrRetrieveClassName.tsx
+var knownRules = /* @__PURE__ */ new Set();
+var hasRule = (selector) => knownRules.has(selector);
+function addRule(selector, block = "") {
+  const styleSheet = getStyleElement().sheet;
+  const rules = styleSheet.cssRules;
+  if (rules == null)
+    throw new Error("\u274C no rules");
+  console.log(`[\u{1F3DB}\uFE0F] add ${knownRules.size}th rule (no check)`, selector, knownRules.has(selector));
+  knownRules.add(selector);
+  const index = styleSheet.insertRule(`${selector} {${block}}`, styleSheet.cssRules.length);
+  return styleSheet.cssRules[index];
+}
+var _styleElement = null;
+function getStyleElement() {
+  if (_styleElement != null)
+    return _styleElement;
+  if (_styleElement) {
+    _styleElement = _styleElement;
+  } else {
+    _styleElement = _styleElement ?? document.createElement("style");
+    _styleElement.title = "dynamic-theme-css";
+    document.head.appendChild(_styleElement);
+  }
+  return _styleElement;
+}
+
+// src/utils/misc/exhaust.ts
+var exhaust = (x) => x;
+
+// src/rsuite/frame/FrameSize.tsx
+function getClassNameForSize(p) {
+  if (p.square) {
+    if (p.size === "input")
+      return `h-input`;
+    if (p.size === "xs")
+      return "w-6 h-6";
+    if (p.size === "sm")
+      return "w-8 h-8";
+    if (p.size === "md")
+      return "w-10 h-10";
+    if (p.size === "lg")
+      return "w-12 h-12";
+    if (p.size === "xl")
+      return "w-14 h-14";
+    if (p.size == null)
+      return;
+    exhaust(p.size);
+  } else {
+    if (p.size === "input")
+      return `w-input h-input`;
+    if (p.size === "xs")
+      return "text-xs px-0.5 py-0.5 line-height-[1.1em]";
+    if (p.size === "sm")
+      return "text-sm px-1   py-1   line-height-[1.1em]";
+    if (p.size === "md")
+      return "        px-2   py-1   line-height-[1.1em]";
+    if (p.size === "lg")
+      return "text-lg px-4   py-2   line-height-[1.1em]";
+    if (p.size === "xl")
+      return "text-xl px-8   py-8   line-height-[1.1em]";
+    if (p.size == null)
+      return;
+    exhaust(p.size);
+  }
+  return "";
+}
+
+// src/rsuite/frame/FrameTemplates.ts
+var frame_ghost = extractNormalizeBox({
+  textShadow: 100,
+  border: 10,
+  base: 0
+});
+var frame_subtle = extractNormalizeBox({
+  textShadow: 100,
+  border: 0.05,
+  base: 0
+});
+var frame_default = extractNormalizeBox({
+  textShadow: 100,
+  border: 0.25,
+  base: 0.2
+});
+var frame_primary = extractNormalizeBox({
+  textShadow: 100,
+  base: { contrast: 0.2, chroma: 0.1 },
+  border: 0.1
+});
+var frame_secondary = extractNormalizeBox({
+  border: 0.3,
+  base: { contrast: 0.3, chroma: 0.2, hueShift: 180 }
+});
+var frames = {
+  ghost: frame_ghost,
+  subtle: frame_subtle,
+  default: frame_default,
+  primary: frame_primary,
+  secondary: frame_secondary
+};
+
+// src/rsuite/frame/Frame.tsx
+import { observer } from "mobx-react-lite";
+import { forwardRef, useContext } from "react";
+var Frame = observer(
+  forwardRef(function Frame_(p, ref) {
+    const {
+      active,
+      disabled,
+      // built-in state & style modifiers
+      icon,
+      suffixIcon,
+      loading,
+      // addons
+      expand,
+      square,
+      /* inline, */
+      size,
+      // size
+      look,
+      // templates
+      base,
+      hover,
+      border,
+      text,
+      textShadow,
+      shadow,
+      // box stuff
+      onMouseDown,
+      onMouseEnter,
+      onClick,
+      triggerOnPress,
+      style,
+      className,
+      ...rest
+    } = p;
+    const box = extractNormalizeBox(p);
+    if (look != null) {
+      const template = frames[look];
+      if (template.base)
+        box.base = overrideKolor(template.base, box.base);
+      if (template.border)
+        box.border = overrideKolor(template.border, box.border);
+      if (template.text)
+        box.border = overrideKolor(template.text, box.text);
+    }
+    const isDisabled = disabled || false;
+    if (isDisabled) {
+      box.text = { contrast: 0.1 };
+      box.base = { contrast: 0 };
+      box.border = null;
+    }
+    if (active) {
+      box.border = { contrast: 0.5 };
+      box.text = { contrast: 0.9 };
+    }
+    const prevCtx = useContext(CurrentStyleCtx);
+    const nextCtx = applyBoxToCtx(prevCtx, box);
+    const variables = {
+      "--KLR": formatOKLCH(nextCtx.base),
+      "--DIR": nextCtx.dir?.toString()
+      // === -1 ? -1 : 1,
+      // '--PREV_BASE_L': prevCtx.base.lightness, // === -1 ? -1 : 1,
+      // '--NEXT_BASE_L': nextCtx.base.lightness, // === -1 ? -1 : 1,
+    };
+    const classes = [];
+    const boxText = box.text ?? prevCtx.text;
+    if (boxText) {
+      const clsName = "text" + hashKolor(boxText);
+      const selector = `.${CSS.escape(clsName)}`;
+      if (!hasRule(selector))
+        addRule(selector, `color: ${compileKolorToCSSExpression("KLR", boxText)};`);
+      classes.push(clsName);
+    }
+    if (box.textShadow) {
+      const clsName = "textShadow" + hashKolor(box.textShadow);
+      const selector = `.${CSS.escape(clsName)}`;
+      if (!hasRule(selector))
+        addRule(selector, `text-shadow: 0px 0px 2px ${compileKolorToCSSExpression("KLR", box.textShadow)};`);
+      classes.push(clsName);
+    }
+    if (box.border) {
+      const clsName = "border" + hashKolor(box.border);
+      const selector = `.${CSS.escape(clsName)}`;
+      if (!hasRule(selector))
+        addRule(selector, `border: 1px solid ${compileKolorToCSSExpression("KLR", box.border)};`);
+      classes.push(clsName);
+    }
+    if (box.hover) {
+      const clsName = "h" + hashKolor(box.hover);
+      const selector = `.${CSS.escape(clsName)}:hover`;
+      if (!hasRule(selector))
+        addRule(selector, `background: red`);
+      classes.push(clsName);
+    }
+    return /* @__PURE__ */ jsx(
+      "div",
+      {
+        ...rest,
+        ref,
+        tw: [
+          //
+          "BOX",
+          look && `box-${look}`,
+          getClassNameForSize(p),
+          expand && "flex-1",
+          // inline && 'inline-flex',
+          ...classes,
+          className
+        ],
+        style: { ...style, ...variables },
+        ...rest,
+        ...triggerOnPress != null ? usePressLogic({ onMouseDown, onMouseEnter, onClick }, triggerOnPress.startingState) : { onMouseDown, onMouseEnter, onClick },
+        children: /* @__PURE__ */ jsxs(CurrentStyleCtx.Provider, { value: nextCtx, children: [
+          icon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none", name: icon }),
+          p.children,
+          suffixIcon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none", name: suffixIcon }),
+          loading && /* @__PURE__ */ jsx("div", { tw: "loading loading-spinner loading-sm" })
+        ] })
+      }
+    );
+  })
+);
+
+// src/rsuite/button/Button.tsx
+import { makeAutoObservable, observable as observable2, runInAction } from "mobx";
+import { observer as observer2 } from "mobx-react-lite";
+import { useEffect, useMemo } from "react";
+var Button = observer2(function Button_(p) {
+  const uist = useMemo(() => new ButtonState(p), []);
+  runInAction(() => uist.props = p);
+  useEffect(() => uist.release, []);
+  const { size, square, look, ...rest } = p;
+  return /* @__PURE__ */ jsx(
+    Frame,
+    {
+      size: size ?? "sm",
+      look,
+      base: 5,
+      border: 10,
+      hover: p.disabled ? false : void 0,
+      active: uist.visuallyActive,
+      loading: p.loading,
+      tabIndex: p.tabIndex ?? -1,
+      ...rest,
+      tw: [
+        "inline-flex",
+        "font-semibold",
+        "ui-button",
+        "rounded-sm gap-2 items-center",
+        p.disabled ? null : "cursor-pointer",
+        "whitespace-nowrap",
+        "justify-center"
+      ],
+      onMouseDown: uist.press
+    }
+  );
+});
+var ButtonState = class {
+  constructor(props) {
+    this.props = props;
+    this.pressed = false;
+    this.press = (_ev) => {
+      this.pressed = true;
+      window.addEventListener("pointerup", this.release, true);
+    };
+    this.release = () => {
+      this.pressed = false;
+      window.removeEventListener("pointerup", this.release, true);
+    };
+    makeAutoObservable(this, { props: observable2.ref });
+  }
+  get visuallyActive() {
+    if (this.props.disabled)
+      return false;
+    return this.pressed ? !this.props.active : this.props.active;
+  }
+};
+
+// src/rsuite/MarkdownUI.tsx
+import { marked } from "marked";
+import { observer as observer3 } from "mobx-react-lite";
+var MarkdownUI = observer3(function MarkdownUI_(p) {
+  if (p.markdown == null)
+    return null;
+  return /* @__PURE__ */ jsx(
     "div",
     {
+      tw: "_MD",
       className: p.className,
-      tw: [
-        //
-        "animate-in fade-in",
-        "virtualBorder p-4 rounded-xl bg-base-100 shadow-xl"
-      ],
-      onClick: (ev) => ev.stopPropagation(),
+      dangerouslySetInnerHTML: { __html: marked(p.markdown) }
+    }
+  );
+});
+
+// src/rsuite/messages/MessageErrorUI.tsx
+import { observer as observer4 } from "mobx-react-lite";
+var MessageErrorUI = observer4(function MessageErrorUI_(p) {
+  return /* @__PURE__ */ jsxs(
+    Frame,
+    {
+      base: { contrast: 0.05, hue: 220, chroma: 0.04 },
+      tw: "virtualBorder p-1 rounded flex items-center gap-2",
+      className: p.className,
       children: [
-        /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
-          /* @__PURE__ */ jsx("div", { tw: "text-xl", children: p.title }),
-          /* @__PURE__ */ jsx("div", { tw: "flex-1" }),
-          /* @__PURE__ */ jsx(
-            "div",
-            {
-              tw: "btn btn-sm btn-square",
-              onClick: (ev) => {
-                ev.stopPropagation();
-                ev.preventDefault();
-                p.close();
-              },
-              children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "close" })
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsx("div", { className: "divider my-0" }),
-        /* @__PURE__ */ jsx("div", { tw: "_ModalBody", children: p.children }),
-        /* @__PURE__ */ jsx("div", { tw: "_ModalFooter", children: p.footer })
+        /* @__PURE__ */ jsx(Ikon.mdiAlertBox, {}),
+        p.title ? /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
+          p.children,
+          /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+        ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+          p.children,
+          /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+        ] })
       ]
     }
   );
+});
+
+// src/controls/FormUI.tsx
+import { observer as observer5 } from "mobx-react-lite";
+var FormUI = observer5(function FormUI_(p) {
+  const form = p.form;
+  if (form == null)
+    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: `form is not yet initialized` });
+  if (form.error)
+    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: form.error });
+  if (form.root == null)
+    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: "form.root is null" });
+  const submitAction = p.submitAction;
+  return /* @__PURE__ */ jsxs(Frame, { ...p.theme, className: p.className, style: p.style, children: [
+    form.root.ui(),
+    p.submitButton ?? (submitAction == null ? null : submitAction === "confetti" ? /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(
+      Button,
+      {
+        look: "primary",
+        tw: "ml-auto",
+        onClick: async () => {
+          const fire = (await import("https://cdn.skypack.dev/canvas-confetti")).default;
+          fire({ zIndex: 1e5, particleCount: 100, spread: 70 });
+        },
+        children: p.submitLabel ?? "Submit"
+      }
+    ) }) : /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(Button, { look: "primary", tw: "ml-auto", onClick: () => submitAction(form), children: p.submitLabel ?? "Submit" }) }))
+  ] });
+});
+
+// src/rsuite/reveal/ModalShell.tsx
+import { observer as observer6 } from "mobx-react-lite";
+var ModalShellUI = observer6(function ModalShellUI_(p) {
+  return /* @__PURE__ */ jsxs(Frame, { border: true, className: p.className, tw: ["animate-in fade-in", "p-4 shadow-xl"], onClick: (ev) => ev.stopPropagation(), children: [
+    /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
+      /* @__PURE__ */ jsx("div", { tw: "text-xl", children: p.title }),
+      /* @__PURE__ */ jsx("div", { tw: "flex-1" }),
+      /* @__PURE__ */ jsx(
+        Button,
+        {
+          look: "subtle",
+          square: true,
+          icon: "mdiClose",
+          onClick: (ev) => {
+            ev.stopPropagation();
+            ev.preventDefault();
+            p.close();
+          }
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "divider my-0" }),
+    /* @__PURE__ */ jsx("div", { tw: "_ModalBody", children: p.children }),
+    /* @__PURE__ */ jsx("div", { tw: "_ModalFooter", children: p.footer })
+  ] });
 });
 
 // src/rsuite/reveal/RevealCtx.ts
@@ -508,7 +760,7 @@ var computePlacement = (placement, rect) => {
 };
 
 // src/rsuite/reveal/RevealState.tsx
-import { makeAutoObservable, observable } from "mobx";
+import { makeAutoObservable as makeAutoObservable2, observable as observable3 } from "mobx";
 var defaultShowDelay_whenRoot = 100;
 var defaultHideDelay_whenRoot = 300;
 var defaultShowDelay_whenNested = 0;
@@ -527,7 +779,7 @@ var RevealStateLazy = class {
       this.uistOrNull = new RevealState({ ...this.p }, this.parents);
       return this.uistOrNull;
     };
-    makeAutoObservable(this, { p: false });
+    makeAutoObservable2(this, { p: false });
   }
 };
 var RevealState = class _RevealState {
@@ -675,14 +927,14 @@ var RevealState = class _RevealState {
         console.log(`[\u{1F920}] leaving children (of ${this.ix}) ${depth}`);
       this.inChildren.delete(depth);
     };
-    this.contentFn = p.content;
-    makeAutoObservable(this, { uid: false, p: false });
+    this.contentFn = () => p.content(this);
+    makeAutoObservable2(this, { uid: false, p: false });
   }
   static {
     this.nextUID = 1;
   }
   static {
-    this.shared = observable({ current: null }, { current: observable.ref });
+    this.shared = observable3({ current: null }, { current: observable3.ref });
   }
   /** how deep in the reveal stack we are */
   get ix() {
@@ -735,21 +987,21 @@ var RevealState = class _RevealState {
 };
 
 // src/rsuite/reveal/RevealUI.tsx
-import { observer as observer6 } from "mobx-react-lite";
-import { useEffect, useMemo, useRef } from "react";
+import { observer as observer7 } from "mobx-react-lite";
+import { createElement, useEffect as useEffect2, useMemo as useMemo2, useRef } from "react";
 import { createPortal } from "react-dom";
-var RevealUI = observer6(function RevealUI_(p) {
+var RevealUI = observer7(function RevealUI_(p) {
   const ref = useRef(null);
   const parents = useRevealOrNull()?.tower ?? [];
-  const self = useMemo(() => new RevealStateLazy(p, parents.map((p2) => p2.getUist())), []);
-  const { uistOrNull, getUist: uist2 } = self;
-  const nextTower = useMemo(() => ({ tower: [...parents, self] }), []);
-  useEffect(() => {
+  const SELF = useMemo2(() => new RevealStateLazy(p, parents.map((p2) => p2.getUist())), []);
+  const { uistOrNull, getUist: uist2 } = SELF;
+  const nextTower = useMemo2(() => ({ tower: [...parents, SELF] }), []);
+  useEffect2(() => {
     const x = uistOrNull;
     if (x == null)
       return;
     if (p.content !== x.p.content)
-      x.contentFn = p.content;
+      x.contentFn = () => p.content(x);
     if (p.trigger !== x.p.trigger)
       x.p.trigger = p.trigger;
     if (p.placement !== x.p.placement)
@@ -759,18 +1011,18 @@ var RevealUI = observer6(function RevealUI_(p) {
     if (p.hideDelay !== x.p.hideDelay)
       x.p.hideDelay = p.hideDelay;
   }, [p.content, p.trigger, p.placement, p.showDelay, p.hideDelay]);
-  useEffect(() => {
+  useEffect2(() => {
     if (uistOrNull?.visible && ref.current) {
       const rect = ref.current.getBoundingClientRect();
       uistOrNull.setPosition(rect);
     }
   }, [uistOrNull?.visible]);
-  const content = p.children;
+  const anchor = p.children;
   const tooltip = mkTooltip(uistOrNull);
-  const anchor = /* @__PURE__ */ jsxs(
-    "span",
+  return /* @__PURE__ */ jsx(RevealCtx.Provider, { value: nextTower, children: /* @__PURE__ */ jsxs(
+    "div",
     {
-      tw: ["inline-block ui-reveal-anchor", uistOrNull?.defaultCursor ?? "cursor-pointer"],
+      tw: ["inline-block", uistOrNull?.defaultCursor ?? "cursor-pointer"],
       className: p.className,
       ref,
       style: p.style,
@@ -791,12 +1043,11 @@ var RevealUI = observer6(function RevealUI_(p) {
       onMouseEnter: () => uist2().onMouseEnterAnchor(),
       onMouseLeave: () => uist2().onMouseLeaveAnchor(),
       children: [
-        content,
+        anchor,
         tooltip
       ]
     }
-  );
-  return /* @__PURE__ */ jsx(RevealCtx.Provider, { value: nextTower, children: anchor });
+  ) });
 });
 var mkTooltip = (uist) => {
   if (uist == null)
@@ -808,119 +1059,128 @@ var mkTooltip = (uist) => {
   );
   const pos = uist.tooltipPosition;
   const p = uist.p;
-  const hiddenContent = uist.contentFn();
-  const revealedContent = uist.placement.startsWith("#") ? /* @__PURE__ */ jsx(
-    "div",
-    {
-      ref: (e) => {
-        if (e == null)
-          return global_RevealStack.filter((p2) => p2 !== uist);
-        global_RevealStack.push(uist);
-      },
-      onKeyUp: (ev) => {
-        if (ev.key === "Escape") {
-          uist.close();
-          ev.stopPropagation();
-          ev.preventDefault();
-        }
-      },
-      onClick: (ev) => {
-        p.onClick?.(ev);
-        uist.close();
-        ev.stopPropagation();
-        ev.preventDefault();
-      },
-      style: { zIndex: 99999999, backgroundColor: "#0000003d" },
-      tw: "pointer-events-auto w-full h-full flex items-center justify-center z-50",
-      children: hiddenContent
-    }
-  ) : uist.placement.startsWith("popup") ? /* @__PURE__ */ jsx(
-    "div",
-    {
-      ref: (e) => {
-        if (e == null)
-          return global_RevealStack.filter((p2) => p2 !== uist);
-        global_RevealStack.push(uist);
-      },
-      onKeyUp: (ev) => {
-        if (ev.key === "Escape") {
-          uist.close();
-          ev.stopPropagation();
-          ev.preventDefault();
-        }
-      },
-      onClick: (ev) => {
-        p.onClick?.(ev);
-        uist.close();
-        ev.stopPropagation();
-      },
-      style: { zIndex: 99999999, backgroundColor: "#0000003d" },
-      tw: "pointer-events-auto absolute w-full h-full flex items-center justify-center z-50",
-      children: /* @__PURE__ */ jsx(
-        ModalShellUI,
-        {
-          close: () => {
+  const hiddenContent = createElement(uist.contentFn);
+  const revealedContent = (
+    // VIA PORTAL --------------------------------------------------------------------------------
+    uist.placement.startsWith("#") ? /* @__PURE__ */ jsx(
+      "div",
+      {
+        ref: (e) => {
+          if (e == null)
+            return global_RevealStack.filter((p2) => p2 !== uist);
+          global_RevealStack.push(uist);
+        },
+        onKeyUp: (ev) => {
+          if (ev.key === "Escape") {
             uist.close();
+            ev.stopPropagation();
+            ev.preventDefault();
+          }
+        },
+        onClick: (ev) => {
+          p.onClick?.(ev);
+          uist.close();
+          ev.stopPropagation();
+          ev.preventDefault();
+        },
+        style: { zIndex: 99999999, backgroundColor: "#0000003d" },
+        tw: "pointer-events-auto w-full h-full flex items-center justify-center z-50",
+        children: hiddenContent
+      }
+    ) : (
+      // VIA POPUP --------------------------------------------------------------------------------
+      uist.placement.startsWith("popup") ? /* @__PURE__ */ jsx(
+        "div",
+        {
+          ref: (e) => {
+            if (e == null)
+              return global_RevealStack.filter((p2) => p2 !== uist);
+            global_RevealStack.push(uist);
           },
-          title: p.title,
-          children: hiddenContent
+          onKeyUp: (ev) => {
+            if (ev.key === "Escape") {
+              uist.close();
+              ev.stopPropagation();
+              ev.preventDefault();
+            }
+          },
+          onClick: (ev) => {
+            p.onClick?.(ev);
+            uist.close();
+            ev.stopPropagation();
+          },
+          style: { zIndex: 99999999, backgroundColor: "#0000003d" },
+          tw: "pointer-events-auto absolute w-full h-full flex items-center justify-center z-50",
+          children: /* @__PURE__ */ jsx(
+            ModalShellUI,
+            {
+              close: () => {
+                uist.close();
+              },
+              title: p.title,
+              children: hiddenContent
+            }
+          )
         }
+      ) : (
+        // VIA POPOVER --------------------------------------------------------------------------------
+        /* @__PURE__ */ jsxs(
+          Frame,
+          {
+            className: p.tooltipWrapperClassName,
+            tw: ["_RevealUI shadow-xl pointer-events-auto"],
+            onClick: (ev) => ev.stopPropagation(),
+            onMouseEnter: uist.onMouseEnterTooltip,
+            onMouseLeave: uist.onMouseLeaveTooltip,
+            onContextMenu: uist.enterAnchor,
+            style: {
+              position: "absolute",
+              zIndex: 99999999,
+              top: pos.top ? `${pos.top}px` : void 0,
+              bottom: pos.bottom ? `${pos.bottom}px` : void 0,
+              left: pos.left ? `${pos.left}px` : void 0,
+              right: pos.right ? `${pos.right}px` : void 0,
+              transform: pos.transform
+            },
+            children: [
+              p.title != null && /* @__PURE__ */ jsxs("div", { tw: "px-2", children: [
+                /* @__PURE__ */ jsx("div", { tw: "py-0.5", children: p.title }),
+                /* @__PURE__ */ jsx("div", { tw: "w-full rounded bg-neutral-content", style: { height: "1px" } })
+              ] }),
+              hiddenContent,
+              uist._lock ? /* @__PURE__ */ jsxs("span", { tw: "opacity-50 italic text-sm flex gap-1 items-center justify-center", children: [
+                /* @__PURE__ */ jsx(Ikon.mdiLock, {}),
+                "shift+right-click to unlock"
+              ] }) : null
+            ]
+          }
+        )
       )
-    }
-  ) : /* @__PURE__ */ jsxs(
-    "div",
-    {
-      className: p.tooltipWrapperClassName,
-      tw: ["_RevealUI card card-bordered bg-base-100 shadow-xl pointer-events-auto"],
-      onClick: (ev) => {
-        ev.stopPropagation();
-      },
-      onMouseEnter: uist.onMouseEnterTooltip,
-      onMouseLeave: uist.onMouseLeaveTooltip,
-      onContextMenu: uist.enterAnchor,
-      style: {
-        //   borderTop: uist._lock ? '1px dashed yellow' : undefined,
-        position: "absolute",
-        zIndex: 99999999,
-        top: pos.top ? `${pos.top}px` : void 0,
-        bottom: pos.bottom ? `${pos.bottom}px` : void 0,
-        left: pos.left ? `${pos.left}px` : void 0,
-        right: pos.right ? `${pos.right}px` : void 0,
-        transform: pos.transform
-        // Adjust positioning as needed
-      },
-      children: [
-        p.title ? /* @__PURE__ */ jsxs("div", { tw: "px-2", children: [
-          /* @__PURE__ */ jsx("div", { tw: "py-0.5", children: p.title }),
-          /* @__PURE__ */ jsx("div", { tw: "w-full rounded bg-neutral-content", style: { height: "1px" } })
-        ] }) : /* @__PURE__ */ jsx(Fragment, {}),
-        hiddenContent,
-        uist._lock ? /* @__PURE__ */ jsxs("span", { tw: "opacity-50 italic text-sm flex gap-1 items-center justify-center", children: [
-          /* @__PURE__ */ jsx(Ikon.mdiLock, {}),
-          "shift+right-click to unlock"
-        ] }) : /* @__PURE__ */ jsxs("span", { tw: "opacity-50 italic text-sm flex gap-1 items-center justify-center", children: [
-          /* @__PURE__ */ jsx(Ikon.mdiLockOff, {}),
-          "shift+right-click to lock"
-        ] })
-      ]
-    }
+    )
   );
   return createPortal(revealedContent, element);
 };
 
 // src/panels/Panel_Gallery/FormAsDropdownConfigUI.tsx
-import { observer as observer7 } from "mobx-react-lite";
-var FormAsDropdownConfigUI = observer7(function FormAsDropdownConfigUI_(p) {
+import { observer as observer8 } from "mobx-react-lite";
+var FormAsDropdownConfigUI = observer8(function FormAsDropdownConfigUI_(p) {
   return /* @__PURE__ */ jsx(
     RevealUI,
     {
       tw: "WIDGET-FIELD",
       title: p.title,
       content: () => /* @__PURE__ */ jsx("div", { style: { width: "500px" }, tw: "flex-shrink-0", children: /* @__PURE__ */ jsx(FormUI, { form: p.form }) }),
-      children: /* @__PURE__ */ jsxs("div", { tw: "flex px-1 cursor-default bg-base-200 rounded w-full h-full items-center justify-center hover:brightness-125 border border-base-100", children: [
-        /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "settings" }),
-        /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "expand_more" })
-      ] })
+      children: /* @__PURE__ */ jsxs(
+        Frame,
+        {
+          hover: true,
+          tw: "flex px-1 w-full h-full items-center justify-center hover:brightness-125 border border-base-100",
+          children: [
+            /* @__PURE__ */ jsx(Ikon.mdiCog, {}),
+            /* @__PURE__ */ jsx(Ikon.mdiChevronDown, {})
+          ]
+        }
+      )
     }
   );
 });
@@ -961,15 +1221,15 @@ var isWidgetGroup = (widget) => widget.type === "group";
 var isWidgetString = (widget) => widget.type === "string";
 
 // src/controls/Form.ts
-import { action, isObservable, makeAutoObservable as makeAutoObservable2, observable as observable2, toJS } from "mobx";
-import { nanoid } from "nanoid";
-import { createElement } from "react";
+import { action, isObservable, makeAutoObservable as makeAutoObservable3, observable as observable4, toJS } from "mobx";
+import { nanoid as nanoid2 } from "nanoid";
+import { createElement as createElement2 } from "react";
 var Form = class {
   constructor(manager, ui, formConfig) {
     this.manager = manager;
     this.ui = ui;
     this.formConfig = formConfig;
-    this.uid = nanoid();
+    this.uid = nanoid2();
     /** loading error  */
     this.error = null;
     /** shortcut to access the <FormUI /> component without having to import it first */
@@ -979,10 +1239,13 @@ var Form = class {
      * without having to import any component; usage:
      * | <div>{x.render()}</div>
      */
-    this.render = (p = {}) => createElement(FormUI, { form: this, ...p });
-    this.renderAsConfigBtn = () => createElement(FormAsDropdownConfigUI, {
-      form: this
-    });
+    this.render = (p = {}) => createElement2(FormUI, { form: this, ...p });
+    /**
+     * allow to quickly render the form in a dropdown button
+     * without having to import any component; usage:
+     * | <div>{x.renderAsConfigBtn()}</div>
+     */
+    this.renderAsConfigBtn = () => createElement2(FormAsDropdownConfigUI, { form: this });
     /** Out of Tree unmounted serials  */
     this.shared = {};
     // Change tracking ------------------------------------
@@ -996,7 +1259,6 @@ var Form = class {
     this.valueChanged = (widget) => {
       this.valueLastUpdatedAt = Date.now();
       this.serialChanged(widget);
-      console.log(`[\u{1F98A}] value changed`);
       this._onValueChange?.(this);
     };
     this.knownShared = /* @__PURE__ */ new Map();
@@ -1012,7 +1274,7 @@ var Form = class {
       try {
         let formSerial = this.formConfig.initialSerial?.();
         if (formSerial && !isObservable(formSerial))
-          formSerial = observable2(formSerial);
+          formSerial = observable4(formSerial);
         if (formSerial != null && Object.keys(formSerial).length === 0) {
           formSerial = null;
         }
@@ -1055,7 +1317,7 @@ var Form = class {
       }
     };
     this.builder = manager.getBuilder(this);
-    makeAutoObservable2(this, {
+    makeAutoObservable3(this, {
       //
       // builder: false,
       root: false,
@@ -1065,9 +1327,6 @@ var Form = class {
   get value() {
     return this.root.value;
   }
-  // get rootSerial(): ROOT['$Serial'] {
-  //     return this.root.serial
-  // }
   get serial() {
     return {
       type: "FormSerial",
@@ -1092,36 +1351,8 @@ var Form = class {
   }
 };
 
-// src/controls/shared/runWithGlobalForm.ts
-import { nanoid as nanoid2 } from "nanoid";
-var GlobalFormCtx = class {
-  constructor() {
-    this.id = nanoid2();
-    this.currentForm = null;
-  }
-};
-var globalCtx = new GlobalFormCtx();
-globalThis.globalCtx = globalCtx;
-var runWithGlobalForm = (form, f) => {
-  if (globalCtx.currentForm === form)
-    return f();
-  const prev = globalCtx.currentForm;
-  globalCtx.currentForm = form;
-  const res = f();
-  globalCtx.currentForm = prev;
-  return res;
-};
-var getCurrentForm_IMPL = () => {
-  if (globalCtx.currentForm == null) {
-    console.log(`[\u{1F459}] `, globalCtx);
-    debugger;
-    throw new Error(`No form in context !`);
-  }
-  return globalCtx.currentForm;
-};
-
 // src/controls/FormManager.ts
-import { useMemo as useMemo2 } from "react";
+import { useMemo as useMemo3 } from "react";
 var FormManager = class {
   constructor(builderCtor) {
     this.builderCtor = builderCtor;
@@ -1156,7 +1387,7 @@ var FormManager = class {
     };
     /** simple way to defined forms and in react components */
     this.use = (ui, formProperties = { name: "unnamed" }, deps = []) => {
-      return useMemo2(() => {
+      return useMemo3(() => {
         return new Form(this, ui, formProperties);
       }, deps);
     };
@@ -1708,7 +1939,7 @@ var openRouterInfos = {
 };
 
 // src/controls/SimpleSpec.ts
-import { makeObservable } from "mobx";
+import { makeObservable as makeObservable2 } from "mobx";
 var SimpleSpec = class _SimpleSpec {
   constructor(type, config) {
     this.type = type;
@@ -1743,7 +1974,7 @@ var SimpleSpec = class _SimpleSpec {
       return cloned;
     };
     this.hidden = () => this.withConfig({ hidden: true });
-    makeObservable(this, { config: true });
+    makeObservable2(this, { config: true });
   }
   publish(chan, produce) {
     this.producers.push({ chan, produce });
@@ -1765,8 +1996,8 @@ var SimpleSpec = class _SimpleSpec {
   }
 };
 
-// src/panels/libraryUI/tree/xxx/TreeWidget.tsx
-import { makeAutoObservable as makeAutoObservable3 } from "mobx";
+// src/panels/libraryUI/tree/nodes/TreeWidget.tsx
+import { makeAutoObservable as makeAutoObservable4 } from "mobx";
 var TreeWidget = class {
   constructor(widgetWithKey) {
     this.widgetWithKey = widgetWithKey;
@@ -1825,7 +2056,7 @@ var TreeWidget = class {
       //     },
       // },
     ];
-    makeAutoObservable3(this);
+    makeAutoObservable4(this);
   }
   get widget() {
     return this.widgetWithKey.widget;
@@ -1845,7 +2076,7 @@ var TreeWidget = class {
 };
 
 // src/utils/mobx-store-inheritance.ts
-import { $mobx, isObservable as isObservable2, makeObservable as makeObservable2 } from "mobx";
+import { $mobx, isObservable as isObservable2, makeObservable as makeObservable3 } from "mobx";
 var annotationsSymbol = Symbol();
 var objectPrototype = Object.prototype;
 var makeAutoObservableInheritance = (target, overrides, options) => {
@@ -1877,7 +2108,7 @@ var makeAutoObservableInheritance = (target, overrides, options) => {
     }
     annotations = tmp;
   }
-  return makeObservable2(target, annotations, options);
+  return makeObservable3(target, annotations, options);
 };
 
 // src/controls/IWidget.ts
@@ -1887,27 +2118,255 @@ var isWidget = (x) => {
 };
 var $WidgetSym = Symbol("Widget");
 
-// src/utils/misc/makeLabelFromFieldName.tsx
-function makeLabelFromFieldName(s) {
-  if (typeof s !== "string") {
-    console.log(`[\u{1F534}] makeLabelFromFieldName: expected string, got ${typeof s} (${s})`);
-  }
-  if (s == null)
-    return "";
-  if (s.length === 0)
-    return s;
-  s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
-  s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
-  s = s.replace(/_/g, " ");
-  s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
-  s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
-  return s[0].toUpperCase() + s.slice(1);
+// src/controls/shared/getActualWidgetToDisplay.tsx
+function getActualWidgetToDisplay(originalWidget) {
+  if (isWidgetOptional(originalWidget))
+    return getActualWidgetToDisplay(originalWidget.child);
+  if (isWidgetShared(originalWidget))
+    return getActualWidgetToDisplay(originalWidget.shared);
+  return originalWidget;
 }
+
+// src/rsuite/checkbox/InputBoolCheckboxUI.tsx
+import { observer as observer9 } from "mobx-react-lite";
+var InputBoolCheckboxUI = observer9(function InputBoolCheckboxUI_(p) {
+  const isActive = p.value ?? false;
+  const label = p.text;
+  const mode = p.mode ?? false;
+  const chroma = isActive ? 0.08 : 0.01;
+  return /* @__PURE__ */ jsxs(
+    Frame,
+    {
+      style: p.style,
+      className: p.className,
+      disabled: p.disabled,
+      hover: true,
+      triggerOnPress: { startingState: isActive },
+      expand: p.expand,
+      tw: ["flex flex-row !select-none cursor-pointer"],
+      onClick: (ev) => {
+        if (!p.onValueChange)
+          return;
+        ev.stopPropagation();
+        p.onValueChange(!isActive);
+      },
+      children: [
+        /* @__PURE__ */ jsx(
+          Frame,
+          {
+            icon: p.icon ?? (isActive ? "mdiCheckBold" : null),
+            tw: [
+              //
+              "!select-none object-contain WIDGET-FIELD",
+              mode === "radio" ? "rounded-full" : "rounded-sm"
+            ],
+            border: { contrast: 0.2, chroma },
+            style: {
+              width: "var(--input-height)"
+              /* hacky */
+            },
+            base: { contrast: isActive ? 0.09 : 0, chroma },
+            size: "sm",
+            ...p.box
+          }
+        ),
+        label ? label : null
+      ]
+    }
+  );
+});
+
+// src/rsuite/checkbox/InputBoolToggleButtonUI.tsx
+import { observer as observer10 } from "mobx-react-lite";
+var InputBoolToggleButtonUI = observer10(function InputBoolToggleButtonUI_(p) {
+  const isActive = p.value ?? false;
+  const expand = p.expand;
+  const label = p.text;
+  const chroma = isActive ? 0.08 : 0.02;
+  return /* @__PURE__ */ jsx(
+    Frame,
+    {
+      tw: "WIDGET-FIELD !select-none cursor-pointer justify-center px-1 py-1 text-sm flex items-center",
+      className: p.className,
+      triggerOnPress: { startingState: isActive },
+      look: "default",
+      base: { contrast: isActive ? 0.09 : 0.05, chroma },
+      border: isActive ? 20 : 0,
+      expand,
+      style: p.style,
+      icon: p.icon,
+      ...p.box,
+      onClick: (ev) => {
+        ev.stopPropagation();
+        p.onValueChange?.(!isActive);
+      },
+      children: /* @__PURE__ */ jsx("p", { tw: "w-full text-center line-clamp-1", children: label })
+    }
+  );
+});
+
+// src/rsuite/checkbox/InputBoolUI.tsx
+import { observer as observer11 } from "mobx-react-lite";
+import { createElement as createElement3 } from "react";
+var BoolButtonProps = class {
+};
+var InputBoolUI = observer11(function InputBoolUI_(p) {
+  const display = p.display ?? "check";
+  if (display === "check")
+    return createElement3(InputBoolCheckboxUI, p);
+  return createElement3(InputBoolToggleButtonUI, p);
+});
+
+// src/controls/shared/Widget_ToggleUI.tsx
+import { observer as observer12 } from "mobx-react-lite";
+var Widget_ToggleUI = observer12(function Widget_ToggleUI_(p) {
+  if (!isWidgetOptional(p.widget))
+    return null;
+  const widget = p.widget;
+  return /* @__PURE__ */ jsx(
+    InputBoolUI,
+    {
+      className: p.className,
+      value: widget.serial.active,
+      expand: false,
+      onValueChange: (value) => widget.setActive(value)
+    }
+  );
+});
+
+// src/controls/shared/WidgetErrorsUI.tsx
+import { observer as observer13 } from "mobx-react-lite";
+var WidgetErrorsUI = observer13(function WidgerErrorsUI_(p) {
+  const widget = p.widget;
+  if (widget.hasErrors === false)
+    return null;
+  return /* @__PURE__ */ jsx("div", { tw: "widget-error-ui", children: widget.errors.map((e, i) => /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
+    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
+    e.message
+  ] }, i)) });
+});
+
+// src/controls/shared/WidgetHeaderContainerUI.tsx
+import { observer as observer14 } from "mobx-react-lite";
+var isDragging = false;
+var wasEnabled = false;
+var isDraggingListener2 = (ev) => {
+  if (ev.button == 0) {
+    isDragging = false;
+    window.removeEventListener("mouseup", isDraggingListener2, true);
+  }
+};
+var WidgetHeaderContainerUI = observer14(function WidgetHeaderContainerUI_(p) {
+  const widget = p.widget;
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: "WIDGET-HEADER COLLAPSE-PASSTHROUGH",
+      tw: ["flex items-center gap-0.5 select-none"],
+      onMouseDown: (ev) => {
+        if (ev.button != 0 || !widget.isCollapsible)
+          return;
+        const target = ev.target;
+        if (!target.classList.contains("COLLAPSE-PASSTHROUGH"))
+          return;
+        isDragging = true;
+        window.addEventListener("mouseup", isDraggingListener2, true);
+        wasEnabled = !widget.serial.collapsed;
+        widget.setCollapsed(wasEnabled);
+      },
+      onMouseMove: (ev) => {
+        if (!isDragging || !widget.isCollapsible)
+          return;
+        widget.setCollapsed(wasEnabled);
+      },
+      children: p.children
+    }
+  );
+});
+
+// src/controls/shared/WidgetLabelCaretUI.tsx
+import { observer as observer15 } from "mobx-react-lite";
+var WidgetLabelCaretUI = observer15(function WidgetLabelCaretUI_(p) {
+  if (!p.widget.isCollapsed && !p.widget.isCollapsible)
+    return null;
+  return /* @__PURE__ */ jsx(WidgetLabelCaretAlwaysUI, { isCollapsed: p.widget.isCollapsed });
+});
+var WidgetLabelCaretAlwaysUI = observer15(function WidgetLabelCaretAlways_({ isCollapsed }) {
+  if (isCollapsed)
+    return /* @__PURE__ */ jsx(Ikon.mdiChevronRight, { tw: "COLLAPSE-PASSTHROUGH" });
+  return /* @__PURE__ */ jsx(Ikon.mdiChevronDown, { tw: "COLLAPSE-PASSTHROUGH" });
+});
+
+// src/rsuite/theme/ThemeCtx.tsx
+import { createContext as createContext3 } from "react";
+var defaultDarkTheme = {
+  // NEW
+  inputBorder: new NumberVar(
+    "input-border",
+    10
+    /* % */
+  ),
+  // LEGACY
+  /* 🔴 */
+  base: { lightness: 0.1, chroma: 0.05, hue: 0 },
+  /* 🔴 */
+  text: { contrast: 1, chroma: 0.1 },
+  /* 🔴 */
+  labelText: { contrast: 0.6, hueShift: 0, chroma: 0.1 },
+  /* 🔴 */
+  primary: { base: { chroma: 0.2 }, border: { contrast: 0.1 } },
+  /* 🔴 */
+  shiftDirection: 1
+};
+var ThemeCtx = createContext3({ value: defaultDarkTheme });
+
+// src/rsuite/theme/useTheme.tsx
+import { useContext as useContext3 } from "react";
+var useTheme = () => {
+  const ctx = useContext3(ThemeCtx);
+  return ctx;
+};
+
+// src/controls/shared/WidgetLabelContainerUI.tsx
+import { observer as observer16 } from "mobx-react-lite";
+var WidgetLabelContainerUI = observer16(function WidgetLabelContainerUI_(p) {
+  const theme = useTheme();
+  return /* @__PURE__ */ jsx(
+    Frame,
+    {
+      tw: "COLLAPSE-PASSTHROUGH flex justify-end gap-0.5 flex-none items-center shrink-0 flex-1 items-center py-1",
+      style: p.justify ? justifyStyle : void 0,
+      text: theme.value.labelText,
+      children: p.children
+    }
+  );
+});
+var justifyStyle = {
+  textAlign: "right",
+  minWidth: "8rem",
+  width: (
+    /* alignLabel && HeaderUI ? */
+    "35%"
+  ),
+  marginRight: (
+    /* alignLabel && HeaderUI ? */
+    "0.25rem"
+  )
+};
+
+// src/controls/shared/WidgetLabelIconUI.tsx
+import { observer as observer17 } from "mobx-react-lite";
+var WidgetLabelIconUI = observer17(function WidgetLabelIconUI_(p) {
+  const iconName = p.widget.icon;
+  if (iconName == null)
+    return null;
+  return /* @__PURE__ */ jsx(Frame, { tw: "mr-1", text: { chroma: 0.2, contrast: 0.9 }, children: /* @__PURE__ */ jsx(IkonOf, { name: iconName }) });
+});
 
 // src/widgets/workspace/JsonViewUI.tsx
 import JsonView from "@uiw/react-json-view";
-import { observer as observer8 } from "mobx-react-lite";
-var JsonViewUI = observer8(function JsonViewUI_(p) {
+import { observer as observer18 } from "mobx-react-lite";
+var JsonViewUI = observer18(function JsonViewUI_(p) {
   JSON.stringify(p.value);
   return /* @__PURE__ */ jsx(
     JsonView,
@@ -1948,7 +2407,7 @@ var _githubDarkTheme = {
   "--w-rjv-type-undefined-color": "#79c0ff"
 };
 
-// src/widgets/misc/ErrorBoundary.tsx
+// src/rsuite/errors/ErrorBoundaryFallback.tsx
 var ErrorBoundaryFallback = (p) => {
   return /* @__PURE__ */ jsxs("div", { role: "alert", children: [
     /* @__PURE__ */ jsxs("p", { tw: "flex gap-2 items-center", children: [
@@ -1959,6 +2418,53 @@ var ErrorBoundaryFallback = (p) => {
     p.error.extraJSON && /* @__PURE__ */ jsx(JsonViewUI, { value: p.error.extraJSON }),
     p.error?.stack && typeof p.error.stack === "string" && /* @__PURE__ */ jsx("pre", { tw: "text-sm", children: p.error.stack.split("\n").map((line, i) => /* @__PURE__ */ jsx("div", { children: line }, i)) })
   ] });
+};
+
+// src/rsuite/errors/ErrorBoundaryUI.tsx
+import { observer as observer19 } from "mobx-react-lite";
+import { ErrorBoundary } from "react-error-boundary";
+var ErrorBoundaryUI = observer19(function CushyErrorBoundarySimpleUI_(p) {
+  return /* @__PURE__ */ jsx(
+    ErrorBoundary,
+    {
+      FallbackComponent: ErrorBoundaryFallback,
+      onReset: (details) => {
+      },
+      children: p.children
+    }
+  );
+});
+
+// src/utils/misc/makeLabelFromFieldName.tsx
+function makeLabelFromFieldName(s) {
+  if (typeof s !== "string") {
+    console.log(`[\u274C] makeLabelFromFieldName: expected string, got ${typeof s} (${s})`);
+  }
+  if (s == null)
+    return "";
+  if (s.length === 0)
+    return s;
+  s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
+  s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
+  s = s.replace(/_/g, " ");
+  s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
+  s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
+  s = s.replace(/([0-9])([a-zA-Z])/g, "$1 $2");
+  s = s.replace(/([a-zA-Z])([0-9])/g, "$1 $2");
+  return s[0].toUpperCase() + s.slice(1);
+}
+
+// src/controls/context/CushyKitCtx.ts
+import { createContext as createContext4, useContext as useContext4 } from "react";
+var CushyKitCtx = createContext4(null);
+var useCushyKit = () => {
+  const val = useContext4(CushyKitCtx);
+  if (val == null)
+    throw new Error("missing CushyKit in current context");
+  return val;
+};
+var useCushyKitOrNull = () => {
+  return useContext4(CushyKitCtx);
 };
 
 // src/utils/misc/bang.ts
@@ -1991,14 +2497,14 @@ function asSTRING_orCrash(a, errMsg = "\u274C not a string") {
 }
 
 // src/controls/utils/useSizeOf.tsx
-import { runInAction } from "mobx";
+import { runInAction as runInAction2 } from "mobx";
 import { useLocalObservable } from "mobx-react-lite";
 var useSizeOf = () => {
   const size = useLocalObservable(
     () => ({
       observer: new ResizeObserver((e, obs) => {
         const e0 = bang(e[0]);
-        runInAction(() => {
+        runInAction2(() => {
           const width = e0.contentRect.width;
           const height = e0.contentRect.height;
           size.width = width;
@@ -2019,46 +2525,11 @@ var useSizeOf = () => {
 };
 
 // src/controls/utils/AnimatedSizeUI.tsx
-import { observer as observer9 } from "mobx-react-lite";
-var AnimatedSizeUI = observer9(function AnimatedSizeUI_(p) {
+import { observer as observer20 } from "mobx-react-lite";
+var AnimatedSizeUI = observer20(function AnimatedSizeUI_(p) {
   const { ref: refFn, size } = useSizeOf();
   return /* @__PURE__ */ jsx("div", { className: p.className, tw: "animated overflow-hidden", style: { height: `${size.height}px` }, children: /* @__PURE__ */ jsx("div", { ref: refFn, children: p.children }) });
 });
-
-// src/controls/shared/getActualWidgetToDisplay.tsx
-function getActualWidgetToDisplay(originalWidget) {
-  if (isWidgetOptional(originalWidget))
-    return getActualWidgetToDisplay(originalWidget.child);
-  if (isWidgetShared(originalWidget))
-    return getActualWidgetToDisplay(originalWidget.shared);
-  return originalWidget;
-}
-
-// src/controls/shared/getBorderStatusForWidget.ts
-var getBorderStatusForWidget = (widget) => {
-  if (isWidgetGroup(widget) && widget.config.topLevel)
-    return false;
-  if (widget.config.border != null)
-    return widget.config.border;
-  if (widget.border != null)
-    return widget.border;
-  if (widget.DefaultBodyUI == null)
-    return false;
-  return true;
-};
-
-// src/controls/shared/getIfWidgetIsCollapsible.tsx
-var getIfWidgetIsCollapsible = (widget) => {
-  if (widget.config.collapsed != null)
-    return widget.config.collapsed;
-  if (widget.collapsible != null)
-    return widget.collapsible;
-  if (!widget.DefaultBodyUI)
-    return false;
-  if (widget.config.label === false)
-    return false;
-  return true;
-};
 
 // src/controls/shared/getIfWidgetNeedAlignedLabel.tsx
 var getIfWidgetNeedAlignedLabel = (widget) => {
@@ -2071,119 +2542,10 @@ var getIfWidgetNeedAlignedLabel = (widget) => {
   return true;
 };
 
-// src/controls/widgets/bool/InputBoolUI.tsx
-import { observer as observer10 } from "mobx-react-lite";
-var isDragging = false;
-var wasEnabled = false;
-var InputBoolUI = observer10(function InputBoolUI_(p) {
-  const isActive = p.active ?? false;
-  const display = p.display ?? "check";
-  const expand = p.expand;
-  const icon = p.icon;
-  const label = p.text;
-  const isDraggingListener = (ev) => {
-    if (ev.button == 0) {
-      isDragging = false;
-      window.removeEventListener("mouseup", isDraggingListener, true);
-    }
-  };
-  return /* @__PURE__ */ jsx(
-    Box,
-    {
-      base: { contrast: 0.1 },
-      className: p.className,
-      style: p.style,
-      tw: [
-        "WIDGET-FIELD select-none cursor-pointer",
-        "flex items-center",
-        "!outline-none",
-        "hover:brightness-110",
-        isActive && "brightness-110",
-        // Make the click-able area take up the entire width when as a checkmark and haven't explicitly set expand to false.
-        (display == "check" && expand === void 0 || expand) && "w-full"
-      ],
-      tabIndex: -1,
-      onMouseDown: (ev) => {
-        if (ev.button == 0) {
-          wasEnabled = !isActive;
-          isDragging = true;
-          ev.stopPropagation();
-          window.addEventListener("mouseup", isDraggingListener, true);
-          if (!p.onValueChange)
-            return;
-          p.onValueChange(!isActive);
-        }
-      },
-      onMouseEnter: (ev) => {
-        if (!isDragging)
-          return;
-        if (!p.onValueChange)
-          return;
-        p.onValueChange(wasEnabled);
-      },
-      children: display == "check" ? /* @__PURE__ */ jsxs(Fragment, { children: [
-        /* @__PURE__ */ jsx(
-          "div",
-          {
-            tw: [
-              //
-              "flex items-center rounded-sm bg-base-100",
-              "border border-base-200",
-              "border-b-2 border-b-base-300 box-content"
-            ],
-            children: /* @__PURE__ */ jsx(
-              "input",
-              {
-                type: "checkbox",
-                checked: isActive,
-                tw: ["checkbox checkbox-primary h-5 w-5 rounded-sm !outline-none cursor-default"],
-                tabIndex: -1,
-                readOnly: true
-              }
-            )
-          }
-        ),
-        icon && /* @__PURE__ */ jsx("span", { tw: "pl-1.5", className: "material-symbols-outlined", children: icon }),
-        label && /* @__PURE__ */ jsx("div", { tw: ["line-clamp-1", icon ? "pl-1" : "pl-1.5"], children: label })
-      ] }) : /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs(
-        Box,
-        {
-          base: { contrast: isActive ? 0.5 : 0 },
-          tw: [
-            //
-            "flex items-center h-full p-1 px-2 rounded",
-            "bg-base-200 border border-base-100 text-shadow",
-            "border-b-2 border-b-base-300",
-            isActive && "text-shadow-inv",
-            icon && "pl-1.5",
-            expand && "w-full justify-center",
-            "grid gap-0"
-          ],
-          style: icon ? { gridTemplateColumns: "24px 1fr" } : {},
-          children: [
-            icon && /* @__PURE__ */ jsx("span", { tw: "flex-shrink-0 h-full pr-1.5 shadow-inherit", className: "material-symbols-outlined", children: icon }),
-            /* @__PURE__ */ jsx("p", { tw: "w-full text-center line-clamp-1", children: label ? label : /* @__PURE__ */ jsx(Fragment, {}) })
-          ]
-        }
-      ) })
-    }
-  );
-});
-
-// src/controls/shared/Widget_ToggleUI.tsx
-import { observer as observer11 } from "mobx-react-lite";
-var Widget_ToggleUI = observer11(function Widget_ToggleUI_(p) {
-  if (!isWidgetOptional(p.widget))
-    return null;
-  const widget = p.widget;
-  return /* @__PURE__ */ jsx(
-    InputBoolUI,
-    {
-      active: widget.serial.active,
-      expand: false,
-      onValueChange: (value) => widget.setActive(value)
-    }
-  );
+// src/controls/shared/WidgetHeaderControlsContainerUI.tsx
+import { observer as observer21 } from "mobx-react-lite";
+var WidgetHeaderControlsContainerUI = observer21(function WidgetHeaderControlsContainerUI_(p) {
+  return /* @__PURE__ */ jsx("div", { className: p.className, tw: "widget-header-container-ui COLLAPSE-PASSTHROUGH flex items-center gap-0.5 flex-1", children: p.children });
 });
 
 // src/operators/RET.ts
@@ -2195,7 +2557,7 @@ var Trigger = /* @__PURE__ */ ((Trigger2) => {
 })(Trigger || {});
 
 // src/operators/Activity.ts
-import { makeAutoObservable as makeAutoObservable4 } from "mobx";
+import { makeAutoObservable as makeAutoObservable5 } from "mobx";
 var ActivityManager = class {
   constructor() {
     /** currently active activities */
@@ -2210,7 +2572,7 @@ var ActivityManager = class {
       activity?.onStop?.();
     };
     this.current = () => this._stack[this._stack.length - 1];
-    makeAutoObservable4(this);
+    makeAutoObservable5(this);
   }
   stopActivity(activity) {
     const ix = this._stack.indexOf(activity);
@@ -2223,7 +2585,7 @@ var ActivityManager = class {
 var activityManager = new ActivityManager();
 
 // src/utils/misc/ManualPromise.ts
-import { action as action2, makeObservable as makeObservable3, observable as observable3, runInAction as runInAction2 } from "mobx";
+import { action as action2, makeObservable as makeObservable4, observable as observable5, runInAction as runInAction3 } from "mobx";
 var ManualPromise = class {
   // prettier-ignore
   constructor() {
@@ -2235,7 +2597,7 @@ var ManualPromise = class {
     };
     this.promise = new Promise((resolve, reject) => {
       this.resolve = (t) => {
-        runInAction2(() => {
+        runInAction3(() => {
           this.done = true;
           this.isRunning = false;
         });
@@ -2248,7 +2610,7 @@ var ManualPromise = class {
         resolve(t);
       };
       this.reject = (t) => {
-        runInAction2(() => {
+        runInAction3(() => {
           this.done = true;
           this.isRunning = false;
         });
@@ -2256,10 +2618,10 @@ var ManualPromise = class {
       };
     });
     this.then = this.promise.then.bind(this.promise);
-    makeObservable3(this, {
-      done: observable3,
+    makeObservable4(this, {
+      done: observable5,
       setValue: action2,
-      value: observable3
+      value: observable5
     });
   }
 };
@@ -2306,7 +2668,7 @@ var hasMod = (ev) => {
 };
 
 // src/app/shortcuts/CommandManager.ts
-import { computed, makeObservable as makeObservable4, observable as observable4 } from "mobx";
+import { computed as computed2, makeObservable as makeObservable5, observable as observable6 } from "mobx";
 var CommandManager = class {
   constructor(conf = {}) {
     this.conf = conf;
@@ -2401,14 +2763,14 @@ var CommandManager = class {
         ev.preventDefault();
         return true;
       }
-      exhaust(res);
+      exhaust2(res);
       throw new Error(`INVALID CASE`);
     };
-    makeObservable4(this, {
+    makeObservable5(this, {
       inputHistory: true,
-      contextByName: observable4.shallow,
-      commandByShortcut: observable4.shallow,
-      knownContexts: computed
+      contextByName: observable6.shallow,
+      commandByShortcut: observable6.shallow,
+      knownContexts: computed2
     });
     this.name = this.conf.name || "no-name";
   }
@@ -2416,7 +2778,7 @@ var CommandManager = class {
     return Array.from(this.contextByName.values());
   }
 };
-var exhaust = (_) => _;
+var exhaust2 = (_) => _;
 function parseShortcutToInputSequence(combo) {
   return combo.split(" ").map(normalizeInputToken);
 }
@@ -2483,7 +2845,7 @@ var Command = class {
      * using when to both extract context and check if command can run
      * */
     this.execute = () => {
-      console.warn(`[CMD] \u2623\uFE0F TRYING TO RUN... ${this.label}`);
+      console.info(`[CMD] \u2623\uFE0F TRYING TO RUN... ${this.label}`);
       const context = this.conf.ctx.check();
       if (context === "UNMATCHED" /* UNMATCHED */) {
         console.warn(`[CMD] \u{1F534} FAILED TO RUN`);
@@ -2493,7 +2855,7 @@ var Command = class {
       return res;
     };
     this.NavBarBtnUI = (p) => {
-      return /* @__PURE__ */ jsx("div", { onClick: () => this.execute(), children: p.label ?? this.label });
+      return /* @__PURE__ */ jsx(Button, { border: false, onClick: () => this.execute(), children: p.label ?? this.label });
     };
     Object.assign(this, conf);
   }
@@ -2544,9 +2906,9 @@ var SimpleMenuAction = class {
 };
 
 // src/app/shortcuts/ComboUI.tsx
-import { observer as observer12 } from "mobx-react-lite";
+import { observer as observer22 } from "mobx-react-lite";
 import { Fragment as Fragment2 } from "react";
-var ComboUI = observer12(function ComboUI_(p) {
+var ComboUI = observer22(function ComboUI_(p) {
   if (p.combo == null)
     return null;
   const iss = parseShortcutToInputSequence(p.combo);
@@ -2592,28 +2954,17 @@ var formatKeyName = (keyName) => {
   return keyName.toUpperCase();
 };
 
-// src/rsuite/Dropdown.tsx
-import { observer as observer13 } from "mobx-react-lite";
-var Dropdown = (p) => /* @__PURE__ */ jsx(
-  RevealUI,
-  {
-    tw: [p.className],
-    content: () => /* @__PURE__ */ jsx(Box, { base: -5, tabIndex: 0, tw: "shadow z-[1] bg-base-100 rounded-box", children: p.content?.() }),
-    children: /* @__PURE__ */ jsxs("label", { tabIndex: 0, tw: [`flex-nowrap btn btn-ghost btn-sm gap-1 py-0 px-1.5`], children: [
-      p.startIcon && /* @__PURE__ */ jsx("span", { tw: "hidden lg:inline-block", children: p.startIcon }),
-      p.title
-    ] })
-  }
-);
-var MenuItem = observer13(function DropdownItem_(p) {
+// src/rsuite/dropdown/MenuItem.tsx
+import { observer as observer23 } from "mobx-react-lite";
+var MenuItem = observer23(function DropdownItem_(p) {
   const { size, label, disabled, icon, children, active, onClick, ...rest } = p;
   return /* @__PURE__ */ jsxs(
-    Box,
+    Frame,
     {
       text: { contrast: disabled ? 0.5 : 1 },
       base: {
-        contrast: active ? 0.9 : 0.05,
-        chroma: active ? 0.5 : void 0
+        contrast: active ? 0.1 : 0,
+        chroma: active ? 0.1 : void 0
       },
       hover: true,
       onClick: (ev) => {
@@ -2622,7 +2973,7 @@ var MenuItem = observer13(function DropdownItem_(p) {
         p.onClick?.(ev);
       },
       style: { lineHeight: "1.6rem" },
-      tw: ["_MenuItem", "px-1 flex items-center gap-2 whitespace-nowrap cursor-pointer"],
+      tw: ["_MenuItem", "px-2 py-0.5 flex items-center gap-2 whitespace-nowrap cursor-pointer"],
       ...rest,
       children: [
         icon,
@@ -2642,13 +2993,13 @@ var SimpleMenuModal = class {
 };
 
 // src/operators/MenuUI.tsx
-import { observer as observer14 } from "mobx-react-lite";
-import { createElement as createElement2 } from "react";
+import { observer as observer24 } from "mobx-react-lite";
+import { createElement as createElement4 } from "react";
 import { Fragment as Fragment3 } from "react/jsx-runtime";
-var MenuRootUI = observer14(function MenuRootUI_(p) {
+var MenuRootUI = observer24(function MenuRootUI_(p) {
   return /* @__PURE__ */ jsx(RevealUI, { className: "dropdown", placement: "bottomStart", content: () => /* @__PURE__ */ jsx(p.menu.UI, {}), children: /* @__PURE__ */ jsx("label", { tabIndex: 0, tw: [`flex-nowrap btn btn-ghost btn-sm py-0 px-1.5`], children: p.menu.menu.title }) });
 });
-var MenuUI = observer14(function MenuUI_(p) {
+var MenuUI = observer24(function MenuUI_(p) {
   return /* @__PURE__ */ jsx(
     "div",
     {
@@ -2765,7 +3116,7 @@ var MenuUI = observer14(function MenuUI_(p) {
         } else if (isWidget(entry)) {
           return entry.ui();
         } else {
-          return /* @__PURE__ */ jsx(Fragment3, { children: createElement2(entry) }, ix);
+          return /* @__PURE__ */ jsx(Fragment3, { children: createElement4(entry) }, ix);
         }
       })
     }
@@ -2774,7 +3125,7 @@ var MenuUI = observer14(function MenuUI_(p) {
 
 // src/operators/Menu.ts
 import { nanoid as nanoid3 } from "nanoid";
-import { createElement as createElement3, useMemo as useMemo3 } from "react";
+import { createElement as createElement5, useMemo as useMemo4 } from "react";
 var MenuManager = class {
   constructor() {
     this.operators = [];
@@ -2787,8 +3138,8 @@ var Menu = class {
   // prettier-ignore
   constructor(def) {
     this.def = def;
-    this.UI = (p) => createElement3(MenuUI, { menu: useMemo3(() => new MenuInstance(this, p.props), []) });
-    this.DropDownUI = (p) => createElement3(MenuRootUI, { menu: useMemo3(() => new MenuInstance(this, p.props), []) });
+    this.UI = (p) => createElement5(MenuUI, { menu: useMemo4(() => new MenuInstance(this, p.props), []) });
+    this.DropDownUI = (p) => createElement5(MenuRootUI, { menu: useMemo4(() => new MenuInstance(this, p.props), []) });
     // prettier-ignore
     /** bind a menu to give props */
     this.bind = (props, ui) => new BoundMenu(this, props, ui);
@@ -2809,8 +3160,8 @@ var MenuWithoutProps = class {
   constructor(def) {
     this.def = def;
     // 🔴
-    this.UI = () => createElement3(MenuRootUI, { menu: useMemo3(() => new MenuInstance(this, {}), []) });
-    this.DropDownUI = () => createElement3(MenuRootUI, { menu: useMemo3(() => new MenuInstance(this, {}), []) });
+    this.UI = () => createElement5(MenuRootUI, { menu: useMemo4(() => new MenuInstance(this, {}), []) });
+    this.DropDownUI = () => createElement5(MenuRootUI, { menu: useMemo4(() => new MenuInstance(this, {}), []) });
     /** bind a menu to give props */
     this.bind = (ui) => new BoundMenu(this, {}, ui);
     this.id = def.id ?? nanoid3();
@@ -2832,7 +3183,7 @@ var MenuInstance = class {
     this.keysTaken = keysTaken;
     this.onStart = () => {
     };
-    this.UI = () => createElement3(MenuUI, { menu: this });
+    this.UI = () => createElement5(MenuUI, { menu: this });
     this.onEvent = (event) => {
       event.stopImmediatePropagation();
       event.stopPropagation();
@@ -2920,7 +3271,7 @@ var VIOLATION = (msg, data) => {
 };
 
 // src/panels/libraryUI/tree/xxx/TreeNode.ts
-import { makeAutoObservable as makeAutoObservable5 } from "mobx";
+import { makeAutoObservable as makeAutoObservable6 } from "mobx";
 var getId = (node) => {
   if (typeof node === "string")
     return node;
@@ -2950,7 +3301,7 @@ var TreeNode = class _TreeNode {
       // @ts-ignore
       ctor(elem.props)
     );
-    makeAutoObservable5(this, { _children_: false });
+    makeAutoObservable6(this, { _children_: false });
   }
   scrollIntoView(p) {
     document.getElementById(this.id)?.scrollIntoView({
@@ -3128,11 +3479,11 @@ var TreeNode = class _TreeNode {
 };
 
 // src/panels/libraryUI/tree/xxx/Tree.ts
-import { makeAutoObservable as makeAutoObservable6, observable as observable5 } from "mobx";
+import { makeAutoObservable as makeAutoObservable7, observable as observable7 } from "mobx";
 import { nanoid as nanoid4 } from "nanoid";
 var defaultTreeStorage = (node) => {
   const data = { isExpanded: SQLITE_false };
-  return observable5({
+  return observable7({
     data,
     update: (next) => data.isExpanded = next.isExpanded
   });
@@ -3146,7 +3497,7 @@ var Tree = class {
       const node = new TreeNode(this, uid, void 0);
       this.topLevelNodes.push(node);
     }
-    makeAutoObservable6(this, {
+    makeAutoObservable7(this, {
       // indexNode: action
     });
   }
@@ -3198,18 +3549,18 @@ var KEYS = {
 };
 
 // src/panels/libraryUI/tree/xxx/TreeCtx.ts
-import { createContext as createContext3, useContext as useContext3 } from "react";
-var TreeViewCtx = createContext3(null);
+import { createContext as createContext5, useContext as useContext5 } from "react";
+var TreeViewCtx = createContext5(null);
 var useTreeView = () => {
-  const val = useContext3(TreeViewCtx);
+  const val = useContext5(TreeViewCtx);
   if (val == null)
     throw new Error("missing editor in current widget react contexts");
   return val;
 };
 
 // src/panels/libraryUI/tree/RenderTreeIcon1.tsx
-import { observer as observer15 } from "mobx-react-lite";
-var TreeIcon1UI = observer15(function TreeIcon1UI_(p) {
+import { observer as observer25 } from "mobx-react-lite";
+var TreeIcon1UI = observer25(function TreeIcon1UI_(p) {
   const action3 = p;
   return /* @__PURE__ */ jsx(
     "div",
@@ -3227,8 +3578,8 @@ var TreeIcon1UI = observer15(function TreeIcon1UI_(p) {
 });
 
 // src/panels/libraryUI/tree/RenderItemTitleUI.tsx
-import { observer as observer16 } from "mobx-react-lite";
-var RenderItemTitleUI = observer16(function RenderItemTitleUI_(p) {
+import { observer as observer26 } from "mobx-react-lite";
+var RenderItemTitleUI = observer26(function RenderItemTitleUI_(p) {
   const node = p.node;
   const item = node.data;
   let icon = node.isOpen ? item.iconExpanded ?? item.icon : item.icon ?? item.iconExpanded;
@@ -3265,9 +3616,9 @@ var RenderItemTitleUI = observer16(function RenderItemTitleUI_(p) {
 });
 
 // src/panels/libraryUI/tree/xxx/TreeEntryUI.tsx
-import { observer as observer17 } from "mobx-react-lite";
+import { observer as observer27 } from "mobx-react-lite";
 import { Fragment as Fragment4 } from "react";
-var TreeEntryUI = observer17(function TreeEntryUI_(p) {
+var TreeEntryUI = observer27(function TreeEntryUI_(p) {
   const n = p.node;
   const children = n.childKeys;
   const hasChildren = children.length > 0;
@@ -3317,11 +3668,11 @@ var TreeEntryUI = observer17(function TreeEntryUI_(p) {
 });
 
 // src/panels/libraryUI/tree/xxx/TreeUI.tsx
-import { observer as observer18 } from "mobx-react-lite";
-var TreeUI = observer18(function TreeEditorUI_(p) {
+import { observer as observer28 } from "mobx-react-lite";
+var TreeUI = observer28(function TreeEditorUI_(p) {
   const tv = p.treeView;
   return /* @__PURE__ */ jsx(TreeViewCtx.Provider, { value: tv, children: /* @__PURE__ */ jsxs("div", { tw: "_TreeUI flex flex-col", className: p.className, children: [
-    /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1 bg-base-300", children: [
+    /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
       /* @__PURE__ */ jsx("div", { className: "flex flex-1 gap-1 items-center", children: p.title && /* @__PURE__ */ jsx("div", { tw: "text-sm", children: p.title }) }),
       p.shortcut && /* @__PURE__ */ jsx(ComboUI, { primary: true, size: "xs", combo: p.shortcut }),
       /* @__PURE__ */ jsx(
@@ -3380,7 +3731,7 @@ var onKeyDownHandlers = (ev, view) => {
 };
 
 // src/panels/libraryUI/tree/xxx/TreeView.ts
-import { makeAutoObservable as makeAutoObservable7 } from "mobx";
+import { makeAutoObservable as makeAutoObservable8 } from "mobx";
 import { nanoid as nanoid5 } from "nanoid";
 import { createRef } from "react";
 var TreeView = class {
@@ -3498,7 +3849,7 @@ var TreeView = class {
         return this.at = this.at.parent;
     };
     this.resetCaretPos();
-    makeAutoObservable7(this, { filterRef: false, id: false });
+    makeAutoObservable8(this, { filterRef: false, id: false });
   }
   get nodes() {
     return this.tree.topLevelNodes;
@@ -3526,71 +3877,116 @@ var TreeView = class {
   }
 };
 
+// src/rsuite/dropdown/MenuDividerUI.tsx
+function MenuDividerUI_() {
+  return /* @__PURE__ */ jsx("div", { tw: "divider my-0" });
+}
+
 // src/controls/shared/WidgetMenu.tsx
+import { observer as observer29 } from "mobx-react-lite";
+var WidgetMenuUI = observer29(function WidgetMenuUI_(p) {
+  return /* @__PURE__ */ jsx(RevealUI, { className: p.className, content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: p.widget }), children: /* @__PURE__ */ jsx(Button, { icon: "mdiDotsVertical", look: "ghost", square: true, size: "input" }) });
+});
 var menu_widgetActions = menu({
   title: "widget actions",
   entries: (widget) => {
-    const createPreset = new SimpleMenuModal({
-      label: "Create Preset",
-      submit: () => {
-        console.log(`[\u{1F920}] values`);
-      },
-      UI: () => {
-        const tree = new Tree([widget.asTreeElement("root")]);
-        const treeView = new TreeView(tree, { selectable: true });
-        return /* @__PURE__ */ jsx(TreeUI, { title: "Select values to include in preset", treeView });
-      }
-    });
-    const presets = widget.config.presets;
-    if (presets == null)
-      return [createPreset];
-    const entries = presets;
-    if (entries.length === 0)
-      return [createPreset];
-    return [
-      //
-      createPreset,
-      ...entries.map(
-        (entry) => new SimpleMenuAction({
+    const out = [];
+    out.push(
+      new SimpleMenuAction({
+        label: "Reset",
+        icon: "mdiUndoVariant",
+        disabled: () => !widget.hasChanges,
+        onPick: () => widget.reset()
+      })
+    );
+    out.push(MenuDividerUI_);
+    out.push(
+      new SimpleMenuAction({
+        label: "Expand All",
+        icon: "mdiExpandAll",
+        disabled: widget.hasNoChild,
+        onPick: () => widget.expandAllChildren()
+      })
+    );
+    out.push(
+      new SimpleMenuAction({
+        label: "Collapse All",
+        icon: "mdiCollapseAll",
+        onPick: () => widget.collapseAllChildren()
+      })
+    );
+    out.push(MenuDividerUI_);
+    out.push(
+      new SimpleMenuModal({
+        label: "Create Preset",
+        submit: () => {
+          console.log(`[\u{1F920}] values`);
+        },
+        UI: () => {
+          const tree = new Tree([widget.asTreeElement("root")]);
+          const treeView = new TreeView(tree, { selectable: true });
+          return /* @__PURE__ */ jsx(
+            TreeUI,
+            {
+              title: "Select values to include in preset",
+              treeView
+            }
+          );
+        }
+      })
+    );
+    out.push(MenuDividerUI_);
+    const presets = widget.config.presets ?? [];
+    for (const entry of presets) {
+      out.push(
+        new SimpleMenuAction({
           label: entry.label,
           icon: entry.icon,
           onPick: () => entry.apply(widget)
         })
-      )
-    ];
+      );
+    }
+    return out;
   }
 });
 
 // src/controls/shared/WidgetTooltipUI.tsx
-import { observer as observer19 } from "mobx-react-lite";
-var WidgetTooltipUI = observer19(function WidgetTooltipUI_(p) {
+import { observer as observer30 } from "mobx-react-lite";
+var WidgetTooltipUI = observer30(function WidgetTooltipUI_(p) {
   const widget = p.widget;
-  return /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx("div", { children: widget.config.tooltip }), children: /* @__PURE__ */ jsx("div", { className: "btn btn-sm btn-square btn-ghost", children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "info" }) }) });
+  return /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx("div", { children: widget.config.tooltip }), children: /* @__PURE__ */ jsx(Frame, { square: true, icon: "mdiInformationOutline" }) });
+});
+
+// src/controls/shared/WidgetUndoChangesButtonUI.tsx
+import { observer as observer31 } from "mobx-react-lite";
+var WidgetUndoChangesButtonUI = observer31(function WidgetUndoChangesButtonUI_(p) {
+  const widget = p.widget;
+  return /* @__PURE__ */ jsx(
+    Button,
+    {
+      className: p.className,
+      onClick: () => widget?.reset(),
+      disabled: !(widget?.hasChanges ?? false),
+      icon: "mdiUndoVariant",
+      look: "ghost",
+      size: "input",
+      square: true
+    }
+  );
 });
 
 // src/controls/shared/WidgetWithLabelUI.tsx
-import { observer as observer20 } from "mobx-react-lite";
-import { ErrorBoundary } from "react-error-boundary";
-var isDragging2 = false;
-var wasEnabled2 = false;
-var WidgetWithLabelUI = observer20(function WidgetWithLabelUI_(p) {
-  if (p.widget.config.hidden)
+import { observer as observer32 } from "mobx-react-lite";
+var WidgetWithLabelUI = observer32(function WidgetWithLabelUI_(p) {
+  if (p.widget.isHidden)
     return null;
   const rootKey = p.rootKey;
   const originalWidget = p.widget;
   const widget = getActualWidgetToDisplay(originalWidget);
-  const isDisabled = isWidgetOptional(originalWidget) && !originalWidget.serial.active;
   const HeaderUI = widget.header();
   const BodyUI = widget.body();
-  const isCollapsible = getIfWidgetIsCollapsible(widget);
-  const isCollapsed = (widget.serial.collapsed ?? isDisabled) && isCollapsible;
-  const alignLabel = p.alignLabel ?? getIfWidgetNeedAlignedLabel(widget);
-  const k = widget;
-  if (isWidgetGroup(k) && //
-  Object.keys(k.fields).length === 0) {
-    return null;
-  }
-  const showBorder = getBorderStatusForWidget(widget);
+  const justify = p.alignLabel ?? getIfWidgetNeedAlignedLabel(widget);
+  const showBorder = widget.border;
   const labelText = (() => {
     if (p.label != null)
       return p.label;
@@ -3603,8 +3999,8 @@ var WidgetWithLabelUI = observer20(function WidgetWithLabelUI_(p) {
     /* @__PURE__ */ jsxs(
       "span",
       {
-        tw: [isCollapsed || isCollapsible ? "cursor-pointer" : null],
-        className: "COLLAPSE-PASSTHROUGH",
+        tw: [widget.isCollapsed || widget.isCollapsible ? "cursor-pointer" : null],
+        className: "COLLAPSE-PASSTHROUGH whitespace-nowrap",
         style: { lineHeight: "1rem" },
         children: [
           labelText,
@@ -3616,98 +4012,39 @@ var WidgetWithLabelUI = observer20(function WidgetWithLabelUI_(p) {
       }
     )
   );
-  const styleDISABLED = isDisabled ? { pointerEvents: "none", opacity: 0.3, backgroundColor: "rgba(0,0,0,0.05)" } : void 0;
-  const isDraggingListener = (ev) => {
-    if (ev.button == 0) {
-      isDragging2 = false;
-      window.removeEventListener("mouseup", isDraggingListener, true);
-    }
-  };
-  const iconName = widget.icon;
-  return /* @__PURE__ */ jsx(
-    Box,
+  const extraClass = originalWidget.isDisabled ? "pointer-events-none opacity-30 bg-[#00000005]" : void 0;
+  const kit = useCushyKit();
+  const boxBase = widget.background && widget.isCollapsible || showBorder ? { contrast: 0.05 } : void 0;
+  const WUI = /* @__PURE__ */ jsxs(
+    Frame,
     {
-      tw: [
-        // widget.background && (isCollapsible || showBorder) && 'bg-base-100',
-        showBorder && "WIDGET-GROUP-BORDERED",
-        p.isTopLevel ? "TOP-LEVEL-FIELD" : "SUB-FIELD",
-        widget.type
-      ],
-      base: widget.background && (isCollapsible || showBorder) ? { contrast: 0.04 } : void 0,
+      base: boxBase,
       ...p.widget.config.box,
-      children: /* @__PURE__ */ jsxs(AnimatedSizeUI, { children: [
-        /* @__PURE__ */ jsxs(
-          "div",
-          {
-            className: "WIDGET-HEADER COLLAPSE-PASSTHROUGH",
-            tw: ["flex items-center gap-0.5 select-none"],
-            onMouseDown: (ev) => {
-              if (ev.button != 0 || !isCollapsible)
-                return;
-              const target = ev.target;
-              if (!target.classList.contains("COLLAPSE-PASSTHROUGH"))
-                return;
-              isDragging2 = true;
-              window.addEventListener("mouseup", isDraggingListener, true);
-              wasEnabled2 = !widget.serial.collapsed;
-              widget.setCollapsed(wasEnabled2);
-            },
-            onMouseMove: (ev) => {
-              if (!isDragging2 || !isCollapsible)
-                return;
-              widget.setCollapsed(wasEnabled2);
-            },
-            children: [
-              /* @__PURE__ */ jsxs(
-                "span",
-                {
-                  tw: [
-                    "flex justify-end gap-0.5 flex-none items-center shrink-0"
-                    // p.isTopLevel && !isDisabled ? 'font-bold' : 'text-base',
-                    // 🔴 label COLOR here
-                    // isDisabled ? undefined : 'text-primary',
-                  ],
-                  style: alignLabel ? {
-                    textAlign: "right",
-                    minWidth: "8rem",
-                    width: alignLabel && HeaderUI ? "35%" : void 0,
-                    marginRight: alignLabel && HeaderUI ? "0.25rem" : void 0
-                  } : void 0,
-                  children: [
-                    /* @__PURE__ */ jsxs(Box, { tw: "flex items-center", text: { hueShift: 0, contrast: 0.9, chromaBlend: 1 }, children: [
-                      (isCollapsed || isCollapsible) && /* @__PURE__ */ jsx("span", { className: "WIDGET-COLLAPSE-BTN COLLAPSE-PASSTHROUGH material-symbols-outlined opacity-70 hover:opacity-100 cursor-pointer", children: isCollapsed ? "chevron_right" : "expand_more" }),
-                      iconName && /* @__PURE__ */ jsx(Box, { tw: "mr-1", text: { chroma: 0.2, contrast: 0.9 }, children: /* @__PURE__ */ jsx(IkonOf, { name: iconName }) }),
-                      BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: originalWidget }),
-                      widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
-                      widget.config.tooltip && /* @__PURE__ */ jsx(WidgetTooltipUI, { widget }),
-                      LABEL
-                    ] }),
-                    !BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: originalWidget })
-                  ]
-                }
-              ),
-              HeaderUI && /* @__PURE__ */ jsx("div", { className: "COLLAPSE-PASSTHROUGH", tw: "flex items-center gap-0.5 flex-1", style: styleDISABLED, children: /* @__PURE__ */ jsx(ErrorBoundary, { FallbackComponent: ErrorBoundaryFallback, onReset: (details) => {
-              }, children: HeaderUI }) }),
-              widget.config.presets && /* @__PURE__ */ jsx(
-                RevealUI,
-                {
-                  content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: widget }),
-                  children: /* @__PURE__ */ jsx(Ikon.mdiBook, {})
-                }
-              )
-            ]
-          }
-        ),
-        BodyUI && !isCollapsed && /* @__PURE__ */ jsx(ErrorBoundary, { FallbackComponent: ErrorBoundaryFallback, onReset: (details) => {
-        }, children: /* @__PURE__ */ jsx("div", { style: styleDISABLED, tw: [isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
-        widget.hasErrors && /* @__PURE__ */ jsx("div", { tw: "widget-error-ui", children: widget.errors.map((e, i) => /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
-          /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
-          e.message
-        ] }, i)) })
-      ] })
+      children: [
+        /* @__PURE__ */ jsxs(WidgetHeaderContainerUI, { widget, children: [
+          /* @__PURE__ */ jsxs(WidgetLabelContainerUI, { justify, children: [
+            /* @__PURE__ */ jsx(WidgetLabelCaretUI, { widget }),
+            /* @__PURE__ */ jsx(WidgetLabelIconUI, { widget }),
+            BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "mr-1", widget: originalWidget }),
+            widget.config.tooltip && /* @__PURE__ */ jsx(WidgetTooltipUI, { widget }),
+            LABEL,
+            !BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "ml-1", widget: originalWidget })
+          ] }),
+          HeaderUI && /* @__PURE__ */ jsx(WidgetHeaderControlsContainerUI, { className: extraClass, children: /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: HeaderUI }) }),
+          /* @__PURE__ */ jsx("div", { tw: "ml-auto" }),
+          widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
+          kit.showWidgetUndo && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { tw: "self-start", widget }),
+          kit.showWidgetMenu && /* @__PURE__ */ jsx(WidgetMenuUI, { tw: "self-start", widget })
+        ] }),
+        BodyUI && !widget.isCollapsed && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { className: extraClass, tw: [widget.isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
+        /* @__PURE__ */ jsx(WidgetErrorsUI, { widget })
+      ]
     },
     rootKey
   );
+  if (widget.animateResize)
+    return /* @__PURE__ */ jsx(AnimatedSizeUI, { children: WUI });
+  return WUI;
 });
 
 // src/controls/Validation.ts
@@ -3733,16 +4070,46 @@ var Severity = /* @__PURE__ */ ((Severity2) => {
 })(Severity || {});
 
 // src/controls/BaseWidget.tsx
-import { observer as observer21 } from "mobx-react-lite";
+import { observer as observer33 } from "mobx-react-lite";
 var ensureObserver = (fn) => {
   if (fn == null)
     return null;
   const isObserver = "$$typeof" in fn && fn.$$typeof === Symbol.for("react.memo");
-  const FmtUI = isObserver ? fn : observer21(fn);
+  const FmtUI = isObserver ? fn : observer33(fn);
   return FmtUI;
 };
 var BaseWidget = class {
   constructor() {
+    this.UIToggle = (p) => /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: this, ...p });
+    this.UIErrors = () => /* @__PURE__ */ jsx(WidgetErrorsUI, { widget: this });
+    this.UILabelCaret = () => /* @__PURE__ */ jsx(WidgetLabelCaretUI, { widget: this });
+    this.UILabelIcon = () => /* @__PURE__ */ jsx(WidgetLabelIconUI, { widget: this });
+    this.UILabelContainer = (p) => /* @__PURE__ */ jsx(WidgetLabelContainerUI, { ...p });
+    this.UIHeaderContainer = (p) => /* @__PURE__ */ jsx(WidgetHeaderContainerUI, { widget: this, children: p.children });
+    this.collapseAllChildren = () => {
+      for (const _item of this.subWidgets) {
+        const item = getActualWidgetToDisplay(_item);
+        if (item.serial.collapsed)
+          continue;
+        const isCollapsible = item.isCollapsible;
+        if (isCollapsible)
+          item.setCollapsed(true);
+      }
+    };
+    this.expandAllChildren = () => {
+      for (const _item of this.subWidgets) {
+        const item = getActualWidgetToDisplay(_item);
+        item.setCollapsed(void 0);
+      }
+    };
+    /**
+     * 2024-05-24 rvion: do we want some abstract defaultValue() too ?
+     * feels like it's going to be PITA to use for higher level objects 🤔
+     * but also... why not...
+     * 🔶 some widget like `WidgetPrompt` would not work with such logic
+     * 🔶 some widget like `Optional` have no simple way to retrieve the default value
+     */
+    // abstract readonly defaultValue: this['spec']['$Value'] |
     this.$WidgetSym = $WidgetSym;
     /**
      * when this widget or one of its descendant publishes a value,
@@ -3757,6 +4124,20 @@ var BaseWidget = class {
       ctor: TreeWidget,
       props: { key, widget: this }
     };
+  }
+  /** shorthand access to config */
+  get config() {
+    return this.spec.config;
+  }
+  get animateResize() {
+    return true;
+  }
+  /**
+   * return true when widget has no child
+   * return flase when widget has one or more child
+   * */
+  get hasNoChild() {
+    return this.subWidgets.length === 0;
   }
   /**
    * when consuming an advertised value, walk upward the parent chain, and look for
@@ -3833,6 +4214,46 @@ var BaseWidget = class {
       Object.assign(at._advertisedValues, producedValues);
       at = at.parent;
     }
+  }
+  get isHidden() {
+    if (this.config.hidden != null)
+      return this.config.hidden;
+    if (isWidgetGroup(this) && Object.keys(this.fields).length === 0)
+      return true;
+    return false;
+  }
+  /** whether the widget should be considered inactive */
+  get isDisabled() {
+    return isWidgetOptional(this) && !this.serial.active;
+  }
+  get isCollapsed() {
+    if (!this.isCollapsible)
+      return false;
+    if (this.serial.collapsed != null)
+      return this.serial.collapsed;
+    if (this.parent?.isDisabled)
+      return true;
+    return false;
+  }
+  /** if specified, override the default algorithm to decide if the widget should have borders */
+  get isCollapsible() {
+    if (this.config.collapsed != null)
+      return this.config.collapsed;
+    if (!this.DefaultBodyUI)
+      return false;
+    if (this.config.label === false)
+      return false;
+    return true;
+  }
+  /** if provided, override the default logic to decide if the widget need to be bordered */
+  get border() {
+    if (this.parent == null)
+      return false;
+    if (this.config.border != null)
+      return this.config.border;
+    if (this.DefaultBodyUI == null)
+      return false;
+    return true;
   }
   // FOLD ----------------------------------------------------
   setCollapsed(val) {
@@ -3931,14 +4352,14 @@ var BaseWidget = class {
 };
 
 // src/controls/widgets/spacer/SpacerUI.tsx
-import { observer as observer22 } from "mobx-react-lite";
-var SpacerUI = observer22(function SpacerUI_(p) {
+import { observer as observer34 } from "mobx-react-lite";
+var SpacerUI = observer34(function SpacerUI_(p) {
   return /* @__PURE__ */ jsx("div", { tw: ["ml-auto"] });
 });
 
 // src/controls/widgets/bool/WidgetBoolUI.tsx
-import { observer as observer23 } from "mobx-react-lite";
-var WidgetBoolUI = observer23(function WidgetBoolUI_(p) {
+import { observer as observer35 } from "mobx-react-lite";
+var WidgetBoolUI = observer35(function WidgetBoolUI_(p) {
   const widget = p.widget;
   if (widget.config.label2) {
     console.warn("label2 is deprecated, please use the text option instead. label2 will be removed in the future");
@@ -3948,28 +4369,19 @@ var WidgetBoolUI = observer23(function WidgetBoolUI_(p) {
       InputBoolUI,
       {
         display: widget.config.display,
-        expand: widget.config.expand,
+        expand: widget.config.display === "button" ? widget.config.expand : true,
         icon: widget.icon,
         text: widget.config.text ?? widget.config.label2,
-        active: widget.value,
+        value: widget.value,
         onValueChange: (value) => widget.value = value
       }
     ),
-    /* @__PURE__ */ jsx(SpacerUI, {}),
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        tw: [widget.isChanged ? void 0 : "btn-disabled opacity-50"],
-        onClick: () => widget.reset(),
-        className: "btn btn-xs btn-narrower btn-ghost",
-        children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "undo" })
-      }
-    )
+    /* @__PURE__ */ jsx(SpacerUI, {})
   ] });
 });
 
 // src/controls/widgets/bool/WidgetBool.tsx
-import { computed as computed2, observable as observable6, runInAction as runInAction3 } from "mobx";
+import { computed as computed3, observable as observable8, runInAction as runInAction4 } from "mobx";
 import { nanoid as nanoid6 } from "nanoid";
 var Widget_bool = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
@@ -3979,7 +4391,6 @@ var Widget_bool = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetBoolUI;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
     this.type = "bool";
     this.setOn = () => this.value = true;
     this.setOff = () => this.value = false;
@@ -3995,19 +4406,16 @@ var Widget_bool = class extends BaseWidget {
       collapsed: this.spec.config.startCollapsed
     };
     this.init({
-      serial: observable6,
-      value: computed2,
+      serial: observable8,
+      value: computed3,
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
   }
-  get config() {
-    return this.spec.config;
-  }
   get baseErrors() {
     return null;
   }
-  get isChanged() {
+  get hasChanges() {
     return this.value !== this.defaultValue;
   }
   get value() {
@@ -4019,7 +4427,7 @@ var Widget_bool = class extends BaseWidget {
   set value(next) {
     if (this.serial.active === next)
       return;
-    runInAction3(() => {
+    runInAction4(() => {
       this.serial.active = next;
       this.bumpValue();
     });
@@ -4028,9 +4436,9 @@ var Widget_bool = class extends BaseWidget {
 registerWidgetClass("bool", Widget_bool);
 
 // src/controls/widgets/button/WidgetButtonUI.tsx
-import { runInAction as runInAction4 } from "mobx";
-import { observer as observer24 } from "mobx-react-lite";
-var WidgetInlineRunUI = observer24(function WidgetInlineRunUI_(p) {
+import { runInAction as runInAction5 } from "mobx";
+import { observer as observer36 } from "mobx-react-lite";
+var WidgetInlineRunUI = observer36(function WidgetInlineRunUI_(p) {
   const extra = p.widget.config.useContext?.();
   const context = { widget: p.widget, context: extra };
   return /* @__PURE__ */ jsx(
@@ -4041,14 +4449,14 @@ var WidgetInlineRunUI = observer24(function WidgetInlineRunUI_(p) {
         p.widget.config.kind === `special` ? `btn-secondary` : p.widget.config.kind === `warning` ? `btn-warning` : `btn-primary`
       ],
       className: "self-start",
-      onClick: () => runInAction4(() => p.widget.config.onClick?.(context)),
+      onClick: () => runInAction5(() => p.widget.config.onClick?.(context)),
       children: p.widget.config.text ?? `Run`
     }
   );
 });
 
 // src/controls/widgets/button/WidgetButton.ts
-import { runInAction as runInAction5 } from "mobx";
+import { runInAction as runInAction6 } from "mobx";
 import { nanoid as nanoid7 } from "nanoid";
 var Widget_button = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
@@ -4058,29 +4466,34 @@ var Widget_button = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetInlineRunUI;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
     this.type = "button";
+    // prettier-ignore
+    this.reset = () => this.value = this.defaultValue;
+    this.id = serial?.id ?? nanoid7();
     const config = spec.config;
     if (config.text) {
       config.label = config.label ?? ` `;
     }
-    this.id = serial?.id ?? nanoid7();
     this.serial = serial ?? {
       type: "button",
       collapsed: config.startCollapsed,
       id: this.id,
-      val: false
+      val: config.default ?? false
     };
     this.init({
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
   }
-  get config() {
-    return this.spec.config;
-  }
   get baseErrors() {
     return null;
+  }
+  get defaultValue() {
+    return this.config.default ?? false;
+  }
+  // prettier-ignore
+  get hasChanges() {
+    return this.serial.val !== this.defaultValue;
   }
   get value() {
     return this.serial.val;
@@ -4091,7 +4504,7 @@ var Widget_button = class extends BaseWidget {
   set value(next) {
     if (this.serial.val === next)
       return;
-    runInAction5(() => {
+    runInAction6(() => {
       this.serial.val = next;
       this.bumpValue();
     });
@@ -4126,6 +4539,102 @@ var toastImage = (imageSrc, message) => {
   });
 };
 
+// src/rsuite/select/SelectPopupUI.tsx
+import { observer as observer37 } from "mobx-react-lite";
+import { createPortal as createPortal2 } from "react-dom";
+var SelectPopupUI = observer37(function SelectPopupUI_(p) {
+  const s = p.s;
+  const isDraggingListener3 = (ev) => {
+    if (ev.button != 0)
+      return;
+    s.isDragging = false;
+    window.removeEventListener("mouseup", isDraggingListener3, true);
+  };
+  return createPortal2(
+    /* @__PURE__ */ jsx(
+      Frame,
+      {
+        ref: s.popupRef,
+        tw: [
+          "MENU-ROOT _SelectPopupUI  flex",
+          // 'border-l border-r border-base-300',
+          "overflow-auto",
+          s.tooltipPosition.bottom != null ? "rounded-t border-t" : "rounded-b border-b"
+        ],
+        style: {
+          minWidth: s.anchorRef.current?.clientWidth ?? "100%",
+          maxWidth: window.innerWidth - (s.tooltipPosition.left != null ? s.tooltipPosition.left : s.tooltipPosition.right ?? 0),
+          pointerEvents: "initial",
+          position: "absolute",
+          zIndex: 99999999,
+          top: s.tooltipPosition.top != null ? `${s.tooltipPosition.top}px` : "unset",
+          bottom: s.tooltipPosition.bottom != null ? `${s.tooltipPosition.bottom}px` : "unset",
+          left: s.tooltipPosition.left != null ? `${s.tooltipPosition.left}px` : "unset",
+          right: s.tooltipPosition.right != null ? `${s.tooltipPosition.right}px` : "unset",
+          maxHeight: `${s.tooltipMaxHeight}px`
+          // Adjust positioning as needed
+        },
+        onMouseDown: (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+        },
+        onMouseEnter: (ev) => {
+          if (s.isOpen) {
+            s.hasMouseEntered = true;
+          }
+        },
+        children: /* @__PURE__ */ jsxs("ul", { className: " max-h-96", tw: "flex-col w-full", children: [
+          /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx("div", { tw: "overflow-hidden", children: s.displayValue }) }),
+          s.filteredOptions.length === 0 ? /* @__PURE__ */ jsx("li", { className: "WIDGET-FIELD text-base", children: "No results" }) : null,
+          s.filteredOptions.map((option, index) => {
+            const isSelected = s.values.find((v) => s.isEqual(v, option)) != null;
+            return /* @__PURE__ */ jsx(
+              "li",
+              {
+                style: { minWidth: "10rem" },
+                tw: ["flex rounded py-0.5", "h-auto"],
+                onMouseEnter: (ev) => {
+                  s.setNavigationIndex(index);
+                  if (!s.isDragging || isSelected == s.wasEnabled)
+                    return;
+                  s.onMenuEntryClick(ev, index);
+                },
+                onMouseDown: (ev) => {
+                  if (ev.button != 0)
+                    return;
+                  s.isDragging = true;
+                  s.wasEnabled = !isSelected;
+                  s.onMenuEntryClick(ev, index);
+                  window.addEventListener("mouseup", isDraggingListener3, true);
+                },
+                children: /* @__PURE__ */ jsxs(
+                  Frame,
+                  {
+                    base: {
+                      contrast: isSelected ? s.selectedIndex === index ? 0.75 : 0.7 : s.selectedIndex === index ? 0.05 : 0
+                    },
+                    tw: [
+                      "WIDGET-FIELD pl-0.5 flex w-full items-center rounded",
+                      "active:cursor-default cursor-pointer",
+                      index === s.selectedIndex ? "bg-base-300" : null
+                    ],
+                    children: [
+                      s.isMultiSelect && /* @__PURE__ */ jsx(InputBoolCheckboxUI, { mode: "checkbox", value: isSelected, expand: false }),
+                      /* @__PURE__ */ jsx("div", { tw: "pl-0.5 flex w-full h-full items-center truncate", children: s.p.getLabelUI ? s.p.getLabelUI(option) : s.p.getLabelText(option) })
+                    ]
+                  }
+                )
+              },
+              index
+            );
+          })
+        ] })
+      }
+    ),
+    document.getElementById("tooltip-root")
+  );
+});
+
 // src/utils/misc/searchMatches.ts
 function unaccent(text) {
   return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -4137,11 +4646,9 @@ function searchMatches(haystack, needle) {
   return normalizeText(haystack).includes(normalizeText(needle));
 }
 
-// src/rsuite/SelectUI.tsx
-import { makeAutoObservable as makeAutoObservable8 } from "mobx";
-import { observer as observer25 } from "mobx-react-lite";
-import React, { useMemo as useMemo4 } from "react";
-import { createPortal as createPortal2 } from "react-dom";
+// src/rsuite/select/SelectState.tsx
+import { makeAutoObservable as makeAutoObservable9 } from "mobx";
+import React from "react";
 var AutoCompleteSelectState = class {
   constructor(p) {
     this.p = p;
@@ -4285,7 +4792,7 @@ var AutoCompleteSelectState = class {
         ev.stopPropagation();
       }
     };
-    makeAutoObservable8(this, {
+    makeAutoObservable9(this, {
       popupRef: false,
       anchorRef: false,
       inputRef: false
@@ -4416,29 +4923,27 @@ var AutoCompleteSelectState = class {
     this.selectedIndex = value;
   }
 };
-var SelectUI = observer25(function SelectUI_(p) {
-  const s = useMemo4(() => new AutoCompleteSelectState(
+
+// src/rsuite/select/SelectUI.tsx
+import { observer as observer38 } from "mobx-react-lite";
+import { useMemo as useMemo5 } from "react";
+var SelectUI = observer38(function SelectUI_(p) {
+  const s = useMemo5(() => new AutoCompleteSelectState(
     /* st, */
     p
   ), []);
   return /* @__PURE__ */ jsx(
-    "div",
+    Frame,
     {
+      base: { contrast: 0.05 },
+      hover: true,
       tabIndex: -1,
-      tw: [
-        "WIDGET-FIELD bg-base-100",
-        "flex flex-1 items-center relative",
-        "rounded overflow-clip text-shadow",
-        "border border-base-100 hover:brightness-110",
-        "hover:border-base-200",
-        "border-1",
-        "border-b-2 border-b-base-200 hover:border-b-base-300"
-      ],
+      tw: ["WIDGET-FIELD ", "flex flex-1 items-center relative"],
+      border: true,
       className: p.className,
       ref: s.anchorRef,
       onKeyUp: s.onRealInputKeyUp,
       onMouseDown: s.onRealWidgetMouseDown,
-      onChange: s.handleInputChange,
       onKeyDown: s.handleTooltipKeyDown,
       onFocus: (ev) => {
         s.isFocused = true;
@@ -4447,25 +4952,36 @@ var SelectUI = observer25(function SelectUI_(p) {
         }
       },
       onBlur: s.onBlur,
-      style: { background: s.searchQuery === "" ? "none" : void 0 },
       children: /* @__PURE__ */ jsxs("div", { className: "flex-1 h-full ", children: [
         /* @__PURE__ */ jsx(
           "div",
           {
             tabIndex: -1,
             tw: [
-              "input input-xs text-sm",
+              "text-sm",
               "flex items-center gap-1",
               "p-0 h-full bg-transparent",
               "select-none pointer-events-none overflow-clip"
             ],
             children: s.isOpen || s.isFocused ? null : (
               /* Using grid here to make sure that inner text will truncate instead of pushing the right-most icon out of the container. */
-              /* @__PURE__ */ jsxs("div", { tw: "grid w-full items-center", style: { gridTemplateColumns: "24px 1fr 24px" }, children: [
-                /* @__PURE__ */ jsx("div", { tw: "btn btn-square btn-xs bg-transparent border-0", children: /* @__PURE__ */ jsx("span", { className: "prefix material-symbols-outlined", children: "search" }) }),
-                /* @__PURE__ */ jsx("div", { tw: "overflow-hidden", children: s.displayValue }),
-                /* @__PURE__ */ jsx("div", { tw: "btn btn-square btn-xs ml-auto bg-transparent border-0", children: /* @__PURE__ */ jsx("span", { className: "suffix material-symbols-outlined ml-auto", children: "arrow_drop_down" }) })
-              ] })
+              /* @__PURE__ */ jsxs(
+                "div",
+                {
+                  tw: [
+                    //
+                    " h-full w-full items-center",
+                    "px-0.5",
+                    "grid"
+                  ],
+                  style: { gridTemplateColumns: "24px 1fr 24px" },
+                  children: [
+                    /* @__PURE__ */ jsx(Ikon.mdiTextBoxSearchOutline, { size: "18px" }),
+                    /* @__PURE__ */ jsx("div", { tw: "overflow-hidden line-clamp-1 text-ellipsis flex-grow", children: s.displayValue }),
+                    /* @__PURE__ */ jsx(Ikon.mdiChevronDown, { size: "18px" })
+                  ]
+                }
+              )
             )
           }
         ),
@@ -4474,11 +4990,10 @@ var SelectUI = observer25(function SelectUI_(p) {
           {
             placeholder: s.isOpen ? p.placeholder : void 0,
             ref: s.inputRef,
-            tw: "input input-sm w-full h-full !outline-none",
+            onChange: s.handleInputChange,
+            tw: "w-full h-full !outline-none bg-transparent",
             type: "text",
-            value: s.searchQuery,
-            onChange: () => {
-            }
+            value: s.searchQuery
           }
         ) }),
         s.isOpen && /* @__PURE__ */ jsx(SelectPopupUI, { s })
@@ -4486,115 +5001,75 @@ var SelectUI = observer25(function SelectUI_(p) {
     }
   );
 });
-var SelectPopupUI = observer25(function SelectPopupUI_(p) {
-  const s = p.s;
-  const isDraggingListener = (ev) => {
-    if (ev.button != 0)
-      return;
-    s.isDragging = false;
-    window.removeEventListener("mouseup", isDraggingListener, true);
-  };
-  return createPortal2(
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        ref: s.popupRef,
-        tw: [
-          "MENU-ROOT _SelectPopupUI bg-base-100 flex",
-          "border-l border-r border-base-300 overflow-auto",
-          s.tooltipPosition.bottom != null ? "rounded-t border-t" : "rounded-b border-b"
-        ],
-        style: {
-          minWidth: s.anchorRef.current?.clientWidth ?? "100%",
-          maxWidth: window.innerWidth - (s.tooltipPosition.left != null ? s.tooltipPosition.left : s.tooltipPosition.right ?? 0),
-          pointerEvents: "initial",
-          position: "absolute",
-          zIndex: 99999999,
-          top: s.tooltipPosition.top != null ? `${s.tooltipPosition.top}px` : "unset",
-          bottom: s.tooltipPosition.bottom != null ? `${s.tooltipPosition.bottom}px` : "unset",
-          left: s.tooltipPosition.left != null ? `${s.tooltipPosition.left}px` : "unset",
-          right: s.tooltipPosition.right != null ? `${s.tooltipPosition.right}px` : "unset",
-          maxHeight: `${s.tooltipMaxHeight}px`
-          // Adjust positioning as needed
-        },
-        onMouseDown: (ev) => {
-          ev.preventDefault();
-          ev.stopPropagation();
-        },
-        onMouseEnter: (ev) => {
-          if (s.isOpen) {
-            s.hasMouseEntered = true;
-          }
-        },
-        children: /* @__PURE__ */ jsxs("ul", { className: "bg-base-100 max-h-96", tw: "flex-col w-full", children: [
-          /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx("div", { tw: "overflow-hidden", children: s.displayValue }) }),
-          s.filteredOptions.length === 0 ? /* @__PURE__ */ jsx("li", { className: "WIDGET-FIELD text-base", children: "No results" }) : null,
-          s.filteredOptions.map((option, index) => {
-            const isSelected = s.values.find((v) => s.isEqual(v, option)) != null;
-            return /* @__PURE__ */ jsx(
-              "li",
-              {
-                style: { minWidth: "10rem" },
-                tw: ["flex rounded py-0.5", "h-auto"],
-                onMouseEnter: (ev) => {
-                  s.setNavigationIndex(index);
-                  if (!s.isDragging || isSelected == s.wasEnabled)
-                    return;
-                  s.onMenuEntryClick(ev, index);
-                },
-                onMouseDown: (ev) => {
-                  if (ev.button != 0)
-                    return;
-                  s.isDragging = true;
-                  s.wasEnabled = !isSelected;
-                  s.onMenuEntryClick(ev, index);
-                  window.addEventListener("mouseup", isDraggingListener, true);
-                },
-                children: /* @__PURE__ */ jsxs(
-                  "div",
-                  {
-                    tw: [
-                      "WIDGET-FIELD pl-0.5 flex w-full items-center rounded overflow-auto",
-                      "active:bg-base-300 cursor-default text-shadow",
-                      index === s.selectedIndex ? "bg-base-300" : null
-                      /* index === s.selectedIndex && */
-                      // isSelected ? '!text-primary-content text-shadow' : 'bg-base-300',
-                      // !isSelected && 'active:bg-base-100',
-                      // isSelected && 'bg-primary text-primary-content hover:text-neutral-content text-shadow-inv active:bg-primary', // prettier-ignore
-                    ],
-                    children: [
-                      /* @__PURE__ */ jsx(InputBoolUI, { active: isSelected, expand: false }),
-                      /* @__PURE__ */ jsx("div", { tw: "pl-0.5 flex w-full h-full items-center truncate", children: s.p.getLabelUI ? s.p.getLabelUI(option) : s.p.getLabelText(option) })
-                    ]
-                  }
-                )
-              },
-              index
-            );
-          })
-        ] })
-      }
-    ),
-    document.getElementById("tooltip-root")
+
+// src/rsuite/box/BoxMisc.tsx
+import { observer as observer39 } from "mobx-react-lite";
+var BoxBase = observer39(function BoxTitleUI_({ children, ...rest }) {
+  return /* @__PURE__ */ jsx(Frame, { ...rest, base: { contrast: 0.05 }, children });
+});
+var BoxTitle = observer39(function BoxTitleUI_2({ children, ...rest }) {
+  return /* @__PURE__ */ jsx(Frame, { ...rest, text: { contrast: 1, chromaBlend: 100, hueShift: 0 }, children });
+});
+var BoxSubtle = observer39(function BoxSubtle_({ children, ...rest }) {
+  return /* @__PURE__ */ jsx(Frame, { ...rest, text: { contrast: 0.4, chromaBlend: 1, hueShift: 0 }, children });
+});
+
+// src/controls/widgets/group/WidgetGroupUI.tsx
+import { observer as observer40 } from "mobx-react-lite";
+var WidgetGroup_LineUI = observer40(function WidgetGroup_LineUI_(p) {
+  if (!p.widget.serial.collapsed)
+    return null;
+  return /* @__PURE__ */ jsx(BoxSubtle, { className: "COLLAPSE-PASSTHROUGH", tw: "line-clamp-1 italic", children: p.widget.summary });
+});
+var WidgetGroup_BlockUI = observer40(function WidgetGroup_BlockUI_(p) {
+  const widget = p.widget;
+  const isTopLevel = widget.config.topLevel;
+  const groupFields = Object.entries(widget.fields);
+  const isHorizontal = widget.config.layout === "H";
+  return /* @__PURE__ */ jsx(WidgetFieldsContainerUI, { layout: p.widget.config.layout, tw: [widget.config.className, p.className], children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
+    WidgetWithLabelUI,
+    {
+      isTopLevel,
+      rootKey,
+      alignLabel: isHorizontal ? false : widget.config.alignLabel,
+      widget: bang(sub)
+    },
+    rootKey
+  )) });
+});
+var WidgetFieldsContainerUI = observer40(function WidgetFieldsContainerUI_(p) {
+  const isHorizontal = p.layout === "H";
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: p.className,
+      tw: [
+        //
+        isHorizontal ? `flex gap-1 flex-wrap` : `flex gap-1 flex-col`,
+        "w-full text-base-content",
+        p.className
+      ],
+      children: p.children
+    }
   );
 });
 
 // src/controls/widgets/choices/WidgetChoicesUI.tsx
-import { observer as observer26 } from "mobx-react-lite";
-var WidgetChoices_HeaderUI = observer26(function WidgetChoices_LineUI_(p) {
+import { observer as observer41 } from "mobx-react-lite";
+var WidgetChoices_HeaderUI = observer41(function WidgetChoices_LineUI_(p) {
   if (p.widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { widget: p.widget });
   else
     return /* @__PURE__ */ jsx(WidgetChoices_SelectHeaderUI, { widget: p.widget });
 });
-var WidgetChoices_BodyUI = observer26(function WidgetChoices_BodyUI_(p) {
+var WidgetChoices_BodyUI = observer41(function WidgetChoices_BodyUI_(p) {
   const widget = p.widget;
   const activeSubwidgets = Object.entries(widget.children).map(([branch, subWidget]) => ({ branch, subWidget }));
-  return /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(AnimatedSizeUI, { children: /* @__PURE__ */ jsx(
-    "div",
+  return /* @__PURE__ */ jsx(
+    WidgetFieldsContainerUI,
     {
-      tw: [widget.config.layout === "H" ? "flex" : null],
-      className: widget.config.className,
+      layout: widget.config.layout,
+      tw: [widget.config.className, p.className],
       children: activeSubwidgets.map((val) => {
         const subWidget = val.subWidget;
         if (subWidget == null)
@@ -4602,6 +5077,7 @@ var WidgetChoices_BodyUI = observer26(function WidgetChoices_BodyUI_(p) {
         return /* @__PURE__ */ jsx(
           WidgetWithLabelUI,
           {
+            alignLabel: p.alignLabel,
             rootKey: val.branch,
             widget: subWidget,
             label: widget.isSingle ? false : void 0
@@ -4610,26 +5086,29 @@ var WidgetChoices_BodyUI = observer26(function WidgetChoices_BodyUI_(p) {
         );
       })
     }
-  ) }) });
+  );
 });
-var WidgetChoices_TabHeaderUI = observer26(function WidgetChoicesTab_LineUI_(p) {
+var WidgetChoices_TabHeaderUI = observer41(function WidgetChoicesTab_LineUI_(p) {
   const widget = p.widget;
   const choices = widget.choicesWithLabels;
+  const theme = useTheme();
   return /* @__PURE__ */ jsx(
     "div",
     {
+      tw: "rounded select-none flex flex-1 flex-wrap gap-x-1 gap-y-0",
       style: {
         justifyContent: widget.config.tabPosition === "start" ? "flex-start" : widget.config.tabPosition === "center" ? "center" : widget.config.tabPosition === "end" ? "flex-end" : "flex-end"
       },
-      tw: "rounded select-none flex flex-1 flex-wrap gap-x-0.5 gap-y-0",
       children: choices.map((c) => {
         const isSelected = widget.serial.branches[c.key];
         return /* @__PURE__ */ jsx(
           InputBoolUI,
           {
-            active: isSelected,
+            value: isSelected,
             display: "button",
+            mode: p.widget.isMulti ? "checkbox" : "radio",
             text: c.label,
+            box: isSelected ? void 0 : { text: theme.value.labelText },
             onValueChange: (value) => {
               if (value != isSelected) {
                 widget.toggleBranch(c.key);
@@ -4642,7 +5121,7 @@ var WidgetChoices_TabHeaderUI = observer26(function WidgetChoicesTab_LineUI_(p) 
     }
   );
 });
-var WidgetChoices_SelectHeaderUI = observer26(function WidgetChoices_SelectLineUI_(p) {
+var WidgetChoices_SelectHeaderUI = observer41(function WidgetChoices_SelectLineUI_(p) {
   const widget = p.widget;
   const choices = widget.choicesWithLabels;
   return /* @__PURE__ */ jsx(
@@ -4685,17 +5164,19 @@ var Widget_choices = class extends BaseWidget {
     this.form = form;
     this.parent = parent;
     this.spec = spec;
+    this.UITab = () => /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { widget: this });
+    this.UISelect = () => /* @__PURE__ */ jsx(WidgetChoices_HeaderUI, { widget: this });
+    this.UIChildren = () => /* @__PURE__ */ jsx(WidgetChoices_BodyUI, { widget: this, alignLabel: false });
     this.DefaultHeaderUI = WidgetChoices_HeaderUI;
     this.DefaultBodyUI = WidgetChoices_BodyUI;
     /* override */
     this.background = true;
-    // prettier-ignore
     this.type = "choices";
     this.expand = this.config.expand ?? false;
     this.children = {};
     this.isBranchDisabled = (branch) => !this.serial.branches[branch];
-    const config = spec.config;
     this.id = serial?.id ?? nanoid8();
+    const config = spec.config;
     if (typeof config.items === "function") {
       toastError('\u{1F534} ChoicesWidget "items" property should now be an object, not a function');
       debugger;
@@ -4728,9 +5209,6 @@ var Widget_choices = class extends BaseWidget {
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
-  }
-  get config() {
-    return this.spec.config;
   }
   get baseErrors() {
     return null;
@@ -4767,6 +5245,35 @@ var Widget_choices = class extends BaseWidget {
     if (this.firstActiveBranchName == null)
       return void 0;
     return this.children[this.firstActiveBranchName];
+  }
+  get hasChanges() {
+    const def = this.config.default;
+    for (const branchName of this.choices) {
+      const shouldBeActive = def == null ? false : typeof def === "string" ? branchName === def : def[branchName];
+      const child = this.children[branchName];
+      if (child && !shouldBeActive)
+        return true;
+      if (!child && shouldBeActive)
+        return true;
+      if (child && shouldBeActive && child.hasChanges)
+        return true;
+    }
+    return false;
+  }
+  reset() {
+    const def = this.config.default;
+    for (const branchName of this.choices) {
+      const shouldBeActive = def == null ? false : typeof def === "string" ? branchName === def : def[branchName];
+      const child = this.children[branchName];
+      if (child && !shouldBeActive)
+        this.disableBranch(branchName, { skipBump: true });
+      if (!child && shouldBeActive)
+        this.enableBranch(branchName, { skipBump: true });
+      const childAfter = this.children[branchName];
+      if (childAfter && childAfter.hasChanges)
+        return true;
+    }
+    this.bumpValue();
   }
   get subWidgets() {
     return Object.values(this.children);
@@ -4840,10 +5347,11 @@ var Widget_choices = class extends BaseWidget {
 registerWidgetClass("choices", Widget_choices);
 
 // src/controls/widgets/color/WidgetColorUI.tsx
-import { observer as observer27 } from "mobx-react-lite";
-var WidgetColorUI = observer27(function WidgetColorUI_(p) {
+import { observer as observer42 } from "mobx-react-lite";
+var WidgetColorUI = observer42(function WidgetColorUI_(p) {
   const widget = p.widget;
-  return /* @__PURE__ */ jsxs("div", { children: [
+  return (
+    // <div>
     /* @__PURE__ */ jsx(
       "input",
       {
@@ -4851,21 +5359,12 @@ var WidgetColorUI = observer27(function WidgetColorUI_(p) {
         type: "color",
         onChange: (ev) => widget.value = ev.target.value
       }
-    ),
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        tw: [widget.isChanged ? void 0 : "btn-disabled opacity-50"],
-        onClick: () => widget.reset(),
-        className: "btn btn-xs btn-narrower btn-ghost",
-        children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "undo" })
-      }
     )
-  ] });
+  );
 });
 
 // src/controls/widgets/color/WidgetColor.tsx
-import { runInAction as runInAction6 } from "mobx";
+import { runInAction as runInAction7 } from "mobx";
 import { nanoid as nanoid9 } from "nanoid";
 var Widget_color = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
@@ -4875,13 +5374,12 @@ var Widget_color = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetColorUI;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
     this.type = "color";
     this.defaultValue = this.config.default ?? "#000000";
     // prettier-ignore
     this.reset = () => this.value = this.defaultValue;
-    const config = spec.config;
     this.id = serial?.id ?? nanoid9();
+    const config = spec.config;
     this.serial = serial ?? {
       type: "color",
       collapsed: config.startCollapsed,
@@ -4893,13 +5391,10 @@ var Widget_color = class extends BaseWidget {
       DefaultBodyUI: false
     });
   }
-  get config() {
-    return this.spec.config;
-  }
   get baseErrors() {
     return null;
   }
-  get isChanged() {
+  get hasChanges() {
     return this.value !== this.defaultValue;
   }
   get value() {
@@ -4911,7 +5406,7 @@ var Widget_color = class extends BaseWidget {
   set value(next) {
     if (this.serial.value === next)
       return;
-    runInAction6(() => {
+    runInAction7(() => {
       this.serial.value = next;
       this.bumpValue();
     });
@@ -4919,49 +5414,8 @@ var Widget_color = class extends BaseWidget {
 };
 registerWidgetClass("color", Widget_color);
 
-// src/controls/widgets/group/WidgetGroupUI.tsx
-import { observer as observer28 } from "mobx-react-lite";
-var WidgetGroup_LineUI = observer28(function WidgetGroup_LineUI_(p) {
-  if (!p.widget.serial.collapsed)
-    return null;
-  return /* @__PURE__ */ jsx(BoxSubtle, { className: "COLLAPSE-PASSTHROUGH", tw: "line-clamp-1 italic", children: p.widget.summary });
-});
-var WidgetGroup_BlockUI = observer28(function WidgetGroup_BlockUI_(p) {
-  const widget = p.widget;
-  const isTopLevel = widget.config.topLevel;
-  const groupFields = Object.entries(widget.fields);
-  const isHorizontal = widget.config.layout === "H";
-  return /* @__PURE__ */ jsx(
-    Box,
-    {
-      className: p.className,
-      tw: ["WIDGET-GROUP", "flex items-start w-full text-base-content"],
-      children: widget.serial.collapsed ? null : /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: widget.config.className,
-          tw: [
-            "_WidgetGroupUI w-full",
-            isHorizontal ? `GROUP-HORIZONTAL flex gap-1 flex-wrap` : `GROUP-VERTICAL   flex gap-1 flex-col`
-          ],
-          children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
-            WidgetWithLabelUI,
-            {
-              isTopLevel,
-              rootKey,
-              alignLabel: isHorizontal ? false : widget.config.alignLabel,
-              widget: bang(sub)
-            },
-            rootKey
-          ))
-        }
-      )
-    }
-  );
-});
-
 // src/controls/widgets/group/WidgetGroup.tsx
-import { runInAction as runInAction7 } from "mobx";
+import { runInAction as runInAction8 } from "mobx";
 import { nanoid as nanoid10 } from "nanoid";
 var Widget_group = class extends BaseWidget {
   constructor(form, parent, spec, serial, preHydrate) {
@@ -4970,24 +5424,11 @@ var Widget_group = class extends BaseWidget {
     this.parent = parent;
     this.spec = spec;
     this.DefaultHeaderUI = WidgetGroup_LineUI;
-    // prettier-ignore
+    this.reset = () => {
+      for (const sub of this.subWidgets)
+        sub.reset();
+    };
     this.type = "group";
-    this.collapseAllEntries = () => {
-      for (const [key, _item] of this.entries) {
-        const item = getActualWidgetToDisplay(_item);
-        if (item.serial.collapsed)
-          continue;
-        const isCollapsible = getIfWidgetIsCollapsible(item);
-        if (isCollapsible)
-          item.setCollapsed(true);
-      }
-    };
-    this.expandAllEntries = () => {
-      for (const [key, _item] of this.entries) {
-        const item = getActualWidgetToDisplay(_item);
-        item.setCollapsed(void 0);
-      }
-    };
     this.at = (key) => this.fields[key];
     this.get = (key) => this.fields[key].value;
     /** the dict of all child widgets */
@@ -5070,11 +5511,11 @@ var Widget_group = class extends BaseWidget {
   get baseErrors() {
     return null;
   }
+  get hasChanges() {
+    return Object.values(this.fields).some((f) => f.hasChanges);
+  }
   get summary() {
     return this.config.summary?.(this.value) ?? "";
-  }
-  get config() {
-    return this.spec.config;
   }
   /** all [key,value] pairs */
   get entries() {
@@ -5084,7 +5525,7 @@ var Widget_group = class extends BaseWidget {
     this.value = val;
   }
   setPartialValue(val) {
-    runInAction7(() => {
+    runInAction8(() => {
       for (const key in val)
         this.fields[key].setValue(val[key]);
       this.bumpValue();
@@ -5097,7 +5538,7 @@ var Widget_group = class extends BaseWidget {
     return Object.entries(this.fields).map(([key, widget]) => ({ key, widget }));
   }
   set value(val) {
-    runInAction7(() => {
+    runInAction8(() => {
       for (const key in val)
         this.fields[key].setValue(val[key]);
       this.bumpValue();
@@ -5111,8 +5552,8 @@ var Widget_group = class extends BaseWidget {
 registerWidgetClass("group", Widget_group);
 
 // src/controls/widgets/list/ListControlsUI.tsx
-import { observer as observer29 } from "mobx-react-lite";
-var ListControlsUI = observer29(function ListControlsUI_(p) {
+import { observer as observer43 } from "mobx-react-lite";
+var ListControlsUI = observer43(function ListControlsUI_(p) {
   const widget = p.widget;
   const max = widget.config.max;
   const min = widget.config.min;
@@ -5121,58 +5562,68 @@ var ListControlsUI = observer29(function ListControlsUI_(p) {
   return /* @__PURE__ */ jsxs(
     "div",
     {
-      tw: "sticky top-0 flex gap-1 z-[50] w-full",
+      tw: "sticky flex gap-0.5 top-0 flex z-[50] w-full",
       onMouseDown: (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
       },
       children: [
         /* @__PURE__ */ jsx(
-          "div",
+          Button,
           {
-            tw: [!canAdd && "btn-disabled", "btn btn-xs btn-narrow btn-ghost"],
+            size: "xs",
+            look: "ghost",
+            disabled: !canAdd,
+            square: true,
+            icon: "mdiPlus",
             onClick: (ev) => {
               if (!canAdd)
                 return;
               ev.stopPropagation();
               widget.addItem();
-            },
-            children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "add" })
+            }
           }
         ),
         /* @__PURE__ */ jsx(
-          "div",
+          Button,
           {
-            tw: [!canClear && "btn-disabled", "btn btn-xs btn-narrow btn-ghost"],
+            size: "xs",
+            look: "ghost",
+            disabled: !canClear,
+            square: true,
+            icon: "mdiDeleteForever",
             onClick: (ev) => {
               if (!canClear)
                 return;
               ev.stopPropagation();
               widget.removeAllItems();
-            },
-            children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "delete_forever" })
+            }
           }
         ),
         /* @__PURE__ */ jsx(
-          "div",
+          Button,
           {
-            tw: ["btn btn-xs btn-narrow btn-ghost"],
+            size: "xs",
+            look: "ghost",
+            square: true,
+            icon: "mdiUnfoldMoreHorizontal",
             onClick: (ev) => {
               ev.stopPropagation();
               widget.expandAllItems();
-            },
-            children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "unfold_more" })
+            }
           }
         ),
         /* @__PURE__ */ jsx(
-          "div",
+          Button,
           {
-            tw: ["btn btn-xs btn-narrow btn-ghost"],
+            size: "xs",
+            look: "ghost",
+            square: true,
+            icon: "mdiUnfoldLessHorizontal",
             onClick: (ev) => {
               ev.stopPropagation();
               widget.collapseAllItems();
-            },
-            children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "unfold_less" })
+            }
           }
         )
       ]
@@ -5181,12 +5632,11 @@ var ListControlsUI = observer29(function ListControlsUI_(p) {
 });
 
 // src/controls/widgets/list/WidgetListUI.tsx
-import { forwardRef } from "react";
-import { observer as observer30 } from "mobx-react-lite";
-import { ErrorBoundary as ErrorBoundary2 } from "react-error-boundary";
+import { observer as observer44 } from "mobx-react-lite";
+import { forwardRef as forwardRef2 } from "react";
 var { default: SortableList, SortableItem, SortableKnob } = await import("react-easy-sort");
-var WidgetList_LineUI = observer30(function WidgetList_LineUI_(p) {
-  return /* @__PURE__ */ jsxs("div", { tw: "flex flex-1 items-center", children: [
+var WidgetList_LineUI = observer44(function WidgetList_LineUI_(p) {
+  return /* @__PURE__ */ jsxs("div", { tw: "flex flex-1 items-center COLLAPSE-PASSTHROUGH", children: [
     /* @__PURE__ */ jsxs("div", { tw: "text-sm text-gray-500 italic", children: [
       p.widget.length,
       " items"
@@ -5194,7 +5644,7 @@ var WidgetList_LineUI = observer30(function WidgetList_LineUI_(p) {
     p.widget.isAuto ? null : /* @__PURE__ */ jsx("div", { tw: "ml-auto", children: /* @__PURE__ */ jsx(ListControlsUI, { widget: p.widget }) })
   ] });
 });
-var WidgetList_BodyUI = observer30(function WidgetList_BodyUI_(p) {
+var WidgetList_BodyUI = observer44(function WidgetList_BodyUI_(p) {
   const widget = p.widget;
   const subWidgets = widget.items;
   const min = widget.config.min;
@@ -5202,66 +5652,57 @@ var WidgetList_BodyUI = observer30(function WidgetList_BodyUI_(p) {
     const widgetHeader = subWidget.header();
     const widgetBody = subWidget.body();
     const collapsed = subWidget.serial.collapsed ?? false;
-    return /* @__PURE__ */ jsx(SortableItem, { children: /* @__PURE__ */ jsxs("div", { tw: ["flex flex-col", getBorderStatusForWidget(subWidget) && "WIDGET-GROUP-BORDERED"], children: [
-      /* @__PURE__ */ jsxs("div", { tw: "flex items-center ", children: [
-        /* @__PURE__ */ jsx(SortableKnob, { children: /* @__PURE__ */ jsx(ListDragHandleUI, { widget: subWidget, ix }) }),
-        p.widget.config.showID ? /* @__PURE__ */ jsx("div", { className: "divider flex-1 border-top", children: /* @__PURE__ */ jsxs("div", { id: subWidget.id, tw: "opacity-20 italic", children: [
+    const showBorder = subWidget.border;
+    const isCollapsible = subWidget.isCollapsible;
+    const boxBorder = showBorder ? 20 : 0;
+    const boxBase = subWidget.background && (isCollapsible || showBorder) ? { contrast: 0.04 } : void 0;
+    return /* @__PURE__ */ jsx(SortableItem, { children: /* @__PURE__ */ jsxs(Frame, { border: boxBorder, tw: "flex flex-col", base: boxBase, children: [
+      /* @__PURE__ */ jsxs("div", { tw: "flex items-center", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            look: "ghost",
+            square: true,
+            size: "xs",
+            icon: "mdiChevronRight",
+            onClick: () => subWidget.toggleCollapsed()
+          }
+        ),
+        /* @__PURE__ */ jsx(SpacerUI, {}),
+        subWidget.config.showID ? /* @__PURE__ */ jsx("div", { className: "divider flex-1 border-top", children: /* @__PURE__ */ jsxs("div", { id: subWidget.id, tw: "opacity-20 italic", children: [
           "#",
           ix,
           ":",
           subWidget.id
         ] }) }) : null,
-        widgetHeader && /* @__PURE__ */ jsx(ErrorBoundary2, { FallbackComponent: ErrorBoundaryFallback, onReset: (details) => {
-        }, children: widgetHeader }),
-        subWidget.config.presets && /* @__PURE__ */ jsx(
-          RevealUI,
-          {
-            content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: subWidget }),
-            children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "more_vert" })
-          }
-        ),
+        widgetHeader && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: widgetHeader }),
         p.widget.isAuto ? null : /* @__PURE__ */ jsx(
-          "div",
+          Button,
           {
-            tw: [
-              "btn btn-sm btn-narrower btn-ghost opacity-50",
-              min != null && widget.items.length <= min ? "btn-disabled" : null
-            ],
-            onClick: () => widget.removeItem(subWidget),
-            children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "delete" })
+            disabled: min != null && widget.items.length <= min,
+            square: true,
+            size: "xs",
+            look: "ghost",
+            icon: "mdiDeleteOutline",
+            onClick: () => widget.removeItem(subWidget)
           }
         ),
-        subWidget.collapsible && /* @__PURE__ */ jsx(ListItemCollapseBtnUI, { widget: subWidget })
+        /* @__PURE__ */ jsx(SortableKnob, { children: /* @__PURE__ */ jsx(ListDragHandleUI, { widget: subWidget, ix }) }),
+        /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: subWidget }), children: /* @__PURE__ */ jsx(Button, { icon: "mdiDotsVertical", look: "ghost", square: true, size: "xs" }) })
       ] }),
-      widgetBody && !collapsed && subWidget != null && /* @__PURE__ */ jsx(ErrorBoundary2, { FallbackComponent: ErrorBoundaryFallback, onReset: (details) => {
-      }, children: /* @__PURE__ */ jsx("div", { tw: "ml-2 pl-2", children: widgetBody }) })
+      widgetBody && !collapsed && subWidget != null && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { tw: "ml-2 pl-2", children: widgetBody }) })
     ] }) }, subWidget.id);
   }) }) }) });
 });
-var ListDragHandleUI = forwardRef((p, ref) => {
-  const widget = p.widget;
-  return /* @__PURE__ */ jsx("div", { tw: "btn btn-narrower btn-ghost btn-square btn-xs", ref, onClick: () => widget.toggleCollapsed(), children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "menu" }) });
-});
-var ListItemCollapseBtnUI = observer30(function ListItemCollapseBtnUI_(p) {
-  const widget = p.widget;
-  const isCollapsible = widget.DefaultBodyUI;
-  if (!isCollapsible)
-    return null;
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      tw: "btn btn-ghost btn-square btn-sm",
-      onClick: () => widget.toggleCollapsed(),
-      children: widget.serial.collapsed ? (
-        //
-        /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "keyboard_arrow_right" })
-      ) : /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "keyboard_arrow_down" })
-    }
+var ListDragHandleUI = forwardRef2((p, ref) => {
+  return (
+    //TODO (bird_d): FIX UI - Needs to be Button when ref is implemented.
+    /* @__PURE__ */ jsx("div", { ref, onClick: () => p.widget.toggleCollapsed(), children: /* @__PURE__ */ jsx(Button, { size: "xs", look: "ghost", square: true, icon: "mdiDragHorizontalVariant" }) })
   );
 });
 
 // src/controls/widgets/list/WidgetList.ts
-import { observable as observable7, reaction } from "mobx";
+import { observable as observable9, reaction } from "mobx";
 import { nanoid as nanoid11 } from "nanoid";
 var Widget_list = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
@@ -5271,10 +5712,20 @@ var Widget_list = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetList_LineUI;
     this.DefaultBodyUI = WidgetList_BodyUI;
-    // prettier-ignore
     this.type = "list";
     /* override */
     this.background = true;
+    this.reset = () => {
+      if (!this.config.auto) {
+        const defaultLength = clampOpt(this.config.defaultLength, this.config.min, this.config.max);
+        for (let i = this.items.length; i > defaultLength; i--)
+          this.removeItem(this.items[i - 1]);
+        for (let i = this.items.length; i < defaultLength; i++)
+          this.addItem({ skipBump: true });
+      }
+      for (const i of this.items)
+        i.reset();
+    };
     this.findItemIndexContaining = (widget) => {
       let at = widget;
       let child = at;
@@ -5365,7 +5816,7 @@ var Widget_list = class extends BaseWidget {
       this.bumpValue();
     };
     this.id = serial?.id ?? nanoid11();
-    this.serial = serial ?? observable7({ type: "list", id: this.id, active: true, items_: [] });
+    this.serial = serial ?? observable9({ type: "list", id: this.id, active: true, items_: [] });
     if (this.serial.items_ == null)
       this.serial.items_ = [];
     this.items = [];
@@ -5393,11 +5844,16 @@ var Widget_list = class extends BaseWidget {
     });
     this.startAutoBehaviour();
   }
-  get config() {
-    return this.spec.config;
-  }
   get length() {
     return this.items.length;
+  }
+  get hasChanges() {
+    if (!this.config.auto) {
+      const defaultLength = clampOpt(this.config.defaultLength, this.config.min, this.config.max);
+      if (this.items.length !== defaultLength)
+        return true;
+    }
+    return this.items.some((i) => i.hasChanges);
   }
   get subWidgets() {
     return this.items;
@@ -5462,10 +5918,10 @@ var Widget_list = class extends BaseWidget {
 registerWidgetClass("list", Widget_list);
 
 // src/controls/widgets/markdown/WidgetMarkdownUI.tsx
-import { observer as observer31 } from "mobx-react-lite";
-var WidgetMardownUI = observer31(function WidgetMardownUI_(p) {
+import { observer as observer45 } from "mobx-react-lite";
+var WidgetMardownUI = observer45(function WidgetMardownUI_(p) {
   const widget = p.widget;
-  return /* @__PURE__ */ jsx(MarkdownUI, { tw: [widget.config.inHeader && "bg-base-300", "_WidgetMardownUI w-full"], markdown: widget.markdown });
+  return /* @__PURE__ */ jsx(MarkdownUI, { tw: "_WidgetMardownUI w-full", markdown: widget.markdown });
 });
 
 // src/controls/widgets/markdown/WidgetMarkdown.ts
@@ -5476,10 +5932,14 @@ var Widget_markdown = class extends BaseWidget {
     this.form = form;
     this.parent = parent;
     this.spec = spec;
-    // prettier-ignore
     this.type = "markdown";
-    const config = spec.config;
+    /** always return false */
+    this.hasChanges = false;
+    /** do nothing */
+    this.reset = () => {
+    };
     this.id = serial?.id ?? nanoid12();
+    const config = spec.config;
     this.serial = serial ?? { type: "markdown", collapsed: config.startCollapsed, active: true, id: this.id };
     makeAutoObservableInheritance(this);
   }
@@ -5500,9 +5960,6 @@ var Widget_markdown = class extends BaseWidget {
   get baseErrors() {
     return null;
   }
-  get config() {
-    return this.spec.config;
-  }
   get markdown() {
     const md = this.config.markdown;
     if (typeof md === "string")
@@ -5521,8 +5978,8 @@ var Widget_markdown = class extends BaseWidget {
 registerWidgetClass("markdown", Widget_markdown);
 
 // src/controls/widgets/matrix/WidgetMatrixUI.tsx
-import { observer as observer32 } from "mobx-react-lite";
-var WidgetMatrixUI = observer32(function WidgetStrUI_(p) {
+import { observer as observer46 } from "mobx-react-lite";
+var WidgetMatrixUI = observer46(function WidgetStrUI_(p) {
   const widget = p.widget;
   const cols = widget.cols;
   const rows = widget.rows;
@@ -5543,7 +6000,7 @@ var WidgetMatrixUI = observer32(function WidgetStrUI_(p) {
       cols.map((col, ix) => /* @__PURE__ */ jsx(
         "th",
         {
-          className: "bg-base-200 virtualBorder",
+          className: "virtualBorder",
           onClick: () => widget.setCol(col, !widget.getCell(rows[0], col).value),
           children: col
         },
@@ -5581,7 +6038,7 @@ var WidgetMatrixUI = observer32(function WidgetStrUI_(p) {
 });
 
 // src/controls/widgets/matrix/WidgetMatrix.ts
-import { runInAction as runInAction8 } from "mobx";
+import { runInAction as runInAction9 } from "mobx";
 import { nanoid as nanoid13 } from "nanoid";
 var Widget_matrix = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
@@ -5591,7 +6048,6 @@ var Widget_matrix = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetMatrixUI;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
     this.type = "matrix";
     this.alignLabel = false;
     this.sep = " &&& ";
@@ -5631,8 +6087,8 @@ var Widget_matrix = class extends BaseWidget {
       cell.value = value;
       this.UPDATE();
     };
-    const config = spec.config;
     this.id = serial?.id ?? nanoid13();
+    const config = spec.config;
     this.serial = serial ?? { type: "matrix", collapsed: config.startCollapsed, id: this.id, active: true, selected: [] };
     const rows = config.rows;
     const cols = config.cols;
@@ -5650,18 +6106,35 @@ var Widget_matrix = class extends BaseWidget {
     this.cols = config.cols;
     makeAutoObservableInheritance(this);
   }
-  get config() {
-    return this.spec.config;
-  }
   get baseErrors() {
     return null;
+  }
+  get hasChanges() {
+    const def = this.config.default;
+    if (def == null)
+      return this.value.length != 0;
+    else {
+      if (def.length != this.value.length)
+        return true;
+      for (const v of this.value) {
+        if (!def.find((d) => d.row == v.row && d.col == v.col))
+          return true;
+      }
+      return false;
+    }
+  }
+  reset() {
+    this.setAll(false);
+    for (const i of this.config.default ?? []) {
+      this.setCell(i.row, i.col, true);
+    }
   }
   setValue(val) {
     this.value = val;
   }
   /** 🔶 this is inneficient */
   set value(val) {
-    runInAction8(() => {
+    runInAction9(() => {
       for (const c of this.allCells) {
         c.value = false;
       }
@@ -5697,24 +6170,11 @@ var parseFloatNoRoundingErr = (str, maxDigitsAfterDot = 3) => {
   return out;
 };
 
-// src/controls/shared/CushyKitCtx.ts
-import { createContext as createContext4, useContext as useContext4 } from "react";
-var CushyKitCtx = createContext4(null);
-var useCushyKit = () => {
-  const val = useContext4(CushyKitCtx);
-  if (val == null)
-    throw new Error("missing CushyKit in current context");
-  return val;
-};
-var useCushyKitOrNull = () => {
-  return useContext4(CushyKitCtx);
-};
-
 // src/controls/widgets/number/InputNumberUI.tsx
-import { makeAutoObservable as makeAutoObservable9, runInAction as runInAction9 } from "mobx";
-import { observer as observer33 } from "mobx-react-lite";
-import React2, { useEffect as useEffect2, useMemo as useMemo5 } from "react";
-var clamp2 = (x, min, max) => Math.max(min, Math.min(max, x));
+import { makeAutoObservable as makeAutoObservable10, runInAction as runInAction10 } from "mobx";
+import { observer as observer47 } from "mobx-react-lite";
+import React3, { useEffect as useEffect3, useMemo as useMemo6 } from "react";
+var clamp3 = (x, min, max) => Math.max(min, Math.min(max, x));
 var startValue = 0;
 var dragged = false;
 var cumulativeOffset = 0;
@@ -5731,7 +6191,7 @@ var InputNumberStableState = class {
     this.inputValue = this.value.toString();
     /* When editing the number <input> this will make it display inputValue instead of val.*/
     this.isEditing = false;
-    this.inputRef = React2.createRef();
+    this.inputRef = React3.createRef();
     this.syncValues = (value, opts = {}) => {
       const soft = opts.soft ?? false;
       const roundingModifier = opts.roundingModifier ?? 1;
@@ -5747,9 +6207,9 @@ var InputNumberStableState = class {
       if (this.mode === "int")
         num = Math.round(num);
       if (soft && startValue <= this.rangeMax && startValue >= this.rangeMin) {
-        num = clamp2(num, this.rangeMin, this.rangeMax);
+        num = clamp3(num, this.rangeMin, this.rangeMax);
       } else {
-        num = clamp2(num, this.props.min ?? -Infinity, this.props.max ?? Infinity);
+        num = clamp3(num, this.props.min ?? -Infinity, this.props.max ?? Infinity);
       }
       if (!skipRounding) {
         const roundingPrecise = Math.ceil(-Math.log10(this.step * 0.01 * roundingModifier));
@@ -5813,10 +6273,10 @@ var InputNumberStableState = class {
         this.syncValues(startValue);
       }
     };
-    makeAutoObservable9(this);
+    makeAutoObservable10(this);
   }
   get value() {
-    return this.props.value ?? clamp2(1, this.props.min ?? -Infinity, this.props.max ?? Infinity);
+    return this.props.value ?? clamp3(1, this.props.min ?? -Infinity, this.props.max ?? Infinity);
   }
   get mode() {
     return this.props.mode;
@@ -5843,28 +6303,30 @@ var InputNumberStableState = class {
     return this.mode === "int";
   }
 };
-var InputNumberUI = observer33(function InputNumberUI_(p) {
+var InputNumberUI = observer47(function InputNumberUI_(p) {
   const kit = useCushyKitOrNull();
-  const uist = useMemo5(() => new InputNumberStableState(p, kit), []);
-  runInAction9(() => Object.assign(uist.props, p));
-  useEffect2(() => uist.onPointerUpListener, []);
+  const uist = useMemo6(() => new InputNumberStableState(p, kit), []);
+  runInAction10(() => Object.assign(uist.props, p));
+  useEffect3(() => uist.onPointerUpListener, []);
   const val = uist.value;
   const step = uist.step;
   const rounding = uist.rounding;
   const isEditing = uist.isEditing;
-  const kolor = useColor({ base: 5, border: true });
+  const theme = useTheme();
+  const border = theme.value.inputBorder;
   return /* @__PURE__ */ jsxs(
-    "div",
+    Frame,
     {
+      style: p.style,
+      base: { contrast: isEditing ? -0.1 : 0.05 },
+      border: { contrast: border },
+      hover: true,
       className: p.className,
-      style: kolor.styles,
       tw: [
+        p.disabled && "pointer-events-none opacity-25",
         "WIDGET-FIELD relative",
-        // 'theme-number-field',
-        // '!shadow-md !shadow-white',
-        "input-number-ui input-number-roundness",
+        "input-number-ui",
         "flex-1 select-none min-w-16 cursor-ew-resize overflow-clip",
-        // 'bg-primary/30 border border-base-100 border-b-2 border-b-base-200',
         !isEditing && "hover:border-base-200 hover:border-b-base-300 hover:bg-primary/40"
       ],
       onWheel: (ev) => {
@@ -5872,31 +6334,34 @@ var InputNumberUI = observer33(function InputNumberUI_(p) {
           let num = uist.isInteger ? step * -Math.sign(ev.deltaY) : step * -Math.sign(ev.deltaY) * 0.1;
           num = val + num;
           num = uist.isInteger ? Math.round(num) : parseFloatNoRoundingErr(num, rounding);
-          num = clamp2(num, p.min ?? -Infinity, p.max ?? Infinity);
+          num = clamp3(num, p.min ?? -Infinity, p.max ?? Infinity);
           uist.syncValues(num, void 0);
+          ev.preventDefault();
+          ev.stopPropagation();
         }
       },
       children: [
         /* @__PURE__ */ jsx(
-          Box,
+          Frame,
           {
             className: "inui-foreground",
-            base: { contrast: !p.hideSlider && !isEditing ? 0.4 : 0 },
+            base: { contrast: !p.hideSlider && !isEditing ? 0.08 : 0, chroma: 0.06 },
             tw: ["z-10 absolute left-0 WIDGET-FIELD"],
             style: { width: `${(val - uist.rangeMin) / (uist.rangeMax - uist.rangeMin) * 100}%` }
           }
         ),
         /* @__PURE__ */ jsxs("div", { tw: "grid w-full h-full items-center z-20", style: { gridTemplateColumns: "16px 1fr 16px" }, children: [
           /* @__PURE__ */ jsx(
-            "button",
+            Frame,
             {
-              tw: [
-                "h-full flex rounded-none text-center justify-center items-center z-20",
-                `border border-base-200 opacity-0 bg-base-200 hover:brightness-125`
-              ],
+              className: "control",
+              hover: -0.1,
+              base: 25,
+              border: true,
+              tw: ["h-full flex rounded-none text-center justify-center items-center z-20", `opacity-0`],
               tabIndex: -1,
               onClick: uist.decrement,
-              children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "arrow_left" })
+              children: /* @__PURE__ */ jsx(Ikon.mdiChevronLeft, {})
             }
           ),
           /* @__PURE__ */ jsxs(
@@ -5905,7 +6370,7 @@ var InputNumberUI = observer33(function InputNumberUI_(p) {
               tw: [
                 //
                 "th-text",
-                `flex px-1 items-center justify-center text-sm text-shadow truncate z-20 h-full`
+                `flex px-1 items-center justify-center text-sm truncate z-20 h-full`
               ],
               onMouseDown: (ev) => {
                 if (isEditing || ev.button != 0)
@@ -5934,7 +6399,7 @@ var InputNumberUI = observer33(function InputNumberUI_(p) {
                     ref: uist.inputRef,
                     onDragStart: (ev) => ev.preventDefault(),
                     tw: [
-                      "text-shadow outline-0",
+                      // 'text-shadow outline-0',
                       /* `absolute opacity-0` is a bit of a hack around not being able to figure out why the input kept taking up so much width.
                        * Can't use `hidden` here because it messes up focusing. */
                       !isEditing && "cursor-not-allowed pointer-events-none absolute opacity-0",
@@ -6009,15 +6474,16 @@ var InputNumberUI = observer33(function InputNumberUI_(p) {
             }
           ),
           /* @__PURE__ */ jsx(
-            "button",
+            Frame,
             {
-              tw: [
-                "h-full flex rounded-none text-center justify-center items-center z-20",
-                `border border-base-200 opacity-0 bg-base-200 hover:brightness-125`
-              ],
+              className: "control",
+              hover: -0.1,
+              base: 25,
+              border: true,
+              tw: ["h-full flex rounded-none text-center justify-center items-center z-20", `opacity-0`],
               tabIndex: -1,
               onClick: uist.increment,
-              children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "arrow_right" })
+              children: /* @__PURE__ */ jsx(Ikon.mdiChevronRight, {})
             }
           )
         ] })
@@ -6027,44 +6493,33 @@ var InputNumberUI = observer33(function InputNumberUI_(p) {
 });
 
 // src/controls/widgets/number/WidgetNumberUI.tsx
-import { observer as observer34 } from "mobx-react-lite";
-var WidgetNumberUI = observer34(function WidgetNumberUI_(p) {
+import { observer as observer48 } from "mobx-react-lite";
+var WidgetNumberUI = observer48(function WidgetNumberUI_(p) {
   const widget = p.widget;
   const value = widget.serial.val;
   const mode = widget.config.mode;
   const step = widget.config.step ?? (mode === "int" ? 1 : 0.1);
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsx(
-      InputNumberUI,
-      {
-        mode,
-        value,
-        hideSlider: widget.config.hideSlider,
-        max: widget.config.max,
-        min: widget.config.min,
-        softMin: widget.config.softMin,
-        softMax: widget.config.softMax,
-        step,
-        suffix: widget.config.suffix,
-        text: widget.config.text,
-        onValueChange: (next) => widget.value = next,
-        forceSnap: widget.config.forceSnap
-      }
-    ),
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        tw: [widget.isChanged ? void 0 : "btn-disabled opacity-50"],
-        onClick: () => widget.reset(),
-        className: "btn btn-xs btn-narrower btn-ghost",
-        children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "undo" })
-      }
-    )
-  ] });
+  return /* @__PURE__ */ jsx(
+    InputNumberUI,
+    {
+      mode,
+      value,
+      hideSlider: widget.config.hideSlider,
+      max: widget.config.max,
+      min: widget.config.min,
+      softMin: widget.config.softMin,
+      softMax: widget.config.softMax,
+      step,
+      suffix: widget.config.suffix,
+      text: widget.config.text,
+      onValueChange: (next) => widget.value = next,
+      forceSnap: widget.config.forceSnap
+    }
+  );
 });
 
 // src/controls/widgets/number/WidgetNumber.tsx
-import { computed as computed3, observable as observable8, runInAction as runInAction10 } from "mobx";
+import { computed as computed4, observable as observable10, runInAction as runInAction11 } from "mobx";
 import { nanoid as nanoid14 } from "nanoid";
 var Widget_number = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
@@ -6074,7 +6529,6 @@ var Widget_number = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetNumberUI;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
     this.type = "number";
     this.forceSnap = false;
     this.defaultValue = this.config.default ?? 0;
@@ -6084,8 +6538,8 @@ var Widget_number = class extends BaseWidget {
         return;
       this.value = this.defaultValue;
     };
-    const config = spec.config;
     this.id = serial?.id ?? nanoid14();
+    const config = spec.config;
     this.serial = serial ?? {
       type: "number",
       collapsed: config.startCollapsed,
@@ -6093,14 +6547,13 @@ var Widget_number = class extends BaseWidget {
       val: config.default ?? 0
     };
     this.init({
-      serial: observable8,
-      value: computed3
+      serial: observable10,
+      value: computed4,
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
     });
   }
-  get config() {
-    return this.spec.config;
-  }
-  get isChanged() {
+  get hasChanges() {
     return this.serial.val !== this.defaultValue;
   }
   get baseErrors() {
@@ -6116,7 +6569,7 @@ var Widget_number = class extends BaseWidget {
   set value(next) {
     if (this.serial.val === next)
       return;
-    runInAction10(() => {
+    runInAction11(() => {
       this.serial.val = next;
       this.bumpValue();
     });
@@ -6128,7 +6581,7 @@ var Widget_number = class extends BaseWidget {
 registerWidgetClass("number", Widget_number);
 
 // src/controls/widgets/optional/WidgetOptional.tsx
-import { computed as computed4, observable as observable9 } from "mobx";
+import { computed as computed5, observable as observable11 } from "mobx";
 import { nanoid as nanoid15 } from "nanoid";
 var Widget_optional = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
@@ -6138,7 +6591,19 @@ var Widget_optional = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = void 0;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
+    this.reset = () => {
+      if (this.config.startActive) {
+        if (!this.serial.active)
+          this.setActive(true);
+        if (this.child.hasChanges)
+          this.child.reset();
+        return;
+      } else {
+        if (this.serial.active)
+          this.setActive(false);
+        return;
+      }
+    };
     this.type = "optional";
     this.setActive = (value) => {
       if (this.serial.active === value)
@@ -6166,8 +6631,8 @@ var Widget_optional = class extends BaseWidget {
         this.serial.child = this.child.serial;
       }
     };
-    const config = spec.config;
     this.id = serial?.id ?? nanoid15();
+    const config = spec.config;
     const defaultActive = config.startActive;
     this.serial = serial ?? {
       id: this.id,
@@ -6179,10 +6644,23 @@ var Widget_optional = class extends BaseWidget {
     if (isActive)
       this.serial.active = true;
     this._ensureChildIsHydrated();
-    this.init({ serial: observable9, value: computed4 });
+    this.init({
+      serial: observable11,
+      value: computed5,
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
-  get config() {
-    return this.spec.config;
+  get hasChanges() {
+    if (this.config.startActive) {
+      if (!this.serial.active)
+        return false;
+      return this.child.hasChanges;
+    } else {
+      if (!this.serial.active)
+        return false;
+      return true;
+    }
   }
   get baseErrors() {
     return null;
@@ -6218,298 +6696,70 @@ var Widget_optional = class extends BaseWidget {
 };
 registerWidgetClass("optional", Widget_optional);
 
-// src/utils/misc/exhaust.ts
-var exhaust2 = (x) => x;
-
-// src/rsuite/shims.tsx
-import { observer as observer35 } from "mobx-react-lite";
-var FormHelpTextUI = (p) => /* @__PURE__ */ jsx("div", { ...p });
-var Button = (p) => {
-  const { icon, active, size, loading, disabled, appearance, ...rest } = p;
+// src/controls/widgets/seed/WidgetSeedUI.tsx
+import { observer as observer49 } from "mobx-react-lite";
+var WidgetSeedUI = observer49(function WidgetSeedUI_(p) {
+  const widget = p.widget;
+  const val = widget.serial.val;
   return /* @__PURE__ */ jsxs(
-    "button",
+    Frame,
     {
-      ...rest,
+      border: true,
       tw: [
-        "btn",
-        p.loading || p.disabled ? "btn-disabled" : null,
-        p.active ? "btn-active" : null,
-        appearance ? (() => {
-          if (appearance === "primary")
-            return "btn-primary";
-          if (appearance === "ghost")
-            return "btn-outline";
-          if (appearance === "link")
-            return "btn-link";
-          if (appearance === "default")
-            return null;
-          if (appearance === "subtle")
-            return null;
-          return exhaust2(appearance);
-        })() : null,
-        p.size ? (() => {
-          if (p.size === "sm")
-            return "btn-sm";
-          if (p.size === "xs")
-            return "btn-xs";
-          if (p.size === "lg")
-            return "btn-lg";
-          if (p.size === "md")
-            return null;
-          return exhaust2(p.size);
-        })() : null,
-        ...p?.tw ?? []
+        "WIDGET-FIELD",
+        "flex-1 flex items-center",
+        "rounded overflow-clip text-shadow"
+        // 'border border-base-200 hover:border-base-200',
+        // 'bg-primary/5',
+        // 'border-b-2 border-b-base-200 hover:border-b-base-300',
+        // '!outline-none',
       ],
       children: [
-        p.icon,
-        p.children
-      ]
-    }
-  );
-};
-var Input = (p) => {
-  const { tw, className, children, ...rest } = p;
-  return /* @__PURE__ */ jsx("input", { tw: [tw, className, "input input-bordered input-sm"], ...rest, children });
-};
-var InputNumberBase = observer35(function InputNumberBase_(p) {
-  const sizeClass = p._size ? `input-${p._size}` : null;
-  return /* @__PURE__ */ jsx(
-    "input",
-    {
-      type: "number",
-      tw: ["input input-sm", sizeClass],
-      ...p
-    }
-  );
-});
-var Slider = observer35(function Slider_(p) {
-  return /* @__PURE__ */ jsx(
-    "input",
-    {
-      type: "range",
-      ...p,
-      tw: ["range range-sm range-primary"]
-    }
-  );
-});
-var Radio = observer35(function Radio_(p) {
-  return /* @__PURE__ */ jsx(
-    "input",
-    {
-      type: "radio",
-      ...p
-    }
-  );
-});
-var Toggle = observer35(function Toggle_(p) {
-  return /* @__PURE__ */ jsx(
-    "input",
-    {
-      type: "checkbox",
-      ...p,
-      tw: [
-        //
-        "toggle toggle-primary"
-        // p.checked && 'toggle-success',
-      ]
-    }
-  );
-});
-var Rate = (p) => /* @__PURE__ */ jsx("div", { tw: "rating rating-md rating-sm", children: new Array(p.max ?? 1).fill(0).map((_, ix) => /* @__PURE__ */ jsx(
-  "input",
-  {
-    name: p.name,
-    checked: p.value === ix,
-    onChange: () => p.onChange?.(ix),
-    type: "radio",
-    tw: ["mask mask-star fade-in-40", p.disabled ? "bg-base-300" : "bg-orange-400"]
-  },
-  ix
-)) });
-var Whisper = (p) => /* @__PURE__ */ jsx(RevealUI, { content: () => p.speaker, children: p.children });
-var Panel = (p) => {
-  const { header, children, ...rest } = p;
-  return /* @__PURE__ */ jsxs(
-    "div",
-    {
-      tw: "p-2 border border-opacity-25 bg-base-200 bg-opacity-50 border-base-content input-bordered rounded-btn",
-      ...rest,
-      children: [
-        header,
-        p.children
-      ]
-    }
-  );
-};
-var ProgressLine = observer35(function ProgressLine_(p) {
-  const status = p.status === "success" ? "progress-success" : "progress-info";
-  return /* @__PURE__ */ jsx(
-    "progress",
-    {
-      tw: [status, "m-0 progress", p.className],
-      value: p.percent,
-      max: 100
-    }
-  );
-});
-var messageIcon = (type) => {
-  if (type === "error")
-    return /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined !text-xl", children: "error" });
-  if (type === "info")
-    return /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined !text-xl", children: "info" });
-  if (type === "warning")
-    return /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined !text-xl", children: "warning" });
-  exhaust2(type);
-  return null;
-};
-var Message = observer35(function Message_(p) {
-  const { showIcon, ...rest } = p;
-  return /* @__PURE__ */ jsxs(
-    "div",
-    {
-      tw: [
-        p.type === "error" ? "bg-error text-error-content" : p.type === "warning" ? "bg-warning text-warning-content" : "bg-base text-base-content"
-      ],
-      ...rest,
-      children: [
-        p.header,
-        /* @__PURE__ */ jsxs(
-          "div",
+        /* @__PURE__ */ jsx(
+          Button,
           {
-            className: "flex flex-wrap items-center gap-2 p-2",
-            children: [
-              messageIcon(p.type),
-              /* @__PURE__ */ jsx("div", { children: p.children })
-            ]
+            tw: "!border-l-0",
+            icon: "mdiShuffle",
+            active: widget.serial.mode === "randomize",
+            onClick: () => widget.setToRandomize(),
+            children: "Random"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            tw: "!border-l !border-r",
+            icon: "mdiAccessPoint",
+            active: widget.serial.mode === "fixed",
+            onClick: () => widget.setToFixed(),
+            children: "Fixed"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          InputNumberUI,
+          {
+            disabled: widget.serial.mode === "randomize",
+            tw: ["!border-none flex-1"],
+            min: widget.config.min,
+            max: widget.config.max,
+            step: 1,
+            value: val,
+            mode: "int",
+            onValueChange: (value) => widget.setValue(value)
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            tw: "!border-l !border-r-0",
+            onClick: () => widget.setToFixed(Math.floor(Math.random() * 1e8)),
+            icon: "mdiAutorenew",
+            square: true
           }
         )
       ]
     }
   );
-});
-var Tag = (p) => /* @__PURE__ */ jsx("div", { ...p });
-var Loader = observer35((p) => /* @__PURE__ */ jsx(
-  "span",
-  {
-    className: p.className,
-    tw: [`loading loading-spinner loading-${p.size ?? "sm"}`]
-  }
-));
-
-// src/controls/widgets/seed/WidgetSeedUI.tsx
-import { observer as observer36 } from "mobx-react-lite";
-var isDragging3 = false;
-var WidgetSeedUI = observer36(function WidgetSeedUI_(p) {
-  const widget = p.widget;
-  const val = widget.serial.val;
-  const isDraggingListener = (ev) => {
-    if (ev.button == 0) {
-      isDragging3 = false;
-      window.removeEventListener("mouseup", isDraggingListener, true);
-    }
-  };
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsxs(
-      "div",
-      {
-        tw: [
-          "WIDGET-FIELD",
-          "flex-1 flex items-center join",
-          "rounded overflow-clip text-shadow",
-          "border border-base-200 hover:border-base-200",
-          "bg-primary/5",
-          "border-b-2 border-b-base-200 hover:border-b-base-300",
-          "!outline-none"
-        ],
-        children: [
-          /* @__PURE__ */ jsxs(
-            "button",
-            {
-              type: "button",
-              tw: [
-                "flex items-center gap-1 whitespace-nowrap join-item btn-sm btn-ghost text-shadow px-2",
-                "bg-base-200 hover:bg-base-200 hover:brightness-110",
-                "border-0 !outline-none",
-                widget.serial.mode === "randomize" && "btn-active !bg-primary text-shadow-inv text-primary-content"
-              ],
-              onMouseDown: (ev) => {
-                if (ev.button == 0) {
-                  widget.setToRandomize();
-                  isDragging3 = true;
-                  window.addEventListener("mouseup", isDraggingListener, true);
-                }
-              },
-              onMouseEnter: (_ev) => {
-                if (isDragging3)
-                  widget.setToRandomize();
-              },
-              children: [
-                /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "shuffle" }),
-                /* @__PURE__ */ jsx("div", { children: "Random" })
-              ]
-            }
-          ),
-          /* @__PURE__ */ jsxs(
-            "button",
-            {
-              type: "button",
-              tw: [
-                "flex items-center gap-1 flex-shrink whitespace-nowrap join-item btn-sm btn-ghost text-shadow px-2",
-                "bg-base-200 hover:bg-base-200 hover:brightness-110",
-                "border-0 !outline-none",
-                widget.serial.mode === "fixed" && "btn-active !bg-primary text-shadow-inv text-primary-content"
-              ],
-              onMouseDown: (ev) => {
-                if (ev.button == 0) {
-                  widget.setToFixed();
-                  isDragging3 = true;
-                  window.addEventListener("mouseup", isDraggingListener, true);
-                }
-              },
-              onMouseEnter: (ev) => {
-                if (isDragging3)
-                  widget.setToFixed();
-              },
-              children: [
-                /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "input" }),
-                /* @__PURE__ */ jsx("div", { children: "Fixed" })
-              ]
-            }
-          ),
-          /* @__PURE__ */ jsx("div", { tw: ["flex-1", widget.serial.mode == "randomize" && "pointer-events-none opacity-25"], children: /* @__PURE__ */ jsx(
-            InputNumberUI,
-            {
-              tw: "!border-none join-item",
-              min: widget.config.min,
-              max: widget.config.max,
-              step: 1,
-              value: val,
-              mode: "int",
-              onValueChange: (value) => widget.setValue(value)
-            }
-          ) }),
-          /* @__PURE__ */ jsx(
-            Button,
-            {
-              tw: "flex w-7 !outline-none",
-              size: "sm",
-              appearance: "subtle",
-              onClick: () => widget.setToFixed(Math.floor(Math.random() * 1e6)),
-              icon: /* @__PURE__ */ jsx("span", { tw: "flex-1 pt-0.5", className: "material-symbols-outlined", children: "autorenew" })
-            }
-          )
-        ]
-      }
-    ),
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        tw: "opacity-0 cursor-default",
-        className: "btn btn-xs btn-narrower btn-ghost",
-        children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "undo" })
-      }
-    )
-  ] });
 });
 
 // src/controls/widgets/seed/WidgetSeed.ts
@@ -6527,11 +6777,11 @@ var Widget_seed = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetSeedUI;
     this.DefaultBodyUI = void 0;
+    this.defaultValue = this.config.default ?? 0;
     // prettier-ignore
+    this.reset = () => this.value = this.defaultValue;
     this.type = "seed";
     this.setToFixed = (val) => {
-      if (this.serial.mode === "fixed")
-        return;
       this.serial.mode = "fixed";
       if (val)
         this.serial.val = val;
@@ -6547,21 +6797,28 @@ var Widget_seed = class extends BaseWidget {
       this.serial.val = val;
       this.bumpValue();
     };
-    const config = spec.config;
     this.id = serial?.id ?? nanoid16();
+    const config = spec.config;
     this.serial = serial ?? {
       type: "seed",
       id: this.id,
       val: config.default ?? 0,
       mode: config.defaultMode ?? "randomize"
     };
-    makeAutoObservableInheritance(this);
+    makeAutoObservableInheritance(this, {
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
   get baseErrors() {
     return null;
   }
-  get config() {
-    return this.spec.config;
+  get hasChanges() {
+    return this.value !== this.defaultValue;
+  }
+  set value(val) {
+    this.serial.val = val;
+    this.bumpValue();
   }
   get value() {
     const count = this.form.builder._cache.count;
@@ -6571,14 +6828,14 @@ var Widget_seed = class extends BaseWidget {
 registerWidgetClass("seed", Widget_seed);
 
 // src/controls/widgets/selectMany/WidgetSelectManyUI.tsx
-import { observer as observer37 } from "mobx-react-lite";
-var WidgetSelectManyUI = observer37(function WidgetSelectManyUI_(p) {
+import { observer as observer50 } from "mobx-react-lite";
+var WidgetSelectManyUI = observer50(function WidgetSelectManyUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectMany_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectMany_SelectUI, { widget });
 });
-var WidgetSelectMany_TabUI = observer37(function WidgetSelectMany_TabUI_(p) {
+var WidgetSelectMany_TabUI = observer50(function WidgetSelectMany_TabUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsxs("div", { tw: "rounded select-none flex flex-wrap gap-x-0.5 gap-y-0", children: [
@@ -6587,7 +6844,7 @@ var WidgetSelectMany_TabUI = observer37(function WidgetSelectMany_TabUI_(p) {
         return /* @__PURE__ */ jsx(
           InputBoolUI,
           {
-            active: isSelected,
+            value: isSelected,
             display: "button",
             text: c.label,
             onValueChange: (value) => {
@@ -6600,7 +6857,7 @@ var WidgetSelectMany_TabUI = observer37(function WidgetSelectMany_TabUI_(p) {
       widget.serial.values.filter((v) => widget.choices.find((i) => i.id === v.id) == null).map((item) => /* @__PURE__ */ jsx(
         InputBoolUI,
         {
-          active: true,
+          value: true,
           style: { border: "1px solid oklch(var(--er))" },
           display: "button",
           text: item.label ?? "no label",
@@ -6611,7 +6868,7 @@ var WidgetSelectMany_TabUI = observer37(function WidgetSelectMany_TabUI_(p) {
     widget.baseErrors && /* @__PURE__ */ jsx(MessageErrorUI, { children: /* @__PURE__ */ jsx("ul", { children: widget.baseErrors.map((e, ix) => /* @__PURE__ */ jsx("li", { children: e }, ix)) }) })
   ] });
 });
-var WidgetSelectMany_SelectUI = observer37(function WidgetSelectMany_SelectUI_(p) {
+var WidgetSelectMany_SelectUI = observer50(function WidgetSelectMany_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { tw: "flex-1", children: [
     /* @__PURE__ */ jsx(
@@ -6638,7 +6895,7 @@ var WidgetSelectMany_SelectUI = observer37(function WidgetSelectMany_SelectUI_(p
 });
 
 // src/controls/widgets/selectMany/WidgetSelectMany.tsx
-import { runInAction as runInAction11 } from "mobx";
+import { runInAction as runInAction12 } from "mobx";
 import { nanoid as nanoid17 } from "nanoid";
 var Widget_selectMany_fromValue = (values) => ({
   type: "selectMany",
@@ -6653,8 +6910,10 @@ var Widget_selectMany = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetSelectManyUI;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
     this.type = "selectMany";
+    this.reset = () => {
+      this.value = this.defaultValue;
+    };
     /** un-select given item */
     this.removeItem = (item) => {
       const indexOf = this.serial.values.findIndex((i) => i.id === item.id);
@@ -6682,8 +6941,8 @@ var Widget_selectMany = class extends BaseWidget {
         this.bumpValue();
       }
     };
-    const config = spec.config;
     this.id = serial?.id ?? nanoid17();
+    const config = spec.config;
     this.serial = serial ?? {
       type: "selectMany",
       collapsed: config.startCollapsed,
@@ -6695,8 +6954,17 @@ var Widget_selectMany = class extends BaseWidget {
       this.serial.values = [];
     makeAutoObservableInheritance(this);
   }
-  get config() {
-    return this.spec.config;
+  get defaultValue() {
+    return this.config.default ?? [];
+  }
+  get hasChanges() {
+    if (this.serial.values.length !== this.defaultValue.length)
+      return true;
+    for (const item of this.serial.values) {
+      if (!this.defaultValue.find((i) => i.id === item.id))
+        return true;
+    }
+    return false;
   }
   get choices() {
     const _choices = this.config.choices;
@@ -6721,7 +6989,7 @@ var Widget_selectMany = class extends BaseWidget {
   set value(next) {
     if (this.serial.values === next)
       return;
-    runInAction11(() => {
+    runInAction12(() => {
       this.serial.values = next;
       this.bumpValue();
     });
@@ -6733,14 +7001,14 @@ var Widget_selectMany = class extends BaseWidget {
 registerWidgetClass("selectMany", Widget_selectMany);
 
 // src/controls/widgets/selectOne/WidgetSelectOneUI.tsx
-import { observer as observer38 } from "mobx-react-lite";
-var WidgetSelectOneUI = observer38(function WidgetSelectOneUI_(p) {
+import { observer as observer51 } from "mobx-react-lite";
+var WidgetSelectOneUI = observer51(function WidgetSelectOneUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectOne_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectOne_SelectUI, { widget });
 });
-var WidgetSelectOne_TabUI = observer38(function WidgetSelectOne_TabUI_(p) {
+var WidgetSelectOne_TabUI = observer51(function WidgetSelectOne_TabUI_(p) {
   const widget = p.widget;
   const selected = widget.serial.val;
   return /* @__PURE__ */ jsxs("div", { children: [
@@ -6749,7 +7017,7 @@ var WidgetSelectOne_TabUI = observer38(function WidgetSelectOne_TabUI_(p) {
       return /* @__PURE__ */ jsx(
         InputBoolUI,
         {
-          active: isSelected,
+          value: isSelected,
           display: "button",
           text: c.label ?? c.id,
           onValueChange: (value) => {
@@ -6767,7 +7035,7 @@ var WidgetSelectOne_TabUI = observer38(function WidgetSelectOne_TabUI_(p) {
     ] })
   ] });
 });
-var WidgetSelectOne_SelectUI = observer38(function WidgetSelectOne_SelectUI_(p) {
+var WidgetSelectOne_SelectUI = observer51(function WidgetSelectOne_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx("div", { tw: "flex-1", children: /* @__PURE__ */ jsx(
     SelectUI,
@@ -6798,7 +7066,7 @@ var WidgetSelectOne_SelectUI = observer38(function WidgetSelectOne_SelectUI_(p) 
 });
 
 // src/controls/widgets/selectOne/WidgetSelectOne.ts
-import { runInAction as runInAction12 } from "mobx";
+import { runInAction as runInAction13 } from "mobx";
 import { nanoid as nanoid18 } from "nanoid";
 var Widget_selectOne_fromValue = (val) => ({
   type: "selectOne",
@@ -6813,10 +7081,12 @@ var Widget_selectOne = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetSelectOneUI;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
     this.type = "selectOne";
-    const config = spec.config;
+    this.reset = () => {
+      this.value = this.defaultValue;
+    };
     this.id = serial?.id ?? nanoid18();
+    const config = spec.config;
     const choices = this.choices;
     this.serial = serial ?? {
       type: "selectOne",
@@ -6829,9 +7099,6 @@ var Widget_selectOne = class extends BaseWidget {
       this.serial.val = choices[0];
     makeAutoObservableInheritance(this);
   }
-  get config() {
-    return this.spec.config;
-  }
   get baseErrors() {
     if (this.serial.val == null)
       return "no value selected";
@@ -6839,6 +7106,12 @@ var Widget_selectOne = class extends BaseWidget {
     if (selected == null)
       return "selected value not in choices";
     return;
+  }
+  get defaultValue() {
+    return this.config.default ?? this.choices[0];
+  }
+  get hasChanges() {
+    return this.serial.val.id !== this.defaultValue.id;
   }
   get choices() {
     const _choices = this.config.choices;
@@ -6857,9 +7130,13 @@ var Widget_selectOne = class extends BaseWidget {
   set value(next) {
     if (this.serial.val === next)
       return;
-    runInAction12(() => {
+    const nextHasSameID = this.serial.val.id === next.id;
+    runInAction13(() => {
       this.serial.val = next;
-      this.bumpValue();
+      if (!nextHasSameID)
+        this.bumpValue();
+      else
+        this.bumpSerial();
     });
   }
   get value() {
@@ -6890,13 +7167,19 @@ var Widget_shared = class _Widget_shared extends BaseWidget {
       const spec2 = new ctor("shared", config);
       new _Widget_shared(this.form, null, spec2, this.serial);
     };
-    const config = spec.config;
     this.id = serial?.id ?? nanoid19();
+    const config = spec.config;
     this.serial = serial ?? { id: this.id, type: "shared", collapsed: config.startCollapsed };
     makeAutoObservableInheritance(this);
   }
   get config() {
     return this.spec.config;
+  }
+  get hasChanges() {
+    return this.config.widget.hasChanges;
+  }
+  reset() {
+    return this.config.widget.reset();
   }
   get shared() {
     return this.config.widget;
@@ -6917,7 +7200,7 @@ var Widget_shared = class _Widget_shared extends BaseWidget {
 registerWidgetClass("shared", Widget_shared);
 
 // src/controls/widgets/size/ResolutionState.tsx
-import { makeAutoObservable as makeAutoObservable10 } from "mobx";
+import { makeAutoObservable as makeAutoObservable11 } from "mobx";
 var ResolutionState = class {
   constructor(req) {
     this.req = req;
@@ -6956,7 +7239,7 @@ var ResolutionState = class {
         return "3:2";
       return "1:1";
     })();
-    makeAutoObservable10(this);
+    makeAutoObservable11(this);
   }
   get width() {
     return this.req.width;
@@ -7021,25 +7304,23 @@ var ResolutionState = class {
 };
 
 // src/controls/widgets/size/WidgetSizeUI.tsx
-import { observer as observer39 } from "mobx-react-lite";
-var WigetSize_BlockUI = observer39(function WigetSize_BlockUI_(p) {
-  return /* @__PURE__ */ jsx(WigetSizeXUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
-});
-var WigetSize_LineUI = observer39(function WigetSize_LineUI_(p) {
+import { observer as observer52 } from "mobx-react-lite";
+var WigetSize_LineUI = observer52(function WigetSize_LineUI_(p) {
   return /* @__PURE__ */ jsx(WidgetSizeX_LineUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WidgetSizeX_LineUI = observer39(function WidgetSize_LineUI_(p) {
+var WigetSize_BlockUI = observer52(function WigetSize_BlockUI_(p) {
+  return /* @__PURE__ */ jsx(WigetSizeXUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
+});
+var WidgetSizeX_LineUI = observer52(function WidgetSize_LineUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx("div", { className: "flex flex-1 flex-col gap-1", children: /* @__PURE__ */ jsxs(
-    "div",
+    Frame,
     {
-      tw: [
-        "WIDGET-FIELD w-full h-full flex items-center join rounded gap-0.5 overflow-clip",
-        "border border-base-100 border-b-base-200",
-        "border-b-2 hover:border-base-200 hover:border-b-base-300"
-      ],
+      hover: true,
+      border: { contrast: 0.25 },
+      tw: ["WIDGET-FIELD w-full h-full flex gap-2 items-center overflow-clip"],
+      style: { padding: "0px" },
       children: [
-        /* @__PURE__ */ jsx(AspectLockButtonUI, { sizeHelper: uist }),
         /* @__PURE__ */ jsx(
           InputNumberUI,
           {
@@ -7047,7 +7328,7 @@ var WidgetSizeX_LineUI = observer39(function WidgetSize_LineUI_(p) {
             max: p.bounds?.max ?? 4096,
             step: p.bounds?.step ?? 32,
             mode: "int",
-            tw: "join-item !border-none",
+            tw: "!border-none",
             value: uist.width,
             hideSlider: true,
             onValueChange: (next) => uist.setWidth(next),
@@ -7056,15 +7337,16 @@ var WidgetSizeX_LineUI = observer39(function WidgetSize_LineUI_(p) {
             suffix: "px"
           }
         ),
+        /* @__PURE__ */ jsx("div", { tw: "h-full", style: { width: "1px" } }),
         /* @__PURE__ */ jsx(
           InputNumberUI,
           {
-            tw: "join-item !border-none",
             min: p.bounds?.min ?? 128,
             max: p.bounds?.max ?? 4096,
             step: p.bounds?.step ?? 32,
             hideSlider: true,
             mode: "int",
+            tw: "!border-none",
             value: uist.height,
             onValueChange: (next) => uist.setHeight(next),
             forceSnap: true,
@@ -7072,21 +7354,23 @@ var WidgetSizeX_LineUI = observer39(function WidgetSize_LineUI_(p) {
             suffix: "px"
           }
         ),
-        /* @__PURE__ */ jsx(AspectRatioSquareUI, { sizeHelper: uist })
+        /* @__PURE__ */ jsx("div", { tw: "h-full", style: { width: "1px" } }),
+        /* @__PURE__ */ jsx(AspectRatioSquareUI, { sizeHelper: uist }),
+        /* @__PURE__ */ jsx("div", { tw: "h-full", style: { width: "1px" } }),
+        /* @__PURE__ */ jsx(AspectLockButtonUI, { sizeHelper: uist })
       ]
     }
   ) });
 });
-var AspectLockButtonUI = observer39(function AspectLockButtonUI_(p) {
+var AspectLockButtonUI = observer52(function AspectLockButtonUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx(
-    "button",
+    Frame,
     {
-      tw: [
-        "btn btn-xs h-8 rounded-none join-item !border-none !outline-none",
-        uist.isAspectRatioLocked && "bg-primary hover:bg-primary text-primary-content !border-none"
-      ],
-      onClick: (ev) => {
+      active: uist.isAspectRatioLocked,
+      style: { border: "unset", borderRadius: "0px" },
+      icon: uist.isAspectRatioLocked ? "mdiLink" : "mdiLinkOff",
+      onMouseDown: (ev) => {
         uist.isAspectRatioLocked = !uist.isAspectRatioLocked;
         if (!uist.isAspectRatioLocked) {
           return;
@@ -7096,90 +7380,99 @@ var AspectLockButtonUI = observer39(function AspectLockButtonUI_(p) {
         } else {
           uist.setWidth(uist.width);
         }
-      },
-      children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: uist.isAspectRatioLocked ? "link" : "link_off" })
+      }
     }
   );
 });
-var AspectRatioSquareUI = observer39(function AspectRatioSquareUI_(p) {
+var AspectRatioSquareUI = observer52(function AspectRatioSquareUI_(p) {
   const uist = p.sizeHelper;
   const ratioDisplaySize = 26;
   return /* @__PURE__ */ jsx(
-    Box,
+    Frame,
     {
-      border: true,
+      square: true,
+      size: "xs",
+      border: 10,
       tw: [
         //
-        "flex rounded-sm",
+        "flex",
         "overflow-clip",
         "items-center justify-center"
       ],
-      style: { width: `${ratioDisplaySize}px`, height: `${ratioDisplaySize}px` },
+      style: { border: "unset", borderRadius: "0px" },
+      onClick: uist.flip,
       children: /* @__PURE__ */ jsx(
-        Box,
+        Frame,
         {
-          base: { contrast: 0.5 },
-          tw: "relative",
+          base: 10,
+          tw: "!relative w-full h-full",
           style: {
             //
             width: "100%",
             height: "100%",
+            borderRadius: "0px",
             // Use transform here because it works with floats and will not cause popping/mis-alignments.
             transform: `
-        scaleX(${uist.width < uist.height ? Math.round(uist.width / uist.height * ratioDisplaySize) / ratioDisplaySize : "1"})
-        scaleY(${uist.height < uist.width ? Math.round(uist.height / uist.width * ratioDisplaySize) / ratioDisplaySize : "1"})`
-          }
+                 scaleX(${uist.width < uist.height ? Math.round(uist.width / uist.height * ratioDisplaySize) / ratioDisplaySize : "1"})
+                 scaleY(${uist.height < uist.width ? Math.round(uist.height / uist.width * ratioDisplaySize) / ratioDisplaySize : "1"})`
+          },
+          square: true
         }
       )
     }
   );
 });
-var WigetSizeXUI = observer39(function WigetSizeXUI_(p) {
+var WigetSizeXUI = observer52(function WigetSizeXUI_(p) {
   const uist = p.sizeHelper;
   const resoBtn = (ar) => /* @__PURE__ */ jsx(
-    "button",
+    InputBoolUI,
     {
-      type: "button",
-      tw: ["btn btn-xs join-item", uist.desiredAspectRatio === ar ? "btn-primary" : "btn-ghost"],
-      onClick: () => uist.setAspectRatio(ar),
-      children: ar
+      display: "button",
+      value: uist.desiredAspectRatio == ar,
+      onValueChange: () => uist.setAspectRatio(ar),
+      text: ar
     }
   );
   const modelBtn = (model) => /* @__PURE__ */ jsx(
-    "button",
+    InputBoolUI,
     {
-      type: "button",
-      tw: ["btn btn-xs join-item", uist.desiredModelType === model ? "btn-primary" : "btn-ghost"],
-      onClick: () => uist.setModelType(model),
-      children: model
+      display: "button",
+      value: uist.desiredModelType == model,
+      onValueChange: () => uist.setModelType(model),
+      text: model
     }
   );
-  return /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-1 mt-0.5 rounded-b", children: /* @__PURE__ */ jsxs("div", { tw: "flex items-start gap-2", children: [
-    /* @__PURE__ */ jsxs("div", { tw: "join virtualBorder", children: [
-      modelBtn("1.5"),
-      modelBtn("xl")
-    ] }),
-    /* @__PURE__ */ jsx("div", { tw: "btn btn-xs", onClick: () => uist.flip(), children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "rotate_right" }) }),
-    /* @__PURE__ */ jsxs("div", { tw: "ml-auto flex items-center gap-1", children: [
-      /* @__PURE__ */ jsx("div", { tw: "join virtualBorder", children: resoBtn("1:1") }),
-      /* @__PURE__ */ jsxs("div", { tw: "join virtualBorder", children: [
-        resoBtn("16:9"),
-        resoBtn("9:16")
-      ] }),
-      /* @__PURE__ */ jsxs("div", { tw: "join virtualBorder", children: [
-        resoBtn("4:3"),
-        resoBtn("3:4")
-      ] }),
-      /* @__PURE__ */ jsxs("div", { tw: "join virtualBorder", children: [
-        resoBtn("3:2"),
-        resoBtn("2:3")
+  const portrait = uist.height / uist.width > 1;
+  return /* @__PURE__ */ jsx(
+    Frame,
+    {
+      children: /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
+        /* @__PURE__ */ jsxs("div", { tw: "join", children: [
+          modelBtn("1.5"),
+          modelBtn("xl")
+        ] }),
+        /* @__PURE__ */ jsxs("div", { tw: "ml-auto flex items-center gap-1.5", children: [
+          /* @__PURE__ */ jsx("div", { tw: "join", children: resoBtn("1:1") }),
+          /* @__PURE__ */ jsxs("div", { tw: "join", children: [
+            resoBtn("16:9"),
+            resoBtn("9:16")
+          ] }),
+          /* @__PURE__ */ jsxs("div", { tw: "join", children: [
+            resoBtn("4:3"),
+            resoBtn("3:4")
+          ] }),
+          /* @__PURE__ */ jsxs("div", { tw: "join", children: [
+            resoBtn("3:2"),
+            resoBtn("2:3")
+          ] })
+        ] })
       ] })
-    ] })
-  ] }) });
+    }
+  );
 });
 
 // src/controls/widgets/size/WidgetSize.ts
-import { runInAction as runInAction13 } from "mobx";
+import { runInAction as runInAction14 } from "mobx";
 import { nanoid as nanoid20 } from "nanoid";
 var Widget_size_fromValue = (val) => ({
   ...val
@@ -7192,10 +7485,9 @@ var Widget_size = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WigetSize_LineUI;
     this.DefaultBodyUI = WigetSize_BlockUI;
-    // prettier-ignore
     this.type = "size";
-    const config = spec.config;
     this.id = serial?.id ?? nanoid20();
+    const config = spec.config;
     if (serial) {
       this.serial = serial;
     } else {
@@ -7212,10 +7504,35 @@ var Widget_size = class extends BaseWidget {
         width
       };
     }
-    this.init({ sizeHelper: false });
+    this.init({
+      sizeHelper: false,
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
   get baseErrors() {
     return null;
+  }
+  get defaultValue() {
+    const config = this.spec.config;
+    const aspectRatio = config.default?.aspectRatio ?? "1:1";
+    const modelType = config.default?.modelType ?? "SD1.5 512";
+    const width = config.default?.width ?? parseInt(modelType.split(" ")[1]);
+    const height = config.default?.height ?? parseInt(modelType.split(" ")[1]);
+    return { type: "size", aspectRatio, modelType, height, width };
+  }
+  get hasChanges() {
+    const def = this.defaultValue;
+    if (this.serial.width !== def.width)
+      return true;
+    if (this.serial.height !== def.height)
+      return true;
+    if (this.serial.aspectRatio !== def.aspectRatio)
+      return true;
+    return false;
+  }
+  reset() {
+    this.value = this.defaultValue;
   }
   get width() {
     return this.serial.width;
@@ -7228,7 +7545,7 @@ var Widget_size = class extends BaseWidget {
   set width(next) {
     if (next === this.serial.width)
       return;
-    runInAction13(() => {
+    runInAction14(() => {
       this.serial.width = next;
       this.bumpValue();
     });
@@ -7236,7 +7553,7 @@ var Widget_size = class extends BaseWidget {
   set height(next) {
     if (next === this.serial.height)
       return;
-    runInAction13(() => {
+    runInAction14(() => {
       this.serial.height = next;
       this.bumpValue();
     });
@@ -7246,9 +7563,6 @@ var Widget_size = class extends BaseWidget {
     Object.defineProperty(this, "sizeHelper", { value: state });
     return state;
   }
-  get config() {
-    return this.spec.config;
-  }
   setValue(val) {
     this.value = val;
   }
@@ -7257,7 +7571,7 @@ var Widget_size = class extends BaseWidget {
     val.height === this.serial.height && val.aspectRatio === this.serial.aspectRatio) {
       return;
     }
-    runInAction13(() => {
+    runInAction14(() => {
       Object.assign(this.serial, val);
       this.bumpValue();
     });
@@ -7269,13 +7583,13 @@ var Widget_size = class extends BaseWidget {
 registerWidgetClass("size", Widget_size);
 
 // src/controls/widgets/spacer/WidgetSpacerUI.tsx
-import { observer as observer40 } from "mobx-react-lite";
-var WidgetSpacerUI = observer40(function WidgetSpacerUI_(p) {
+import { observer as observer53 } from "mobx-react-lite";
+var WidgetSpacerUI = observer53(function WidgetSpacerUI_(p) {
   return /* @__PURE__ */ jsx(SpacerUI, {});
 });
 
 // src/controls/widgets/spacer/WidgetSpacer.tsx
-import { observable as observable10 } from "mobx";
+import { observable as observable12 } from "mobx";
 import { nanoid as nanoid21 } from "nanoid";
 var Widget_spacer_fromValue = (val) => ({
   type: "spacer"
@@ -7288,21 +7602,24 @@ var Widget_spacer = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetSpacerUI;
     this.DefaultBodyUI = void 0;
-    // prettier-ignore
     this.type = "spacer";
+    this.hasChanges = false;
+    this.reset = () => {
+    };
     this.id = serial?.id ?? nanoid21();
     this.serial = serial ?? {
       id: this.id,
       type: "spacer",
       collapsed: false
     };
-    this.init({ serial: observable10 });
+    this.init({
+      serial: observable12,
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
   get baseErrors() {
     return null;
-  }
-  get config() {
-    return this.spec.config;
   }
   get value() {
     return false;
@@ -7314,9 +7631,31 @@ var Widget_spacer = class extends BaseWidget {
 };
 registerWidgetClass("spacer", Widget_spacer);
 
+// src/rsuite/kolor/getLCHFromStringAsString.tsx
+import Color2 from "colorjs.io";
+function getLCHFromStringAsString(str) {
+  try {
+    const color = new Color2(str);
+    const [l, c, h_] = color.oklch;
+    const h = isNaN(h_) ? 0 : h_;
+    return `lch(${fmtNum1(l * 100)}%, ${fmtNum2(c)}, ${fmtNum1(h)})`;
+  } catch (e) {
+    console.error(`[\u{1F534}] getLCHFromStringAsString FAILURE (string is: "${str}")`);
+    return `lch(.5 1 0)`;
+  }
+}
+var fmtNum2 = (n) => {
+  const s = n.toFixed(2);
+  return s.endsWith(".00") ? s.slice(0, -3) : s.endsWith("0") ? s.slice(0, -1) : s;
+};
+var fmtNum1 = (n) => {
+  const s = n.toFixed(1);
+  return s.endsWith(".0") ? s.slice(0, -2) : s;
+};
+
 // src/controls/widgets/string/WidgetStringUI.tsx
-import { observer as observer41 } from "mobx-react-lite";
-var WidgetString_TextareaHeaderUI = observer41(function WidgetString_TextareaHeaderUI_(p) {
+import { observer as observer54 } from "mobx-react-lite";
+var WidgetString_TextareaHeaderUI = observer54(function WidgetString_TextareaHeaderUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
     return null;
@@ -7324,17 +7663,15 @@ var WidgetString_TextareaHeaderUI = observer41(function WidgetString_TextareaHea
     return null;
   return /* @__PURE__ */ jsx("div", { tw: "line-clamp-1 italic opacity-50", children: p.widget.value });
 });
-var WidgetString_TextareaBodyUI = observer41(function WidgetString_TextareaBodyUI_(p) {
+var WidgetString_TextareaBodyUI = observer54(function WidgetString_TextareaBodyUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
     return null;
   const val = widget.value;
-  const kolor = useColor({ base: 5 });
-  return /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsx(Frame, { base: 5, children: /* @__PURE__ */ jsx(
     "textarea",
     {
       style: {
-        ...kolor.styles,
         /* ...p.widget.config.style, */
         lineHeight: "1.3rem",
         resize: p.widget.config.resize ?? "both"
@@ -7347,112 +7684,95 @@ var WidgetString_TextareaBodyUI = observer41(function WidgetString_TextareaBodyU
         widget.value = ev.target.value;
       }
     }
-  );
+  ) });
 });
-var WidgetString_HeaderUI = observer41(function WidgetStringUI_(p) {
+var WidgetString_HeaderUI = observer54(function WidgetStringUI_(p) {
   const widget = p.widget;
   const val = widget.value;
   let inputTailwind;
   let visualHelper;
-  let highlight = true;
-  const color = useColor({
-    base: 5,
-    text: {
-      contrast: 1,
-      /* hueShift: 150, chromaBlend: 899 */
-      chromaBlend: 1
-    },
-    border: true
-  });
   switch (widget.config.inputType) {
     case "color":
-      inputTailwind = "absolute w-full h-full opacity-0";
-      visualHelper = /* @__PURE__ */ jsx("div", { tw: "w-full h-full", style: { background: val } });
-      highlight = false;
+      inputTailwind = "absolute w-full h-full !bg-transparent opacity-0 !p-0";
+      visualHelper = /* @__PURE__ */ jsx(
+        Frame,
+        {
+          tw: "w-full h-full text-xs justify-between",
+          base: val ? val : void 0,
+          text: { contrast: 1 },
+          textShadow: { contrast: 0.5 },
+          children: /* @__PURE__ */ jsx("div", { children: getLCHFromStringAsString(val) })
+        }
+      );
       break;
     default:
-      inputTailwind = "input input-sm w-full h-full !outline-none text-shadow";
+      inputTailwind = "w-full h-full !outline-none bg-transparent";
       break;
   }
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsxs(
-      "div",
-      {
-        style: color.styles,
-        tw: [
-          // color.className,
-          "WIDGET-FIELD",
-          "h-full w-full",
-          "flex flex-1 items-center relative",
-          "rounded overflow-clip text-shadow",
-          // 'border border-base-100 hover:border-base-300',
-          // 'bg-primary/5',
-          highlight && "hover:brightness-110",
-          // 'border-b-2 border-b-base-200 hover:border-b-base-300',
-          "p-0 m-0"
-        ],
-        onMouseDown: (ev) => {
-          if (ev.button == 1) {
-            const textInput = ev.currentTarget.querySelector('input[type="text"');
-            textInput.focus();
-          }
-        },
-        children: [
-          visualHelper,
-          /* @__PURE__ */ jsx(
-            "input",
-            {
-              tw: inputTailwind,
-              type: widget.config.inputType,
-              pattern: widget.config.pattern,
-              placeholder: widget.config.placeHolder,
-              value: widget.config.buffered ? widget.temporaryValue ?? val : val,
-              onChange: (ev) => {
-                if (widget.config.buffered) {
-                  widget.setTemporaryValue(ev.target.value);
-                } else {
-                  widget.value = ev.currentTarget.value;
-                }
-              },
-              onDragStart: (ev) => ev.preventDefault(),
-              onFocus: (ev) => {
-                widget.setTemporaryValue(widget.value ?? "");
-                ev.currentTarget.select();
-              },
-              onBlur: () => {
-                if (widget.config.buffered && widget.temporaryValue != null) {
+  return /* @__PURE__ */ jsxs(
+    Frame,
+    {
+      base: 5,
+      text: { contrast: 1, chromaBlend: 1 },
+      border: true,
+      tw: [
+        //
+        "WIDGET-FIELD",
+        "h-full w-full",
+        "flex flex-1 items-center relative",
+        "overflow-clip text-sm"
+      ],
+      onMouseDown: (ev) => {
+        if (ev.button == 1) {
+          const textInput = ev.currentTarget.querySelector('input[type="text"');
+          textInput.focus();
+        }
+      },
+      children: [
+        visualHelper,
+        /* @__PURE__ */ jsx(
+          "input",
+          {
+            tw: inputTailwind,
+            type: widget.config.inputType,
+            pattern: widget.config.pattern,
+            placeholder: widget.config.placeHolder,
+            value: widget.config.buffered ? widget.temporaryValue ?? val : val,
+            onChange: (ev) => {
+              if (widget.config.buffered)
+                widget.setTemporaryValue(ev.target.value);
+              else
+                widget.value = ev.currentTarget.value;
+            },
+            onDragStart: (ev) => ev.preventDefault(),
+            onFocus: (ev) => {
+              widget.setTemporaryValue(widget.value ?? "");
+              ev.currentTarget.select();
+            },
+            onBlur: () => {
+              if (widget.config.buffered && widget.temporaryValue != null) {
+                widget.value = widget.temporaryValue;
+              }
+            },
+            onKeyDown: (ev) => {
+              if (ev.key === "Enter") {
+                ev.currentTarget.blur();
+              } else if (ev.key === "Escape") {
+                if (!widget.config.buffered && widget.temporaryValue)
                   widget.value = widget.temporaryValue;
-                }
-              },
-              onKeyDown: (ev) => {
-                if (ev.key === "Enter") {
-                  ev.currentTarget.blur();
-                } else if (ev.key === "Escape") {
-                  if (!widget.config.buffered && widget.temporaryValue)
-                    widget.value = widget.temporaryValue;
-                  widget.setTemporaryValue(null);
-                  ev.currentTarget.blur();
-                }
+                widget.setTemporaryValue(null);
+                ev.currentTarget.blur();
               }
             }
-          )
-        ]
-      }
-    ),
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        tw: [widget.isChanged ? void 0 : "btn-disabled opacity-50"],
-        onClick: () => widget.reset(),
-        className: "btn btn-xs btn-narrower btn-ghost",
-        children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "undo" })
-      }
-    )
-  ] });
+          }
+        )
+      ]
+    }
+  );
 });
 
 // src/controls/widgets/string/WidgetString.tsx
-import { runInAction as runInAction14 } from "mobx";
+import { runInAction as runInAction15 } from "mobx";
 import { nanoid as nanoid22 } from "nanoid";
 var Widget_string_fromValue = (val) => ({
   type: "str",
@@ -7465,8 +7785,6 @@ var Widget_string = class extends BaseWidget {
     this.form = form;
     this.parent = parent;
     this.spec = spec;
-    this.border = false;
-    // prettier-ignore
     this.type = "str";
     // --------------
     this.temporaryValue = null;
@@ -7476,8 +7794,8 @@ var Widget_string = class extends BaseWidget {
     this.reset = () => {
       this.value = this.defaultValue;
     };
-    const config = spec.config;
     this.id = serial?.id ?? nanoid22();
+    const config = spec.config;
     this.serial = serial ?? {
       type: "str",
       val: this.config.default,
@@ -7500,11 +7818,13 @@ var Widget_string = class extends BaseWidget {
   get baseErrors() {
     return null;
   }
-  get config() {
-    return this.spec.config;
-  }
-  get isChanged() {
+  get hasChanges() {
     return this.serial.val !== this.defaultValue;
+  }
+  get animateResize() {
+    if (this.config.textarea)
+      return false;
+    return true;
   }
   setValue(val) {
     this.value = val;
@@ -7512,7 +7832,7 @@ var Widget_string = class extends BaseWidget {
   set value(next) {
     if (this.serial.val === next)
       return;
-    runInAction14(() => {
+    runInAction15(() => {
       this.serial.val = next;
       this.bumpValue();
     });
@@ -7524,7 +7844,7 @@ var Widget_string = class extends BaseWidget {
 registerWidgetClass("str", Widget_string);
 
 // src/controls/SimpleFormBuilder.ts
-import { makeAutoObservable as makeAutoObservable11, reaction as reaction2 } from "mobx";
+import { makeAutoObservable as makeAutoObservable12, reaction as reaction2 } from "mobx";
 var SimpleFormBuilder = class {
   /** (@internal) don't call this yourself */
   constructor(form) {
@@ -7751,7 +8071,7 @@ var SimpleFormBuilder = class {
       }
       return w;
     };
-    makeAutoObservable11(this, {
+    makeAutoObservable12(this, {
       SpecCtor: false
     });
   }
@@ -7767,12 +8087,13 @@ export {
   AnimatedSizeUI,
   AspectLockButtonUI,
   AspectRatioSquareUI,
+  AutoCompleteSelectState,
   BaseWidget,
+  BoolButtonProps,
   BoundCommand,
   BoundCommandSym,
   BoundMenu,
   BoundMenuSym,
-  Box,
   BoxBase,
   BoxSubtle,
   BoxTitle,
@@ -7782,46 +8103,40 @@ export {
   CommandContext,
   CommandManager,
   CommandSym,
+  CurrentStyleCtx,
   CushyKitCtx,
-  Dropdown,
   ErrorBoundaryFallback,
+  ErrorBoundaryUI,
   FAIL,
   Form,
   FormAsDropdownConfigUI,
-  FormHelpTextUI,
   FormManager,
   FormUI,
+  Frame,
   GlobalFormCtx,
   Ikon,
   IkonOf,
-  Input,
+  InputBoolCheckboxUI,
+  InputBoolToggleButtonUI,
   InputBoolUI,
-  InputNumberBase,
   InputNumberUI,
   JsonViewUI,
   KEYS,
   ListControlsUI,
-  ListItemCollapseBtnUI,
-  Loader,
   META_NAME,
   MOD_KEY,
   ManualPromise,
   MarkdownUI,
   Menu,
+  MenuDividerUI_,
   MenuInstance,
   MenuItem,
   MenuRootUI,
   MenuUI,
   MenuWithoutProps,
-  Message,
   MessageErrorUI,
-  MessageInfoUI,
-  MessageWarningUI,
   ModalShellUI,
-  Panel,
-  ProgressLine,
-  Radio,
-  Rate,
+  NumberVar,
   RenderItemTitleUI,
   ResolutionState,
   RevealCtx,
@@ -7838,11 +8153,8 @@ export {
   SimpleMenuAction,
   SimpleMenuModal,
   SimpleSpec,
-  Slider,
   SpacerUI,
-  Tag,
   ThemeCtx,
-  Toggle,
   Tree,
   TreeEntryUI,
   TreeIcon1UI,
@@ -7853,19 +8165,28 @@ export {
   TreeWidget,
   Trigger,
   VIOLATION,
-  Whisper,
   WidgetBoolUI,
   WidgetChoices_BodyUI,
   WidgetChoices_HeaderUI,
   WidgetChoices_SelectHeaderUI,
+  WidgetChoices_TabHeaderUI,
   WidgetColorUI,
+  WidgetErrorsUI,
+  WidgetFieldsContainerUI,
   WidgetGroup_BlockUI,
   WidgetGroup_LineUI,
+  WidgetHeaderContainerUI,
+  WidgetHeaderControlsContainerUI,
   WidgetInlineRunUI,
+  WidgetLabelCaretAlwaysUI,
+  WidgetLabelCaretUI,
+  WidgetLabelContainerUI,
+  WidgetLabelIconUI,
   WidgetList_BodyUI,
   WidgetList_LineUI,
   WidgetMardownUI,
   WidgetMatrixUI,
+  WidgetMenuUI,
   WidgetNumberUI,
   WidgetSeedUI,
   WidgetSelectManyUI,
@@ -7880,6 +8201,7 @@ export {
   WidgetString_TextareaBodyUI,
   WidgetString_TextareaHeaderUI,
   WidgetTooltipUI,
+  WidgetUndoChangesButtonUI,
   WidgetWithLabelUI,
   Widget_ToggleUI,
   Widget_bool,
@@ -7910,35 +8232,45 @@ export {
   WigetSize_BlockUI,
   WigetSize_LineUI,
   activityManager,
+  addRule,
   allIcons,
-  applyRelative,
+  applyBoxToCtx,
+  applyKolorToOKLCH,
   asSTRING_orCrash,
-  autoContrast,
   bang,
   clamp,
+  clampOpt,
   command,
   commandManager,
+  compileKolorToCSSExpression,
   computePlacement,
   debounce,
+  defaultDarkTheme,
   defaultHideDelay_whenNested,
   defaultHideDelay_whenRoot,
   defaultShowDelay_whenNested,
   defaultShowDelay_whenRoot,
   defaultTreeStorage,
-  exhaust2 as exhaust,
-  formatColor,
+  exhaust,
+  extractNormalizeBox,
+  formatOKLCH,
+  frames,
   genUID,
   getActualWidgetToDisplay,
   getAllIcons,
-  getBorderStatusForWidget,
+  getClassNameForSize,
   getCurrentForm_IMPL,
   getId,
-  getIfWidgetIsCollapsible,
   getIfWidgetNeedAlignedLabel,
+  getLCHFromString,
+  getLCHFromStringAsString,
+  getNum,
   getOS,
   getWidgetClass,
   global_RevealStack,
   hasMod,
+  hasRule,
+  hashKolor,
   isBoundCommand,
   isBoundMenu,
   isCommand,
@@ -7953,11 +8285,13 @@ export {
   menu,
   menuWithoutProps,
   menu_widgetActions,
+  normalizeBoxKolor,
   normalizeCushyShortcut,
   normalizeProblem,
   normalizeText,
   onKeyDownHandlers,
   openRouterInfos,
+  overrideKolor,
   parseFloatNoRoundingErr,
   parseShortcutToInputSequence,
   registerWidgetClass,
@@ -7968,11 +8302,12 @@ export {
   toastInfo,
   toastSuccess,
   unaccent,
-  useColor,
   useCushyKit,
   useCushyKitOrNull,
+  usePressLogic,
   useReveal,
   useRevealOrNull,
   useSizeOf,
+  useTheme,
   useTreeView
 };
