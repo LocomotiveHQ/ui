@@ -2,8 +2,8 @@ import type { CSSProperties } from 'react'
 
 import { observer } from 'mobx-react-lite'
 
-import { Frame } from '../../rsuite/frame/Frame'
-import { useTheme } from '../../rsuite/theme/useTheme'
+import { useCSuite } from '../../csuite/ctx/useCSuite'
+import { Frame } from '../../csuite/frame/Frame'
 
 export type WidgetLabelContainerProps = {
     //
@@ -13,12 +13,13 @@ export type WidgetLabelContainerProps = {
 }
 
 export const WidgetLabelContainerUI = observer(function WidgetLabelContainerUI_(p: WidgetLabelContainerProps) {
-    const theme = useTheme()
+    const csuite = useCSuite()
     return (
         <Frame
-            tw='COLLAPSE-PASSTHROUGH flex justify-end gap-0.5 flex-none items-center shrink-0 flex-1 items-center py-1'
+            hover
+            tw='COLLAPSE-PASSTHROUGH h-input flex justify-end gap-0.5 flex-none items-center shrink-0 flex-1 items-center'
             style={p.justify ? justifyStyle : undefined}
-            text={theme.value.labelText}
+            text={csuite.labelText}
         >
             {p.children}
         </Frame>

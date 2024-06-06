@@ -3,11 +3,11 @@ import type { Widget_choices } from './WidgetChoices'
 
 import { observer } from 'mobx-react-lite'
 
-import { InputBoolUI } from '../../../rsuite/checkbox/InputBoolUI'
-import { SelectUI } from '../../../rsuite/select/SelectUI'
-import { useTheme } from '../../../rsuite/theme/useTheme'
+import { InputBoolUI } from '../../../csuite/checkbox/InputBoolUI'
+import { useCSuite } from '../../../csuite/ctx/useCSuite'
+import { SelectUI } from '../../../csuite/select/SelectUI'
+import { WidgetsContainerUI } from '../../shared/WidgetsContainerUI'
 import { WidgetWithLabelUI } from '../../shared/WidgetWithLabelUI'
-import { WidgetFieldsContainerUI } from '../group/WidgetGroupUI'
 
 // UI
 export const WidgetChoices_HeaderUI = observer(function WidgetChoices_LineUI_(p: { widget: Widget_choices<any> }) {
@@ -25,7 +25,7 @@ export const WidgetChoices_BodyUI = observer(function WidgetChoices_BodyUI_<T ex
         .map(([branch, subWidget]) => ({ branch, subWidget }))
 
     return (
-        <WidgetFieldsContainerUI //
+        <WidgetsContainerUI //
             layout={widget.config.layout}
             tw={[widget.config.className, p.className]}
         >
@@ -34,7 +34,7 @@ export const WidgetChoices_BodyUI = observer(function WidgetChoices_BodyUI_<T ex
                 if (subWidget == null) return <>❌ error</>
                 return (
                     <WidgetWithLabelUI //
-                        alignLabel={p.alignLabel}
+                        justifyLabel={p.alignLabel}
                         key={val.branch}
                         rootKey={val.branch}
                         widget={subWidget}
@@ -42,7 +42,7 @@ export const WidgetChoices_BodyUI = observer(function WidgetChoices_BodyUI_<T ex
                     />
                 )
             })}
-        </WidgetFieldsContainerUI>
+        </WidgetsContainerUI>
     )
 })
 
@@ -53,7 +53,7 @@ export const WidgetChoices_TabHeaderUI = observer(function WidgetChoicesTab_Line
 }) {
     const widget = p.widget
     const choices = widget.choicesWithLabels // choicesStr.map((v) => ({ key: v }))
-    const theme = useTheme()
+    const csuite = useCSuite()
     return (
         <div
             tw='rounded select-none flex flex-1 flex-wrap gap-x-1 gap-y-0'
@@ -77,7 +77,7 @@ export const WidgetChoices_TabHeaderUI = observer(function WidgetChoicesTab_Line
                         display='button'
                         mode={p.widget.isMulti ? 'checkbox' : 'radio'}
                         text={c.label}
-                        box={isSelected ? undefined : { text: theme.value.labelText }}
+                        box={isSelected ? undefined : { text: csuite.labelText }}
                         onValueChange={(value) => {
                             if (value != isSelected) {
                                 widget.toggleBranch(c.key)

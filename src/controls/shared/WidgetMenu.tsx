@@ -1,17 +1,17 @@
-import type { Menu, MenuEntry } from '../../operators/Menu'
+import type { Menu, MenuEntry } from '../../operators/menu/Menu'
 import type { IWidget } from '../IWidget'
 
 import { observer } from 'mobx-react-lite'
 
-import { menu } from '../../operators/Menu'
-import { SimpleMenuAction } from '../../operators/menuSystem/SimpleMenuAction'
-import { SimpleMenuModal } from '../../operators/menuSystem/SimpleMenuModal'
+import { Button } from '../../csuite/button/Button'
+import { MenuDividerUI_ } from '../../csuite/dropdown/MenuDividerUI'
+import { RevealUI } from '../../csuite/reveal/RevealUI'
+import { menu } from '../../operators/menu/Menu'
+import { SimpleMenuAction } from '../../operators/menu/SimpleMenuAction'
+import { SimpleMenuModal } from '../../operators/menu/SimpleMenuModal'
 import { Tree } from '../../panels/libraryUI/tree/xxx/Tree'
 import { TreeUI } from '../../panels/libraryUI/tree/xxx/TreeUI'
 import { TreeView } from '../../panels/libraryUI/tree/xxx/TreeView'
-import { Button } from '../../rsuite/button/Button'
-import { MenuDividerUI_ } from '../../rsuite/dropdown/MenuDividerUI'
-import { RevealUI } from '../../rsuite/reveal/RevealUI'
 
 export const WidgetMenuUI = observer(function WidgetMenuUI_(p: { className?: string; widget: IWidget }) {
     return (
@@ -35,21 +35,23 @@ export const menu_widgetActions: Menu<IWidget> = menu({
             }),
         )
         out.push(MenuDividerUI_)
-        // FOLD ALL CHILDREN
-        out.push(
-            new SimpleMenuAction({
-                label: 'Expand All',
-                icon: 'mdiExpandAll',
-                disabled: widget.hasNoChild,
-                onPick: () => widget.expandAllChildren(),
-            }),
-        )
+
         // COLLAPSE ALL CHILDREN
         out.push(
             new SimpleMenuAction({
                 label: 'Collapse All',
                 icon: 'mdiCollapseAll',
                 onPick: () => widget.collapseAllChildren(),
+            }),
+        )
+
+        // EXPAND ALL CHILDREN
+        out.push(
+            new SimpleMenuAction({
+                label: 'Expand All',
+                icon: 'mdiExpandAll',
+                disabled: widget.hasNoChild,
+                onPick: () => widget.expandAllChildren(),
             }),
         )
 
@@ -61,18 +63,15 @@ export const menu_widgetActions: Menu<IWidget> = menu({
                 submit: () => {
                     console.log(`[🤠] values`)
                 },
-                UI: () => {
-                    const tree = new Tree([widget.asTreeElement('root')])
-                    const treeView = new TreeView(tree, { selectable: true })
-                    return (
-                        <TreeUI //
-                            title='Select values to include in preset'
-                            treeView={treeView}
-                        />
-                    )
-                },
+                UI: (w) => <CreatePresetUI widget={widget} />,
             }),
         )
+        // out.push(
+        //     new SimpleMenuAction({
+        //         label: 'Create Preset (V2)',
+        //         onPick: () => cushy.layout.addCustomV2(CreatePresetUI, { widget /* 🔴 */ }),
+        //     }),
+        // )
         out.push(MenuDividerUI_)
         const presets = widget.config.presets ?? []
         for (const entry of presets) {
@@ -95,4 +94,15 @@ export const menu_widgetActions: Menu<IWidget> = menu({
         //     // menu_copyImageAs.bind(image),
         // ]
     },
+})
+
+export const CreatePresetUI = observer(function CreatePresetUI_(p: { widget: IWidget }) {
+    const tree = new Tree([p.widget.asTreeElement('root')])
+    const treeView = new TreeView(tree, { selectable: true })
+    return (
+        <TreeUI //
+            title='Select values to include in preset'
+            treeView={treeView}
+        />
+    )
 })

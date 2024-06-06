@@ -4,9 +4,9 @@ import type { AspectRatio, ModelType } from './WidgetSizeTypes'
 
 import { observer } from 'mobx-react-lite'
 
-import { InputBoolUI } from '../../../rsuite/checkbox/InputBoolUI'
-import { Frame } from '../../../rsuite/frame/Frame'
-import { InputNumberUI } from '../number/InputNumberUI'
+import { InputBoolUI } from '../../../csuite/checkbox/InputBoolUI'
+import { Frame } from '../../../csuite/frame/Frame'
+import { InputNumberUI } from '../../../csuite/input-number/InputNumberUI'
 
 export const WigetSize_LineUI = observer(function WigetSize_LineUI_(p: { widget: Widget_size }) {
     return <WidgetSizeX_LineUI sizeHelper={p.widget.sizeHelper} bounds={p.widget.config} />
@@ -28,11 +28,8 @@ export const WidgetSizeX_LineUI = observer(function WidgetSize_LineUI_(p: {
     return (
         <div className='flex flex-1 flex-col gap-1'>
             <Frame //Joined container
-                hover
-                border={{ contrast: 0.25 }}
-                // 'border border-base-100 border-b-base-200',
-                // 'border-b-2 hover:border-base-200 hover:border-b-base-300',
-                tw={['WIDGET-FIELD w-full h-full flex gap-2 items-center overflow-clip']}
+                border={{ contrast: 0.05 }}
+                tw={['h-input w-full h-full flex gap-2 items-center overflow-clip']}
                 style={{ padding: '0px' }}
             >
                 <InputNumberUI
@@ -41,7 +38,6 @@ export const WidgetSizeX_LineUI = observer(function WidgetSize_LineUI_(p: {
                     max={p.bounds?.max ?? 4096}
                     step={p.bounds?.step ?? 32}
                     mode='int'
-                    tw='!border-none'
                     value={uist.width}
                     hideSlider
                     onValueChange={(next) => uist.setWidth(next)}
@@ -57,7 +53,6 @@ export const WidgetSizeX_LineUI = observer(function WidgetSize_LineUI_(p: {
                     step={p.bounds?.step ?? 32}
                     hideSlider
                     mode='int'
-                    tw='!border-none'
                     value={uist.height}
                     onValueChange={(next) => uist.setHeight(next)}
                     forceSnap={true}
@@ -104,17 +99,11 @@ export const AspectRatioSquareUI = observer(function AspectRatioSquareUI_(p: { s
         <Frame // Aspect ratio display background
             square
             size='xs'
-            // base={10}
             border={10}
-            tw={[
-                //
-                'flex',
-                'overflow-clip',
-                'items-center justify-center',
-            ]}
-            // style={{ width: `${ratioDisplaySize}px`, height: `${ratioDisplaySize}px` }}
-            style={{ border: 'unset', borderRadius: '0px' }}
+            tw={['flex', 'overflow-clip', 'items-center justify-center', 'cursor-pointer']}
+            style={{ borderRadius: '0px' }}
             onClick={uist.flip}
+            hover
         >
             <Frame
                 base={10}

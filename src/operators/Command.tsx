@@ -1,5 +1,5 @@
-import { commandManager, type CushyShortcut } from '../app/shortcuts/CommandManager'
-import { Button } from '../rsuite/button/Button'
+import { commandManager, type CushyShortcut } from '../app/accelerators/CommandManager'
+import { Button } from '../csuite/button/Button'
 import { BoundCommandSym } from './introspect/_isBoundCommand'
 import { CommandSym } from './introspect/_isCommand'
 import { Trigger } from './RET'

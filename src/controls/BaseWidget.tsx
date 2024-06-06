@@ -1,4 +1,4 @@
-import type { IconName } from '../icons/icons'
+import type { IconName } from '../csuite/icons/icons'
 import type { ITreeElement } from '../panels/libraryUI/tree/TreeEntry'
 import type { Channel, ChannelId } from './Channel'
 import type { Form } from './Form'
@@ -271,8 +271,21 @@ export abstract class BaseWidget {
     }
 
     // UI ----------------------------------------------------
-    ui(this: IWidget): JSX.Element {
-        return <WidgetWithLabelUI isTopLevel key={this.id} widget={this} rootKey='_' />
+    ui(
+        this: IWidget,
+        p?: {
+            label?: string | false
+            justifyLabel?: boolean
+        },
+    ): JSX.Element {
+        return (
+            <WidgetWithLabelUI //
+                key={this.id}
+                {...p}
+                widget={this}
+                rootKey='_'
+            />
+        )
     }
 
     defaultHeader(this: IWidget): JSX.Element | undefined {
@@ -349,6 +362,7 @@ export abstract class BaseWidget {
         // make the object deeply observable including this base class
         makeAutoObservableInheritance(this, mobxOverrides)
 
+        // eslint-disable-next-line consistent-this
         const self = this as any as IWidget
         const config = self.config
         const serial = self.serial

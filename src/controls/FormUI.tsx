@@ -1,25 +1,34 @@
-import type { Box } from '../rsuite/box/Box'
+import type { Box } from '../csuite/box/Box'
 import type { Form } from './Form'
+import type { ISpec } from './ISpec'
 import type { CovariantFn } from './utils/BivariantHack'
 import type { CovariantFC } from './utils/CovariantFC'
 import type { CSSProperties, ReactNode } from 'react'
 
 import { observer } from 'mobx-react-lite'
 
-import { Button } from '../rsuite/button/Button'
-import { Frame } from '../rsuite/frame/Frame'
-import { MessageErrorUI } from '../rsuite/messages/MessageErrorUI'
+import { Button } from '../csuite/button/Button'
+import { Frame } from '../csuite/frame/Frame'
+import { MessageErrorUI } from '../csuite/messages/MessageErrorUI'
 
 export type FormUIProps = {
-    // form -----------------------------------
-    form: Maybe<Form>
-    // look and feel --------------------------
-    /** from your daisy-ui config */
+    // form ---------------------------------------------------------
+    form: Maybe<Form<ISpec>>
+
+    // root wrapper
+    label?: string | false
+    justifyLabel?: boolean
+
+    // look and feel ------------------------------------------------
     theme?: Box
     className?: string
     style?: CSSProperties
+
+    // extra --------------------------------------------------------
     /** any react children passed to this widget will be displayed at the end of the form */
     children?: ReactNode
+
+    // submit -------------------------------------------------------
     /**
      * override default label.
      * @default 'Submit'

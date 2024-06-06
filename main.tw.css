@@ -1268,6 +1268,11 @@ html {
   min-width: 2.2em;
 }
 
+.link {
+  cursor: pointer;
+  text-decoration-line: underline;
+}
+
 .menu {
   display: flex;
   flex-direction: column;
@@ -2058,6 +2063,16 @@ details.collapse summary::-webkit-details-marker {
 
 .join-item:focus {
   isolation: isolate;
+}
+
+.link:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .loading {
@@ -3141,6 +3156,15 @@ details.collapse summary::-webkit-details-marker {
   margin: 0px;
 }
 
+.m-8 {
+  margin: 2rem;
+}
+
+.mx-1 {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
 .my-0 {
   margin-top: 0px;
   margin-bottom: 0px;
@@ -3167,6 +3191,13 @@ details.collapse summary::-webkit-details-marker {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .block {
@@ -3225,6 +3256,11 @@ details.collapse summary::-webkit-details-marker {
   height: auto;
 }
 
+.h-fit {
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
 .h-full {
   height: 100%;
 }
@@ -3272,6 +3308,14 @@ details.collapse summary::-webkit-details-marker {
 
 .min-w-60 {
   min-width: 15rem;
+}
+
+.max-w-lg {
+  max-width: 32rem;
+}
+
+.max-w-sm {
+  max-width: 24rem;
 }
 
 .flex-1 {
@@ -3346,6 +3390,10 @@ details.collapse summary::-webkit-details-marker {
   flex-wrap: nowrap;
 }
 
+.items-start {
+  align-items: flex-start;
+}
+
 .items-center {
   align-items: center;
 }
@@ -3403,6 +3451,14 @@ details.collapse summary::-webkit-details-marker {
 
 .self-start {
   align-self: flex-start;
+}
+
+.self-center {
+  align-self: center;
+}
+
+.justify-self-center {
+  justify-self: center;
 }
 
 .overflow-auto {
@@ -3473,24 +3529,12 @@ details.collapse summary::-webkit-details-marker {
   border-left-width: 1px !important;
 }
 
-.\!border-l-0 {
-  border-left-width: 0px !important;
-}
-
-.\!border-r {
-  border-right-width: 1px !important;
-}
-
 .\!border-r-0 {
   border-right-width: 0px !important;
 }
 
 .border-b {
   border-bottom-width: 1px;
-}
-
-.border-b-2 {
-  border-bottom-width: 2px;
 }
 
 .border-l {
@@ -3509,16 +3553,6 @@ details.collapse summary::-webkit-details-marker {
   border-style: none !important;
 }
 
-.border-base-100 {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-border-opacity)));
-}
-
-.border-base-200 {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-border-opacity)));
-}
-
 .border-base-300 {
   --tw-border-opacity: 1;
   border-color: var(--fallback-b3,oklch(var(--b3)/var(--tw-border-opacity)));
@@ -3528,17 +3562,16 @@ details.collapse summary::-webkit-details-marker {
   border-color: transparent;
 }
 
-.border-b-base-200 {
-  --tw-border-opacity: 1;
-  border-bottom-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-border-opacity)));
-}
-
 .\!bg-transparent {
   background-color: transparent !important;
 }
 
 .bg-\[\#00000005\] {
   background-color: #00000005;
+}
+
+.bg-\[\#000000db\] {
+  background-color: #000000db;
 }
 
 .bg-base-200 {
@@ -3554,15 +3587,6 @@ details.collapse summary::-webkit-details-marker {
 .bg-black {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-}
-
-.bg-neutral-content {
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-nc,oklch(var(--nc)/var(--tw-bg-opacity)));
-}
-
-.bg-primary\/5 {
-  background-color: var(--fallback-p,oklch(var(--p)/0.05));
 }
 
 .bg-transparent {
@@ -3582,8 +3606,8 @@ details.collapse summary::-webkit-details-marker {
   padding: 0px;
 }
 
-.p-1 {
-  padding: 0.25rem;
+.p-0\.5 {
+  padding: 0.125rem;
 }
 
 .p-2 {
@@ -3684,6 +3708,10 @@ details.collapse summary::-webkit-details-marker {
 
 .font-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.text-\[0\.6rem\] {
+  font-size: 0.6rem;
 }
 
 .text-base {
@@ -3829,6 +3857,18 @@ details.collapse summary::-webkit-details-marker {
   --tw-enter-opacity: 0;
 }
 
+.running {
+  animation-play-state: running;
+}
+
+.\[lineHeight\:1rem\] {
+  line-height: 1rem;
+}
+
+.\[overflow\:unset\] {
+  overflow: unset;
+}
+
 .\[width\:1\.3rem\] {
   width: 1.3rem;
 }
@@ -3859,11 +3899,6 @@ details.collapse summary::-webkit-details-marker {
 
 .hover\:opacity-100:hover {
   opacity: 1;
-}
-
-.hover\:brightness-125:hover {
-  --tw-brightness: brightness(1.25);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .active\:cursor-default:active {

@@ -26,7 +26,226 @@ var getCurrentForm_IMPL = () => {
   return globalCtx.currentForm;
 };
 
-// src/icons/icons.ts
+// src/controls/utils/clamp.ts
+var clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+var clampOpt = (v, min, max) => {
+  if (v == null)
+    return min ?? 0;
+  if (min == null && max == null)
+    return v;
+  if (min == null)
+    return Math.min(v, max);
+  if (max == null)
+    return Math.max(v, min);
+  return Math.min(Math.max(v, min), max);
+};
+
+// src/csuite/kolor/getLCHFromString.tsx
+import Color from "colorjs.io";
+function getLCHFromString(str) {
+  try {
+    const color = new Color(str);
+    const [l, c, h] = color.oklch;
+    return {
+      lightness: l,
+      chroma: c,
+      hue: isNaN(h) ? 0 : h
+    };
+  } catch (e) {
+    console.error(`[\u{1F534}] getLCHFromString FAILURE (string is: "${str}")`);
+    return { lightness: 0.5, chroma: 0.1, hue: 0 };
+  }
+}
+
+// src/csuite/box/BoxNormalized.tsx
+function extractNormalizeBox(box) {
+  return {
+    base: normalizeBoxKolor(box.base),
+    hover: normalizeBoxKolor(box.hover),
+    // ----------
+    base_: normalizeBoxKolor(box.base_),
+    text: normalizeBoxKolor(box.text),
+    textShadow: normalizeBoxKolor(box.textShadow),
+    shadow: normalizeBoxKolor(box.shadow),
+    border: normalizeBoxKolor(box.border)
+    //
+  };
+}
+function normalizeBoxKolor(kolor) {
+  if (kolor == null)
+    return null;
+  if (typeof kolor === "boolean")
+    return { contrast: kolor ? (
+      /* 0.2 */
+      0.03
+    ) : 0 };
+  if (typeof kolor === "number")
+    return { contrast: clamp(kolor / 100, 0, 1) };
+  if (typeof kolor === "string")
+    return getLCHFromString(kolor);
+  return kolor;
+}
+
+// src/csuite/tinyCSS/CSSVar.tsx
+import { computed, makeObservable, observable } from "mobx";
+var NumberVar = class {
+  constructor(name, value_) {
+    this.name = name;
+    this.value_ = value_;
+    makeObservable(this, { value_: observable, value: computed });
+  }
+  get value() {
+    return this.value_ instanceof Function ? this.value_() : this.value_;
+  }
+  toString() {
+    return `var(--${this.name})`;
+  }
+};
+function getNum(a, def) {
+  if (a == null)
+    return def;
+  return typeof a === "number" ? a : a.value;
+}
+
+// src/csuite/kolor/applyRelative.tsx
+var applyKolorToOKLCH = (a, b) => {
+  if (b == null)
+    return a;
+  const lightness = getNum(b.lightness) ?? _autoContrast(a.lightness, getNum(b.contrast, 0));
+  const chroma = getNum(b.chroma) ?? a.chroma * getNum(b.chromaBlend, 1);
+  const hue = getNum(b.hue) ?? a.hue + getNum(b.hueShift, 0);
+  return { lightness, chroma: clamp(chroma, 0, 0.4), hue };
+};
+function _autoContrast(lightness, contrast) {
+  const start = lightness;
+  const dir = Math.sign(0.5 - lightness - 1e-5);
+  const final = start + dir * contrast;
+  return clamp(final, 0, 1);
+}
+
+// src/csuite/kolor/overrideKolor.tsx
+var overrideKolor = (a, b) => {
+  if (a == null && b == null)
+    return null;
+  if (a == null)
+    return b;
+  if (b == null)
+    return a;
+  let out = {};
+  if (b.lightness != null)
+    out.lightness = b.lightness;
+  else if (b.contrast != null)
+    out.contrast = b.contrast;
+  else if (a.lightness != null)
+    out.lightness = a.lightness;
+  else if (a.contrast != null)
+    out.contrast = a.contrast;
+  if (b.chroma != null)
+    out.chroma = b.chroma;
+  else if (b.chromaBlend != null)
+    out.chromaBlend = b.chromaBlend;
+  else if (a.chroma != null)
+    out.chroma = a.chroma;
+  else if (a.chromaBlend != null)
+    out.chromaBlend = a.chromaBlend;
+  if (b.hue != null)
+    out.hue = b.hue;
+  else if (b.hueShift != null)
+    out.hueShift = b.hueShift;
+  else if (a.hue != null)
+    out.hue = a.hue;
+  else if (a.hueShift != null)
+    out.hueShift = a.hueShift;
+  return out;
+};
+
+// src/csuite/box/compileBoxClassName.tsx
+var applyBoxToCtx = (ctx, box) => {
+  const nextBase = applyKolorToOKLCH(ctx.base, box.base);
+  const nextBaseH = applyKolorToOKLCH(nextBase, box.hover);
+  const nextLightness = nextBase.lightness;
+  const nextext = overrideKolor(ctx.text, box.text);
+  const nextDir = ctx.dir === 1 && nextLightness > 0.7 ? -1 : ctx.dir === -1 && nextLightness < 0.45 ? 1 : ctx.dir;
+  return {
+    dir: nextDir,
+    base: nextBase,
+    baseH: nextBaseH,
+    text: nextext
+  };
+};
+var hashKolor = (k, dir) => {
+  let out = [];
+  const sign = dir === 1 ? "p" : "m";
+  if (k.lightness)
+    out.push(`l${k.lightness}`);
+  else if (k.contrast)
+    out.push(`l${sign}${k.contrast}`);
+  if (k.chroma)
+    out.push(`c${k.chroma}`);
+  else if (k.chromaBlend)
+    out.push(`c${sign}${k.chromaBlend}`);
+  if (k.hue)
+    out.push(`h${k.hue}`);
+  else if (k.hueShift)
+    out.push(`h${sign}${k.hueShift}`);
+  return `${out.join("_")}`;
+};
+
+// src/csuite/box/CurrentStyleCtx.tsx
+import { createContext } from "react";
+var CurrentStyleCtx = createContext({
+  base: { lightness: 0.1, chroma: 0.05, hue: 0 },
+  baseH: { lightness: 0.1, chroma: 0.05, hue: 0 },
+  text: { contrast: 1, chromaBlend: 0, hueShift: 0 },
+  dir: 1
+  /**
+   * if we want to handle that though CSS, it HAS to always be present
+   * so we can seamlessly switch to it, when any part of the tree becomes hovered;
+   *
+   * potential problems
+   * 🔶 it may not handle properly Reveals:
+   *       => 2024-06-03 rvion: I think we should be good to go to force override
+   *          the revealed content context to the base non-hovered color in every
+   *          situation; should be the safest option to assumem hover must be
+   *          computed from the last DOM root only
+   */
+});
+
+// src/csuite/button/usePressLogic.ts
+var draggedElement = null;
+var startingState = false;
+var isDraggingListener = (ev) => {
+  if (ev.button == 0) {
+    draggedElement = null;
+    window.removeEventListener("mouseup", isDraggingListener, true);
+  }
+};
+var usePressLogic = (p, value) => {
+  if (p.onClick == null)
+    return {
+      onMouseDown: p.onMouseDown,
+      onMouseEnter: p.onMouseEnter
+    };
+  return {
+    onMouseDown: (ev) => {
+      if (ev.button == 0) {
+        p.onMouseDown?.(ev);
+        p.onClick?.(ev);
+        draggedElement = ev.currentTarget;
+        startingState = !value;
+        window.addEventListener("mouseup", isDraggingListener, true);
+      }
+    },
+    onMouseEnter: (ev) => {
+      if (startingState === value)
+        return;
+      if (draggedElement != null)
+        p.onClick?.(ev);
+    }
+  };
+};
+
+// src/csuite/icons/icons.ts
 import * as icons from "@mdi/js";
 var myCustomIcons = {
   cdiTest: "M 2.40,7.20 A 20,20 0,0,1 12.00,7.20 A 20,20 0,0,1 21.60,7.20 Q 21.60,14.40 12.00,21.60 Q 2.40,14.40 2.40,7.20 z"
@@ -35,10 +254,10 @@ var allIcons = {
   ...icons,
   ...myCustomIcons
 };
+var getAllIcons = () => Object.keys(icons);
 
-// src/icons/iconHelpers.tsx
-import * as icons2 from "@mdi/js";
-import { Icon } from "@mdi/react";
+// src/csuite/icons/iconHelpers.tsx
+import IconA from "@mdi/react";
 
 // src/utils/custom-jsx/jsx-runtime.js
 import { jsx as jsx_, jsxs as jsxs_ } from "react/jsx-runtime";
@@ -81,7 +300,8 @@ function jsxs(type, props, key) {
   return jsxs_(type, { ...rest, className: joinCls(tw) }, key);
 }
 
-// src/icons/iconHelpers.tsx
+// src/csuite/icons/iconHelpers.tsx
+var Icon = IconA ?? (await import("@mdi/react")).default.Icon;
 var Ikon = new Proxy({}, {
   get(target, key) {
     if (key in target)
@@ -90,225 +310,17 @@ var Ikon = new Proxy({}, {
   }
 });
 var IkonOf = function IkonOf_({ name, ...p }) {
-  return /* @__PURE__ */ jsx(Icon, { path: allIcons[name], size: "1.1em", ...p });
-};
-var getAllIcons = () => Object.keys(icons2);
-
-// src/controls/utils/clamp.ts
-var clamp = (v, min, max) => Math.min(Math.max(v, min), max);
-var clampOpt = (v, min, max) => {
-  if (v == null)
-    return min ?? 0;
-  if (min == null && max == null)
-    return v;
-  if (min == null)
-    return Math.min(v, max);
-  if (max == null)
-    return Math.max(v, min);
-  return Math.min(Math.max(v, min), max);
-};
-
-// src/rsuite/kolor/getLCHFromString.tsx
-import Color from "colorjs.io";
-function getLCHFromString(str) {
-  try {
-    const color = new Color(str);
-    const [l, c, h] = color.oklch;
-    return {
-      lightness: l,
-      chroma: c,
-      hue: isNaN(h) ? 0 : h
-    };
-  } catch (e) {
-    console.error(`[\u{1F534}] getLCHFromString FAILURE (string is: "${str}")`);
-    return { lightness: 0.5, chroma: 0.1, hue: 0 };
-  }
-}
-
-// src/rsuite/box/BoxNormalized.tsx
-function extractNormalizeBox(box) {
-  return {
-    base: normalizeBoxKolor(box.base),
-    hover: normalizeBoxKolor(box.hover),
-    // ----------
-    text: normalizeBoxKolor(box.text),
-    textShadow: normalizeBoxKolor(box.textShadow),
-    shadow: normalizeBoxKolor(box.shadow),
-    border: normalizeBoxKolor(box.border)
-  };
-}
-function normalizeBoxKolor(kolor) {
-  if (kolor == null)
-    return null;
-  if (typeof kolor === "boolean")
-    return { contrast: kolor ? (
-      /* 0.2 */
-      0.03
-    ) : 0 };
-  if (typeof kolor === "number")
-    return { contrast: clamp(kolor / 100, 0, 1) };
-  if (typeof kolor === "string")
-    return getLCHFromString(kolor);
-  return kolor;
-}
-
-// src/rsuite/theme/CSSVar.tsx
-import { computed, makeObservable, observable } from "mobx";
-var NumberVar = class {
-  constructor(name, value_) {
-    this.name = name;
-    this.value_ = value_;
-    makeObservable(this, { value_: observable, value: computed });
-  }
-  get value() {
-    return this.value_ instanceof Function ? this.value_() : this.value_;
-  }
-  toString() {
-    return `var(--${this.name})`;
-  }
-};
-function getNum(a, def) {
-  if (a == null)
-    return def;
-  return typeof a === "number" ? a : a.value;
-}
-
-// src/rsuite/kolor/applyRelative.tsx
-var applyKolorToOKLCH = (a, b) => {
-  if (b == null)
-    return a;
-  const lightness = getNum(b.lightness) ?? _autoContrast(a.lightness, getNum(b.contrast, 0));
-  const chroma = getNum(b.chroma) ?? a.chroma * getNum(b.chromaBlend, 1);
-  const hue = getNum(b.hue) ?? a.hue + getNum(b.hueShift, 0);
-  return { lightness, chroma: clamp(chroma, 0, 0.4), hue };
-};
-function _autoContrast(lightness, contrast) {
-  const start = lightness;
-  const dir = Math.sign(0.5 - lightness - 1e-5);
-  const final = start + dir * contrast;
-  return clamp(final, 0, 1);
-}
-
-// src/rsuite/kolor/overrideKolor.tsx
-var overrideKolor = (a, b) => {
-  if (a == null && b == null)
-    return null;
-  if (a == null)
-    return b;
-  if (b == null)
-    return a;
-  let out = {};
-  if (b.lightness != null)
-    out.lightness = b.lightness;
-  else if (b.contrast != null)
-    out.contrast = b.contrast;
-  else if (a.lightness != null)
-    out.lightness = a.lightness;
-  else if (a.contrast != null)
-    out.contrast = a.contrast;
-  if (b.chroma != null)
-    out.chroma = b.chroma;
-  else if (b.chromaBlend != null)
-    out.chromaBlend = b.chromaBlend;
-  else if (a.chroma != null)
-    out.chroma = a.chroma;
-  else if (a.chromaBlend != null)
-    out.chromaBlend = a.chromaBlend;
-  if (b.hue != null)
-    out.hue = b.hue;
-  else if (b.hueShift != null)
-    out.hueShift = b.hueShift;
-  else if (a.hue != null)
-    out.hue = a.hue;
-  else if (a.hueShift != null)
-    out.hueShift = a.hueShift;
-  return out;
-};
-
-// src/rsuite/box/compileBoxClassName.tsx
-var applyBoxToCtx = (ctx, box) => {
-  const nextBase = applyKolorToOKLCH(ctx.base, box.base);
-  const nextBaseH = applyKolorToOKLCH(nextBase, box.hover);
-  const lightness = nextBase.lightness;
-  return {
-    dir: ctx.dir === 1 && lightness > 0.7 ? -1 : ctx.dir === -1 && lightness < 0.45 ? 1 : ctx.dir,
-    base: nextBase,
-    baseH: nextBaseH,
-    text: overrideKolor(ctx.text, box.text)
-  };
-};
-var hashKolor = (k) => {
-  let out = [];
-  if (k.lightness)
-    out.push(`l=${k.lightness}`);
-  else if (k.contrast)
-    out.push(`l->${k.contrast}`);
-  if (k.chroma)
-    out.push(`c=${k.chroma}`);
-  else if (k.chromaBlend)
-    out.push(`c*${k.chromaBlend}`);
-  if (k.hue)
-    out.push(`h=${k.hue}`);
-  else if (k.hueShift)
-    out.push(`h->${k.hueShift}`);
-  return `(${out.join(",")})`;
-};
-
-// src/rsuite/box/CurrentStyleCtx.tsx
-import { createContext } from "react";
-var CurrentStyleCtx = createContext({
-  base: { lightness: 0.1, chroma: 0.05, hue: 0 },
-  baseH: { lightness: 0.1, chroma: 0.05, hue: 0 },
-  text: { contrast: 1, chromaBlend: 0, hueShift: 0 },
-  dir: 1
-  /**
-   * if we want to handle that though CSS, it HAS to always be present
-   * so we can seamlessly switch to it, when any part of the tree becomes hovered;
-   *
-   * potential problems
-   * 🔶 it may not handle properly Reveals:
-   *       => 2024-06-03 rvion: I think we should be good to go to force override
-   *          the revealed content context to the base non-hovered color in every
-   *          situation; should be the safest option to assumem hover must be
-   *          computed from the last DOM root only
-   */
-});
-
-// src/rsuite/button/usePressLogic.ts
-var draggedElement = null;
-var startingState = false;
-var isDraggingListener = (ev) => {
-  if (ev.button == 0) {
-    draggedElement = null;
-    window.removeEventListener("mouseup", isDraggingListener, true);
-  }
-};
-var usePressLogic = (p, value) => {
-  if (p.onClick == null)
-    return {
-      onMouseDown: p.onMouseDown,
-      onMouseEnter: p.onMouseEnter
-    };
-  return {
-    onMouseDown: (ev) => {
-      if (ev.button == 0) {
-        p.onMouseDown?.(ev);
-        p.onClick?.(ev);
-        draggedElement = ev.currentTarget;
-        startingState = !value;
-        window.addEventListener("mouseup", isDraggingListener, true);
-      }
-    },
-    onMouseEnter: (ev) => {
-      if (startingState === value)
-        return;
-      if (draggedElement != null)
-        p.onClick?.(ev);
+  return /* @__PURE__ */ jsx(
+    Icon,
+    {
+      path: allIcons[name],
+      size: "1.1em",
+      ...p
     }
-  };
+  );
 };
 
-// src/rsuite/kolor/compileKolorToCSSExpression.tsx
+// src/csuite/kolor/compileKolorToCSSExpression.tsx
 var compileKolorToCSSExpression = (from, kolor) => {
   const l = kolor.lightness != null ? kolor.lightness : kolor.contrast ? `calc(l + ${kolor.contrast} * var(--DIR))` : "l";
   const c = kolor.chroma != null ? kolor.chroma : kolor.chromaBlend ? `calc(c * ${kolor.chromaBlend})` : "c";
@@ -316,7 +328,7 @@ var compileKolorToCSSExpression = (from, kolor) => {
   return `oklch(from var(--${from}) ${l} ${c} ${h})`;
 };
 
-// src/rsuite/kolor/formatOKLCH.tsx
+// src/csuite/kolor/formatOKLCH.tsx
 function formatOKLCH(col) {
   const l = clamp(col.lightness, 1e-4, 0.9999).toFixed(3);
   const c = col.chroma.toFixed(3);
@@ -324,7 +336,18 @@ function formatOKLCH(col) {
   return `oklch(${l} ${c} ${h})`;
 }
 
-// src/rsuite/tinyCSS/compileOrRetrieveClassName.tsx
+// src/csuite/kolor/OKLCH.tsx
+var isSameOKLCH = (a, b) => {
+  if (a.lightness !== b.lightness)
+    return false;
+  if (a.chroma !== b.chroma)
+    return false;
+  if (a.hue !== b.hue)
+    return false;
+  return true;
+};
+
+// src/csuite/tinyCSS/compileOrRetrieveClassName.tsx
 var knownRules = /* @__PURE__ */ new Set();
 var hasRule = (selector) => knownRules.has(selector);
 function addRule(selector, block = "") {
@@ -354,15 +377,15 @@ function getStyleElement() {
 // src/utils/misc/exhaust.ts
 var exhaust = (x) => x;
 
-// src/rsuite/frame/FrameSize.tsx
+// src/csuite/frame/FrameSize.tsx
 function getClassNameForSize(p) {
   if (p.square) {
     if (p.size === "input")
-      return `h-input`;
+      return `h-input w-input text-sm`;
     if (p.size === "xs")
-      return "w-6 h-6";
+      return "w-6  h-6";
     if (p.size === "sm")
-      return "w-8 h-8";
+      return "w-8  h-8";
     if (p.size === "md")
       return "w-10 h-10";
     if (p.size === "lg")
@@ -374,17 +397,17 @@ function getClassNameForSize(p) {
     exhaust(p.size);
   } else {
     if (p.size === "input")
-      return `w-input h-input`;
+      return `line-height-[1.1em] h-input text-sm`;
     if (p.size === "xs")
-      return "text-xs px-0.5 py-0.5 line-height-[1.1em]";
+      return "line-height-[1.1em] text-xs px-0.5 py-0.5";
     if (p.size === "sm")
-      return "text-sm px-1   py-1   line-height-[1.1em]";
+      return "line-height-[1.1em] text-sm px-1   py-1  ";
     if (p.size === "md")
-      return "        px-2   py-1   line-height-[1.1em]";
+      return "line-height-[1.1em]         px-2   py-1  ";
     if (p.size === "lg")
-      return "text-lg px-4   py-2   line-height-[1.1em]";
+      return "line-height-[1.1em] text-lg px-4   py-2  ";
     if (p.size === "xl")
-      return "text-xl px-8   py-8   line-height-[1.1em]";
+      return "line-height-[1.1em] text-xl px-8   py-8  ";
     if (p.size == null)
       return;
     exhaust(p.size);
@@ -392,7 +415,7 @@ function getClassNameForSize(p) {
   return "";
 }
 
-// src/rsuite/frame/FrameTemplates.ts
+// src/csuite/frame/FrameTemplates.ts
 var frame_ghost = extractNormalizeBox({
   textShadow: 100,
   border: 10,
@@ -408,9 +431,13 @@ var frame_default = extractNormalizeBox({
   border: 0.25,
   base: 0.2
 });
+var frame_link = extractNormalizeBox({
+  border: 0,
+  text: { hue: 220, chroma: 0.3, contrast: 0.4 }
+});
 var frame_primary = extractNormalizeBox({
   textShadow: 100,
-  base: { contrast: 0.2, chroma: 0.1 },
+  base: { contrast: 0.1, chroma: 0.1 },
   border: 0.1
 });
 var frame_secondary = extractNormalizeBox({
@@ -418,6 +445,7 @@ var frame_secondary = extractNormalizeBox({
   base: { contrast: 0.3, chroma: 0.2, hueShift: 180 }
 });
 var frames = {
+  link: frame_link,
   ghost: frame_ghost,
   subtle: frame_subtle,
   default: frame_default,
@@ -425,7 +453,7 @@ var frames = {
   secondary: frame_secondary
 };
 
-// src/rsuite/frame/Frame.tsx
+// src/csuite/frame/Frame.tsx
 import { observer } from "mobx-react-lite";
 import { forwardRef, useContext } from "react";
 var Frame = observer(
@@ -468,7 +496,7 @@ var Frame = observer(
       if (template.border)
         box.border = overrideKolor(template.border, box.border);
       if (template.text)
-        box.border = overrideKolor(template.text, box.text);
+        box.text = overrideKolor(template.text, box.text);
     }
     const isDisabled = disabled || false;
     if (isDisabled) {
@@ -481,33 +509,45 @@ var Frame = observer(
       box.text = { contrast: 0.9 };
     }
     const prevCtx = useContext(CurrentStyleCtx);
-    const nextCtx = applyBoxToCtx(prevCtx, box);
-    const variables = {
-      "--KLR": formatOKLCH(nextCtx.base),
-      "--KLRH": formatOKLCH(nextCtx.baseH),
-      "--DIR": nextCtx.dir?.toString()
-      // === -1 ? -1 : 1,
-      // '--PREV_BASE_L': prevCtx.base.lightness, // === -1 ? -1 : 1,
-      // '--NEXT_BASE_L': nextCtx.base.lightness, // === -1 ? -1 : 1,
-    };
+    const nextBase = applyKolorToOKLCH(prevCtx.base, box.base);
+    const nextBaseH = applyKolorToOKLCH(nextBase, box.hover);
+    const nextLightness = nextBase.lightness;
+    const nextext = overrideKolor(prevCtx.text, box.text);
+    const goingTooDark = prevCtx.dir === 1 && nextLightness > 0.7;
+    const goingTooLight = prevCtx.dir === -1 && nextLightness < 0.45;
+    const nextDir = goingTooDark ? -1 : goingTooLight ? 1 : prevCtx.dir;
+    const variables = {};
+    if (!isSameOKLCH(prevCtx.base, nextBase))
+      variables["--KLR"] = formatOKLCH(nextBase);
+    if (!isSameOKLCH(prevCtx.baseH, nextBaseH))
+      variables["--KLRH"] = formatOKLCH(nextBaseH);
+    if (nextDir !== prevCtx.dir)
+      variables["--DIR"] = nextDir.toString();
     const classes = [];
+    if (box.base_) {
+      const clsName = "bg" + hashKolor(box.base_, nextDir);
+      const selector = `.${CSS.escape(clsName)}`;
+      if (!hasRule(selector))
+        addRule(`.${CSS.escape(clsName)}`, `background: ${compileKolorToCSSExpression("KLR", box.base_)};`);
+      classes.push(clsName);
+    }
     const boxText = box.text ?? prevCtx.text;
     if (boxText) {
-      const clsName = "text" + hashKolor(boxText);
+      const clsName = "text" + hashKolor(boxText, nextDir);
       const selector = `.${CSS.escape(clsName)}`;
       if (!hasRule(selector))
         addRule(selector, `color: ${compileKolorToCSSExpression("KLR", boxText)};`);
       classes.push(clsName);
     }
     if (box.textShadow) {
-      const clsName = "textShadow" + hashKolor(box.textShadow);
+      const clsName = "textShadow" + hashKolor(box.textShadow, nextDir);
       const selector = `.${CSS.escape(clsName)}`;
       if (!hasRule(selector))
         addRule(selector, `text-shadow: 0px 0px 2px ${compileKolorToCSSExpression("KLR", box.textShadow)};`);
       classes.push(clsName);
     }
     if (box.border) {
-      const clsName = "border" + hashKolor(box.border);
+      const clsName = "border" + hashKolor(box.border, nextDir);
       const selector = `.${CSS.escape(clsName)}`;
       if (!hasRule(selector))
         addRule(selector, `border: 1px solid ${compileKolorToCSSExpression("KLR", box.border)};`);
@@ -522,27 +562,38 @@ var Frame = observer(
           //
           "BOX",
           look && `box-${look}`,
+          loading && "relative",
           getClassNameForSize(p),
           expand && "flex-1",
-          // inline && 'inline-flex',
           ...classes,
           className
         ],
         style: { ...style, ...variables },
         ...rest,
         ...triggerOnPress != null ? usePressLogic({ onMouseDown, onMouseEnter, onClick }, triggerOnPress.startingState) : { onMouseDown, onMouseEnter, onClick },
-        children: /* @__PURE__ */ jsxs(CurrentStyleCtx.Provider, { value: nextCtx, children: [
-          icon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none", name: icon }),
-          p.children,
-          suffixIcon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none", name: suffixIcon }),
-          loading && /* @__PURE__ */ jsx("div", { tw: "loading loading-spinner loading-sm" })
-        ] })
+        children: /* @__PURE__ */ jsxs(
+          CurrentStyleCtx.Provider,
+          {
+            value: {
+              dir: nextDir,
+              base: nextBase,
+              baseH: nextBaseH,
+              text: nextext
+            },
+            children: [
+              icon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none flex-none", name: icon }),
+              p.children,
+              suffixIcon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none", name: suffixIcon }),
+              loading && /* @__PURE__ */ jsx("div", { tw: "loading loading-spinner absolute loading-sm self-center justify-self-center" })
+            ]
+          }
+        )
       }
     );
   })
 );
 
-// src/rsuite/button/Button.tsx
+// src/csuite/button/Button.tsx
 import { makeAutoObservable, observable as observable2, runInAction } from "mobx";
 import { observer as observer2 } from "mobx-react-lite";
 import { useEffect, useMemo } from "react";
@@ -550,29 +601,33 @@ var Button = observer2(function Button_(p) {
   const uist = useMemo(() => new ButtonState(p), []);
   runInAction(() => uist.props = p);
   useEffect(() => uist.release, []);
-  const { size, square, look, ...rest } = p;
+  const { size, look, onClick, ...rest } = p;
   return /* @__PURE__ */ jsx(
     Frame,
     {
-      size: size ?? "sm",
+      size: size ?? "input",
       look,
-      base: p.subtle ? 0 : 5,
-      border: 10,
+      base: p.subtle ? 0 : uist.running ? 10 : 5,
+      border: p.borderless ? 0 : 10,
       hover: p.disabled ? false : 3,
       active: uist.visuallyActive,
-      loading: p.loading,
+      disabled: p.disabled,
+      loading: p.loading ?? uist.running,
       tabIndex: p.tabIndex ?? -1,
+      onMouseDown: uist.press,
+      onClick: uist.onClick,
       ...rest,
       tw: [
         "inline-flex",
+        "select-none",
+        p.square ? null : "px-2",
         "font-semibold",
         "ui-button",
         "rounded-sm gap-2 items-center",
         p.disabled ? null : "cursor-pointer",
         "whitespace-nowrap",
         "justify-center"
-      ],
-      onMouseDown: uist.press
+      ]
     }
   );
 });
@@ -580,7 +635,28 @@ var ButtonState = class {
   constructor(props) {
     this.props = props;
     this.pressed = false;
+    this.running = false;
+    this.onClick = (ev) => {
+      if (this.props.disabled)
+        return;
+      if (this.running)
+        return;
+      if (this.props.onClick) {
+        const res = this.props.onClick(ev);
+        if (res == null)
+          return;
+        if (res instanceof Promise) {
+          runInAction(() => this.running = true);
+          void res.finally(() => runInAction(() => this.running = false));
+        } else {
+        }
+      }
+    };
     this.press = (_ev) => {
+      if (this.props.disabled)
+        return;
+      if (this.running)
+        return;
       this.pressed = true;
       window.addEventListener("pointerup", this.release, true);
     };
@@ -590,6 +666,7 @@ var ButtonState = class {
     };
     makeAutoObservable(this, { props: observable2.ref });
   }
+  /** 2024-06-04 for now, "active" means "pressed or active" */
   get visuallyActive() {
     if (this.props.disabled)
       return false;
@@ -597,7 +674,7 @@ var ButtonState = class {
   }
 };
 
-// src/rsuite/MarkdownUI.tsx
+// src/csuite/markdown/MarkdownUI.tsx
 import { marked } from "marked";
 import { observer as observer3 } from "mobx-react-lite";
 var MarkdownUI = observer3(function MarkdownUI_(p) {
@@ -613,33 +690,69 @@ var MarkdownUI = observer3(function MarkdownUI_(p) {
   );
 });
 
-// src/rsuite/messages/MessageErrorUI.tsx
-import { observer as observer4 } from "mobx-react-lite";
-var MessageErrorUI = observer4(function MessageErrorUI_(p) {
+// src/csuite/tinyCSS/knownHues.ts
+var knownOKLCHHues = {
+  error: 0,
+  info: 220,
+  success: 135,
+  warning: 90
+};
+
+// src/csuite/messages/MessageUI.tsx
+import { observer as observer4, useLocalObservable } from "mobx-react-lite";
+var MessageUI = observer4(function MessageInfoUI_(p) {
+  const uist = useLocalObservable(() => ({ closed: false }));
+  if (uist.closed)
+    return null;
   return /* @__PURE__ */ jsxs(
     Frame,
     {
-      base: { contrast: 0.05, hue: 220, chroma: 0.04 },
-      tw: "virtualBorder p-1 rounded flex items-center gap-2",
+      base: { contrast: 0.05, hue: p.hue ?? knownOKLCHHues.info, chroma: 0.04 },
+      border: 10,
       className: p.className,
+      tw: "p-0.5 rounded flex items-start gap-1",
       children: [
-        /* @__PURE__ */ jsx(Ikon.mdiAlertBox, {}),
-        p.title ? /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("div", { tw: "text-xl w-full font-bold", children: p.title }),
+        p.icon && /* @__PURE__ */ jsx(Frame, { text: { chroma: 0.1, contrast: 0.2 }, children: /* @__PURE__ */ jsx(IkonOf, { name: p.icon, tw: "flex-none text-lg h-input" }) }),
+        /* @__PURE__ */ jsxs("div", { children: [
+          p.title && /* @__PURE__ */ jsx("div", { tw: "w-full font-bold", children: p.title }),
           p.children,
           /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-        ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-          p.children,
-          /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-        ] })
+        ] }),
+        (p.closable ?? true) && /* @__PURE__ */ jsx(
+          Button,
+          {
+            onClick: () => uist.closed = true,
+            tw: "ml-auto",
+            size: "input",
+            text: { contrast: 0.3 },
+            border: 0,
+            subtle: true,
+            square: true,
+            icon: "mdiClose"
+          }
+        )
       ]
     }
   );
 });
 
-// src/controls/FormUI.tsx
+// src/csuite/messages/MessageErrorUI.tsx
 import { observer as observer5 } from "mobx-react-lite";
-var FormUI = observer5(function FormUI_(p) {
+var MessageErrorUI = observer5(function MessageErrorUI_(p) {
+  return /* @__PURE__ */ jsx(
+    MessageUI,
+    {
+      type: "error",
+      icon: "mdiSkull",
+      hue: 0,
+      ...p
+    }
+  );
+});
+
+// src/controls/FormUI.tsx
+import { observer as observer6 } from "mobx-react-lite";
+var FormUI = observer6(function FormUI_(p) {
   const form = p.form;
   if (form == null)
     return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: `form is not yet initialized` });
@@ -665,9 +778,9 @@ var FormUI = observer5(function FormUI_(p) {
   ] });
 });
 
-// src/rsuite/reveal/ModalShell.tsx
-import { observer as observer6 } from "mobx-react-lite";
-var ModalShellUI = observer6(function ModalShellUI_(p) {
+// src/csuite/modal/ModalShell.tsx
+import { observer as observer7 } from "mobx-react-lite";
+var ModalShellUI = observer7(function ModalShellUI_(p) {
   return /* @__PURE__ */ jsxs(Frame, { border: true, className: p.className, tw: ["animate-in fade-in", "p-4 shadow-xl"], onClick: (ev) => ev.stopPropagation(), children: [
     /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
       /* @__PURE__ */ jsx("div", { tw: "text-xl", children: p.title }),
@@ -692,7 +805,7 @@ var ModalShellUI = observer6(function ModalShellUI_(p) {
   ] });
 });
 
-// src/rsuite/reveal/RevealCtx.ts
+// src/csuite/reveal/RevealCtx.ts
 import { createContext as createContext2, useContext as useContext2 } from "react";
 var RevealCtx = createContext2(null);
 var useRevealOrNull = () => {
@@ -706,10 +819,10 @@ var useReveal = () => {
   return val;
 };
 
-// src/rsuite/reveal/RevealStack.ts
+// src/csuite/reveal/RevealStack.ts
 var global_RevealStack = [];
 
-// src/rsuite/reveal/RevealPlacement.tsx
+// src/csuite/reveal/RevealPlacement.tsx
 var computePlacement = (placement, rect) => {
   if (placement === "popup-xs")
     return { top: 0, left: 0 };
@@ -767,7 +880,7 @@ var computePlacement = (placement, rect) => {
   return { top: rect.bottom, left: rect.left };
 };
 
-// src/rsuite/reveal/RevealState.tsx
+// src/csuite/reveal/RevealState.tsx
 import { makeAutoObservable as makeAutoObservable2, observable as observable3 } from "mobx";
 var defaultShowDelay_whenRoot = 100;
 var defaultHideDelay_whenRoot = 300;
@@ -994,11 +1107,11 @@ var RevealState = class _RevealState {
   }
 };
 
-// src/rsuite/reveal/RevealUI.tsx
-import { observer as observer7 } from "mobx-react-lite";
+// src/csuite/reveal/RevealUI.tsx
+import { observer as observer8 } from "mobx-react-lite";
 import { createElement, useEffect as useEffect2, useMemo as useMemo2, useRef } from "react";
 import { createPortal } from "react-dom";
-var RevealUI = observer7(function RevealUI_(p) {
+var RevealUI = observer8(function RevealUI_(p) {
   const ref = useRef(null);
   const parents = useRevealOrNull()?.tower ?? [];
   const SELF = useMemo2(() => new RevealStateLazy(p, parents.map((p2) => p2.getUist())), []);
@@ -1135,8 +1248,9 @@ var mkTooltip = (uist) => {
         /* @__PURE__ */ jsxs(
           Frame,
           {
+            shadow: true,
             className: p.tooltipWrapperClassName,
-            tw: ["_RevealUI shadow-xl pointer-events-auto"],
+            tw: ["_RevealUI pointer-events-auto"],
             onClick: (ev) => ev.stopPropagation(),
             onMouseEnter: uist.onMouseEnterTooltip,
             onMouseLeave: uist.onMouseLeaveTooltip,
@@ -1153,13 +1267,10 @@ var mkTooltip = (uist) => {
             children: [
               p.title != null && /* @__PURE__ */ jsxs("div", { tw: "px-2", children: [
                 /* @__PURE__ */ jsx("div", { tw: "py-0.5", children: p.title }),
-                /* @__PURE__ */ jsx("div", { tw: "w-full rounded bg-neutral-content", style: { height: "1px" } })
+                /* @__PURE__ */ jsx(Frame, { tw: "w-full rounded", base: { contrast: 0.2 }, style: { height: "1px" } })
               ] }),
               hiddenContent,
-              uist._lock ? /* @__PURE__ */ jsxs("span", { tw: "opacity-50 italic text-sm flex gap-1 items-center justify-center", children: [
-                /* @__PURE__ */ jsx(Ikon.mdiLock, {}),
-                "shift+right-click to unlock"
-              ] }) : null
+              uist._lock ? /* @__PURE__ */ jsx(Frame, { icon: "mdiLock", text: { contrast: 0.3 }, tw: "italic text-sm flex gap-1 items-center justify-center", children: "shift+right-click to unlock" }) : null
             ]
           }
         )
@@ -1170,25 +1281,17 @@ var mkTooltip = (uist) => {
 };
 
 // src/panels/Panel_Gallery/FormAsDropdownConfigUI.tsx
-import { observer as observer8 } from "mobx-react-lite";
-var FormAsDropdownConfigUI = observer8(function FormAsDropdownConfigUI_(p) {
+import { observer as observer9 } from "mobx-react-lite";
+var FormAsDropdownConfigUI = observer9(function FormAsDropdownConfigUI_(p) {
   return /* @__PURE__ */ jsx(
     RevealUI,
     {
-      tw: "WIDGET-FIELD",
       title: p.title,
       content: () => /* @__PURE__ */ jsx("div", { style: { width: "500px" }, tw: "flex-shrink-0", children: /* @__PURE__ */ jsx(FormUI, { form: p.form }) }),
-      children: /* @__PURE__ */ jsxs(
-        Frame,
-        {
-          hover: true,
-          tw: "flex px-1 w-full h-full items-center justify-center hover:brightness-125 border border-base-100",
-          children: [
-            /* @__PURE__ */ jsx(Ikon.mdiCog, {}),
-            /* @__PURE__ */ jsx(Ikon.mdiChevronDown, {})
-          ]
-        }
-      )
+      children: /* @__PURE__ */ jsxs(Button, { size: "input", children: [
+        /* @__PURE__ */ jsx(Ikon.mdiCog, {}),
+        /* @__PURE__ */ jsx(Ikon.mdiChevronDown, {})
+      ] })
     }
   );
 });
@@ -1253,7 +1356,7 @@ var Form = class {
      * without having to import any component; usage:
      * | <div>{x.renderAsConfigBtn()}</div>
      */
-    this.renderAsConfigBtn = () => createElement2(FormAsDropdownConfigUI, { form: this });
+    this.renderAsConfigBtn = (p) => createElement2(FormAsDropdownConfigUI, { form: this, title: p?.title });
     /** Out of Tree unmounted serials  */
     this.shared = {};
     // Change tracking ------------------------------------
@@ -1402,7 +1505,7 @@ var FormManager = class {
   }
 };
 
-// src/llm/OpenRouter_infos.ts
+// src/csuite/openrouter/OpenRouter_infos.ts
 var openRouterInfos = {
   "openrouter/auto": {
     id: "openrouter/auto",
@@ -2076,7 +2179,7 @@ var TreeWidget = class {
     return this.widgetWithKey.key;
   }
   get name() {
-    return `${this.label} = ${this.widget.summary}`;
+    return `${this.label} = ${this.widget.id}`;
   }
   get isFolder() {
     return this.widget.subWidgets.length > 0;
@@ -2135,9 +2238,9 @@ function getActualWidgetToDisplay(originalWidget) {
   return originalWidget;
 }
 
-// src/rsuite/checkbox/InputBoolCheckboxUI.tsx
-import { observer as observer9 } from "mobx-react-lite";
-var InputBoolCheckboxUI = observer9(function InputBoolCheckboxUI_(p) {
+// src/csuite/checkbox/InputBoolCheckboxUI.tsx
+import { observer as observer10 } from "mobx-react-lite";
+var InputBoolCheckboxUI = observer10(function InputBoolCheckboxUI_(p) {
   const isActive = p.value ?? false;
   const label = p.text;
   const mode = p.mode ?? false;
@@ -2163,7 +2266,7 @@ var InputBoolCheckboxUI = observer9(function InputBoolCheckboxUI_(p) {
           Frame,
           {
             icon: p.icon ?? (isActive ? "mdiCheckBold" : null),
-            tw: ["!select-none object-contain WIDGET-FIELD", mode === "radio" ? "rounded-full" : "rounded-sm"],
+            tw: ["!select-none object-contain h-input", mode === "radio" ? "rounded-full" : "rounded-sm"],
             border: { contrast: 0.2, chroma },
             style: {
               width: "var(--input-height)"
@@ -2175,15 +2278,15 @@ var InputBoolCheckboxUI = observer9(function InputBoolCheckboxUI_(p) {
             ...p.box
           }
         ),
-        label ? label : null
+        label ? /* @__PURE__ */ jsx("div", { tw: "ml-1", children: label }) : null
       ]
     }
   );
 });
 
-// src/rsuite/checkbox/InputBoolToggleButtonUI.tsx
-import { observer as observer10 } from "mobx-react-lite";
-var InputBoolToggleButtonUI = observer10(function InputBoolToggleButtonUI_(p) {
+// src/csuite/checkbox/InputBoolToggleButtonUI.tsx
+import { observer as observer11 } from "mobx-react-lite";
+var InputBoolToggleButtonUI = observer11(function InputBoolToggleButtonUI_(p) {
   const isActive = p.value ?? false;
   const expand = p.expand;
   const label = p.text;
@@ -2191,7 +2294,7 @@ var InputBoolToggleButtonUI = observer10(function InputBoolToggleButtonUI_(p) {
   return /* @__PURE__ */ jsx(
     Frame,
     {
-      tw: "WIDGET-FIELD !select-none cursor-pointer justify-center px-1 py-1 text-sm flex items-center",
+      tw: "h-input !select-none cursor-pointer justify-center px-1 py-1 text-sm flex items-center",
       className: p.className,
       triggerOnPress: { startingState: isActive },
       look: "default",
@@ -2211,12 +2314,12 @@ var InputBoolToggleButtonUI = observer10(function InputBoolToggleButtonUI_(p) {
   );
 });
 
-// src/rsuite/checkbox/InputBoolUI.tsx
-import { observer as observer11 } from "mobx-react-lite";
+// src/csuite/checkbox/InputBoolUI.tsx
+import { observer as observer12 } from "mobx-react-lite";
 import { createElement as createElement3 } from "react";
 var BoolButtonProps = class {
 };
-var InputBoolUI = observer11(function InputBoolUI_(p) {
+var InputBoolUI = observer12(function InputBoolUI_(p) {
   const display = p.display ?? "check";
   if (display === "check")
     return createElement3(InputBoolCheckboxUI, p);
@@ -2224,8 +2327,8 @@ var InputBoolUI = observer11(function InputBoolUI_(p) {
 });
 
 // src/controls/shared/Widget_ToggleUI.tsx
-import { observer as observer12 } from "mobx-react-lite";
-var Widget_ToggleUI = observer12(function Widget_ToggleUI_(p) {
+import { observer as observer13 } from "mobx-react-lite";
+var Widget_ToggleUI = observer13(function Widget_ToggleUI_(p) {
   if (!isWidgetOptional(p.widget))
     return null;
   const widget = p.widget;
@@ -2241,19 +2344,19 @@ var Widget_ToggleUI = observer12(function Widget_ToggleUI_(p) {
 });
 
 // src/controls/shared/WidgetErrorsUI.tsx
-import { observer as observer13 } from "mobx-react-lite";
-var WidgetErrorsUI = observer13(function WidgerErrorsUI_(p) {
+import { observer as observer14 } from "mobx-react-lite";
+var WidgetErrorsUI = observer14(function WidgerErrorsUI_(p) {
   const widget = p.widget;
   if (widget.hasErrors === false)
     return null;
-  return /* @__PURE__ */ jsx("div", { tw: "widget-error-ui", children: widget.errors.map((e, i) => /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
-    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "error" }),
+  return /* @__PURE__ */ jsx(MessageErrorUI, { children: widget.errors.map((e, i) => /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
+    /* @__PURE__ */ jsx(Ikon.mdiAlert, {}),
     e.message
   ] }, i)) });
 });
 
 // src/controls/shared/WidgetHeaderContainerUI.tsx
-import { observer as observer14 } from "mobx-react-lite";
+import { observer as observer15 } from "mobx-react-lite";
 var isDragging = false;
 var wasEnabled = false;
 var isDraggingListener2 = (ev) => {
@@ -2262,13 +2365,18 @@ var isDraggingListener2 = (ev) => {
     window.removeEventListener("mouseup", isDraggingListener2, true);
   }
 };
-var WidgetHeaderContainerUI = observer14(function WidgetHeaderContainerUI_(p) {
+var WidgetHeaderContainerUI = observer15(function WidgetHeaderContainerUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(
     "div",
     {
       className: "WIDGET-HEADER COLLAPSE-PASSTHROUGH",
-      tw: ["flex items-center gap-0.5 select-none"],
+      tw: [
+        "flex gap-0.5 select-none",
+        // 2024-06-03 rvion, changing 'items-center' to 'items-start'
+        // as well as adding some `h-input` class to <WidgetLabelContainerUI />
+        "items-start"
+      ],
       onMouseDown: (ev) => {
         if (ev.button != 0 || !widget.isCollapsible)
           return;
@@ -2291,58 +2399,52 @@ var WidgetHeaderContainerUI = observer14(function WidgetHeaderContainerUI_(p) {
 });
 
 // src/controls/shared/WidgetLabelCaretUI.tsx
-import { observer as observer15 } from "mobx-react-lite";
-var WidgetLabelCaretUI = observer15(function WidgetLabelCaretUI_(p) {
+import { observer as observer16 } from "mobx-react-lite";
+var WidgetLabelCaretUI = observer16(function WidgetLabelCaretUI_(p) {
   if (!p.widget.isCollapsed && !p.widget.isCollapsible)
     return null;
   return /* @__PURE__ */ jsx(WidgetLabelCaretAlwaysUI, { isCollapsed: p.widget.isCollapsed });
 });
-var WidgetLabelCaretAlwaysUI = observer15(function WidgetLabelCaretAlways_({ isCollapsed }) {
+var WidgetLabelCaretAlwaysUI = observer16(function WidgetLabelCaretAlways_({ isCollapsed }) {
   if (isCollapsed)
     return /* @__PURE__ */ jsx(Ikon.mdiChevronRight, { tw: "COLLAPSE-PASSTHROUGH" });
   return /* @__PURE__ */ jsx(Ikon.mdiChevronDown, { tw: "COLLAPSE-PASSTHROUGH" });
 });
 
-// src/rsuite/theme/ThemeCtx.tsx
-import { createContext as createContext3 } from "react";
-var defaultDarkTheme = {
-  // NEW
-  inputBorder: new NumberVar(
-    "input-border",
-    10
-    /* % */
-  ),
-  // LEGACY
-  /* 🔴 */
-  base: { lightness: 0.1, chroma: 0.05, hue: 0 },
-  /* 🔴 */
-  text: { contrast: 1, chroma: 0.1 },
-  /* 🔴 */
-  labelText: { contrast: 0.6, hueShift: 0, chroma: 0.1 },
-  /* 🔴 */
-  primary: { base: { chroma: 0.2 }, border: { contrast: 0.1 } },
-  /* 🔴 */
+// src/csuite/ctx/CSuite_theme1.ts
+var CSuite_theme1 = {
+  clickAndSlideMultiplicator: 1,
+  showWidgetUndo: true,
+  showWidgetMenu: true,
+  showWidgetDiff: true,
+  showToggleButtonBox: true,
+  inputBorder: new NumberVar("input-border", 8),
+  base: { lightness: 0.987, chroma: 0.01, hue: 286 },
+  baseStr: "oklch(0.987 0.01 286)",
+  text: { contrast: 0.824 },
+  labelText: { contrast: 0.48, chroma: 0.035 },
   shiftDirection: 1
 };
-var ThemeCtx = createContext3({ value: defaultDarkTheme });
 
-// src/rsuite/theme/useTheme.tsx
+// src/csuite/ctx/CSuiteCtx.ts
+import { createContext as createContext3 } from "react";
+var CSuiteCtx = createContext3(CSuite_theme1);
+
+// src/csuite/ctx/useCSuite.ts
 import { useContext as useContext3 } from "react";
-var useTheme = () => {
-  const ctx = useContext3(ThemeCtx);
-  return ctx;
-};
+var useCSuite = () => useContext3(CSuiteCtx);
 
 // src/controls/shared/WidgetLabelContainerUI.tsx
-import { observer as observer16 } from "mobx-react-lite";
-var WidgetLabelContainerUI = observer16(function WidgetLabelContainerUI_(p) {
-  const theme = useTheme();
+import { observer as observer17 } from "mobx-react-lite";
+var WidgetLabelContainerUI = observer17(function WidgetLabelContainerUI_(p) {
+  const csuite = useCSuite();
   return /* @__PURE__ */ jsx(
     Frame,
     {
-      tw: "COLLAPSE-PASSTHROUGH flex justify-end gap-0.5 flex-none items-center shrink-0 flex-1 items-center py-1",
+      hover: true,
+      tw: "COLLAPSE-PASSTHROUGH h-input flex justify-end gap-0.5 flex-none items-center shrink-0 flex-1 items-center",
       style: p.justify ? justifyStyle : void 0,
-      text: theme.value.labelText,
+      text: csuite.labelText,
       children: p.children
     }
   );
@@ -2361,8 +2463,8 @@ var justifyStyle = {
 };
 
 // src/controls/shared/WidgetLabelIconUI.tsx
-import { observer as observer17 } from "mobx-react-lite";
-var WidgetLabelIconUI = observer17(function WidgetLabelIconUI_(p) {
+import { observer as observer18 } from "mobx-react-lite";
+var WidgetLabelIconUI = observer18(function WidgetLabelIconUI_(p) {
   const iconName = p.widget.icon;
   if (iconName == null)
     return null;
@@ -2371,8 +2473,8 @@ var WidgetLabelIconUI = observer17(function WidgetLabelIconUI_(p) {
 
 // src/widgets/workspace/JsonViewUI.tsx
 import JsonView from "@uiw/react-json-view";
-import { observer as observer18 } from "mobx-react-lite";
-var JsonViewUI = observer18(function JsonViewUI_(p) {
+import { observer as observer19 } from "mobx-react-lite";
+var JsonViewUI = observer19(function JsonViewUI_(p) {
   JSON.stringify(p.value);
   return /* @__PURE__ */ jsx(
     JsonView,
@@ -2413,7 +2515,7 @@ var _githubDarkTheme = {
   "--w-rjv-type-undefined-color": "#79c0ff"
 };
 
-// src/rsuite/errors/ErrorBoundaryFallback.tsx
+// src/csuite/errors/ErrorBoundaryFallback.tsx
 var ErrorBoundaryFallback = (p) => {
   return /* @__PURE__ */ jsxs("div", { role: "alert", children: [
     /* @__PURE__ */ jsxs("p", { tw: "flex gap-2 items-center", children: [
@@ -2426,10 +2528,10 @@ var ErrorBoundaryFallback = (p) => {
   ] });
 };
 
-// src/rsuite/errors/ErrorBoundaryUI.tsx
-import { observer as observer19 } from "mobx-react-lite";
+// src/csuite/errors/ErrorBoundaryUI.tsx
+import { observer as observer20 } from "mobx-react-lite";
 import { ErrorBoundary } from "react-error-boundary";
-var ErrorBoundaryUI = observer19(function CushyErrorBoundarySimpleUI_(p) {
+var ErrorBoundaryUI = observer20(function CushyErrorBoundarySimpleUI_(p) {
   return /* @__PURE__ */ jsx(
     ErrorBoundary,
     {
@@ -2459,19 +2561,6 @@ function makeLabelFromFieldName(s) {
   s = s.replace(/([a-zA-Z])([0-9])/g, "$1 $2");
   return s[0].toUpperCase() + s.slice(1);
 }
-
-// src/controls/context/CushyKitCtx.ts
-import { createContext as createContext4, useContext as useContext4 } from "react";
-var CushyKitCtx = createContext4(null);
-var useCushyKit = () => {
-  const val = useContext4(CushyKitCtx);
-  if (val == null)
-    throw new Error("missing CushyKit in current context");
-  return val;
-};
-var useCushyKitOrNull = () => {
-  return useContext4(CushyKitCtx);
-};
 
 // src/utils/misc/bang.ts
 var bang = (x, msg = "") => {
@@ -2504,9 +2593,10 @@ function asSTRING_orCrash(a, errMsg = "\u274C not a string") {
 
 // src/controls/utils/useSizeOf.tsx
 import { runInAction as runInAction2 } from "mobx";
-import { useLocalObservable } from "mobx-react-lite";
+import { useLocalObservable as useLocalObservable2 } from "mobx-react-lite";
+import { useCallback } from "react";
 var useSizeOf = () => {
-  const size = useLocalObservable(
+  const size = useLocalObservable2(
     () => ({
       observer: new ResizeObserver((e, obs) => {
         const e0 = bang(e[0]);
@@ -2521,18 +2611,20 @@ var useSizeOf = () => {
       height: void 0
     })
   );
-  const ro = size.observer;
-  const refFn = (e) => {
-    if (e == null)
-      return ro.disconnect();
-    ro.observe(e);
-  };
+  const refFn = useCallback(
+    (e) => {
+      if (e == null)
+        return size.observer.disconnect();
+      size.observer.observe(e);
+    },
+    [size]
+  );
   return { ref: refFn, size };
 };
 
 // src/controls/utils/AnimatedSizeUI.tsx
-import { observer as observer20 } from "mobx-react-lite";
-var AnimatedSizeUI = observer20(function AnimatedSizeUI_(p) {
+import { observer as observer21 } from "mobx-react-lite";
+var AnimatedSizeUI = observer21(function AnimatedSizeUI_(p) {
   const { ref: refFn, size } = useSizeOf();
   return /* @__PURE__ */ jsx("div", { className: p.className, tw: "smooth-resize-container animated overflow-hidden", style: { height: `${size.height}px` }, children: /* @__PURE__ */ jsx("div", { className: "smooth-resize-content", ref: refFn, children: p.children }) });
 });
@@ -2548,11 +2640,49 @@ var getIfWidgetNeedAlignedLabel = (widget) => {
   return true;
 };
 
+// src/controls/shared/WidgetDebugIDUI.tsx
+import { observer as observer22 } from "mobx-react-lite";
+var WidgetDebugIDUI = observer22(function WidgetDebugIDUI_(p) {
+  return /* @__PURE__ */ jsxs("span", { tw: "COLLAPSE-PASSTHROUGH opacity-50 italic text-sm", children: [
+    "#",
+    p.widget.id.slice(0, 3)
+  ] });
+});
+
 // src/controls/shared/WidgetHeaderControlsContainerUI.tsx
-import { observer as observer21 } from "mobx-react-lite";
-var WidgetHeaderControlsContainerUI = observer21(function WidgetHeaderControlsContainerUI_(p) {
+import { observer as observer23 } from "mobx-react-lite";
+var WidgetHeaderControlsContainerUI = observer23(function WidgetHeaderControlsContainerUI_(p) {
   return /* @__PURE__ */ jsx("div", { className: p.className, tw: "widget-header-container-ui COLLAPSE-PASSTHROUGH flex items-center gap-0.5 flex-1", children: p.children });
 });
+
+// src/controls/shared/WidgetLabelUI.tsx
+import { observer as observer24 } from "mobx-react-lite";
+var WidgetLabelUI = observer24(function WidgetLabelUI_(p) {
+  return /* @__PURE__ */ jsx(
+    "span",
+    {
+      tw: [
+        // 1. indicate we can click on the label
+        p.widget.isCollapsed || p.widget.isCollapsible ? "cursor-pointer COLLAPSE-PASSTHROUGH" : null,
+        // 3. label wrappign strategy
+        // 3.1  alt. 1: disable all wrapping
+        // 'whitespace-nowrap',
+        // 3.2. alt. 2:
+        //  - limit to 2 lines, with ellipsis,
+        //  - dense line height to force widget to remain within it's
+        //  - original allocated height
+        "line-clamp-2 [lineHeight:1rem] [overflow:unset]",
+        p.className
+      ],
+      children: p.children
+    }
+  );
+});
+
+// src/csuite/dropdown/MenuDividerUI.tsx
+function MenuDividerUI_() {
+  return /* @__PURE__ */ jsx("div", { tw: "divider my-0" });
+}
 
 // src/operators/RET.ts
 var Trigger = /* @__PURE__ */ ((Trigger2) => {
@@ -2562,7 +2692,7 @@ var Trigger = /* @__PURE__ */ ((Trigger2) => {
   return Trigger2;
 })(Trigger || {});
 
-// src/operators/Activity.ts
+// src/operators/activity/Activity.ts
 import { makeAutoObservable as makeAutoObservable5 } from "mobx";
 var ActivityManager = class {
   constructor() {
@@ -2608,8 +2738,7 @@ var ManualPromise = class {
           this.isRunning = false;
         });
         if (isPromise(t)) {
-          ;
-          t.then((final) => this.setValue(final));
+          void t.then((final) => this.setValue(final));
         } else {
           this.setValue(t);
         }
@@ -2624,7 +2753,7 @@ var ManualPromise = class {
       };
     });
     this.then = this.promise.then.bind(this.promise);
-    makeObservable4(this, {
+    void makeObservable4(this, {
       done: observable5,
       setValue: action2,
       value: observable5
@@ -2635,7 +2764,7 @@ var isPromise = (p) => {
   return p != null && typeof p.then === "function";
 };
 
-// src/app/shortcuts/_OS.ts
+// src/app/accelerators/getOS.ts
 var _os;
 function getOS() {
   if (_os)
@@ -2663,7 +2792,7 @@ function getOS_() {
   }
 }
 
-// src/app/shortcuts/META_NAME.ts
+// src/app/accelerators/META_NAME.ts
 var platform = getOS();
 var MOD_KEY = platform === "Mac" ? "cmd" : "ctrl";
 var META_NAME = platform === "Mac" ? "cmd" : "win";
@@ -2673,7 +2802,7 @@ var hasMod = (ev) => {
   return ev.ctrlKey;
 };
 
-// src/app/shortcuts/CommandManager.ts
+// src/app/accelerators/CommandManager.ts
 import { computed as computed2, makeObservable as makeObservable5, observable as observable6 } from "mobx";
 var CommandManager = class {
   constructor(conf = {}) {
@@ -2904,17 +3033,10 @@ var BoundMenuSym = Symbol("BoundMenu");
 var isBoundMenu = (x) => x != null && //
 typeof x === "object" && "$SYM" in x && x.$SYM === BoundMenuSym;
 
-// src/operators/menuSystem/SimpleMenuAction.ts
-var SimpleMenuAction = class {
-  constructor(opts) {
-    this.opts = opts;
-  }
-};
-
-// src/app/shortcuts/ComboUI.tsx
-import { observer as observer22 } from "mobx-react-lite";
+// src/app/accelerators/ComboUI.tsx
+import { observer as observer25 } from "mobx-react-lite";
 import { Fragment as Fragment2 } from "react";
-var ComboUI = observer22(function ComboUI_(p) {
+var ComboUI = observer25(function ComboUI_(p) {
   if (p.combo == null)
     return null;
   const iss = parseShortcutToInputSequence(p.combo);
@@ -2960,9 +3082,9 @@ var formatKeyName = (keyName) => {
   return keyName.toUpperCase();
 };
 
-// src/rsuite/dropdown/MenuItem.tsx
-import { observer as observer23 } from "mobx-react-lite";
-var MenuItem = observer23(function DropdownItem_(p) {
+// src/csuite/dropdown/MenuItem.tsx
+import { observer as observer26 } from "mobx-react-lite";
+var MenuItem = observer26(function DropdownItem_(p) {
   const { size, label, disabled, icon, children, active, onClick, ...rest } = p;
   return /* @__PURE__ */ jsxs(
     Frame,
@@ -2991,21 +3113,28 @@ var MenuItem = observer23(function DropdownItem_(p) {
   );
 });
 
-// src/operators/menuSystem/SimpleMenuModal.ts
+// src/operators/menu/SimpleMenuAction.ts
+var SimpleMenuAction = class {
+  constructor(opts) {
+    this.opts = opts;
+  }
+};
+
+// src/operators/menu/SimpleMenuModal.ts
 var SimpleMenuModal = class {
   constructor(p) {
     this.p = p;
   }
 };
 
-// src/operators/MenuUI.tsx
-import { observer as observer24 } from "mobx-react-lite";
+// src/operators/menu/MenuUI.tsx
+import { observer as observer27 } from "mobx-react-lite";
 import { createElement as createElement4 } from "react";
 import { Fragment as Fragment3 } from "react/jsx-runtime";
-var MenuRootUI = observer24(function MenuRootUI_(p) {
+var MenuRootUI = observer27(function MenuRootUI_(p) {
   return /* @__PURE__ */ jsx(RevealUI, { className: "dropdown", placement: "bottomStart", content: () => /* @__PURE__ */ jsx(p.menu.UI, {}), children: /* @__PURE__ */ jsx("label", { tabIndex: 0, tw: [`flex-nowrap btn btn-ghost btn-sm py-0 px-1.5`], children: p.menu.menu.title }) });
 });
-var MenuUI = observer24(function MenuUI_(p) {
+var MenuUI = observer27(function MenuUI_(p) {
   return /* @__PURE__ */ jsx(
     "div",
     {
@@ -3020,9 +3149,9 @@ var MenuUI = observer24(function MenuUI_(p) {
             if (entry.entry instanceof SimpleMenuAction)
               entry.entry.opts.onPick();
             else if (isBoundCommand(entry.entry))
-              entry.entry.execute();
+              void entry.entry.execute();
             else if (isCommand(entry.entry))
-              entry.entry.execute();
+              void entry.entry.execute();
             p.menu.onStop();
             ev.stopPropagation();
             ev.preventDefault();
@@ -3057,7 +3186,7 @@ var MenuUI = observer24(function MenuUI_(p) {
               onClick: (event) => {
                 activityManager.startActivity({
                   event,
-                  uid: "createPreset",
+                  uid: "createPreset\u2753",
                   placement: "auto",
                   shell: "popup-lg",
                   UI: (p2) => /* @__PURE__ */ jsx(
@@ -3082,7 +3211,7 @@ var MenuUI = observer24(function MenuUI_(p) {
               tw: "min-w-60",
               shortcut: char,
               onClick: () => {
-                entry.execute();
+                void entry.execute();
                 p.menu.onStop();
               },
               label: charIx != null ? /* @__PURE__ */ jsxs("div", { children: [
@@ -3106,7 +3235,7 @@ var MenuUI = observer24(function MenuUI_(p) {
                 MenuItem,
                 {
                   shortcut: char,
-                  label: /* @__PURE__ */ jsxs(Fragment, { children: [
+                  label: /* @__PURE__ */ jsxs(Fragment3, { children: [
                     charIx != null ? /* @__PURE__ */ jsxs("div", { children: [
                       /* @__PURE__ */ jsx("span", { children: label.slice(0, charIx) }),
                       /* @__PURE__ */ jsx("span", { tw: "underline text-red", children: label[charIx] }),
@@ -3129,7 +3258,7 @@ var MenuUI = observer24(function MenuUI_(p) {
   );
 });
 
-// src/operators/Menu.ts
+// src/operators/menu/Menu.ts
 import { nanoid as nanoid3 } from "nanoid";
 import { createElement as createElement5, useMemo as useMemo4 } from "react";
 var MenuManager = class {
@@ -3319,10 +3448,12 @@ var TreeNode = class _TreeNode {
     return this.entryL.data.isExpanded ?? false;
   }
   open() {
+    console.log(`[\u{1F920}] opening`);
     this.data.onExpand?.(this);
     this.entryL.update({ isExpanded: SQLITE_true });
   }
   close() {
+    console.log(`[\u{1F920}] closing`);
     this.entryL.update({ isExpanded: SQLITE_false });
   }
   toggle() {
@@ -3488,10 +3619,13 @@ var TreeNode = class _TreeNode {
 import { makeAutoObservable as makeAutoObservable7, observable as observable7 } from "mobx";
 import { nanoid as nanoid4 } from "nanoid";
 var defaultTreeStorage = (node) => {
-  const data = { isExpanded: SQLITE_false };
+  const data = observable7({
+    isExpanded: SQLITE_true,
+    isSelected: SQLITE_true
+  });
   return observable7({
     data,
-    update: (next) => data.isExpanded = next.isExpanded
+    update: (next) => Object.assign(data, next)
   });
 };
 var Tree = class {
@@ -3555,18 +3689,18 @@ var KEYS = {
 };
 
 // src/panels/libraryUI/tree/xxx/TreeCtx.ts
-import { createContext as createContext5, useContext as useContext5 } from "react";
-var TreeViewCtx = createContext5(null);
+import { createContext as createContext4, useContext as useContext4 } from "react";
+var TreeViewCtx = createContext4(null);
 var useTreeView = () => {
-  const val = useContext5(TreeViewCtx);
+  const val = useContext4(TreeViewCtx);
   if (val == null)
     throw new Error("missing editor in current widget react contexts");
   return val;
 };
 
 // src/panels/libraryUI/tree/RenderTreeIcon1.tsx
-import { observer as observer25 } from "mobx-react-lite";
-var TreeIcon1UI = observer25(function TreeIcon1UI_(p) {
+import { observer as observer28 } from "mobx-react-lite";
+var TreeIcon1UI = observer28(function TreeIcon1UI_(p) {
   const action3 = p;
   return /* @__PURE__ */ jsx(
     "div",
@@ -3584,8 +3718,8 @@ var TreeIcon1UI = observer25(function TreeIcon1UI_(p) {
 });
 
 // src/panels/libraryUI/tree/RenderItemTitleUI.tsx
-import { observer as observer26 } from "mobx-react-lite";
-var RenderItemTitleUI = observer26(function RenderItemTitleUI_(p) {
+import { observer as observer29 } from "mobx-react-lite";
+var RenderItemTitleUI = observer29(function RenderItemTitleUI_(p) {
   const node = p.node;
   const item = node.data;
   let icon = node.isOpen ? item.iconExpanded ?? item.icon : item.icon ?? item.iconExpanded;
@@ -3622,9 +3756,9 @@ var RenderItemTitleUI = observer26(function RenderItemTitleUI_(p) {
 });
 
 // src/panels/libraryUI/tree/xxx/TreeEntryUI.tsx
-import { observer as observer27 } from "mobx-react-lite";
+import { observer as observer30 } from "mobx-react-lite";
 import { Fragment as Fragment4 } from "react";
-var TreeEntryUI = observer27(function TreeEntryUI_(p) {
+var TreeEntryUI = observer30(function TreeEntryUI_(p) {
   const n = p.node;
   const children = n.childKeys;
   const hasChildren = children.length > 0;
@@ -3649,7 +3783,18 @@ var TreeEntryUI = observer27(function TreeEntryUI_(p) {
           }
         ],
         children: [
-          hasChildren ? /* @__PURE__ */ jsx("label", { onClick: () => n.toggle(), className: "swap swap-rotate opacity-50", children: n.isOpen ? /* @__PURE__ */ jsx(Ikon.mdiChevronDown, {}) : /* @__PURE__ */ jsx(Ikon.mdiChevronRight, {}) }) : /* @__PURE__ */ jsx("div", { tw: "[width:1.3rem]", children: "\xA0" }),
+          hasChildren ? /* @__PURE__ */ jsx(
+            "label",
+            {
+              onClick: (ev) => {
+                console.log(`[\u{1F920}] ok`, n.isOpen);
+                n.toggle();
+                ev.stopPropagation();
+              },
+              className: "swap swap-rotate opacity-50",
+              children: n.isOpen ? /* @__PURE__ */ jsx(Ikon.mdiChevronDown, {}) : /* @__PURE__ */ jsx(Ikon.mdiChevronRight, {})
+            }
+          ) : /* @__PURE__ */ jsx("div", { tw: "[width:1.3rem]", children: "\xA0" }),
           tv.conf.selectable && /* @__PURE__ */ jsx("input", { checked: true, type: "checkbox", tw: "checkbox" }),
           /* @__PURE__ */ jsx(RenderItemTitleUI, { node: n })
         ]
@@ -3674,8 +3819,8 @@ var TreeEntryUI = observer27(function TreeEntryUI_(p) {
 });
 
 // src/panels/libraryUI/tree/xxx/TreeUI.tsx
-import { observer as observer28 } from "mobx-react-lite";
-var TreeUI = observer28(function TreeEditorUI_(p) {
+import { observer as observer31 } from "mobx-react-lite";
+var TreeUI = observer31(function TreeEditorUI_(p) {
   const tv = p.treeView;
   return /* @__PURE__ */ jsx(TreeViewCtx.Provider, { value: tv, children: /* @__PURE__ */ jsxs("div", { tw: "_TreeUI flex flex-col", className: p.className, children: [
     /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
@@ -3883,14 +4028,9 @@ var TreeView = class {
   }
 };
 
-// src/rsuite/dropdown/MenuDividerUI.tsx
-function MenuDividerUI_() {
-  return /* @__PURE__ */ jsx("div", { tw: "divider my-0" });
-}
-
 // src/controls/shared/WidgetMenu.tsx
-import { observer as observer29 } from "mobx-react-lite";
-var WidgetMenuUI = observer29(function WidgetMenuUI_(p) {
+import { observer as observer32 } from "mobx-react-lite";
+var WidgetMenuUI = observer32(function WidgetMenuUI_(p) {
   return /* @__PURE__ */ jsx(RevealUI, { className: p.className, content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: p.widget }), children: /* @__PURE__ */ jsx(Button, { subtle: true, icon: "mdiDotsVertical", look: "ghost", square: true, size: "input" }) });
 });
 var menu_widgetActions = menu({
@@ -3908,17 +4048,17 @@ var menu_widgetActions = menu({
     out.push(MenuDividerUI_);
     out.push(
       new SimpleMenuAction({
-        label: "Expand All",
-        icon: "mdiExpandAll",
-        disabled: widget.hasNoChild,
-        onPick: () => widget.expandAllChildren()
+        label: "Collapse All",
+        icon: "mdiCollapseAll",
+        onPick: () => widget.collapseAllChildren()
       })
     );
     out.push(
       new SimpleMenuAction({
-        label: "Collapse All",
-        icon: "mdiCollapseAll",
-        onPick: () => widget.collapseAllChildren()
+        label: "Expand All",
+        icon: "mdiExpandAll",
+        disabled: widget.hasNoChild,
+        onPick: () => widget.expandAllChildren()
       })
     );
     out.push(MenuDividerUI_);
@@ -3928,17 +4068,7 @@ var menu_widgetActions = menu({
         submit: () => {
           console.log(`[\u{1F920}] values`);
         },
-        UI: () => {
-          const tree = new Tree([widget.asTreeElement("root")]);
-          const treeView = new TreeView(tree, { selectable: true });
-          return /* @__PURE__ */ jsx(
-            TreeUI,
-            {
-              title: "Select values to include in preset",
-              treeView
-            }
-          );
-        }
+        UI: (w) => /* @__PURE__ */ jsx(CreatePresetUI, { widget })
       })
     );
     out.push(MenuDividerUI_);
@@ -3955,17 +4085,28 @@ var menu_widgetActions = menu({
     return out;
   }
 });
+var CreatePresetUI = observer32(function CreatePresetUI_(p) {
+  const tree = new Tree([p.widget.asTreeElement("root")]);
+  const treeView = new TreeView(tree, { selectable: true });
+  return /* @__PURE__ */ jsx(
+    TreeUI,
+    {
+      title: "Select values to include in preset",
+      treeView
+    }
+  );
+});
 
 // src/controls/shared/WidgetTooltipUI.tsx
-import { observer as observer30 } from "mobx-react-lite";
-var WidgetTooltipUI = observer30(function WidgetTooltipUI_(p) {
+import { observer as observer33 } from "mobx-react-lite";
+var WidgetTooltipUI = observer33(function WidgetTooltipUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx("div", { children: widget.config.tooltip }), children: /* @__PURE__ */ jsx(Frame, { square: true, icon: "mdiInformationOutline" }) });
 });
 
 // src/controls/shared/WidgetUndoChangesButtonUI.tsx
-import { observer as observer31 } from "mobx-react-lite";
-var WidgetUndoChangesButtonUI = observer31(function WidgetUndoChangesButtonUI_(p) {
+import { observer as observer34 } from "mobx-react-lite";
+var WidgetUndoChangesButtonUI = observer34(function WidgetUndoChangesButtonUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(
     Button,
@@ -3983,8 +4124,8 @@ var WidgetUndoChangesButtonUI = observer31(function WidgetUndoChangesButtonUI_(p
 });
 
 // src/controls/shared/WidgetWithLabelUI.tsx
-import { observer as observer32 } from "mobx-react-lite";
-var WidgetWithLabelUI = observer32(function WidgetWithLabelUI_(p) {
+import { observer as observer35 } from "mobx-react-lite";
+var WidgetWithLabelUI = observer35(function WidgetWithLabelUI_(p) {
   if (p.widget.isHidden)
     return null;
   const rootKey = p.rootKey;
@@ -3992,8 +4133,15 @@ var WidgetWithLabelUI = observer32(function WidgetWithLabelUI_(p) {
   const widget = getActualWidgetToDisplay(originalWidget);
   const HeaderUI = widget.header();
   const BodyUI = widget.body();
-  const justify = p.alignLabel ?? getIfWidgetNeedAlignedLabel(widget);
+  const justify = p.justifyLabel ?? getIfWidgetNeedAlignedLabel(widget);
   const showBorder = widget.border;
+  const extraClass = originalWidget.isDisabled ? "pointer-events-none opacity-30 bg-[#00000005]" : void 0;
+  const csuite = useCSuite();
+  const showContrast = (
+    /* 🤮👉 */
+    widget.background && widget.isCollapsible || showBorder
+  );
+  const boxBase = showContrast ? { contrast: 0.05 } : void 0;
   const labelText = (() => {
     if (p.label != null)
       return p.label;
@@ -4001,31 +4149,12 @@ var WidgetWithLabelUI = observer32(function WidgetWithLabelUI_(p) {
       return widget.config.label;
     return makeLabelFromFieldName(p.rootKey);
   })();
-  const LABEL = (
-    // <span onClick={onLabelClick} style={{ lineHeight: '1rem' }}>
-    /* @__PURE__ */ jsxs(
-      "span",
-      {
-        tw: [widget.isCollapsed || widget.isCollapsible ? "cursor-pointer" : null],
-        className: "COLLAPSE-PASSTHROUGH whitespace-nowrap",
-        style: { lineHeight: "1rem" },
-        children: [
-          labelText,
-          widget.config.showID ? /* @__PURE__ */ jsxs("span", { tw: "opacity-50 italic text-sm", children: [
-            "#",
-            widget.id.slice(0, 3)
-          ] }) : null
-        ]
-      }
-    )
-  );
-  const extraClass = originalWidget.isDisabled ? "pointer-events-none opacity-30 bg-[#00000005]" : void 0;
-  const kit = useCushyKit();
-  const boxBase = widget.background && widget.isCollapsible || showBorder ? { contrast: 0.05 } : void 0;
   const WUI = /* @__PURE__ */ jsxs(
     Frame,
     {
+      tw: "flex flex-col gap-1",
       base: boxBase,
+      border: showBorder ? 5 : 0,
       ...p.widget.config.box,
       children: [
         /* @__PURE__ */ jsxs(WidgetHeaderContainerUI, { widget, children: [
@@ -4034,14 +4163,15 @@ var WidgetWithLabelUI = observer32(function WidgetWithLabelUI_(p) {
             /* @__PURE__ */ jsx(WidgetLabelIconUI, { widget }),
             BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "mr-1", widget: originalWidget }),
             widget.config.tooltip && /* @__PURE__ */ jsx(WidgetTooltipUI, { widget }),
-            LABEL,
+            /* @__PURE__ */ jsx(WidgetLabelUI, { widget, children: labelText }),
+            widget.config.showID && /* @__PURE__ */ jsx(WidgetDebugIDUI, { widget }),
             !BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "ml-1", widget: originalWidget })
           ] }),
           HeaderUI && /* @__PURE__ */ jsx(WidgetHeaderControlsContainerUI, { className: extraClass, children: /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: HeaderUI }) }),
           /* @__PURE__ */ jsx("div", { tw: "ml-auto" }),
           widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
-          kit.showWidgetUndo && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { widget }),
-          kit.showWidgetMenu && /* @__PURE__ */ jsx(WidgetMenuUI, { widget })
+          csuite.showWidgetUndo && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { widget: originalWidget }),
+          csuite.showWidgetMenu && /* @__PURE__ */ jsx(WidgetMenuUI, { widget })
         ] }),
         BodyUI && !widget.isCollapsed && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { className: extraClass, tw: [widget.isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
         /* @__PURE__ */ jsx(WidgetErrorsUI, { widget })
@@ -4077,12 +4207,12 @@ var Severity = /* @__PURE__ */ ((Severity2) => {
 })(Severity || {});
 
 // src/controls/BaseWidget.tsx
-import { observer as observer33 } from "mobx-react-lite";
+import { observer as observer36 } from "mobx-react-lite";
 var ensureObserver = (fn) => {
   if (fn == null)
     return null;
   const isObserver = "$$typeof" in fn && fn.$$typeof === Symbol.for("react.memo");
-  const FmtUI = isObserver ? fn : observer33(fn);
+  const FmtUI = isObserver ? fn : observer36(fn);
   return FmtUI;
 };
 var BaseWidget = class {
@@ -4274,8 +4404,16 @@ var BaseWidget = class {
     this.form.serialChanged(this);
   }
   // UI ----------------------------------------------------
-  ui() {
-    return /* @__PURE__ */ jsx(WidgetWithLabelUI, { isTopLevel: true, widget: this, rootKey: "_" }, this.id);
+  ui(p) {
+    return /* @__PURE__ */ jsx(
+      WidgetWithLabelUI,
+      {
+        ...p,
+        widget: this,
+        rootKey: "_"
+      },
+      this.id
+    );
   }
   defaultHeader() {
     if (this.DefaultHeaderUI == null)
@@ -4359,14 +4497,14 @@ var BaseWidget = class {
 };
 
 // src/controls/widgets/spacer/SpacerUI.tsx
-import { observer as observer34 } from "mobx-react-lite";
-var SpacerUI = observer34(function SpacerUI_(p) {
+import { observer as observer37 } from "mobx-react-lite";
+var SpacerUI = observer37(function SpacerUI_(p) {
   return /* @__PURE__ */ jsx("div", { tw: ["ml-auto"] });
 });
 
 // src/controls/widgets/bool/WidgetBoolUI.tsx
-import { observer as observer35 } from "mobx-react-lite";
-var WidgetBoolUI = observer35(function WidgetBoolUI_(p) {
+import { observer as observer38 } from "mobx-react-lite";
+var WidgetBoolUI = observer38(function WidgetBoolUI_(p) {
   const widget = p.widget;
   if (widget.config.label2) {
     console.warn("label2 is deprecated, please use the text option instead. label2 will be removed in the future");
@@ -4444,8 +4582,8 @@ registerWidgetClass("bool", Widget_bool);
 
 // src/controls/widgets/button/WidgetButtonUI.tsx
 import { runInAction as runInAction5 } from "mobx";
-import { observer as observer36 } from "mobx-react-lite";
-var WidgetInlineRunUI = observer36(function WidgetInlineRunUI_(p) {
+import { observer as observer39 } from "mobx-react-lite";
+var WidgetInlineRunUI = observer39(function WidgetInlineRunUI_(p) {
   const extra = p.widget.config.useContext?.();
   const context = { widget: p.widget, context: extra };
   return /* @__PURE__ */ jsx(
@@ -4546,10 +4684,10 @@ var toastImage = (imageSrc, message) => {
   });
 };
 
-// src/rsuite/select/SelectPopupUI.tsx
-import { observer as observer37 } from "mobx-react-lite";
+// src/csuite/select/SelectPopupUI.tsx
+import { observer as observer40 } from "mobx-react-lite";
 import { createPortal as createPortal2 } from "react-dom";
-var SelectPopupUI = observer37(function SelectPopupUI_(p) {
+var SelectPopupUI = observer40(function SelectPopupUI_(p) {
   const s = p.s;
   const isDraggingListener3 = (ev) => {
     if (ev.button != 0)
@@ -4592,7 +4730,7 @@ var SelectPopupUI = observer37(function SelectPopupUI_(p) {
         },
         children: /* @__PURE__ */ jsxs("ul", { className: " max-h-96", tw: "flex-col w-full", children: [
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx("div", { tw: "overflow-hidden", children: s.displayValue }) }),
-          s.filteredOptions.length === 0 ? /* @__PURE__ */ jsx("li", { className: "WIDGET-FIELD text-base", children: "No results" }) : null,
+          s.filteredOptions.length === 0 ? /* @__PURE__ */ jsx("li", { className: "h-input text-base", children: "No results" }) : null,
           s.filteredOptions.map((option, index) => {
             const isSelected = s.values.find((v) => s.isEqual(v, option)) != null;
             return /* @__PURE__ */ jsx(
@@ -4621,7 +4759,7 @@ var SelectPopupUI = observer37(function SelectPopupUI_(p) {
                       contrast: isSelected ? s.selectedIndex === index ? 0.75 : 0.7 : s.selectedIndex === index ? 0.05 : 0
                     },
                     tw: [
-                      "WIDGET-FIELD pl-0.5 flex w-full items-center rounded",
+                      "h-input pl-0.5 flex w-full items-center rounded",
                       "active:cursor-default cursor-pointer",
                       index === s.selectedIndex ? "bg-base-300" : null
                     ],
@@ -4653,7 +4791,7 @@ function searchMatches(haystack, needle) {
   return normalizeText(haystack).includes(normalizeText(needle));
 }
 
-// src/rsuite/select/SelectState.tsx
+// src/csuite/select/SelectState.tsx
 import { makeAutoObservable as makeAutoObservable9 } from "mobx";
 import React from "react";
 var AutoCompleteSelectState = class {
@@ -4931,22 +5069,24 @@ var AutoCompleteSelectState = class {
   }
 };
 
-// src/rsuite/select/SelectUI.tsx
-import { observer as observer38 } from "mobx-react-lite";
+// src/csuite/select/SelectUI.tsx
+import { observer as observer41 } from "mobx-react-lite";
 import { useMemo as useMemo5 } from "react";
-var SelectUI = observer38(function SelectUI_(p) {
+var SelectUI = observer41(function SelectUI_(p) {
   const s = useMemo5(() => new AutoCompleteSelectState(
     /* st, */
     p
   ), []);
+  const csuite = useCSuite();
+  const border = csuite.inputBorder;
   return /* @__PURE__ */ jsx(
     Frame,
     {
       base: { contrast: 0.05 },
       hover: true,
       tabIndex: -1,
-      tw: ["WIDGET-FIELD ", "flex flex-1 items-center relative"],
-      border: true,
+      tw: ["SelectUI h-input", "flex flex-1 items-center relative"],
+      border: { contrast: border },
       className: p.className,
       ref: s.anchorRef,
       onKeyUp: s.onRealInputKeyUp,
@@ -4975,12 +5115,7 @@ var SelectUI = observer38(function SelectUI_(p) {
               /* @__PURE__ */ jsxs(
                 "div",
                 {
-                  tw: [
-                    //
-                    " h-full w-full items-center",
-                    "px-0.5",
-                    "grid"
-                  ],
+                  tw: [" h-full w-full items-center", "px-0.5", "grid"],
                   style: { gridTemplateColumns: "24px 1fr 24px" },
                   children: [
                     /* @__PURE__ */ jsx(Ikon.mdiTextBoxSearchOutline, { size: "18px" }),
@@ -5009,42 +5144,9 @@ var SelectUI = observer38(function SelectUI_(p) {
   );
 });
 
-// src/rsuite/box/BoxMisc.tsx
-import { observer as observer39 } from "mobx-react-lite";
-var BoxBase = observer39(function BoxTitleUI_({ children, ...rest }) {
-  return /* @__PURE__ */ jsx(Frame, { ...rest, base: { contrast: 0.05 }, children });
-});
-var BoxTitle = observer39(function BoxTitleUI_2({ children, ...rest }) {
-  return /* @__PURE__ */ jsx(Frame, { ...rest, text: { contrast: 1, chromaBlend: 100, hueShift: 0 }, children });
-});
-var BoxSubtle = observer39(function BoxSubtle_({ children, ...rest }) {
-  return /* @__PURE__ */ jsx(Frame, { ...rest, text: { contrast: 0.4, chromaBlend: 1, hueShift: 0 }, children });
-});
-
-// src/controls/widgets/group/WidgetGroupUI.tsx
-import { observer as observer40 } from "mobx-react-lite";
-var WidgetGroup_LineUI = observer40(function WidgetGroup_LineUI_(p) {
-  if (!p.widget.serial.collapsed)
-    return null;
-  return /* @__PURE__ */ jsx(BoxSubtle, { className: "COLLAPSE-PASSTHROUGH", tw: "line-clamp-1 italic", children: p.widget.summary });
-});
-var WidgetGroup_BlockUI = observer40(function WidgetGroup_BlockUI_(p) {
-  const widget = p.widget;
-  const isTopLevel = widget.config.topLevel;
-  const groupFields = Object.entries(widget.fields);
-  const isHorizontal = widget.config.layout === "H";
-  return /* @__PURE__ */ jsx(WidgetFieldsContainerUI, { layout: p.widget.config.layout, tw: [widget.config.className, p.className], children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
-    WidgetWithLabelUI,
-    {
-      isTopLevel,
-      rootKey,
-      alignLabel: isHorizontal ? false : widget.config.alignLabel,
-      widget: bang(sub)
-    },
-    rootKey
-  )) });
-});
-var WidgetFieldsContainerUI = observer40(function WidgetFieldsContainerUI_(p) {
+// src/controls/shared/WidgetsContainerUI.tsx
+import { observer as observer42 } from "mobx-react-lite";
+var WidgetsContainerUI = observer42(function WidgetsContainerUI_(p) {
   const isHorizontal = p.layout === "H";
   return /* @__PURE__ */ jsx(
     "div",
@@ -5062,18 +5164,18 @@ var WidgetFieldsContainerUI = observer40(function WidgetFieldsContainerUI_(p) {
 });
 
 // src/controls/widgets/choices/WidgetChoicesUI.tsx
-import { observer as observer41 } from "mobx-react-lite";
-var WidgetChoices_HeaderUI = observer41(function WidgetChoices_LineUI_(p) {
+import { observer as observer43 } from "mobx-react-lite";
+var WidgetChoices_HeaderUI = observer43(function WidgetChoices_LineUI_(p) {
   if (p.widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { widget: p.widget });
   else
     return /* @__PURE__ */ jsx(WidgetChoices_SelectHeaderUI, { widget: p.widget });
 });
-var WidgetChoices_BodyUI = observer41(function WidgetChoices_BodyUI_(p) {
+var WidgetChoices_BodyUI = observer43(function WidgetChoices_BodyUI_(p) {
   const widget = p.widget;
   const activeSubwidgets = Object.entries(widget.children).map(([branch, subWidget]) => ({ branch, subWidget }));
   return /* @__PURE__ */ jsx(
-    WidgetFieldsContainerUI,
+    WidgetsContainerUI,
     {
       layout: widget.config.layout,
       tw: [widget.config.className, p.className],
@@ -5084,7 +5186,7 @@ var WidgetChoices_BodyUI = observer41(function WidgetChoices_BodyUI_(p) {
         return /* @__PURE__ */ jsx(
           WidgetWithLabelUI,
           {
-            alignLabel: p.alignLabel,
+            justifyLabel: p.alignLabel,
             rootKey: val.branch,
             widget: subWidget,
             label: widget.isSingle ? false : void 0
@@ -5095,10 +5197,10 @@ var WidgetChoices_BodyUI = observer41(function WidgetChoices_BodyUI_(p) {
     }
   );
 });
-var WidgetChoices_TabHeaderUI = observer41(function WidgetChoicesTab_LineUI_(p) {
+var WidgetChoices_TabHeaderUI = observer43(function WidgetChoicesTab_LineUI_(p) {
   const widget = p.widget;
   const choices = widget.choicesWithLabels;
-  const theme = useTheme();
+  const csuite = useCSuite();
   return /* @__PURE__ */ jsx(
     "div",
     {
@@ -5115,7 +5217,7 @@ var WidgetChoices_TabHeaderUI = observer41(function WidgetChoicesTab_LineUI_(p) 
             display: "button",
             mode: p.widget.isMulti ? "checkbox" : "radio",
             text: c.label,
-            box: isSelected ? void 0 : { text: theme.value.labelText },
+            box: isSelected ? void 0 : { text: csuite.labelText },
             onValueChange: (value) => {
               if (value != isSelected) {
                 widget.toggleBranch(c.key);
@@ -5128,7 +5230,7 @@ var WidgetChoices_TabHeaderUI = observer41(function WidgetChoicesTab_LineUI_(p) 
     }
   );
 });
-var WidgetChoices_SelectHeaderUI = observer41(function WidgetChoices_SelectLineUI_(p) {
+var WidgetChoices_SelectHeaderUI = observer43(function WidgetChoices_SelectLineUI_(p) {
   const widget = p.widget;
   const choices = widget.choicesWithLabels;
   return /* @__PURE__ */ jsx(
@@ -5278,7 +5380,7 @@ var Widget_choices = class extends BaseWidget {
         this.enableBranch(branchName, { skipBump: true });
       const childAfter = this.children[branchName];
       if (childAfter && childAfter.hasChanges)
-        return true;
+        childAfter.reset();
     }
     this.bumpValue();
   }
@@ -5354,8 +5456,8 @@ var Widget_choices = class extends BaseWidget {
 registerWidgetClass("choices", Widget_choices);
 
 // src/controls/widgets/color/WidgetColorUI.tsx
-import { observer as observer42 } from "mobx-react-lite";
-var WidgetColorUI = observer42(function WidgetColorUI_(p) {
+import { observer as observer44 } from "mobx-react-lite";
+var WidgetColorUI = observer44(function WidgetColorUI_(p) {
   const widget = p.widget;
   return (
     // <div>
@@ -5420,6 +5522,40 @@ var Widget_color = class extends BaseWidget {
   }
 };
 registerWidgetClass("color", Widget_color);
+
+// src/csuite/wrappers/FrameSubtle.tsx
+import { observer as observer45 } from "mobx-react-lite";
+var FrameSubtle = observer45(function BoxSubtle_({ children, ...rest }) {
+  return /* @__PURE__ */ jsx(Frame, { ...rest, text: { contrast: 0.3, chromaBlend: 1, hueShift: 0 }, children });
+});
+
+// src/controls/shared/WidgetSingleLineSummaryUI.tsx
+import { observer as observer46 } from "mobx-react-lite";
+var WidgetSingleLineSummaryUI = observer46(function WidgetSingleLineSummaryUI_(p) {
+  return /* @__PURE__ */ jsx(FrameSubtle, { className: "COLLAPSE-PASSTHROUGH ml-1 lh-input line-clamp-1 italic", children: p.children });
+});
+
+// src/controls/widgets/group/WidgetGroupUI.tsx
+import { observer as observer47 } from "mobx-react-lite";
+var WidgetGroup_LineUI = observer47(function WidgetGroup_LineUI_(p) {
+  if (!p.widget.serial.collapsed)
+    return null;
+  return /* @__PURE__ */ jsx(WidgetSingleLineSummaryUI, { children: p.widget.summary });
+});
+var WidgetGroup_BlockUI = observer47(function WidgetGroup_BlockUI_(p) {
+  const widget = p.widget;
+  const groupFields = Object.entries(widget.fields);
+  const isHorizontal = widget.config.layout === "H";
+  return /* @__PURE__ */ jsx(WidgetsContainerUI, { layout: p.widget.config.layout, tw: [widget.config.className, p.className], children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
+    WidgetWithLabelUI,
+    {
+      rootKey,
+      justifyLabel: isHorizontal ? false : widget.config.alignLabel,
+      widget: bang(sub)
+    },
+    rootKey
+  )) });
+});
 
 // src/controls/widgets/group/WidgetGroup.tsx
 import { runInAction as runInAction8 } from "mobx";
@@ -5559,8 +5695,8 @@ var Widget_group = class extends BaseWidget {
 registerWidgetClass("group", Widget_group);
 
 // src/controls/widgets/list/ListControlsUI.tsx
-import { observer as observer43 } from "mobx-react-lite";
-var ListControlsUI = observer43(function ListControlsUI_(p) {
+import { observer as observer48 } from "mobx-react-lite";
+var ListControlsUI = observer48(function ListControlsUI_(p) {
   const widget = p.widget;
   const max = widget.config.max;
   const min = widget.config.min;
@@ -5578,8 +5714,8 @@ var ListControlsUI = observer43(function ListControlsUI_(p) {
         /* @__PURE__ */ jsx(
           Button,
           {
-            size: "xs",
-            look: "ghost",
+            size: "input",
+            subtle: true,
             disabled: !canAdd,
             square: true,
             icon: "mdiPlus",
@@ -5594,8 +5730,8 @@ var ListControlsUI = observer43(function ListControlsUI_(p) {
         /* @__PURE__ */ jsx(
           Button,
           {
-            size: "xs",
-            look: "ghost",
+            size: "input",
+            subtle: true,
             disabled: !canClear,
             square: true,
             icon: "mdiDeleteForever",
@@ -5610,8 +5746,8 @@ var ListControlsUI = observer43(function ListControlsUI_(p) {
         /* @__PURE__ */ jsx(
           Button,
           {
-            size: "xs",
-            look: "ghost",
+            size: "input",
+            subtle: true,
             square: true,
             icon: "mdiUnfoldMoreHorizontal",
             onClick: (ev) => {
@@ -5623,8 +5759,8 @@ var ListControlsUI = observer43(function ListControlsUI_(p) {
         /* @__PURE__ */ jsx(
           Button,
           {
-            size: "xs",
-            look: "ghost",
+            size: "input",
+            subtle: true,
             square: true,
             icon: "mdiUnfoldLessHorizontal",
             onClick: (ev) => {
@@ -5639,10 +5775,10 @@ var ListControlsUI = observer43(function ListControlsUI_(p) {
 });
 
 // src/controls/widgets/list/WidgetListUI.tsx
-import { observer as observer44 } from "mobx-react-lite";
+import { observer as observer49 } from "mobx-react-lite";
 import { forwardRef as forwardRef2 } from "react";
 var { default: SortableList, SortableItem, SortableKnob } = await import("react-easy-sort");
-var WidgetList_LineUI = observer44(function WidgetList_LineUI_(p) {
+var WidgetList_LineUI = observer49(function WidgetList_LineUI_(p) {
   return /* @__PURE__ */ jsxs("div", { tw: "flex flex-1 items-center COLLAPSE-PASSTHROUGH", children: [
     /* @__PURE__ */ jsxs("div", { tw: "text-sm text-gray-500 italic", children: [
       p.widget.length,
@@ -5651,7 +5787,7 @@ var WidgetList_LineUI = observer44(function WidgetList_LineUI_(p) {
     p.widget.isAuto ? null : /* @__PURE__ */ jsx("div", { tw: "ml-auto", children: /* @__PURE__ */ jsx(ListControlsUI, { widget: p.widget }) })
   ] });
 });
-var WidgetList_BodyUI = observer44(function WidgetList_BodyUI_(p) {
+var WidgetList_BodyUI = observer49(function WidgetList_BodyUI_(p) {
   const widget = p.widget;
   const subWidgets = widget.items;
   const min = widget.config.min;
@@ -5662,15 +5798,15 @@ var WidgetList_BodyUI = observer44(function WidgetList_BodyUI_(p) {
     const showBorder = subWidget.border;
     const isCollapsible = subWidget.isCollapsible;
     const boxBorder = showBorder ? 20 : 0;
-    const boxBase = subWidget.background && (isCollapsible || showBorder) ? { contrast: 0.04 } : void 0;
+    const boxBase = subWidget.background && (isCollapsible || showBorder) ? { contrast: 0.03 } : void 0;
     return /* @__PURE__ */ jsx(SortableItem, { children: /* @__PURE__ */ jsxs(Frame, { border: boxBorder, tw: "flex flex-col", base: boxBase, children: [
       /* @__PURE__ */ jsxs("div", { tw: "flex items-center", children: [
         /* @__PURE__ */ jsx(
           Button,
           {
-            look: "ghost",
+            subtle: true,
             square: true,
-            size: "xs",
+            size: "input",
             icon: "mdiChevronRight",
             onClick: () => subWidget.toggleCollapsed()
           }
@@ -5688,14 +5824,14 @@ var WidgetList_BodyUI = observer44(function WidgetList_BodyUI_(p) {
           {
             disabled: min != null && widget.items.length <= min,
             square: true,
-            size: "xs",
-            look: "ghost",
+            size: "input",
+            subtle: true,
             icon: "mdiDeleteOutline",
             onClick: () => widget.removeItem(subWidget)
           }
         ),
         /* @__PURE__ */ jsx(SortableKnob, { children: /* @__PURE__ */ jsx(ListDragHandleUI, { widget: subWidget, ix }) }),
-        /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: subWidget }), children: /* @__PURE__ */ jsx(Button, { icon: "mdiDotsVertical", look: "ghost", square: true, size: "xs" }) })
+        /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: subWidget }), children: /* @__PURE__ */ jsx(Button, { icon: "mdiDotsVertical", subtle: true, square: true, size: "input" }) })
       ] }),
       widgetBody && !collapsed && subWidget != null && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { tw: "ml-2 pl-2", children: widgetBody }) })
     ] }) }, subWidget.id);
@@ -5704,7 +5840,7 @@ var WidgetList_BodyUI = observer44(function WidgetList_BodyUI_(p) {
 var ListDragHandleUI = forwardRef2((p, ref) => {
   return (
     //TODO (bird_d): FIX UI - Needs to be Button when ref is implemented.
-    /* @__PURE__ */ jsx("div", { ref, onClick: () => p.widget.toggleCollapsed(), children: /* @__PURE__ */ jsx(Button, { size: "xs", look: "ghost", square: true, icon: "mdiDragHorizontalVariant" }) })
+    /* @__PURE__ */ jsx("div", { ref, onClick: () => p.widget.toggleCollapsed(), children: /* @__PURE__ */ jsx(Button, { size: "input", subtle: true, square: true, icon: "mdiDragHorizontalVariant" }) })
   );
 });
 
@@ -5925,8 +6061,8 @@ var Widget_list = class extends BaseWidget {
 registerWidgetClass("list", Widget_list);
 
 // src/controls/widgets/markdown/WidgetMarkdownUI.tsx
-import { observer as observer45 } from "mobx-react-lite";
-var WidgetMardownUI = observer45(function WidgetMardownUI_(p) {
+import { observer as observer50 } from "mobx-react-lite";
+var WidgetMardownUI = observer50(function WidgetMardownUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(MarkdownUI, { tw: "_WidgetMardownUI w-full", markdown: widget.markdown });
 });
@@ -5985,8 +6121,8 @@ var Widget_markdown = class extends BaseWidget {
 registerWidgetClass("markdown", Widget_markdown);
 
 // src/controls/widgets/matrix/WidgetMatrixUI.tsx
-import { observer as observer46 } from "mobx-react-lite";
-var WidgetMatrixUI = observer46(function WidgetStrUI_(p) {
+import { observer as observer51 } from "mobx-react-lite";
+var WidgetMatrixUI = observer51(function WidgetStrUI_(p) {
   const widget = p.widget;
   const cols = widget.cols;
   const rows = widget.rows;
@@ -6177,9 +6313,9 @@ var parseFloatNoRoundingErr = (str, maxDigitsAfterDot = 3) => {
   return out;
 };
 
-// src/controls/widgets/number/InputNumberUI.tsx
+// src/csuite/input-number/InputNumberUI.tsx
 import { makeAutoObservable as makeAutoObservable10, runInAction as runInAction10 } from "mobx";
-import { observer as observer47 } from "mobx-react-lite";
+import { observer as observer52 } from "mobx-react-lite";
 import React3, { useEffect as useEffect3, useMemo as useMemo6 } from "react";
 var clamp3 = (x, min, max) => Math.max(min, Math.min(max, x));
 var startValue = 0;
@@ -6310,8 +6446,8 @@ var InputNumberStableState = class {
     return this.mode === "int";
   }
 };
-var InputNumberUI = observer47(function InputNumberUI_(p) {
-  const kit = useCushyKitOrNull();
+var InputNumberUI = observer52(function InputNumberUI_(p) {
+  const kit = useCSuite();
   const uist = useMemo6(() => new InputNumberStableState(p, kit), []);
   runInAction10(() => Object.assign(uist.props, p));
   useEffect3(() => uist.onPointerUpListener, []);
@@ -6319,22 +6455,22 @@ var InputNumberUI = observer47(function InputNumberUI_(p) {
   const step = uist.step;
   const rounding = uist.rounding;
   const isEditing = uist.isEditing;
-  const theme = useTheme();
-  const border = theme.value.inputBorder;
+  const csuite = useCSuite();
+  const border = csuite.inputBorder;
   return /* @__PURE__ */ jsxs(
     Frame,
     {
       style: p.style,
-      base: { contrast: isEditing ? -0.1 : 0.05 },
+      base: 5,
       border: { contrast: border },
-      hover: true,
+      hover: { contrast: 0.03 },
       className: p.className,
       tw: [
         p.disabled && "pointer-events-none opacity-25",
-        "WIDGET-FIELD relative",
+        "h-input relative",
         "input-number-ui",
-        "flex-1 select-none min-w-16 cursor-ew-resize overflow-clip",
-        !isEditing && "hover:border-base-200 hover:border-b-base-300 hover:bg-primary/40"
+        "flex-1 select-none min-w-16 cursor-ew-resize overflow-clip"
+        // !isEditing && 'hover:border-base-200 hover:border-b-base-300 hover:bg-primary/40',
       ],
       onWheel: (ev) => {
         if (ev.ctrlKey) {
@@ -6353,7 +6489,7 @@ var InputNumberUI = observer47(function InputNumberUI_(p) {
           {
             className: "inui-foreground",
             base: { contrast: !p.hideSlider && !isEditing ? 0.08 : 0, chroma: 0.06 },
-            tw: ["z-10 absolute left-0 WIDGET-FIELD"],
+            tw: ["z-10 absolute left-0 h-input"],
             style: { width: `${(val - uist.rangeMin) / (uist.rangeMax - uist.rangeMin) * 100}%` }
           }
         ),
@@ -6362,8 +6498,6 @@ var InputNumberUI = observer47(function InputNumberUI_(p) {
             Frame,
             {
               className: "control",
-              hover: -0.1,
-              base: 25,
               border: true,
               tw: ["h-full flex rounded-none text-center justify-center items-center z-20", `opacity-0`],
               tabIndex: -1,
@@ -6484,8 +6618,6 @@ var InputNumberUI = observer47(function InputNumberUI_(p) {
             Frame,
             {
               className: "control",
-              hover: -0.1,
-              base: 25,
               border: true,
               tw: ["h-full flex rounded-none text-center justify-center items-center z-20", `opacity-0`],
               tabIndex: -1,
@@ -6500,8 +6632,8 @@ var InputNumberUI = observer47(function InputNumberUI_(p) {
 });
 
 // src/controls/widgets/number/WidgetNumberUI.tsx
-import { observer as observer48 } from "mobx-react-lite";
-var WidgetNumberUI = observer48(function WidgetNumberUI_(p) {
+import { observer as observer53 } from "mobx-react-lite";
+var WidgetNumberUI = observer53(function WidgetNumberUI_(p) {
   const widget = p.widget;
   const value = widget.serial.val;
   const mode = widget.config.mode;
@@ -6661,7 +6793,7 @@ var Widget_optional = class extends BaseWidget {
   get hasChanges() {
     if (this.config.startActive) {
       if (!this.serial.active)
-        return false;
+        return true;
       return this.child.hasChanges;
     } else {
       if (!this.serial.active)
@@ -6704,69 +6836,55 @@ var Widget_optional = class extends BaseWidget {
 registerWidgetClass("optional", Widget_optional);
 
 // src/controls/widgets/seed/WidgetSeedUI.tsx
-import { observer as observer49 } from "mobx-react-lite";
-var WidgetSeedUI = observer49(function WidgetSeedUI_(p) {
+import { observer as observer54 } from "mobx-react-lite";
+var WidgetSeedUI = observer54(function WidgetSeedUI_(p) {
   const widget = p.widget;
   const val = widget.serial.val;
-  return /* @__PURE__ */ jsxs(
-    Frame,
-    {
-      border: true,
-      tw: [
-        "WIDGET-FIELD",
-        "flex-1 flex items-center",
-        "rounded overflow-clip text-shadow"
-        // 'border border-base-200 hover:border-base-200',
-        // 'bg-primary/5',
-        // 'border-b-2 border-b-base-200 hover:border-b-base-300',
-        // '!outline-none',
-      ],
-      children: [
-        /* @__PURE__ */ jsx(
-          Button,
-          {
-            tw: "!border-l-0",
-            icon: "mdiShuffle",
-            active: widget.serial.mode === "randomize",
-            onClick: () => widget.setToRandomize(),
-            children: "Random"
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          Button,
-          {
-            tw: "!border-l !border-r",
-            icon: "mdiAccessPoint",
-            active: widget.serial.mode === "fixed",
-            onClick: () => widget.setToFixed(),
-            children: "Fixed"
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          InputNumberUI,
-          {
-            disabled: widget.serial.mode === "randomize",
-            tw: ["!border-none flex-1"],
-            min: widget.config.min,
-            max: widget.config.max,
-            step: 1,
-            value: val,
-            mode: "int",
-            onValueChange: (value) => widget.setValue(value)
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          Button,
-          {
-            tw: "!border-l !border-r-0",
-            onClick: () => widget.setToFixed(Math.floor(Math.random() * 1e8)),
-            icon: "mdiAutorenew",
-            square: true
-          }
-        )
-      ]
-    }
-  );
+  const csuite = useCSuite();
+  const border = csuite.inputBorder;
+  return /* @__PURE__ */ jsxs(Frame, { border: { contrast: border }, tw: ["h-input", "flex-1 flex items-center"], children: [
+    /* @__PURE__ */ jsx(
+      InputBoolToggleButtonUI,
+      {
+        icon: "mdiShuffle",
+        value: widget.serial.mode === "randomize",
+        onValueChange: () => widget.setToRandomize(),
+        text: "Random"
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      InputBoolToggleButtonUI,
+      {
+        icon: "mdiDotsGrid",
+        value: widget.serial.mode === "fixed",
+        onValueChange: () => widget.setToFixed(),
+        text: "Fixed"
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      InputNumberUI,
+      {
+        disabled: widget.serial.mode === "randomize",
+        tw: ["!border-none flex-1"],
+        min: widget.config.min,
+        max: widget.config.max,
+        step: 1,
+        value: val,
+        mode: "int",
+        onValueChange: (value) => widget.setValue(value)
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      Button,
+      {
+        size: "input",
+        tw: "!border-l !border-r-0",
+        onClick: () => widget.setToFixed(Math.floor(Math.random() * 1e8)),
+        icon: "mdiAutorenew",
+        square: true
+      }
+    )
+  ] });
 });
 
 // src/controls/widgets/seed/WidgetSeed.ts
@@ -6835,14 +6953,14 @@ var Widget_seed = class extends BaseWidget {
 registerWidgetClass("seed", Widget_seed);
 
 // src/controls/widgets/selectMany/WidgetSelectManyUI.tsx
-import { observer as observer50 } from "mobx-react-lite";
-var WidgetSelectManyUI = observer50(function WidgetSelectManyUI_(p) {
+import { observer as observer55 } from "mobx-react-lite";
+var WidgetSelectManyUI = observer55(function WidgetSelectManyUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectMany_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectMany_SelectUI, { widget });
 });
-var WidgetSelectMany_TabUI = observer50(function WidgetSelectMany_TabUI_(p) {
+var WidgetSelectMany_TabUI = observer55(function WidgetSelectMany_TabUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsxs("div", { tw: "rounded select-none flex flex-wrap gap-x-0.5 gap-y-0", children: [
@@ -6875,7 +6993,7 @@ var WidgetSelectMany_TabUI = observer50(function WidgetSelectMany_TabUI_(p) {
     widget.baseErrors && /* @__PURE__ */ jsx(MessageErrorUI, { children: /* @__PURE__ */ jsx("ul", { children: widget.baseErrors.map((e, ix) => /* @__PURE__ */ jsx("li", { children: e }, ix)) }) })
   ] });
 });
-var WidgetSelectMany_SelectUI = observer50(function WidgetSelectMany_SelectUI_(p) {
+var WidgetSelectMany_SelectUI = observer55(function WidgetSelectMany_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { tw: "flex-1", children: [
     /* @__PURE__ */ jsx(
@@ -7008,14 +7126,14 @@ var Widget_selectMany = class extends BaseWidget {
 registerWidgetClass("selectMany", Widget_selectMany);
 
 // src/controls/widgets/selectOne/WidgetSelectOneUI.tsx
-import { observer as observer51 } from "mobx-react-lite";
-var WidgetSelectOneUI = observer51(function WidgetSelectOneUI_(p) {
+import { observer as observer56 } from "mobx-react-lite";
+var WidgetSelectOneUI = observer56(function WidgetSelectOneUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectOne_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectOne_SelectUI, { widget });
 });
-var WidgetSelectOne_TabUI = observer51(function WidgetSelectOne_TabUI_(p) {
+var WidgetSelectOne_TabUI = observer56(function WidgetSelectOne_TabUI_(p) {
   const widget = p.widget;
   const selected = widget.serial.val;
   return /* @__PURE__ */ jsxs("div", { children: [
@@ -7042,7 +7160,7 @@ var WidgetSelectOne_TabUI = observer51(function WidgetSelectOne_TabUI_(p) {
     ] })
   ] });
 });
-var WidgetSelectOne_SelectUI = observer51(function WidgetSelectOne_SelectUI_(p) {
+var WidgetSelectOne_SelectUI = observer56(function WidgetSelectOne_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx("div", { tw: "flex-1", children: /* @__PURE__ */ jsx(
     SelectUI,
@@ -7312,21 +7430,20 @@ var ResolutionState = class {
 };
 
 // src/controls/widgets/size/WidgetSizeUI.tsx
-import { observer as observer52 } from "mobx-react-lite";
-var WigetSize_LineUI = observer52(function WigetSize_LineUI_(p) {
+import { observer as observer57 } from "mobx-react-lite";
+var WigetSize_LineUI = observer57(function WigetSize_LineUI_(p) {
   return /* @__PURE__ */ jsx(WidgetSizeX_LineUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WigetSize_BlockUI = observer52(function WigetSize_BlockUI_(p) {
+var WigetSize_BlockUI = observer57(function WigetSize_BlockUI_(p) {
   return /* @__PURE__ */ jsx(WigetSizeXUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WidgetSizeX_LineUI = observer52(function WidgetSize_LineUI_(p) {
+var WidgetSizeX_LineUI = observer57(function WidgetSize_LineUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx("div", { className: "flex flex-1 flex-col gap-1", children: /* @__PURE__ */ jsxs(
     Frame,
     {
-      hover: true,
-      border: { contrast: 0.25 },
-      tw: ["WIDGET-FIELD w-full h-full flex gap-2 items-center overflow-clip"],
+      border: { contrast: 0.05 },
+      tw: ["h-input w-full h-full flex gap-2 items-center overflow-clip"],
       style: { padding: "0px" },
       children: [
         /* @__PURE__ */ jsx(
@@ -7336,7 +7453,6 @@ var WidgetSizeX_LineUI = observer52(function WidgetSize_LineUI_(p) {
             max: p.bounds?.max ?? 4096,
             step: p.bounds?.step ?? 32,
             mode: "int",
-            tw: "!border-none",
             value: uist.width,
             hideSlider: true,
             onValueChange: (next) => uist.setWidth(next),
@@ -7354,7 +7470,6 @@ var WidgetSizeX_LineUI = observer52(function WidgetSize_LineUI_(p) {
             step: p.bounds?.step ?? 32,
             hideSlider: true,
             mode: "int",
-            tw: "!border-none",
             value: uist.height,
             onValueChange: (next) => uist.setHeight(next),
             forceSnap: true,
@@ -7370,7 +7485,7 @@ var WidgetSizeX_LineUI = observer52(function WidgetSize_LineUI_(p) {
     }
   ) });
 });
-var AspectLockButtonUI = observer52(function AspectLockButtonUI_(p) {
+var AspectLockButtonUI = observer57(function AspectLockButtonUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx(
     Frame,
@@ -7392,7 +7507,7 @@ var AspectLockButtonUI = observer52(function AspectLockButtonUI_(p) {
     }
   );
 });
-var AspectRatioSquareUI = observer52(function AspectRatioSquareUI_(p) {
+var AspectRatioSquareUI = observer57(function AspectRatioSquareUI_(p) {
   const uist = p.sizeHelper;
   const ratioDisplaySize = 26;
   return /* @__PURE__ */ jsx(
@@ -7401,14 +7516,10 @@ var AspectRatioSquareUI = observer52(function AspectRatioSquareUI_(p) {
       square: true,
       size: "xs",
       border: 10,
-      tw: [
-        //
-        "flex",
-        "overflow-clip",
-        "items-center justify-center"
-      ],
-      style: { border: "unset", borderRadius: "0px" },
+      tw: ["flex", "overflow-clip", "items-center justify-center", "cursor-pointer"],
+      style: { borderRadius: "0px" },
       onClick: uist.flip,
+      hover: true,
       children: /* @__PURE__ */ jsx(
         Frame,
         {
@@ -7430,7 +7541,7 @@ var AspectRatioSquareUI = observer52(function AspectRatioSquareUI_(p) {
     }
   );
 });
-var WigetSizeXUI = observer52(function WigetSizeXUI_(p) {
+var WigetSizeXUI = observer57(function WigetSizeXUI_(p) {
   const uist = p.sizeHelper;
   const resoBtn = (ar) => /* @__PURE__ */ jsx(
     InputBoolUI,
@@ -7591,8 +7702,8 @@ var Widget_size = class extends BaseWidget {
 registerWidgetClass("size", Widget_size);
 
 // src/controls/widgets/spacer/WidgetSpacerUI.tsx
-import { observer as observer53 } from "mobx-react-lite";
-var WidgetSpacerUI = observer53(function WidgetSpacerUI_(p) {
+import { observer as observer58 } from "mobx-react-lite";
+var WidgetSpacerUI = observer58(function WidgetSpacerUI_(p) {
   return /* @__PURE__ */ jsx(SpacerUI, {});
 });
 
@@ -7639,14 +7750,14 @@ var Widget_spacer = class extends BaseWidget {
 };
 registerWidgetClass("spacer", Widget_spacer);
 
-// src/rsuite/kolor/getLCHFromStringAsString.tsx
+// src/csuite/kolor/getLCHFromStringAsString.tsx
 import Color2 from "colorjs.io";
 function getLCHFromStringAsString(str) {
   try {
     const color = new Color2(str);
     const [l, c, h_] = color.oklch;
     const h = isNaN(h_) ? 0 : h_;
-    return `lch(${fmtNum1(l * 100)}%, ${fmtNum2(c)}, ${fmtNum1(h)})`;
+    return `lch(${fmtNum1(l * 100)}% ${fmtNum2(c)} ${fmtNum1(h)})`;
   } catch (e) {
     console.error(`[\u{1F534}] getLCHFromStringAsString FAILURE (string is: "${str}")`);
     return `lch(.5 1 0)`;
@@ -7661,9 +7772,114 @@ var fmtNum1 = (n) => {
   return s.endsWith(".0") ? s.slice(0, -2) : s;
 };
 
+// src/csuite/input-string/InputStringUI.tsx
+import { observer as observer59 } from "mobx-react-lite";
+import { useState } from "react";
+var InputStringUI = observer59(function WidgetStringUI_(p) {
+  const widget = p;
+  const value = widget.getValue();
+  const isBuffered = Boolean(widget.buffered);
+  const temporaryValue = widget.buffered?.getTemporaryValue?.();
+  const isDirty = isBuffered && temporaryValue != null && temporaryValue !== value;
+  const [reveal, setReveal] = useState(false);
+  let inputTailwind;
+  let visualHelper;
+  switch (widget.type) {
+    case "color":
+      inputTailwind = "absolute w-full h-full !bg-transparent opacity-0 !p-0";
+      visualHelper = /* @__PURE__ */ jsx(
+        Frame,
+        {
+          tw: "w-full h-full flex items-center font-mono whitespace-nowrap text-[0.6rem]",
+          base: value ? value : void 0,
+          text: { contrast: 1 },
+          children: getLCHFromStringAsString(value)
+        }
+      );
+      break;
+    default:
+      inputTailwind = "w-full h-full !outline-none bg-transparent";
+      break;
+  }
+  const csuite = useCSuite();
+  return /* @__PURE__ */ jsxs(
+    Frame,
+    {
+      base: 5,
+      text: { contrast: 1, chromaBlend: 1 },
+      border: isDirty ? { contrast: 0.3, hue: knownOKLCHHues.warning, chroma: 0.2 } : { contrast: csuite.inputBorder },
+      tw: ["h-input w-full flex flex-1 items-center relative text-sm"],
+      onMouseDown: (ev) => {
+        if (ev.button == 1) {
+          const textInput = ev.currentTarget.querySelector('input[type="text"');
+          textInput.focus();
+        }
+      },
+      children: [
+        visualHelper,
+        p.icon && /* @__PURE__ */ jsx(
+          IkonOf,
+          {
+            tw: "mx-1",
+            size: "1.2rem",
+            name: typeof p.icon === "string" ? p.icon : "mdiText"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          "input",
+          {
+            tw: ["px-2", inputTailwind],
+            type: reveal ? "text" : widget.type,
+            pattern: widget.pattern,
+            placeholder: widget.placeHolder,
+            value: widget.buffered ? temporaryValue ?? value : value,
+            onChange: (ev) => {
+              if (widget.buffered)
+                widget.buffered.setTemporaryValue(ev.target.value);
+              else
+                widget.setValue(ev.currentTarget.value);
+            },
+            onDragStart: (ev) => ev.preventDefault(),
+            onFocus: (ev) => {
+              widget.buffered?.setTemporaryValue(widget.getValue() ?? "");
+              ev.currentTarget.select();
+            },
+            onBlur: () => {
+              const tempValue = widget.buffered?.getTemporaryValue?.();
+              if (tempValue != null)
+                widget.setValue(tempValue);
+            },
+            onKeyDown: (ev) => {
+              if (ev.key === "Enter") {
+                ev.currentTarget.blur();
+              } else if (ev.key === "Escape") {
+                if (!widget.buffered && temporaryValue)
+                  widget.setValue(temporaryValue);
+                widget.buffered?.setTemporaryValue(null);
+                ev.currentTarget.blur();
+              }
+            }
+          }
+        ),
+        p.type === "password" && /* @__PURE__ */ jsx(
+          Button,
+          {
+            subtle: true,
+            borderless: true,
+            icon: reveal ? "mdiEyeOff" : "mdiEye",
+            onClick: () => setReveal(!reveal),
+            tw: "mx-1 cursor-pointer",
+            square: true
+          }
+        )
+      ]
+    }
+  );
+});
+
 // src/controls/widgets/string/WidgetStringUI.tsx
-import { observer as observer54 } from "mobx-react-lite";
-var WidgetString_TextareaHeaderUI = observer54(function WidgetString_TextareaHeaderUI_(p) {
+import { observer as observer60 } from "mobx-react-lite";
+var WidgetString_TextareaHeaderUI = observer60(function WidgetString_TextareaHeaderUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
     return null;
@@ -7671,7 +7887,7 @@ var WidgetString_TextareaHeaderUI = observer54(function WidgetString_TextareaHea
     return null;
   return /* @__PURE__ */ jsx("div", { tw: "line-clamp-1 italic opacity-50", children: p.widget.value });
 });
-var WidgetString_TextareaBodyUI = observer54(function WidgetString_TextareaBodyUI_(p) {
+var WidgetString_TextareaBodyUI = observer60(function WidgetString_TextareaBodyUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
     return null;
@@ -7694,86 +7910,21 @@ var WidgetString_TextareaBodyUI = observer54(function WidgetString_TextareaBodyU
     }
   ) });
 });
-var WidgetString_HeaderUI = observer54(function WidgetStringUI_(p) {
+var WidgetString_HeaderUI = observer60(function WidgetStringUI_2(p) {
   const widget = p.widget;
-  const val = widget.value;
-  let inputTailwind;
-  let visualHelper;
-  switch (widget.config.inputType) {
-    case "color":
-      inputTailwind = "absolute w-full h-full !bg-transparent opacity-0 !p-0";
-      visualHelper = /* @__PURE__ */ jsx(
-        Frame,
-        {
-          tw: "w-full h-full text-xs flex items-center font-mono",
-          base: val ? val : void 0,
-          text: { contrast: 1 },
-          children: /* @__PURE__ */ jsx("div", { children: getLCHFromStringAsString(val) })
-        }
-      );
-      break;
-    default:
-      inputTailwind = "w-full h-full !outline-none bg-transparent";
-      break;
-  }
-  return /* @__PURE__ */ jsxs(
-    Frame,
+  const config = widget.config;
+  return /* @__PURE__ */ jsx(
+    InputStringUI,
     {
-      base: 5,
-      text: { contrast: 1, chromaBlend: 1 },
-      border: true,
-      tw: [
-        //
-        "WIDGET-FIELD",
-        "h-full w-full",
-        "flex flex-1 items-center relative",
-        "overflow-clip text-sm"
-      ],
-      onMouseDown: (ev) => {
-        if (ev.button == 1) {
-          const textInput = ev.currentTarget.querySelector('input[type="text"');
-          textInput.focus();
-        }
-      },
-      children: [
-        visualHelper,
-        /* @__PURE__ */ jsx(
-          "input",
-          {
-            tw: inputTailwind,
-            type: widget.config.inputType,
-            pattern: widget.config.pattern,
-            placeholder: widget.config.placeHolder,
-            value: widget.config.buffered ? widget.temporaryValue ?? val : val,
-            onChange: (ev) => {
-              if (widget.config.buffered)
-                widget.setTemporaryValue(ev.target.value);
-              else
-                widget.value = ev.currentTarget.value;
-            },
-            onDragStart: (ev) => ev.preventDefault(),
-            onFocus: (ev) => {
-              widget.setTemporaryValue(widget.value ?? "");
-              ev.currentTarget.select();
-            },
-            onBlur: () => {
-              if (widget.config.buffered && widget.temporaryValue != null) {
-                widget.value = widget.temporaryValue;
-              }
-            },
-            onKeyDown: (ev) => {
-              if (ev.key === "Enter") {
-                ev.currentTarget.blur();
-              } else if (ev.key === "Escape") {
-                if (!widget.config.buffered && widget.temporaryValue)
-                  widget.value = widget.temporaryValue;
-                widget.setTemporaryValue(null);
-                ev.currentTarget.blur();
-              }
-            }
-          }
-        )
-      ]
+      type: config.inputType,
+      pattern: config.pattern,
+      className: config.className,
+      getValue: () => widget.value,
+      setValue: (value) => widget.value = value,
+      buffered: widget.config.buffered ? {
+        getTemporaryValue: () => widget.temporaryValue,
+        setTemporaryValue: (value) => widget.temporaryValue = value
+      } : void 0
     }
   );
 });
@@ -8084,6 +8235,91 @@ var SimpleFormBuilder = class {
   }
 };
 
+// src/controls/Channel.ts
+import { makeAutoObservable as makeAutoObservable13 } from "mobx";
+import { nanoid as nanoid23 } from "nanoid";
+var Channel = class {
+  constructor(id = nanoid23()) {
+    this.id = id;
+    makeAutoObservable13(this);
+  }
+};
+
+// src/operators/activity/ActivityUI.tsx
+import { observer as observer61 } from "mobx-react-lite";
+import { Fragment as Fragment5 } from "react/jsx-runtime";
+var ActivityStackUI = observer61(function ActivityStackUI_(p) {
+  return /* @__PURE__ */ jsx(Fragment5, { children: activityManager._stack.map((activity, ix) => /* @__PURE__ */ jsx(
+    ActivityContainerUI,
+    {
+      stop: () => {
+        activity.onStop?.();
+        activityManager.stopCurrentActivity();
+      },
+      activity,
+      ix,
+      children: /* @__PURE__ */ jsx(
+        activity.UI,
+        {
+          activity,
+          stop: () => activityManager.stopActivity(activity)
+        }
+      )
+    },
+    activity.uid
+  )) });
+});
+var ActivityContainerUI = observer61(function ActivityContainerUI_(p) {
+  const backdropzIndex = 1e3 + 100 * (p.ix ?? 1);
+  const activityZIndex = backdropzIndex + 1;
+  let pos = void 0;
+  if (p.activity.event) {
+    const target = p.activity.event.target;
+    if (target instanceof HTMLElement) {
+      pos = computePlacement(p.activity.placement ?? "popup-lg", target.getBoundingClientRect());
+    }
+  }
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      tabIndex: -1,
+      className: "_InputBlockerUI",
+      tw: "absolute inset-0 h-full w-full pointer-events-auto",
+      onKeyUp: (ev) => {
+        if (ev.key === "Escape") {
+          console.log("Escape key pressed");
+          p.stop?.();
+        }
+      },
+      children: /* @__PURE__ */ jsxs("div", { tw: "relative w-full h-full", children: [
+        /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: "_InputBlockerUI-backdrop",
+            tw: "absolute inset-0 bg-[#000000db]",
+            style: { zIndex: backdropzIndex },
+            children: /* @__PURE__ */ jsx("div", { style: { zIndex: -1 }, tw: "absolute inset-0 z" })
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          "div",
+          {
+            tw: "absolute inset-0",
+            style: { zIndex: activityZIndex, ...pos },
+            className: "_InputBlockerUI-activity-container flex justify-center",
+            onMouseDown: (ev) => {
+              console.log("activity backref clicked");
+              if (ev.target === ev.currentTarget)
+                p.stop?.();
+            },
+            children: p.activity.shell === "popup-lg" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "max-w-lg w-fit h-fit m-8", close: () => p.stop(), title: p.activity.title, children: p.children }) : p.activity.shell === "popup-sm" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "max-w-sm w-fit h-fit m-8", close: () => p.stop(), title: p.activity.title, children: p.children }) : p.activity.shell === "popup-full" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "m-8", close: () => p.stop(), title: p.activity.title, children: p.children }) : p.children
+          }
+        )
+      ] })
+    }
+  );
+});
+
 // src/controls/SimpleForm.ts
 var SimpleFormManager = new FormManager(SimpleFormBuilder);
 export {
@@ -8091,6 +8327,8 @@ export {
   ASSERT_ARRAY,
   ASSERT_EQUAL,
   ASSERT_STRING,
+  ActivityContainerUI,
+  ActivityStackUI,
   AnimatedSizeUI,
   AspectLockButtonUI,
   AspectRatioSquareUI,
@@ -8101,17 +8339,17 @@ export {
   BoundCommandSym,
   BoundMenu,
   BoundMenuSym,
-  BoxBase,
-  BoxSubtle,
-  BoxTitle,
   Button,
+  CSuiteCtx,
+  CSuite_theme1,
+  Channel,
   ComboUI,
   Command,
   CommandContext,
   CommandManager,
   CommandSym,
+  CreatePresetUI,
   CurrentStyleCtx,
-  CushyKitCtx,
   ErrorBoundaryFallback,
   ErrorBoundaryUI,
   FAIL,
@@ -8120,6 +8358,7 @@ export {
   FormManager,
   FormUI,
   Frame,
+  FrameSubtle,
   GlobalFormCtx,
   Ikon,
   IkonOf,
@@ -8127,6 +8366,7 @@ export {
   InputBoolToggleButtonUI,
   InputBoolUI,
   InputNumberUI,
+  InputStringUI,
   JsonViewUI,
   KEYS,
   ListControlsUI,
@@ -8142,6 +8382,7 @@ export {
   MenuUI,
   MenuWithoutProps,
   MessageErrorUI,
+  MessageUI,
   ModalShellUI,
   NumberVar,
   RenderItemTitleUI,
@@ -8161,7 +8402,6 @@ export {
   SimpleMenuModal,
   SimpleSpec,
   SpacerUI,
-  ThemeCtx,
   Tree,
   TreeEntryUI,
   TreeIcon1UI,
@@ -8178,8 +8418,8 @@ export {
   WidgetChoices_SelectHeaderUI,
   WidgetChoices_TabHeaderUI,
   WidgetColorUI,
+  WidgetDebugIDUI,
   WidgetErrorsUI,
-  WidgetFieldsContainerUI,
   WidgetGroup_BlockUI,
   WidgetGroup_LineUI,
   WidgetHeaderContainerUI,
@@ -8189,6 +8429,7 @@ export {
   WidgetLabelCaretUI,
   WidgetLabelContainerUI,
   WidgetLabelIconUI,
+  WidgetLabelUI,
   WidgetList_BodyUI,
   WidgetList_LineUI,
   WidgetMardownUI,
@@ -8202,6 +8443,7 @@ export {
   WidgetSelectOneUI,
   WidgetSelectOne_SelectUI,
   WidgetSelectOne_TabUI,
+  WidgetSingleLineSummaryUI,
   WidgetSizeX_LineUI,
   WidgetSpacerUI,
   WidgetString_HeaderUI,
@@ -8235,6 +8477,7 @@ export {
   Widget_spacer_fromValue,
   Widget_string,
   Widget_string_fromValue,
+  WidgetsContainerUI,
   WigetSizeXUI,
   WigetSize_BlockUI,
   WigetSize_LineUI,
@@ -8252,7 +8495,6 @@ export {
   compileKolorToCSSExpression,
   computePlacement,
   debounce,
-  defaultDarkTheme,
   defaultHideDelay_whenNested,
   defaultHideDelay_whenRoot,
   defaultShowDelay_whenNested,
@@ -8282,11 +8524,13 @@ export {
   isBoundMenu,
   isCommand,
   isPromise,
+  isSameOKLCH,
   isWidget,
   isWidgetGroup,
   isWidgetOptional,
   isWidgetShared,
   isWidgetString,
+  knownOKLCHHues,
   makeAutoObservableInheritance,
   makeLabelFromFieldName,
   menu,
@@ -8309,12 +8553,10 @@ export {
   toastInfo,
   toastSuccess,
   unaccent,
-  useCushyKit,
-  useCushyKitOrNull,
+  useCSuite,
   usePressLogic,
   useReveal,
   useRevealOrNull,
   useSizeOf,
-  useTheme,
   useTreeView
 };
