@@ -34,25 +34,25 @@ export const InputStringUI = observer(function WidgetStringUI_(p: {
     /** text pattern */
     pattern?: Widget_string_config['pattern']
 
+    autofocus?: boolean
+
     /** input placeholder */
-    placeHolder?: string
+    placeholder?: string
 
     // styling -------------------
     className?: string
     style?: CSSProperties
 }) {
-    const widget = p
-
-    const value = widget.getValue()
-    const isBuffered = Boolean(widget.buffered)
-    const temporaryValue = widget.buffered?.getTemporaryValue?.()
+    const value = p.getValue()
+    const isBuffered = Boolean(p.buffered)
+    const temporaryValue = p.buffered?.getTemporaryValue?.()
     const isDirty = isBuffered && temporaryValue != null && temporaryValue !== value
 
     const [reveal, setReveal] = useState(false)
     let inputTailwind: string | ClassLike[] | undefined
     let visualHelper: ReactElement<any, any> | undefined
 
-    switch (widget.type) {
+    switch (p.type) {
         case 'color':
             inputTailwind = 'absolute w-full h-full !bg-transparent opacity-0 !p-0'
             visualHelper = (
@@ -97,32 +97,33 @@ export const InputStringUI = observer(function WidgetStringUI_(p: {
             )}
             <input
                 tw={['px-2', inputTailwind]}
-                type={reveal ? 'text' : widget.type}
-                pattern={widget.pattern}
-                placeholder={widget.placeHolder}
-                value={widget.buffered ? temporaryValue ?? value : value}
+                type={reveal ? 'text' : p.type}
+                pattern={p.pattern}
+                placeholder={p.placeholder}
+                autoFocus={p.autofocus}
+                value={p.buffered ? temporaryValue ?? value : value}
                 onChange={(ev) => {
-                    if (widget.buffered) widget.buffered.setTemporaryValue(ev.target.value)
-                    else widget.setValue(ev.currentTarget.value)
+                    if (p.buffered) p.buffered.setTemporaryValue(ev.target.value)
+                    else p.setValue(ev.currentTarget.value)
                 }}
                 /* Prevents drag n drop of selected text, so selecting is easier. */
                 onDragStart={(ev) => ev.preventDefault()}
                 onFocus={(ev) => {
-                    widget.buffered?.setTemporaryValue(widget.getValue() ?? '')
+                    p.buffered?.setTemporaryValue(p.getValue() ?? '')
                     ev.currentTarget.select()
                 }}
                 onBlur={() => {
                     // need to be deferenced here because of how it's called in
                     // the onKeyDown handler a few lines below
-                    const tempValue = widget.buffered?.getTemporaryValue?.()
-                    if (tempValue != null) widget.setValue(tempValue)
+                    const tempValue = p.buffered?.getTemporaryValue?.()
+                    if (tempValue != null) p.setValue(tempValue)
                 }}
                 onKeyDown={(ev) => {
                     if (ev.key === 'Enter') {
                         ev.currentTarget.blur()
                     } else if (ev.key === 'Escape') {
-                        if (!widget.buffered && temporaryValue) widget.setValue(temporaryValue)
-                        widget.buffered?.setTemporaryValue(null)
+                        if (!p.buffered && temporaryValue) p.setValue(temporaryValue)
+                        p.buffered?.setTemporaryValue(null)
                         ev.currentTarget.blur()
                     }
                 }}

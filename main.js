@@ -58,22 +58,25 @@ function getLCHFromString(str) {
 }
 
 // src/csuite/box/BoxNormalized.tsx
-function extractNormalizeBox(box) {
-  return {
-    base: normalizeBoxKolor(box.base),
-    hover: normalizeBoxKolor(box.hover),
-    // ----------
-    base_: normalizeBoxKolor(box.base_),
-    text: normalizeBoxKolor(box.text),
-    textShadow: normalizeBoxKolor(box.textShadow),
-    shadow: normalizeBoxKolor(box.shadow),
-    border: normalizeBoxKolor(box.border)
-    //
-  };
+function normalizeBox(box) {
+  const out = {};
+  if (box.base)
+    out.base = _normalizeKolor(box.base);
+  if (box.hover)
+    out.hover = _normalizeKolor(box.hover);
+  if (box.shock)
+    out.shock = _normalizeKolor(box.shock);
+  if (box.text)
+    out.text = _normalizeKolor(box.text);
+  if (box.textShadow)
+    out.textShadow = _normalizeKolor(box.textShadow);
+  if (box.shadow)
+    out.shadow = _normalizeKolor(box.shadow);
+  if (box.border)
+    out.border = _normalizeKolor(box.border);
+  return out;
 }
-function normalizeBoxKolor(kolor) {
-  if (kolor == null)
-    return null;
+function _normalizeKolor(kolor) {
   if (typeof kolor === "boolean")
     return { contrast: kolor ? (
       /* 0.2 */
@@ -85,111 +88,6 @@ function normalizeBoxKolor(kolor) {
     return getLCHFromString(kolor);
   return kolor;
 }
-
-// src/csuite/tinyCSS/CSSVar.tsx
-import { computed, makeObservable, observable } from "mobx";
-var NumberVar = class {
-  constructor(name, value_) {
-    this.name = name;
-    this.value_ = value_;
-    makeObservable(this, { value_: observable, value: computed });
-  }
-  get value() {
-    return this.value_ instanceof Function ? this.value_() : this.value_;
-  }
-  toString() {
-    return `var(--${this.name})`;
-  }
-};
-function getNum(a, def) {
-  if (a == null)
-    return def;
-  return typeof a === "number" ? a : a.value;
-}
-
-// src/csuite/kolor/applyRelative.tsx
-var applyKolorToOKLCH = (a, b) => {
-  if (b == null)
-    return a;
-  const lightness = getNum(b.lightness) ?? _autoContrast(a.lightness, getNum(b.contrast, 0));
-  const chroma = getNum(b.chroma) ?? a.chroma * getNum(b.chromaBlend, 1);
-  const hue = getNum(b.hue) ?? a.hue + getNum(b.hueShift, 0);
-  return { lightness, chroma: clamp(chroma, 0, 0.4), hue };
-};
-function _autoContrast(lightness, contrast) {
-  const start = lightness;
-  const dir = Math.sign(0.5 - lightness - 1e-5);
-  const final = start + dir * contrast;
-  return clamp(final, 0, 1);
-}
-
-// src/csuite/kolor/overrideKolor.tsx
-var overrideKolor = (a, b) => {
-  if (a == null && b == null)
-    return null;
-  if (a == null)
-    return b;
-  if (b == null)
-    return a;
-  let out = {};
-  if (b.lightness != null)
-    out.lightness = b.lightness;
-  else if (b.contrast != null)
-    out.contrast = b.contrast;
-  else if (a.lightness != null)
-    out.lightness = a.lightness;
-  else if (a.contrast != null)
-    out.contrast = a.contrast;
-  if (b.chroma != null)
-    out.chroma = b.chroma;
-  else if (b.chromaBlend != null)
-    out.chromaBlend = b.chromaBlend;
-  else if (a.chroma != null)
-    out.chroma = a.chroma;
-  else if (a.chromaBlend != null)
-    out.chromaBlend = a.chromaBlend;
-  if (b.hue != null)
-    out.hue = b.hue;
-  else if (b.hueShift != null)
-    out.hueShift = b.hueShift;
-  else if (a.hue != null)
-    out.hue = a.hue;
-  else if (a.hueShift != null)
-    out.hueShift = a.hueShift;
-  return out;
-};
-
-// src/csuite/box/compileBoxClassName.tsx
-var applyBoxToCtx = (ctx, box) => {
-  const nextBase = applyKolorToOKLCH(ctx.base, box.base);
-  const nextBaseH = applyKolorToOKLCH(nextBase, box.hover);
-  const nextLightness = nextBase.lightness;
-  const nextext = overrideKolor(ctx.text, box.text);
-  const nextDir = ctx.dir === 1 && nextLightness > 0.7 ? -1 : ctx.dir === -1 && nextLightness < 0.45 ? 1 : ctx.dir;
-  return {
-    dir: nextDir,
-    base: nextBase,
-    baseH: nextBaseH,
-    text: nextext
-  };
-};
-var hashKolor = (k, dir) => {
-  let out = [];
-  const sign = dir === 1 ? "p" : "m";
-  if (k.lightness)
-    out.push(`l${k.lightness}`);
-  else if (k.contrast)
-    out.push(`l${sign}${k.contrast}`);
-  if (k.chroma)
-    out.push(`c${k.chroma}`);
-  else if (k.chromaBlend)
-    out.push(`c${sign}${k.chromaBlend}`);
-  if (k.hue)
-    out.push(`h${k.hue}`);
-  else if (k.hueShift)
-    out.push(`h${sign}${k.hueShift}`);
-  return `${out.join("_")}`;
-};
 
 // src/csuite/box/CurrentStyleCtx.tsx
 import { createContext } from "react";
@@ -248,13 +146,49 @@ var usePressLogic = (p, value) => {
 // src/csuite/icons/icons.ts
 import * as icons from "@mdi/js";
 var myCustomIcons = {
-  cdiTest: "M 2.40,7.20 A 20,20 0,0,1 12.00,7.20 A 20,20 0,0,1 21.60,7.20 Q 21.60,14.40 12.00,21.60 Q 2.40,14.40 2.40,7.20 z"
+  // semantic stuff ----------------------------------------------------------------
+  _missedCall: icons.mdiPhoneMissed,
+  _transferredCall: icons.mdiPhoneInTalk,
+  _close: icons.mdiClose,
+  _clear: icons.mdiClose,
+  _check: icons.mdiCheck,
+  _edit: icons.mdiPencil,
+  // grid
+  _gridFilter: icons.mdiFilterOutline,
+  _gridSortedAsc: icons.mdiArrowUp,
+  _gridSortedDesc: icons.mdiArrowDown,
+  _gridGroupBy: icons.mdiViewGrid,
+  // features
+  _webchat: icons.mdiChatProcessing,
+  // cushy -------------------------------------------------------------------------
+  cdiTest: "M 2.40,7.20 A 20,20 0,0,1 12.00,7.20 A 20,20 0,0,1 21.60,7.20 Q 21.60,14.40 12.00,21.60 Q 2.40,14.40 2.40,7.20 z",
+  cdiDraft: icons.mdiPencil,
+  cdiApp: icons.mdiAbacus,
+  cdiStep: icons.mdiAccessPoint,
+  cdiPreset: icons.mdiAccessPoint,
+  // AI stuff goes there
+  // ....
+  // locomotive ---------------------------------------------------------------------
+  ldiRegularStar: "M11.049 2.92664C11.3483 2.00537 12.6517 2.00538 12.951 2.92664L14.4699 7.60055C14.6038 8.01254 14.9877 8.29148 15.4209 8.29149L20.3354 8.29168C21.3041 8.29172 21.7068 9.53127 20.9232 10.1007L16.9474 12.9895C16.5969 13.2441 16.4503 13.6955 16.5841 14.1075L18.1026 18.7815C18.4019 19.7028 17.3475 20.4689 16.5638 19.8995L12.5878 17.011C12.2373 16.7564 11.7627 16.7564 11.4122 17.011L7.43622 19.8995C6.65252 20.4689 5.5981 19.7028 5.8974 18.7815L7.41589 14.1075C7.54974 13.6955 7.40309 13.2441 7.05263 12.9895L3.07683 10.1007C2.29317 9.53127 2.69592 8.29172 3.66461 8.29168L8.57911 8.29149C9.01231 8.29148 9.39623 8.01254 9.53011 7.60055L11.049 2.92664Z",
+  ldiRegularStatusOnline: "M5.63604 18.3646C2.12132 14.8499 2.12132 9.15144 5.63604 5.63672M18.364 5.63672C21.8787 9.15144 21.8787 14.8499 18.364 18.3646M8.46447 15.5362C6.51184 13.5836 6.51184 10.4178 8.46447 8.46515M15.5355 8.46515C17.4882 10.4178 17.4882 13.5836 15.5355 15.5362M13 12.0007C13 12.553 12.5523 13.0007 12 13.0007C11.4477 13.0007 11 12.553 11 12.0007C11 11.4484 11.4477 11.0007 12 11.0007C12.5523 11.0007 13 11.4484 13 12.0007Z",
+  ldiRegularUser: "M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z",
+  ldiSolidArchive: "M4 3C2.89543 3 2 3.89543 2 5C2 6.10457 2.89543 7 4 7H16C17.1046 7 18 6.10457 18 5C18 3.89543 17.1046 3 16 3H4Z M3 8H17V15C17 16.1046 16.1046 17 15 17H5C3.89543 17 3 16.1046 3 15V8ZM8 11C8 10.4477 8.44772 10 9 10H11C11.5523 10 12 10.4477 12 11C12 11.5523 11.5523 12 11 12H9C8.44772 12 8 11.5523 8 11Z",
+  ldiSolidArrowNarrowUp: "M5.29289 7.70711C4.90237 7.31658 4.90237 6.68342 5.29289 6.29289L9.2929 2.29289C9.68342 1.90237 10.3166 1.90237 10.7071 2.29289L14.7071 6.29289C15.0976 6.68342 15.0976 7.31658 14.7071 7.70711C14.3166 8.09763 13.6834 8.09763 13.2929 7.70711L11 5.41421L11 17C11 17.5523 10.5523 18 10 18C9.44772 18 9 17.5523 9 17L9 5.41421L6.70711 7.70711C6.31658 8.09763 5.68342 8.09763 5.29289 7.70711Z",
+  ldiSolidArrowUp: "M3.29289 9.70711C2.90237 9.31658 2.90237 8.68342 3.29289 8.29289L9.29289 2.29289C9.68342 1.90237 10.3166 1.90237 10.7071 2.29289L16.7071 8.29289C17.0976 8.68342 17.0976 9.31658 16.7071 9.70711C16.3166 10.0976 15.6834 10.0976 15.2929 9.70711L11 5.41421L11 17C11 17.5523 10.5523 18 10 18C9.44772 18 9 17.5523 9 17L9 5.41421L4.70711 9.70711C4.31658 10.0976 3.68342 10.0976 3.29289 9.70711Z",
+  ldiSolidChevronDown: "M5.29289 7.29289C5.68342 6.90237 6.31658 6.90237 6.7071 7.29289L9.99999 10.5858L13.2929 7.29289C13.6834 6.90237 14.3166 6.90237 14.7071 7.29289C15.0976 7.68342 15.0976 8.31658 14.7071 8.70711L10.7071 12.7071C10.3166 13.0976 9.68341 13.0976 9.29289 12.7071L5.29289 8.70711C4.90237 8.31658 4.90237 7.68342 5.29289 7.29289Z",
+  ldiSolidChevronUp: "M14.7071 12.7071C14.3166 13.0976 13.6834 13.0976 13.2929 12.7071L10 9.41421L6.70711 12.7071C6.31658 13.0976 5.68342 13.0976 5.29289 12.7071C4.90237 12.3166 4.90237 11.6834 5.29289 11.2929L9.29289 7.29289C9.68342 6.90237 10.3166 6.90237 10.7071 7.29289L14.7071 11.2929C15.0976 11.6834 15.0976 12.3166 14.7071 12.7071Z",
+  ldiSolidFilter: "M3 3C3 2.44772 3.44772 2 4 2H16C16.5523 2 17 2.44772 17 3V6C17 6.26522 16.8946 6.51957 16.7071 6.70711L12 11.4142V15C12 15.2652 11.8946 15.5196 11.7071 15.7071L9.70711 17.7071C9.42111 17.9931 8.99099 18.0787 8.61732 17.9239C8.24364 17.7691 8 17.4045 8 17V11.4142L3.29289 6.70711C3.10536 6.51957 3 6.26522 3 6V3Z",
+  ldiSolidFolder: "M2 6C2 4.89543 2.89543 4 4 4H9L11 6H16C17.1046 6 18 6.89543 18 8V14C18 15.1046 17.1046 16 16 16H4C2.89543 16 2 15.1046 2 14V6Z",
+  ldiSolidPencil: "M13.5858 3.58579C14.3668 2.80474 15.6332 2.80474 16.4142 3.58579C17.1953 4.36683 17.1953 5.63316 16.4142 6.41421L15.6213 7.20711L12.7929 4.37868L13.5858 3.58579Z M11.3787 5.79289L3 14.1716V17H5.82842L14.2071 8.62132L11.3787 5.79289Z",
+  ldiSolidPhone: "M2 3C2 2.44772 2.44772 2 3 2H5.15287C5.64171 2 6.0589 2.35341 6.13927 2.8356L6.87858 7.27147C6.95075 7.70451 6.73206 8.13397 6.3394 8.3303L4.79126 9.10437C5.90756 11.8783 8.12168 14.0924 10.8956 15.2087L11.6697 13.6606C11.866 13.2679 12.2955 13.0492 12.7285 13.1214L17.1644 13.8607C17.6466 13.9411 18 14.3583 18 14.8471V17C18 17.5523 17.5523 18 17 18H15C7.8203 18 2 12.1797 2 5V3Z",
+  ldiSolidSearch: "M8 4C5.79086 4 4 5.79086 4 8C4 10.2091 5.79086 12 8 12C10.2091 12 12 10.2091 12 8C12 5.79086 10.2091 4 8 4ZM2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8C14 9.29583 13.5892 10.4957 12.8907 11.4765L17.7071 16.2929C18.0976 16.6834 18.0976 17.3166 17.7071 17.7071C17.3166 18.0976 16.6834 18.0976 16.2929 17.7071L11.4765 12.8907C10.4957 13.5892 9.29583 14 8 14C4.68629 14 2 11.3137 2 8Z",
+  ldiSolidStar: "M7.49288 0.76784C7.88896 0.0878043 8.87138 0.0878028 9.26747 0.767838L11.2236 4.12633C11.3687 4.37544 11.6118 4.55208 11.8936 4.6131L15.6922 5.43567C16.4613 5.60223 16.7649 6.53657 16.2406 7.12341L13.6509 10.0216C13.4589 10.2366 13.366 10.5224 13.395 10.8092L13.7865 14.6761C13.8658 15.4591 13.071 16.0365 12.3509 15.7192L8.79424 14.1519C8.53043 14.0357 8.22991 14.0357 7.9661 14.1519L4.40948 15.7192C3.68932 16.0365 2.89453 15.4591 2.9738 14.6761L3.36532 10.8092C3.39436 10.5224 3.30149 10.2366 3.10941 10.0216L0.51978 7.12341C-0.00457591 6.53657 0.299008 5.60223 1.06816 5.43567L4.86676 4.6131C5.14851 4.55208 5.39164 4.37544 5.53673 4.12633L7.49288 0.76784Z",
+  ldiSolidX: "M4.29289 4.29289C4.68342 3.90237 5.31658 3.90237 5.70711 4.29289L10 8.58579L14.2929 4.29289C14.6834 3.90237 15.3166 3.90237 15.7071 4.29289C16.0976 4.68342 16.0976 5.31658 15.7071 5.70711L11.4142 10L15.7071 14.2929C16.0976 14.6834 16.0976 15.3166 15.7071 15.7071C15.3166 16.0976 14.6834 16.0976 14.2929 15.7071L10 11.4142L5.70711 15.7071C5.31658 16.0976 4.68342 16.0976 4.29289 15.7071C3.90237 15.3166 3.90237 14.6834 4.29289 14.2929L8.58579 10L4.29289 5.70711C3.90237 5.31658 3.90237 4.68342 4.29289 4.29289Z"
 };
 var allIcons = {
   ...icons,
   ...myCustomIcons
 };
-var getAllIcons = () => Object.keys(icons);
 
 // src/csuite/icons/iconHelpers.tsx
 import IconA from "@mdi/react";
@@ -309,24 +243,55 @@ var Ikon = new Proxy({}, {
     return target[key] = (p) => /* @__PURE__ */ jsx(Icon, { path: allIcons[key], size: "1.1em", ...p });
   }
 });
-var IkonOf = function IkonOf_({ name, ...p }) {
+var IkonOf = function IkonOf_({ name, size, ...p }) {
   return /* @__PURE__ */ jsx(
     Icon,
     {
       path: allIcons[name],
-      size: "1.1em",
+      size: size ?? "1.1em",
       ...p
     }
   );
 };
 
-// src/csuite/kolor/compileKolorToCSSExpression.tsx
-var compileKolorToCSSExpression = (from, kolor) => {
-  const l = kolor.lightness != null ? kolor.lightness : kolor.contrast ? `calc(l + ${kolor.contrast} * var(--DIR))` : "l";
-  const c = kolor.chroma != null ? kolor.chroma : kolor.chromaBlend ? `calc(c * ${kolor.chromaBlend})` : "c";
-  const h = kolor.hue != null ? kolor.hue : kolor.hueShift ? `calc(l + ${kolor.hueShift})` : "h";
-  return `oklch(from var(--${from}) ${l} ${c} ${h})`;
+// src/csuite/tinyCSS/CSSVar.tsx
+import { computed, makeObservable, observable } from "mobx";
+var NumberVar = class {
+  constructor(name, value_) {
+    this.name = name;
+    this.value_ = value_;
+    makeObservable(this, { value_: observable, value: computed });
+  }
+  get value() {
+    return this.value_ instanceof Function ? this.value_() : this.value_;
+  }
+  toString() {
+    return `var(--${this.name})`;
+  }
 };
+function getNum(a, def) {
+  if (a == null)
+    return def;
+  if (a instanceof NumberVar)
+    return getNum(a.value);
+  return a;
+}
+
+// src/csuite/kolor/applyRelative.tsx
+var applyKolorToOKLCH = (a, b) => {
+  if (b == null)
+    return a;
+  const lightness = getNum(b.lightness) ?? _autoContrast(a.lightness, getNum(b.contrast, 0));
+  const chroma = getNum(b.chroma) ?? a.chroma * getNum(b.chromaBlend, 1);
+  const hue = getNum(b.hue) ?? a.hue + getNum(b.hueShift, 0);
+  return { lightness, chroma: clamp(chroma, 0, 0.4), hue };
+};
+function _autoContrast(lightness, contrast) {
+  const start = lightness;
+  const dir = Math.sign(0.5 - lightness - 1e-5);
+  const final = start + dir * contrast;
+  return clamp(final, 0, 1);
+}
 
 // src/csuite/kolor/formatOKLCH.tsx
 function formatOKLCH(col) {
@@ -347,6 +312,42 @@ var isSameOKLCH = (a, b) => {
   return true;
 };
 
+// src/csuite/kolor/overrideKolor.tsx
+var overrideKolor = (a, b) => {
+  if (a == null && b == null)
+    return {};
+  if (a == null)
+    return b;
+  if (b == null)
+    return a;
+  let out = {};
+  if (b.lightness != null)
+    out.lightness = b.lightness;
+  else if (b.contrast != null)
+    out.contrast = b.contrast;
+  else if (a.lightness != null)
+    out.lightness = a.lightness;
+  else if (a.contrast != null)
+    out.contrast = a.contrast;
+  if (b.chroma != null)
+    out.chroma = b.chroma;
+  else if (b.chromaBlend != null)
+    out.chromaBlend = b.chromaBlend;
+  else if (a.chroma != null)
+    out.chroma = a.chroma;
+  else if (a.chromaBlend != null)
+    out.chromaBlend = a.chromaBlend;
+  if (b.hue != null)
+    out.hue = b.hue;
+  else if (b.hueShift != null)
+    out.hueShift = b.hueShift;
+  else if (a.hue != null)
+    out.hue = a.hue;
+  else if (a.hueShift != null)
+    out.hueShift = a.hueShift;
+  return out;
+};
+
 // src/csuite/tinyCSS/compileOrRetrieveClassName.tsx
 var knownRules = /* @__PURE__ */ new Set();
 var hasRule = (selector) => knownRules.has(selector);
@@ -355,7 +356,8 @@ function addRule(selector, block = "") {
   const rules = styleSheet.cssRules;
   if (rules == null)
     throw new Error("\u274C no rules");
-  console.log(`[\u{1F3DB}\uFE0F] add ${knownRules.size}th rule (no check)`, selector, knownRules.has(selector));
+  if (knownRules.size > 0 && knownRules.size % 100 === 0)
+    console.log(`[\u{1F3DB}\uFE0F] ${knownRules.size}th rule added`, selector, knownRules.has(selector));
   knownRules.add(selector);
   const index = styleSheet.insertRule(`${selector} {${block}}`, styleSheet.cssRules.length);
   return styleSheet.cssRules[index];
@@ -374,88 +376,97 @@ function getStyleElement() {
   return _styleElement;
 }
 
-// src/utils/misc/exhaust.ts
-var exhaust = (x) => x;
-
-// src/csuite/frame/FrameSize.tsx
-function getClassNameForSize(p) {
-  if (p.square) {
-    if (p.size === "input")
-      return `h-input w-input text-sm`;
-    if (p.size === "xs")
-      return "w-6  h-6";
-    if (p.size === "sm")
-      return "w-8  h-8";
-    if (p.size === "md")
-      return "w-10 h-10";
-    if (p.size === "lg")
-      return "w-12 h-12";
-    if (p.size === "xl")
-      return "w-14 h-14";
-    if (p.size == null)
-      return;
-    exhaust(p.size);
-  } else {
-    if (p.size === "input")
-      return `line-height-[1.1em] h-input text-sm`;
-    if (p.size === "xs")
-      return "line-height-[1.1em] text-xs px-0.5 py-0.5";
-    if (p.size === "sm")
-      return "line-height-[1.1em] text-sm px-1   py-1  ";
-    if (p.size === "md")
-      return "line-height-[1.1em]         px-2   py-1  ";
-    if (p.size === "lg")
-      return "line-height-[1.1em] text-lg px-4   py-2  ";
-    if (p.size === "xl")
-      return "line-height-[1.1em] text-xl px-8   py-8  ";
-    if (p.size == null)
-      return;
-    exhaust(p.size);
-  }
-  return "";
-}
+// src/csuite/tinyCSS/quickClass.ts
+import { createHash } from "crypto";
+import { customAlphabet } from "nanoid";
+var mkClassName = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 8);
+var cache = {};
+var compileOrRetrieveClassName = (appearance) => {
+  const vals = JSON.stringify(appearance);
+  const hash = createHash("md5").update(vals).digest("hex");
+  if (hash in cache)
+    return cache[hash];
+  const className = "box-" + mkClassName();
+  const cssBlock = Object.entries(appearance).map(([key, val]) => {
+    if (val == null)
+      return "";
+    return `${key}: ${val};`;
+  }).join("\n");
+  addRule(`.${className}`, cssBlock);
+  cache[hash] = className;
+  return className;
+};
 
 // src/csuite/frame/FrameTemplates.ts
-var frame_ghost = extractNormalizeBox({
+var frame_ghost = normalizeBox({
   textShadow: 100,
   border: 10,
   base: 0
 });
-var frame_subtle = extractNormalizeBox({
+var frame_subtle = normalizeBox({
   textShadow: 100,
   border: 0.05,
   base: 0
 });
-var frame_default = extractNormalizeBox({
+var frame_default = normalizeBox({
   textShadow: 100,
   border: 0.25,
   base: 0.2
 });
-var frame_link = extractNormalizeBox({
+var frame_link = normalizeBox({
   border: 0,
   text: { hue: 220, chroma: 0.3, contrast: 0.4 }
 });
-var frame_primary = extractNormalizeBox({
+var frame_primary = normalizeBox({
   textShadow: 100,
   base: { contrast: 0.1, chroma: 0.1 },
   border: 0.1
 });
-var frame_secondary = extractNormalizeBox({
+var frame_primarySuccess = normalizeBox({
+  textShadow: 100,
+  base: { contrast: 1, chroma: 0.1, hue: 135 },
+  border: 0.1
+});
+var frame_primaryWarning = normalizeBox({
+  textShadow: 100,
+  base: { contrast: 0.1, chroma: 0.1, hue: 60 },
+  border: 0.1
+});
+var frame_primaryInfo = normalizeBox({
+  textShadow: 100,
+  base: { contrast: 0.1, chroma: 0.1, hue: 240 },
+  border: 0.1
+});
+var frame_primaryError = normalizeBox({
+  textShadow: 100,
+  base: { contrast: 0.1, chroma: 0.1, hue: 0 },
+  border: 0.1
+});
+var frame_secondary = normalizeBox({
   border: 0.3,
   base: { contrast: 0.3, chroma: 0.2, hueShift: 180 }
 });
-var frames = {
+var frameTemplates = {
   link: frame_link,
   ghost: frame_ghost,
   subtle: frame_subtle,
   default: frame_default,
   primary: frame_primary,
+  success: frame_primarySuccess,
+  info: frame_primaryInfo,
+  warning: frame_primaryWarning,
+  error: frame_primaryError,
   secondary: frame_secondary
 };
+var frameTemplateNames = Object.keys(frameTemplates);
 
 // src/csuite/frame/Frame.tsx
 import { observer } from "mobx-react-lite";
-import { forwardRef, useContext } from "react";
+import { forwardRef, useContext, useState } from "react";
+var frameMode = 1 - 1 === 1 ? "STYLE" : "CLASSNAME";
+var configureFrameEngine = (mode) => {
+  frameMode = mode;
+};
 var Frame = observer(
   forwardRef(function Frame_(p, ref) {
     const {
@@ -463,12 +474,12 @@ var Frame = observer(
       disabled,
       // built-in state & style modifiers
       icon,
+      iconSize,
       suffixIcon,
       loading,
       // addons
       expand,
       square,
-      /* inline, */
       size,
       // size
       look,
@@ -486,36 +497,37 @@ var Frame = observer(
       triggerOnPress,
       style,
       className,
+      tooltip,
       ...rest
     } = p;
-    const box = extractNormalizeBox(p);
+    const box = normalizeBox(p);
+    const [hovered, setHovered] = useState(false);
+    let realBase = hovered ? box.hover ?? box.base : box.base;
     if (look != null) {
-      const template = frames[look];
+      const template = frameTemplates[look];
       if (template.base)
-        box.base = overrideKolor(template.base, box.base);
+        realBase = overrideKolor(template.base, realBase);
       if (template.border)
         box.border = overrideKolor(template.border, box.border);
       if (template.text)
         box.text = overrideKolor(template.text, box.text);
     }
-    const isDisabled = disabled || false;
-    if (isDisabled) {
+    if (disabled) {
       box.text = { contrast: 0.1 };
-      box.base = { contrast: 0 };
-      box.border = null;
+      realBase = { contrast: 0 };
     }
     if (active) {
       box.border = { contrast: 0.5 };
       box.text = { contrast: 0.9 };
     }
     const prevCtx = useContext(CurrentStyleCtx);
-    const nextBase = applyKolorToOKLCH(prevCtx.base, box.base);
+    const nextBase = applyKolorToOKLCH(prevCtx.base, realBase);
     const nextBaseH = applyKolorToOKLCH(nextBase, box.hover);
-    const nextLightness = nextBase.lightness;
     const nextext = overrideKolor(prevCtx.text, box.text);
-    const goingTooDark = prevCtx.dir === 1 && nextLightness > 0.7;
-    const goingTooLight = prevCtx.dir === -1 && nextLightness < 0.45;
-    const nextDir = goingTooDark ? -1 : goingTooLight ? 1 : prevCtx.dir;
+    const nextLightness = nextBase.lightness;
+    const _goingTooDark = prevCtx.dir === 1 && nextLightness > 0.7;
+    const _goingTooLight = prevCtx.dir === -1 && nextLightness < 0.45;
+    const nextDir = _goingTooDark ? -1 : _goingTooLight ? 1 : prevCtx.dir;
     const variables = {};
     if (!isSameOKLCH(prevCtx.base, nextBase))
       variables["--KLR"] = formatOKLCH(nextBase);
@@ -524,51 +536,41 @@ var Frame = observer(
     if (nextDir !== prevCtx.dir)
       variables["--DIR"] = nextDir.toString();
     const classes = [];
-    if (box.base_) {
-      const clsName = "bg" + hashKolor(box.base_, nextDir);
-      const selector = `.${CSS.escape(clsName)}`;
-      if (!hasRule(selector))
-        addRule(`.${CSS.escape(clsName)}`, `background: ${compileKolorToCSSExpression("KLR", box.base_)};`);
-      classes.push(clsName);
-    }
+    if (box.shock)
+      variables.background = formatOKLCH(applyKolorToOKLCH(nextBase, box.shock));
+    else
+      variables.background = formatOKLCH(nextBase);
     const boxText = box.text ?? prevCtx.text;
-    if (boxText) {
-      const clsName = "text" + hashKolor(boxText, nextDir);
-      const selector = `.${CSS.escape(clsName)}`;
-      if (!hasRule(selector))
-        addRule(selector, `color: ${compileKolorToCSSExpression("KLR", boxText)};`);
-      classes.push(clsName);
-    }
-    if (box.textShadow) {
-      const clsName = "textShadow" + hashKolor(box.textShadow, nextDir);
-      const selector = `.${CSS.escape(clsName)}`;
-      if (!hasRule(selector))
-        addRule(selector, `text-shadow: 0px 0px 2px ${compileKolorToCSSExpression("KLR", box.textShadow)};`);
-      classes.push(clsName);
-    }
-    if (box.border) {
-      const clsName = "border" + hashKolor(box.border, nextDir);
-      const selector = `.${CSS.escape(clsName)}`;
-      if (!hasRule(selector))
-        addRule(selector, `border: 1px solid ${compileKolorToCSSExpression("KLR", box.border)};`);
-      classes.push(clsName);
+    if (boxText)
+      variables.color = formatOKLCH(applyKolorToOKLCH(nextBase, boxText));
+    if (box.textShadow)
+      variables.textShadow = `0px 0px 2px ${formatOKLCH(applyKolorToOKLCH(nextBase, box.textShadow))}`;
+    if (box.border)
+      variables.border = `1px solid ${formatOKLCH(applyKolorToOKLCH(nextBase, box.border))}`;
+    let _onMouseOver = void 0;
+    let _onMouseOut = void 0;
+    if (p.hover) {
+      _onMouseOver = () => setHovered(true);
+      _onMouseOut = () => setHovered(false);
     }
     return /* @__PURE__ */ jsx(
       "div",
       {
-        ...rest,
         ref,
+        title: tooltip,
+        onMouseOver: _onMouseOver,
+        onMouseOut: _onMouseOut,
         tw: [
-          //
-          "BOX",
-          look && `box-${look}`,
+          "box",
+          frameMode === "CLASSNAME" ? compileOrRetrieveClassName(variables) : void 0,
+          size && `box-${size}`,
+          square && `box-square`,
           loading && "relative",
-          getClassNameForSize(p),
           expand && "flex-1",
           ...classes,
           className
         ],
-        style: { ...style, ...variables },
+        style: frameMode === "CLASSNAME" ? style : { ...style, ...variables },
         ...rest,
         ...triggerOnPress != null ? usePressLogic({ onMouseDown, onMouseEnter, onClick }, triggerOnPress.startingState) : { onMouseDown, onMouseEnter, onClick },
         children: /* @__PURE__ */ jsxs(
@@ -581,9 +583,9 @@ var Frame = observer(
               text: nextext
             },
             children: [
-              icon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none flex-none", name: icon }),
+              icon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none flex-none", name: icon, size: iconSize }),
               p.children,
-              suffixIcon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none", name: suffixIcon }),
+              suffixIcon && /* @__PURE__ */ jsx(IkonOf, { tw: "pointer-events-none", name: suffixIcon, size: iconSize }),
               loading && /* @__PURE__ */ jsx("div", { tw: "loading loading-spinner absolute loading-sm self-center justify-self-center" })
             ]
           }
@@ -601,14 +603,14 @@ var Button = observer2(function Button_(p) {
   const uist = useMemo(() => new ButtonState(p), []);
   runInAction(() => uist.props = p);
   useEffect(() => uist.release, []);
-  const { size, look, onClick, ...rest } = p;
+  const { size, look, subtle, borderless, onClick, ...rest } = p;
   return /* @__PURE__ */ jsx(
     Frame,
     {
       size: size ?? "input",
       look,
-      base: p.subtle ? 0 : uist.running ? 10 : 5,
-      border: p.borderless ? 0 : 10,
+      base: subtle ? 0 : uist.running ? 10 : 5,
+      border: borderless ? 0 : 10,
       hover: p.disabled ? false : 3,
       active: uist.visuallyActive,
       disabled: p.disabled,
@@ -762,7 +764,7 @@ var FormUI = observer6(function FormUI_(p) {
     return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: "form.root is null" });
   const submitAction = p.submitAction;
   return /* @__PURE__ */ jsxs(Frame, { ...p.theme, className: p.className, style: p.style, children: [
-    form.root.ui(),
+    form.root.renderWithLabel(),
     p.submitButton ?? (submitAction == null ? null : submitAction === "confetti" ? /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(
       Button,
       {
@@ -1287,8 +1289,24 @@ var FormAsDropdownConfigUI = observer9(function FormAsDropdownConfigUI_(p) {
     RevealUI,
     {
       title: p.title,
-      content: () => /* @__PURE__ */ jsx("div", { style: { width: "500px" }, tw: "flex-shrink-0", children: /* @__PURE__ */ jsx(FormUI, { form: p.form }) }),
-      children: /* @__PURE__ */ jsxs(Button, { size: "input", children: [
+      className: p.className,
+      content: () => /* @__PURE__ */ jsxs(
+        "div",
+        {
+          tw: "flex-none",
+          style: {
+            // maxWidth: p.maxWidth ?? '500px',
+            maxWidth: p.maxWidth,
+            minWidth: p.minWidth,
+            width: p.width
+          },
+          children: [
+            p.form && /* @__PURE__ */ jsx(FormUI, { form: p.form }),
+            p.children
+          ]
+        }
+      ),
+      children: /* @__PURE__ */ jsxs(Button, { size: "input", tw: "!gap-0", children: [
         /* @__PURE__ */ jsx(Ikon.mdiCog, {}),
         /* @__PURE__ */ jsx(Ikon.mdiChevronDown, {})
       ] })
@@ -1333,14 +1351,14 @@ var isWidgetString = (widget) => widget.type === "string";
 
 // src/controls/Form.ts
 import { action, isObservable, makeAutoObservable as makeAutoObservable3, observable as observable4, toJS } from "mobx";
-import { nanoid as nanoid2 } from "nanoid";
+import { nanoid as nanoid3 } from "nanoid";
 import { createElement as createElement2 } from "react";
 var Form = class {
   constructor(manager, ui, formConfig) {
     this.manager = manager;
     this.ui = ui;
     this.formConfig = formConfig;
-    this.uid = nanoid2();
+    this.uid = nanoid3();
     /** loading error  */
     this.error = null;
     /** shortcut to access the <FormUI /> component without having to import it first */
@@ -1356,7 +1374,7 @@ var Form = class {
      * without having to import any component; usage:
      * | <div>{x.renderAsConfigBtn()}</div>
      */
-    this.renderAsConfigBtn = (p) => createElement2(FormAsDropdownConfigUI, { form: this, title: p?.title });
+    this.renderAsConfigBtn = (p) => createElement2(FormAsDropdownConfigUI, { form: this, ...p });
     /** Out of Tree unmounted serials  */
     this.shared = {};
     // Change tracking ------------------------------------
@@ -1484,7 +1502,6 @@ var FormManager = class {
           () => builder.group({
             label: false,
             items: ui(builder),
-            topLevel: true,
             collapsed: false
           })
         );
@@ -2238,13 +2255,22 @@ function getActualWidgetToDisplay(originalWidget) {
   return originalWidget;
 }
 
+// src/csuite/checkbox/_InputBoolChroma.ts
+var getInputBoolChroma = (isActive) => {
+  return isActive ? 0.04 : 0.01;
+};
+var getInputBoolContrast = (isActive) => {
+  return isActive ? 0.1 : 0.01;
+};
+
 // src/csuite/checkbox/InputBoolCheckboxUI.tsx
 import { observer as observer10 } from "mobx-react-lite";
 var InputBoolCheckboxUI = observer10(function InputBoolCheckboxUI_(p) {
   const isActive = p.value ?? false;
   const label = p.text;
   const mode = p.mode ?? false;
-  const chroma = isActive ? 0.08 : 0.01;
+  const chroma = getInputBoolChroma(isActive);
+  const contrast = getInputBoolContrast(isActive);
   return /* @__PURE__ */ jsxs(
     Frame,
     {
@@ -2265,41 +2291,74 @@ var InputBoolCheckboxUI = observer10(function InputBoolCheckboxUI_(p) {
         /* @__PURE__ */ jsx(
           Frame,
           {
+            size: "input",
+            square: true,
             icon: p.icon ?? (isActive ? "mdiCheckBold" : null),
-            tw: ["!select-none object-contain h-input", mode === "radio" ? "rounded-full" : "rounded-sm"],
+            tw: ["!select-none", mode === "radio" ? "rounded-full" : "rounded-sm"],
             border: { contrast: 0.2, chroma },
-            style: {
-              width: "var(--input-height)"
-              /* hacky */
-            },
-            base: { contrast: isActive ? 0.09 : 0, chroma },
-            size: "sm",
+            base: { contrast, chroma },
+            iconSize: "var(--input-icon-height)",
             hover: true,
             ...p.box
           }
         ),
-        label ? /* @__PURE__ */ jsx("div", { tw: "ml-1", children: label }) : null
+        p.children ?? (label ? /* @__PURE__ */ jsx("div", { tw: "ml-1", children: label }) : null)
       ]
     }
   );
 });
 
-// src/csuite/checkbox/InputBoolToggleButtonUI.tsx
+// src/csuite/ctx/CSuite_theme1.ts
+var CSuite_theme1 = {
+  clickAndSlideMultiplicator: 1,
+  showWidgetUndo: true,
+  showWidgetMenu: true,
+  showWidgetDiff: true,
+  showToggleButtonBox: false,
+  inputBorder: new NumberVar("input-border", 8),
+  base: { lightness: 0.987, chroma: 0.01, hue: 286 },
+  baseStr: "oklch(0.987 0.01 286)",
+  text: { contrast: 0.824 },
+  labelText: { contrast: 0.48, chroma: 0.035 },
+  shiftDirection: 1,
+  inputHeight: 1.6,
+  showWidgetExtra: true,
+  truncateLabels: false
+};
+
+// src/csuite/ctx/CSuiteCtx.ts
+import { createContext as createContext3 } from "react";
+var CSuiteCtx = createContext3(CSuite_theme1);
+
+// src/csuite/ctx/useCSuite.ts
+import { useContext as useContext3 } from "react";
+var useCSuite = () => useContext3(CSuiteCtx);
+
+// src/csuite/checkbox/_InputBoolToggleButtonBoxUI.tsx
 import { observer as observer11 } from "mobx-react-lite";
-var InputBoolToggleButtonUI = observer11(function InputBoolToggleButtonUI_(p) {
+var InputBoolToggleButtonBoxUI = observer11(function InputBoolToggleButtonBoxUI_(p) {
+  const { mode, isActive } = p;
+  const chroma = isActive ? 0.08 : 0.02;
+  return /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(Frame, { tw: "text-lg mr-1", text: { contrast: 0.8, chroma: isActive ? 0.15 : chroma }, children: mode === "radio" ? isActive ? /* @__PURE__ */ jsx(Ikon.mdiCheckCircle, {}) : /* @__PURE__ */ jsx(Ikon.mdiCircleOutline, {}) : mode === "checkbox" ? isActive ? /* @__PURE__ */ jsx(Ikon.mdiCheckboxMarked, {}) : /* @__PURE__ */ jsx(Ikon.mdiCheckboxBlankOutline, {}) : null }) });
+});
+
+// src/csuite/checkbox/InputBoolToggleButtonUI.tsx
+import { observer as observer12 } from "mobx-react-lite";
+var InputBoolToggleButtonUI = observer12(function InputBoolToggleButtonUI_(p) {
   const isActive = p.value ?? false;
   const expand = p.expand;
-  const label = p.text;
-  const chroma = isActive ? 0.08 : 0.02;
-  return /* @__PURE__ */ jsx(
+  const chroma = getInputBoolChroma(isActive);
+  const kit = useCSuite();
+  return /* @__PURE__ */ jsxs(
     Frame,
     {
-      tw: "h-input !select-none cursor-pointer justify-center px-1 py-1 text-sm flex items-center",
+      tw: "InputBoolToggleButtonUI minh-input !select-none cursor-pointer justify-center px-1 text-sm flex items-center",
       className: p.className,
       triggerOnPress: { startingState: isActive },
       look: "default",
-      base: { contrast: isActive ? 0.09 : 0.05, chroma },
-      border: isActive ? 20 : 0,
+      base: { contrast: getInputBoolContrast(isActive), chroma },
+      border: isActive ? 10 : 5,
+      iconSize: "1.5em",
       hover: !p.disabled,
       expand,
       style: p.style,
@@ -2309,17 +2368,20 @@ var InputBoolToggleButtonUI = observer11(function InputBoolToggleButtonUI_(p) {
         ev.stopPropagation();
         p.onValueChange?.(!isActive);
       },
-      children: /* @__PURE__ */ jsx("p", { tw: "w-full text-center line-clamp-1", children: label })
+      children: [
+        (p.showToggleButtonBox ?? kit.showToggleButtonBox) && p.mode && /* @__PURE__ */ jsx(InputBoolToggleButtonBoxUI, { isActive, mode: p.mode }),
+        p.children ?? /* @__PURE__ */ jsx("p", { tw: "w-full text-center", children: p.text })
+      ]
     }
   );
 });
 
 // src/csuite/checkbox/InputBoolUI.tsx
-import { observer as observer12 } from "mobx-react-lite";
+import { observer as observer13 } from "mobx-react-lite";
 import { createElement as createElement3 } from "react";
 var BoolButtonProps = class {
 };
-var InputBoolUI = observer12(function InputBoolUI_(p) {
+var InputBoolUI = observer13(function InputBoolUI_(p) {
   const display = p.display ?? "check";
   if (display === "check")
     return createElement3(InputBoolCheckboxUI, p);
@@ -2327,8 +2389,8 @@ var InputBoolUI = observer12(function InputBoolUI_(p) {
 });
 
 // src/controls/shared/Widget_ToggleUI.tsx
-import { observer as observer13 } from "mobx-react-lite";
-var Widget_ToggleUI = observer13(function Widget_ToggleUI_(p) {
+import { observer as observer14 } from "mobx-react-lite";
+var Widget_ToggleUI = observer14(function Widget_ToggleUI_(p) {
   if (!isWidgetOptional(p.widget))
     return null;
   const widget = p.widget;
@@ -2344,8 +2406,8 @@ var Widget_ToggleUI = observer13(function Widget_ToggleUI_(p) {
 });
 
 // src/controls/shared/WidgetErrorsUI.tsx
-import { observer as observer14 } from "mobx-react-lite";
-var WidgetErrorsUI = observer14(function WidgerErrorsUI_(p) {
+import { observer as observer15 } from "mobx-react-lite";
+var WidgetErrorsUI = observer15(function WidgerErrorsUI_(p) {
   const widget = p.widget;
   if (widget.hasErrors === false)
     return null;
@@ -2356,7 +2418,7 @@ var WidgetErrorsUI = observer14(function WidgerErrorsUI_(p) {
 });
 
 // src/controls/shared/WidgetHeaderContainerUI.tsx
-import { observer as observer15 } from "mobx-react-lite";
+import { observer as observer16 } from "mobx-react-lite";
 var isDragging = false;
 var wasEnabled = false;
 var isDraggingListener2 = (ev) => {
@@ -2365,7 +2427,7 @@ var isDraggingListener2 = (ev) => {
     window.removeEventListener("mouseup", isDraggingListener2, true);
   }
 };
-var WidgetHeaderContainerUI = observer15(function WidgetHeaderContainerUI_(p) {
+var WidgetHeaderContainerUI = observer16(function WidgetHeaderContainerUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(
     "div",
@@ -2399,50 +2461,34 @@ var WidgetHeaderContainerUI = observer15(function WidgetHeaderContainerUI_(p) {
 });
 
 // src/controls/shared/WidgetLabelCaretUI.tsx
-import { observer as observer16 } from "mobx-react-lite";
-var WidgetLabelCaretUI = observer16(function WidgetLabelCaretUI_(p) {
+import { observer as observer17 } from "mobx-react-lite";
+var WidgetLabelCaretUI = observer17(function WidgetLabelCaretUI_(p) {
   if (!p.widget.isCollapsed && !p.widget.isCollapsible)
     return null;
   return /* @__PURE__ */ jsx(WidgetLabelCaretAlwaysUI, { isCollapsed: p.widget.isCollapsed });
 });
-var WidgetLabelCaretAlwaysUI = observer16(function WidgetLabelCaretAlways_({ isCollapsed }) {
+var WidgetLabelCaretAlwaysUI = observer17(function WidgetLabelCaretAlways_({ isCollapsed }) {
   if (isCollapsed)
     return /* @__PURE__ */ jsx(Ikon.mdiChevronRight, { tw: "COLLAPSE-PASSTHROUGH" });
   return /* @__PURE__ */ jsx(Ikon.mdiChevronDown, { tw: "COLLAPSE-PASSTHROUGH" });
 });
 
-// src/csuite/ctx/CSuite_theme1.ts
-var CSuite_theme1 = {
-  clickAndSlideMultiplicator: 1,
-  showWidgetUndo: true,
-  showWidgetMenu: true,
-  showWidgetDiff: true,
-  showToggleButtonBox: true,
-  inputBorder: new NumberVar("input-border", 8),
-  base: { lightness: 0.987, chroma: 0.01, hue: 286 },
-  baseStr: "oklch(0.987 0.01 286)",
-  text: { contrast: 0.824 },
-  labelText: { contrast: 0.48, chroma: 0.035 },
-  shiftDirection: 1
-};
-
-// src/csuite/ctx/CSuiteCtx.ts
-import { createContext as createContext3 } from "react";
-var CSuiteCtx = createContext3(CSuite_theme1);
-
-// src/csuite/ctx/useCSuite.ts
-import { useContext as useContext3 } from "react";
-var useCSuite = () => useContext3(CSuiteCtx);
-
 // src/controls/shared/WidgetLabelContainerUI.tsx
-import { observer as observer17 } from "mobx-react-lite";
-var WidgetLabelContainerUI = observer17(function WidgetLabelContainerUI_(p) {
+import { observer as observer18 } from "mobx-react-lite";
+var WidgetLabelContainerUI = observer18(function WidgetLabelContainerUI_(p) {
   const csuite = useCSuite();
   return /* @__PURE__ */ jsx(
     Frame,
     {
       hover: true,
-      tw: "COLLAPSE-PASSTHROUGH h-input flex justify-end gap-0.5 flex-none items-center shrink-0 flex-1 items-center",
+      tw: [
+        //
+        "COLLAPSE-PASSTHROUGH",
+        "minh-input",
+        "flex",
+        // gap-0.5
+        "items-center flex-none shrink-0"
+      ],
       style: p.justify ? justifyStyle : void 0,
       text: csuite.labelText,
       children: p.children
@@ -2452,19 +2498,17 @@ var WidgetLabelContainerUI = observer17(function WidgetLabelContainerUI_(p) {
 var justifyStyle = {
   textAlign: "right",
   minWidth: "8rem",
-  width: (
-    /* alignLabel && HeaderUI ? */
-    "35%"
-  ),
-  marginRight: (
-    /* alignLabel && HeaderUI ? */
-    "0.25rem"
-  )
+  // 🔴 move to theme options
+  width: "35%",
+  // 🔴 move to theme options
+  marginRight: "0.25rem",
+  // 🔴 move to theme options
+  justifyContent: "flex-end"
 };
 
 // src/controls/shared/WidgetLabelIconUI.tsx
-import { observer as observer18 } from "mobx-react-lite";
-var WidgetLabelIconUI = observer18(function WidgetLabelIconUI_(p) {
+import { observer as observer19 } from "mobx-react-lite";
+var WidgetLabelIconUI = observer19(function WidgetLabelIconUI_(p) {
   const iconName = p.widget.icon;
   if (iconName == null)
     return null;
@@ -2473,8 +2517,8 @@ var WidgetLabelIconUI = observer18(function WidgetLabelIconUI_(p) {
 
 // src/widgets/workspace/JsonViewUI.tsx
 import JsonView from "@uiw/react-json-view";
-import { observer as observer19 } from "mobx-react-lite";
-var JsonViewUI = observer19(function JsonViewUI_(p) {
+import { observer as observer20 } from "mobx-react-lite";
+var JsonViewUI = observer20(function JsonViewUI_(p) {
   JSON.stringify(p.value);
   return /* @__PURE__ */ jsx(
     JsonView,
@@ -2529,9 +2573,9 @@ var ErrorBoundaryFallback = (p) => {
 };
 
 // src/csuite/errors/ErrorBoundaryUI.tsx
-import { observer as observer20 } from "mobx-react-lite";
+import { observer as observer21 } from "mobx-react-lite";
 import { ErrorBoundary } from "react-error-boundary";
-var ErrorBoundaryUI = observer20(function CushyErrorBoundarySimpleUI_(p) {
+var ErrorBoundaryUI = observer21(function CushyErrorBoundarySimpleUI_(p) {
   return /* @__PURE__ */ jsx(
     ErrorBoundary,
     {
@@ -2623,26 +2667,37 @@ var useSizeOf = () => {
 };
 
 // src/controls/utils/AnimatedSizeUI.tsx
-import { observer as observer21 } from "mobx-react-lite";
-var AnimatedSizeUI = observer21(function AnimatedSizeUI_(p) {
+import { observer as observer22 } from "mobx-react-lite";
+var AnimatedSizeUI = observer22(function AnimatedSizeUI_(p) {
   const { ref: refFn, size } = useSizeOf();
-  return /* @__PURE__ */ jsx("div", { className: p.className, tw: "smooth-resize-container animated overflow-hidden", style: { height: `${size.height}px` }, children: /* @__PURE__ */ jsx("div", { className: "smooth-resize-content", ref: refFn, children: p.children }) });
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: p.className,
+      tw: [
+        //
+        "smooth-resize-container animated",
+        // 'overflow-hidden',
+        "overflow-y-hidden"
+      ],
+      style: { height: `${size.height}px` },
+      children: /* @__PURE__ */ jsx("div", { className: "smooth-resize-content", ref: refFn, children: p.children })
+    }
+  );
 });
 
 // src/controls/shared/getIfWidgetNeedAlignedLabel.tsx
-var getIfWidgetNeedAlignedLabel = (widget) => {
-  if (widget.config.alignLabel != null)
-    return widget.config.alignLabel;
-  if (widget.alignLabel != null)
-    return widget.alignLabel;
+var getIfWidgetNeedJustifiedLabel = (widget) => {
+  if (widget.config.justifyLabel != null)
+    return widget.config.justifyLabel;
   if (widget.DefaultBodyUI)
     return false;
   return true;
 };
 
 // src/controls/shared/WidgetDebugIDUI.tsx
-import { observer as observer22 } from "mobx-react-lite";
-var WidgetDebugIDUI = observer22(function WidgetDebugIDUI_(p) {
+import { observer as observer23 } from "mobx-react-lite";
+var WidgetDebugIDUI = observer23(function WidgetDebugIDUI_(p) {
   return /* @__PURE__ */ jsxs("span", { tw: "COLLAPSE-PASSTHROUGH opacity-50 italic text-sm", children: [
     "#",
     p.widget.id.slice(0, 3)
@@ -2650,14 +2705,22 @@ var WidgetDebugIDUI = observer22(function WidgetDebugIDUI_(p) {
 });
 
 // src/controls/shared/WidgetHeaderControlsContainerUI.tsx
-import { observer as observer23 } from "mobx-react-lite";
-var WidgetHeaderControlsContainerUI = observer23(function WidgetHeaderControlsContainerUI_(p) {
-  return /* @__PURE__ */ jsx("div", { className: p.className, tw: "widget-header-container-ui COLLAPSE-PASSTHROUGH flex items-center gap-0.5 flex-1", children: p.children });
+import { observer as observer24 } from "mobx-react-lite";
+var WidgetHeaderControlsContainerUI = observer24(function WidgetHeaderControlsContainerUI_(p) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: p.className,
+      tw: "widget-header-container-ui COLLAPSE-PASSTHROUGH flex items-center gap-0.5 flex-1",
+      children: p.children
+    }
+  );
 });
 
 // src/controls/shared/WidgetLabelUI.tsx
-import { observer as observer24 } from "mobx-react-lite";
-var WidgetLabelUI = observer24(function WidgetLabelUI_(p) {
+import { observer as observer25 } from "mobx-react-lite";
+var WidgetLabelUI = observer25(function WidgetLabelUI_(p) {
+  const csuite = useCSuite();
   return /* @__PURE__ */ jsx(
     "span",
     {
@@ -2671,7 +2734,11 @@ var WidgetLabelUI = observer24(function WidgetLabelUI_(p) {
         //  - limit to 2 lines, with ellipsis,
         //  - dense line height to force widget to remain within it's
         //  - original allocated height
-        "line-clamp-2 [lineHeight:1rem] [overflow:unset]",
+        // 'line-clamp-2',
+        // 3.3. alt. 3:
+        //
+        // '[lineHeight:1.3rem] overflow-auto',
+        csuite.truncateLabels && "truncate",
         p.className
       ],
       children: p.children
@@ -2898,7 +2965,7 @@ var CommandManager = class {
         ev.preventDefault();
         return true;
       }
-      exhaust2(res);
+      exhaust(res);
       throw new Error(`INVALID CASE`);
     };
     makeObservable5(this, {
@@ -2913,7 +2980,7 @@ var CommandManager = class {
     return Array.from(this.contextByName.values());
   }
 };
-var exhaust2 = (_) => _;
+var exhaust = (_) => _;
 function parseShortcutToInputSequence(combo) {
   return combo.split(" ").map(normalizeInputToken);
 }
@@ -3034,9 +3101,9 @@ var isBoundMenu = (x) => x != null && //
 typeof x === "object" && "$SYM" in x && x.$SYM === BoundMenuSym;
 
 // src/app/accelerators/ComboUI.tsx
-import { observer as observer25 } from "mobx-react-lite";
+import { observer as observer26 } from "mobx-react-lite";
 import { Fragment as Fragment2 } from "react";
-var ComboUI = observer25(function ComboUI_(p) {
+var ComboUI = observer26(function ComboUI_(p) {
   if (p.combo == null)
     return null;
   const iss = parseShortcutToInputSequence(p.combo);
@@ -3083,8 +3150,8 @@ var formatKeyName = (keyName) => {
 };
 
 // src/csuite/dropdown/MenuItem.tsx
-import { observer as observer26 } from "mobx-react-lite";
-var MenuItem = observer26(function DropdownItem_(p) {
+import { observer as observer27 } from "mobx-react-lite";
+var MenuItem = observer27(function DropdownItem_(p) {
   const { size, label, disabled, icon, children, active, onClick, ...rest } = p;
   return /* @__PURE__ */ jsxs(
     Frame,
@@ -3094,7 +3161,7 @@ var MenuItem = observer26(function DropdownItem_(p) {
         contrast: active ? 0.1 : 0,
         chroma: active ? 0.1 : void 0
       },
-      hover: true,
+      hover: 15,
       onClick: (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
@@ -3128,13 +3195,13 @@ var SimpleMenuModal = class {
 };
 
 // src/operators/menu/MenuUI.tsx
-import { observer as observer27 } from "mobx-react-lite";
+import { observer as observer28 } from "mobx-react-lite";
 import { createElement as createElement4 } from "react";
 import { Fragment as Fragment3 } from "react/jsx-runtime";
-var MenuRootUI = observer27(function MenuRootUI_(p) {
+var MenuRootUI = observer28(function MenuRootUI_(p) {
   return /* @__PURE__ */ jsx(RevealUI, { className: "dropdown", placement: "bottomStart", content: () => /* @__PURE__ */ jsx(p.menu.UI, {}), children: /* @__PURE__ */ jsx("label", { tabIndex: 0, tw: [`flex-nowrap btn btn-ghost btn-sm py-0 px-1.5`], children: p.menu.menu.title }) });
 });
-var MenuUI = observer27(function MenuUI_(p) {
+var MenuUI = observer28(function MenuUI_(p) {
   return /* @__PURE__ */ jsx(
     "div",
     {
@@ -3249,7 +3316,7 @@ var MenuUI = observer27(function MenuUI_(p) {
             }
           );
         } else if (isWidget(entry)) {
-          return entry.ui();
+          return entry.renderWithLabel();
         } else {
           return /* @__PURE__ */ jsx(Fragment3, { children: createElement4(entry) }, ix);
         }
@@ -3259,7 +3326,7 @@ var MenuUI = observer27(function MenuUI_(p) {
 });
 
 // src/operators/menu/Menu.ts
-import { nanoid as nanoid3 } from "nanoid";
+import { nanoid as nanoid4 } from "nanoid";
 import { createElement as createElement5, useMemo as useMemo4 } from "react";
 var MenuManager = class {
   constructor() {
@@ -3278,7 +3345,7 @@ var Menu = class {
     // prettier-ignore
     /** bind a menu to give props */
     this.bind = (props, ui) => new BoundMenu(this, props, ui);
-    this.id = def.id ?? nanoid3();
+    this.id = def.id ?? nanoid4();
     menuManager.registerMenu(this);
   }
   get title() {
@@ -3299,7 +3366,7 @@ var MenuWithoutProps = class {
     this.DropDownUI = () => createElement5(MenuRootUI, { menu: useMemo4(() => new MenuInstance(this, {}), []) });
     /** bind a menu to give props */
     this.bind = (ui) => new BoundMenu(this, {}, ui);
-    this.id = def.id ?? nanoid3();
+    this.id = def.id ?? nanoid4();
     menuManager.registerMenu(this);
   }
   get title() {
@@ -3327,7 +3394,7 @@ var MenuInstance = class {
     };
     this.onStop = () => {
     };
-    this.uid = nanoid3();
+    this.uid = nanoid4();
     this.findSuitableKeys = (label, allocatedKeys) => {
       let ix = 0;
       for (const char of [...label]) {
@@ -3396,8 +3463,8 @@ var SQLITE_true = 1;
 var SQLITE_false = 0;
 
 // src/panels/libraryUI/tree/xxx/utils.ts
-import { customAlphabet } from "nanoid";
-var genUID = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 5);
+import { customAlphabet as customAlphabet2 } from "nanoid";
+var genUID = customAlphabet2("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 5);
 var FAIL = (msg, data) => {
   throw new Error(`\u{1F534} ${msg}`, data);
 };
@@ -3617,7 +3684,7 @@ var TreeNode = class _TreeNode {
 
 // src/panels/libraryUI/tree/xxx/Tree.ts
 import { makeAutoObservable as makeAutoObservable7, observable as observable7 } from "mobx";
-import { nanoid as nanoid4 } from "nanoid";
+import { nanoid as nanoid5 } from "nanoid";
 var defaultTreeStorage = (node) => {
   const data = observable7({
     isExpanded: SQLITE_true,
@@ -3632,7 +3699,7 @@ var Tree = class {
   constructor(rootNodes, config = { getNodeState: defaultTreeStorage }) {
     this.config = config;
     this.topLevelNodes = [];
-    this.KeyboardNavigableDomNodeID = nanoid4();
+    this.KeyboardNavigableDomNodeID = nanoid5();
     for (let uid of rootNodes) {
       const node = new TreeNode(this, uid, void 0);
       this.topLevelNodes.push(node);
@@ -3699,8 +3766,8 @@ var useTreeView = () => {
 };
 
 // src/panels/libraryUI/tree/RenderTreeIcon1.tsx
-import { observer as observer28 } from "mobx-react-lite";
-var TreeIcon1UI = observer28(function TreeIcon1UI_(p) {
+import { observer as observer29 } from "mobx-react-lite";
+var TreeIcon1UI = observer29(function TreeIcon1UI_(p) {
   const action3 = p;
   return /* @__PURE__ */ jsx(
     "div",
@@ -3718,8 +3785,8 @@ var TreeIcon1UI = observer28(function TreeIcon1UI_(p) {
 });
 
 // src/panels/libraryUI/tree/RenderItemTitleUI.tsx
-import { observer as observer29 } from "mobx-react-lite";
-var RenderItemTitleUI = observer29(function RenderItemTitleUI_(p) {
+import { observer as observer30 } from "mobx-react-lite";
+var RenderItemTitleUI = observer30(function RenderItemTitleUI_(p) {
   const node = p.node;
   const item = node.data;
   let icon = node.isOpen ? item.iconExpanded ?? item.icon : item.icon ?? item.iconExpanded;
@@ -3756,9 +3823,9 @@ var RenderItemTitleUI = observer29(function RenderItemTitleUI_(p) {
 });
 
 // src/panels/libraryUI/tree/xxx/TreeEntryUI.tsx
-import { observer as observer30 } from "mobx-react-lite";
+import { observer as observer31 } from "mobx-react-lite";
 import { Fragment as Fragment4 } from "react";
-var TreeEntryUI = observer30(function TreeEntryUI_(p) {
+var TreeEntryUI = observer31(function TreeEntryUI_(p) {
   const n = p.node;
   const children = n.childKeys;
   const hasChildren = children.length > 0;
@@ -3819,8 +3886,8 @@ var TreeEntryUI = observer30(function TreeEntryUI_(p) {
 });
 
 // src/panels/libraryUI/tree/xxx/TreeUI.tsx
-import { observer as observer31 } from "mobx-react-lite";
-var TreeUI = observer31(function TreeEditorUI_(p) {
+import { observer as observer32 } from "mobx-react-lite";
+var TreeUI = observer32(function TreeEditorUI_(p) {
   const tv = p.treeView;
   return /* @__PURE__ */ jsx(TreeViewCtx.Provider, { value: tv, children: /* @__PURE__ */ jsxs("div", { tw: "_TreeUI flex flex-col", className: p.className, children: [
     /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
@@ -3883,14 +3950,14 @@ var onKeyDownHandlers = (ev, view) => {
 
 // src/panels/libraryUI/tree/xxx/TreeView.ts
 import { makeAutoObservable as makeAutoObservable8 } from "mobx";
-import { nanoid as nanoid5 } from "nanoid";
+import { nanoid as nanoid6 } from "nanoid";
 import { createRef } from "react";
 var TreeView = class {
   constructor(tree, conf = {}) {
     this.tree = tree;
     this.conf = conf;
     /** treeview id; only for debugging purpose */
-    this.id = nanoid5(4);
+    this.id = nanoid6(4);
     this.filterRef = createRef();
     this.updateFilter = (xPath) => this.filter = xPath;
     this.focusFilter = () => {
@@ -4029,8 +4096,8 @@ var TreeView = class {
 };
 
 // src/controls/shared/WidgetMenu.tsx
-import { observer as observer32 } from "mobx-react-lite";
-var WidgetMenuUI = observer32(function WidgetMenuUI_(p) {
+import { observer as observer33 } from "mobx-react-lite";
+var WidgetMenuUI = observer33(function WidgetMenuUI_(p) {
   return /* @__PURE__ */ jsx(RevealUI, { className: p.className, content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: p.widget }), children: /* @__PURE__ */ jsx(Button, { subtle: true, icon: "mdiDotsVertical", look: "ghost", square: true, size: "input" }) });
 });
 var menu_widgetActions = menu({
@@ -4085,7 +4152,7 @@ var menu_widgetActions = menu({
     return out;
   }
 });
-var CreatePresetUI = observer32(function CreatePresetUI_(p) {
+var CreatePresetUI = observer33(function CreatePresetUI_(p) {
   const tree = new Tree([p.widget.asTreeElement("root")]);
   const treeView = new TreeView(tree, { selectable: true });
   return /* @__PURE__ */ jsx(
@@ -4098,15 +4165,15 @@ var CreatePresetUI = observer32(function CreatePresetUI_(p) {
 });
 
 // src/controls/shared/WidgetTooltipUI.tsx
-import { observer as observer33 } from "mobx-react-lite";
-var WidgetTooltipUI = observer33(function WidgetTooltipUI_(p) {
+import { observer as observer34 } from "mobx-react-lite";
+var WidgetTooltipUI = observer34(function WidgetTooltipUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx("div", { children: widget.config.tooltip }), children: /* @__PURE__ */ jsx(Frame, { square: true, icon: "mdiInformationOutline" }) });
 });
 
 // src/controls/shared/WidgetUndoChangesButtonUI.tsx
-import { observer as observer34 } from "mobx-react-lite";
-var WidgetUndoChangesButtonUI = observer34(function WidgetUndoChangesButtonUI_(p) {
+import { observer as observer35 } from "mobx-react-lite";
+var WidgetUndoChangesButtonUI = observer35(function WidgetUndoChangesButtonUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(
     Button,
@@ -4124,62 +4191,47 @@ var WidgetUndoChangesButtonUI = observer34(function WidgetUndoChangesButtonUI_(p
 });
 
 // src/controls/shared/WidgetWithLabelUI.tsx
-import { observer as observer35 } from "mobx-react-lite";
-var WidgetWithLabelUI = observer35(function WidgetWithLabelUI_(p) {
+import { observer as observer36 } from "mobx-react-lite";
+var WidgetWithLabelUI = observer36(function WidgetWithLabelUI_(p) {
   if (p.widget.isHidden)
     return null;
-  const rootKey = p.rootKey;
   const originalWidget = p.widget;
   const widget = getActualWidgetToDisplay(originalWidget);
   const HeaderUI = widget.header();
   const BodyUI = widget.body();
-  const justify = p.justifyLabel ?? getIfWidgetNeedAlignedLabel(widget);
-  const showBorder = widget.border;
+  const justify = p.justifyLabel ?? getIfWidgetNeedJustifiedLabel(widget);
   const extraClass = originalWidget.isDisabled ? "pointer-events-none opacity-30 bg-[#00000005]" : void 0;
   const csuite = useCSuite();
-  const showContrast = (
-    /* 🤮👉 */
-    widget.background && widget.isCollapsible || showBorder
-  );
-  const boxBase = showContrast ? { contrast: 0.05 } : void 0;
-  const labelText = (() => {
-    if (p.label != null)
-      return p.label;
-    if (widget.config.label != null)
-      return widget.config.label;
-    return makeLabelFromFieldName(p.rootKey);
-  })();
+  const labelText = p.label ?? widget.config.label ?? makeLabelFromFieldName(p.fieldName);
   const WUI = /* @__PURE__ */ jsxs(
     Frame,
     {
       tw: "flex flex-col gap-1",
-      base: boxBase,
-      border: showBorder ? 5 : 0,
+      base: widget.background,
+      border: widget.border,
       ...p.widget.config.box,
       children: [
-        /* @__PURE__ */ jsxs(WidgetHeaderContainerUI, { widget, children: [
+        !p.noHeader && /* @__PURE__ */ jsxs(WidgetHeaderContainerUI, { widget, children: [
           /* @__PURE__ */ jsxs(WidgetLabelContainerUI, { justify, children: [
             /* @__PURE__ */ jsx(WidgetLabelCaretUI, { widget }),
             /* @__PURE__ */ jsx(WidgetLabelIconUI, { widget }),
-            BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "mr-1", widget: originalWidget }),
+            !justify && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "mr-1", widget: originalWidget }),
             widget.config.tooltip && /* @__PURE__ */ jsx(WidgetTooltipUI, { widget }),
             /* @__PURE__ */ jsx(WidgetLabelUI, { widget, children: labelText }),
             widget.config.showID && /* @__PURE__ */ jsx(WidgetDebugIDUI, { widget }),
-            !BodyUI && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "ml-1", widget: originalWidget })
+            justify && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "ml-1", widget: originalWidget })
           ] }),
           HeaderUI && /* @__PURE__ */ jsx(WidgetHeaderControlsContainerUI, { className: extraClass, children: /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: HeaderUI }) }),
-          /* @__PURE__ */ jsx("div", { tw: "ml-auto" }),
-          widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
-          csuite.showWidgetUndo && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { widget: originalWidget }),
-          csuite.showWidgetMenu && /* @__PURE__ */ jsx(WidgetMenuUI, { widget })
+          (p.showWidgetExtra ?? csuite.showWidgetExtra) && widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
+          (p.showWidgetUndo ?? csuite.showWidgetUndo) && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { widget: originalWidget }),
+          (p.showWidgetMenu ?? csuite.showWidgetMenu) && /* @__PURE__ */ jsx(WidgetMenuUI, { widget })
         ] }),
-        BodyUI && !widget.isCollapsed && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { className: extraClass, tw: [widget.isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
-        /* @__PURE__ */ jsx(WidgetErrorsUI, { widget })
+        !p.noBody && BodyUI && !widget.isCollapsed && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { className: extraClass, tw: [widget.isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
+        !p.noErrors && /* @__PURE__ */ jsx(WidgetErrorsUI, { widget })
       ]
-    },
-    rootKey
+    }
   );
-  if (widget.animateResize)
+  if (widget.animateResize && !p.noBody && BodyUI)
     return /* @__PURE__ */ jsx(AnimatedSizeUI, { children: WUI });
   return WUI;
 });
@@ -4207,12 +4259,12 @@ var Severity = /* @__PURE__ */ ((Severity2) => {
 })(Severity || {});
 
 // src/controls/BaseWidget.tsx
-import { observer as observer36 } from "mobx-react-lite";
+import { observer as observer37 } from "mobx-react-lite";
 var ensureObserver = (fn) => {
   if (fn == null)
     return null;
   const isObserver = "$$typeof" in fn && fn.$$typeof === Symbol.for("react.memo");
-  const FmtUI = isObserver ? fn : observer36(fn);
+  const FmtUI = isObserver ? fn : observer37(fn);
   return FmtUI;
 };
 var BaseWidget = class {
@@ -4382,6 +4434,9 @@ var BaseWidget = class {
       return false;
     return true;
   }
+  get background() {
+    return this.config.background;
+  }
   /** if provided, override the default logic to decide if the widget need to be bordered */
   get border() {
     if (this.parent == null)
@@ -4390,7 +4445,7 @@ var BaseWidget = class {
       return this.config.border;
     if (this.DefaultBodyUI == null)
       return false;
-    return true;
+    return 5;
   }
   // FOLD ----------------------------------------------------
   setCollapsed(val) {
@@ -4404,13 +4459,13 @@ var BaseWidget = class {
     this.form.serialChanged(this);
   }
   // UI ----------------------------------------------------
-  ui(p) {
+  renderWithLabel(p) {
     return /* @__PURE__ */ jsx(
       WidgetWithLabelUI,
       {
         ...p,
         widget: this,
-        rootKey: "_"
+        fieldName: "_"
       },
       this.id
     );
@@ -4497,14 +4552,14 @@ var BaseWidget = class {
 };
 
 // src/controls/widgets/spacer/SpacerUI.tsx
-import { observer as observer37 } from "mobx-react-lite";
-var SpacerUI = observer37(function SpacerUI_(p) {
+import { observer as observer38 } from "mobx-react-lite";
+var SpacerUI = observer38(function SpacerUI_(p) {
   return /* @__PURE__ */ jsx("div", { tw: ["ml-auto"] });
 });
 
 // src/controls/widgets/bool/WidgetBoolUI.tsx
-import { observer as observer38 } from "mobx-react-lite";
-var WidgetBoolUI = observer38(function WidgetBoolUI_(p) {
+import { observer as observer39 } from "mobx-react-lite";
+var WidgetBoolUI = observer39(function WidgetBoolUI_(p) {
   const widget = p.widget;
   if (widget.config.label2) {
     console.warn("label2 is deprecated, please use the text option instead. label2 will be removed in the future");
@@ -4527,7 +4582,7 @@ var WidgetBoolUI = observer38(function WidgetBoolUI_(p) {
 
 // src/controls/widgets/bool/WidgetBool.tsx
 import { computed as computed3, observable as observable8, runInAction as runInAction4 } from "mobx";
-import { nanoid as nanoid6 } from "nanoid";
+import { nanoid as nanoid7 } from "nanoid";
 var Widget_bool = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -4543,7 +4598,7 @@ var Widget_bool = class extends BaseWidget {
     this.defaultValue = this.config.default ?? false;
     // prettier-ignore
     this.reset = () => this.value = this.defaultValue;
-    this.id = serial?.id ?? nanoid6();
+    this.id = serial?.id ?? nanoid7();
     this.serial = serial ?? {
       id: this.id,
       type: "bool",
@@ -4582,18 +4637,17 @@ registerWidgetClass("bool", Widget_bool);
 
 // src/controls/widgets/button/WidgetButtonUI.tsx
 import { runInAction as runInAction5 } from "mobx";
-import { observer as observer39 } from "mobx-react-lite";
-var WidgetInlineRunUI = observer39(function WidgetInlineRunUI_(p) {
+import { observer as observer40 } from "mobx-react-lite";
+var WidgetInlineRunUI = observer40(function WidgetInlineRunUI_(p) {
   const extra = p.widget.config.useContext?.();
   const context = { widget: p.widget, context: extra };
   return /* @__PURE__ */ jsx(
-    "div",
+    Button,
     {
-      tw: [
-        "btn btn-sm join-item",
-        p.widget.config.kind === `special` ? `btn-secondary` : p.widget.config.kind === `warning` ? `btn-warning` : `btn-primary`
-      ],
+      look: p.widget.config.look,
       className: "self-start",
+      icon: p.widget.icon,
+      expand: p.widget.config.expand,
       onClick: () => runInAction5(() => p.widget.config.onClick?.(context)),
       children: p.widget.config.text ?? `Run`
     }
@@ -4602,7 +4656,7 @@ var WidgetInlineRunUI = observer39(function WidgetInlineRunUI_(p) {
 
 // src/controls/widgets/button/WidgetButton.ts
 import { runInAction as runInAction6 } from "mobx";
-import { nanoid as nanoid7 } from "nanoid";
+import { nanoid as nanoid8 } from "nanoid";
 var Widget_button = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -4614,7 +4668,7 @@ var Widget_button = class extends BaseWidget {
     this.type = "button";
     // prettier-ignore
     this.reset = () => this.value = this.defaultValue;
-    this.id = serial?.id ?? nanoid7();
+    this.id = serial?.id ?? nanoid8();
     const config = spec.config;
     if (config.text) {
       config.label = config.label ?? ` `;
@@ -4685,9 +4739,9 @@ var toastImage = (imageSrc, message) => {
 };
 
 // src/csuite/select/SelectPopupUI.tsx
-import { observer as observer40 } from "mobx-react-lite";
+import { observer as observer41 } from "mobx-react-lite";
 import { createPortal as createPortal2 } from "react-dom";
-var SelectPopupUI = observer40(function SelectPopupUI_(p) {
+var SelectPopupUI = observer41(function SelectPopupUI_(p) {
   const s = p.s;
   const isDraggingListener3 = (ev) => {
     if (ev.button != 0)
@@ -5070,9 +5124,9 @@ var AutoCompleteSelectState = class {
 };
 
 // src/csuite/select/SelectUI.tsx
-import { observer as observer41 } from "mobx-react-lite";
+import { observer as observer42 } from "mobx-react-lite";
 import { useMemo as useMemo5 } from "react";
-var SelectUI = observer41(function SelectUI_(p) {
+var SelectUI = observer42(function SelectUI_(p) {
   const s = useMemo5(() => new AutoCompleteSelectState(
     /* st, */
     p
@@ -5145,8 +5199,8 @@ var SelectUI = observer41(function SelectUI_(p) {
 });
 
 // src/controls/shared/WidgetsContainerUI.tsx
-import { observer as observer42 } from "mobx-react-lite";
-var WidgetsContainerUI = observer42(function WidgetsContainerUI_(p) {
+import { observer as observer43 } from "mobx-react-lite";
+var WidgetsContainerUI = observer43(function WidgetsContainerUI_(p) {
   const isHorizontal = p.layout === "H";
   return /* @__PURE__ */ jsx(
     "div",
@@ -5155,7 +5209,7 @@ var WidgetsContainerUI = observer42(function WidgetsContainerUI_(p) {
       tw: [
         //
         isHorizontal ? `flex gap-1 flex-wrap` : `flex gap-1 flex-col`,
-        "w-full",
+        "w-full overflow-auto",
         p.className
       ],
       children: p.children
@@ -5164,14 +5218,14 @@ var WidgetsContainerUI = observer42(function WidgetsContainerUI_(p) {
 });
 
 // src/controls/widgets/choices/WidgetChoicesUI.tsx
-import { observer as observer43 } from "mobx-react-lite";
-var WidgetChoices_HeaderUI = observer43(function WidgetChoices_LineUI_(p) {
+import { observer as observer44 } from "mobx-react-lite";
+var WidgetChoices_HeaderUI = observer44(function WidgetChoices_LineUI_(p) {
   if (p.widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { widget: p.widget });
   else
     return /* @__PURE__ */ jsx(WidgetChoices_SelectHeaderUI, { widget: p.widget });
 });
-var WidgetChoices_BodyUI = observer43(function WidgetChoices_BodyUI_(p) {
+var WidgetChoices_BodyUI = observer44(function WidgetChoices_BodyUI_(p) {
   const widget = p.widget;
   const activeSubwidgets = Object.entries(widget.children).map(([branch, subWidget]) => ({ branch, subWidget }));
   return /* @__PURE__ */ jsx(
@@ -5186,8 +5240,8 @@ var WidgetChoices_BodyUI = observer43(function WidgetChoices_BodyUI_(p) {
         return /* @__PURE__ */ jsx(
           WidgetWithLabelUI,
           {
-            justifyLabel: p.alignLabel,
-            rootKey: val.branch,
+            justifyLabel: p.justify,
+            fieldName: val.branch,
             widget: subWidget,
             label: widget.isSingle ? false : void 0
           },
@@ -5197,7 +5251,7 @@ var WidgetChoices_BodyUI = observer43(function WidgetChoices_BodyUI_(p) {
     }
   );
 });
-var WidgetChoices_TabHeaderUI = observer43(function WidgetChoicesTab_LineUI_(p) {
+var WidgetChoices_TabHeaderUI = observer44(function WidgetChoicesTab_LineUI_(p) {
   const widget = p.widget;
   const choices = widget.choicesWithLabels;
   const csuite = useCSuite();
@@ -5230,7 +5284,7 @@ var WidgetChoices_TabHeaderUI = observer43(function WidgetChoicesTab_LineUI_(p) 
     }
   );
 });
-var WidgetChoices_SelectHeaderUI = observer43(function WidgetChoices_SelectLineUI_(p) {
+var WidgetChoices_SelectHeaderUI = observer44(function WidgetChoices_SelectLineUI_(p) {
   const widget = p.widget;
   const choices = widget.choicesWithLabels;
   return /* @__PURE__ */ jsx(
@@ -5239,7 +5293,7 @@ var WidgetChoices_SelectHeaderUI = observer43(function WidgetChoices_SelectLineU
       tw: [
         //
         "relative",
-        p.widget.expand || p.widget.config.alignLabel ? "w-full" : "w-64"
+        p.widget.expand || p.widget.config.justifyLabel ? "w-full" : "w-64"
       ],
       onMouseDown: (ev) => {
         ev.preventDefault();
@@ -5266,7 +5320,7 @@ var WidgetChoices_SelectHeaderUI = observer43(function WidgetChoices_SelectLineU
 });
 
 // src/controls/widgets/choices/WidgetChoices.tsx
-import { nanoid as nanoid8 } from "nanoid";
+import { nanoid as nanoid9 } from "nanoid";
 var Widget_choices = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -5275,16 +5329,14 @@ var Widget_choices = class extends BaseWidget {
     this.spec = spec;
     this.UITab = () => /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { widget: this });
     this.UISelect = () => /* @__PURE__ */ jsx(WidgetChoices_HeaderUI, { widget: this });
-    this.UIChildren = () => /* @__PURE__ */ jsx(WidgetChoices_BodyUI, { widget: this, alignLabel: false });
+    this.UIChildren = () => /* @__PURE__ */ jsx(WidgetChoices_BodyUI, { widget: this, justify: false });
     this.DefaultHeaderUI = WidgetChoices_HeaderUI;
     this.DefaultBodyUI = WidgetChoices_BodyUI;
-    /* override */
-    this.background = true;
     this.type = "choices";
     this.expand = this.config.expand ?? false;
     this.children = {};
     this.isBranchDisabled = (branch) => !this.serial.branches[branch];
-    this.id = serial?.id ?? nanoid8();
+    this.id = serial?.id ?? nanoid9();
     const config = spec.config;
     if (typeof config.items === "function") {
       toastError('\u{1F534} ChoicesWidget "items" property should now be an object, not a function');
@@ -5456,8 +5508,8 @@ var Widget_choices = class extends BaseWidget {
 registerWidgetClass("choices", Widget_choices);
 
 // src/controls/widgets/color/WidgetColorUI.tsx
-import { observer as observer44 } from "mobx-react-lite";
-var WidgetColorUI = observer44(function WidgetColorUI_(p) {
+import { observer as observer45 } from "mobx-react-lite";
+var WidgetColorUI = observer45(function WidgetColorUI_(p) {
   const widget = p.widget;
   return (
     // <div>
@@ -5474,7 +5526,7 @@ var WidgetColorUI = observer44(function WidgetColorUI_(p) {
 
 // src/controls/widgets/color/WidgetColor.tsx
 import { runInAction as runInAction7 } from "mobx";
-import { nanoid as nanoid9 } from "nanoid";
+import { nanoid as nanoid10 } from "nanoid";
 var Widget_color = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -5487,7 +5539,7 @@ var Widget_color = class extends BaseWidget {
     this.defaultValue = this.config.default ?? "#000000";
     // prettier-ignore
     this.reset = () => this.value = this.defaultValue;
-    this.id = serial?.id ?? nanoid9();
+    this.id = serial?.id ?? nanoid10();
     const config = spec.config;
     this.serial = serial ?? {
       type: "color",
@@ -5524,33 +5576,38 @@ var Widget_color = class extends BaseWidget {
 registerWidgetClass("color", Widget_color);
 
 // src/csuite/wrappers/FrameSubtle.tsx
-import { observer as observer45 } from "mobx-react-lite";
-var FrameSubtle = observer45(function BoxSubtle_({ children, ...rest }) {
+import { observer as observer46 } from "mobx-react-lite";
+var FrameSubtle = observer46(function BoxSubtle_({ children, ...rest }) {
   return /* @__PURE__ */ jsx(Frame, { ...rest, text: { contrast: 0.3, chromaBlend: 1, hueShift: 0 }, children });
 });
 
 // src/controls/shared/WidgetSingleLineSummaryUI.tsx
-import { observer as observer46 } from "mobx-react-lite";
-var WidgetSingleLineSummaryUI = observer46(function WidgetSingleLineSummaryUI_(p) {
+import { observer as observer47 } from "mobx-react-lite";
+var WidgetSingleLineSummaryUI = observer47(function WidgetSingleLineSummaryUI_(p) {
   return /* @__PURE__ */ jsx(FrameSubtle, { className: "COLLAPSE-PASSTHROUGH ml-1 lh-input line-clamp-1 italic", children: p.children });
 });
 
 // src/controls/widgets/group/WidgetGroupUI.tsx
-import { observer as observer47 } from "mobx-react-lite";
-var WidgetGroup_LineUI = observer47(function WidgetGroup_LineUI_(p) {
-  if (!p.widget.serial.collapsed)
+import { observer as observer48 } from "mobx-react-lite";
+var WidgetGroup_LineUI = observer48(function WidgetGroup_LineUI_(p) {
+  if (!p.widget.serial.collapsed) {
+    return /* @__PURE__ */ jsxs("div", { tw: "ml-auto flex", children: [
+      /* @__PURE__ */ jsx(Button, { square: true, onClick: () => p.widget.expandAllChildren(), subtle: true, icon: "mdiUnfoldMoreHorizontal" }),
+      /* @__PURE__ */ jsx(Button, { square: true, onClick: () => p.widget.collapseAllChildren(), subtle: true, icon: "mdiUnfoldLessHorizontal" })
+    ] });
     return null;
+  }
   return /* @__PURE__ */ jsx(WidgetSingleLineSummaryUI, { children: p.widget.summary });
 });
-var WidgetGroup_BlockUI = observer47(function WidgetGroup_BlockUI_(p) {
+var WidgetGroup_BlockUI = observer48(function WidgetGroup_BlockUI_(p) {
   const widget = p.widget;
   const groupFields = Object.entries(widget.fields);
   const isHorizontal = widget.config.layout === "H";
   return /* @__PURE__ */ jsx(WidgetsContainerUI, { layout: p.widget.config.layout, tw: [widget.config.className, p.className], children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
     WidgetWithLabelUI,
     {
-      rootKey,
-      justifyLabel: isHorizontal ? false : widget.config.alignLabel,
+      fieldName: rootKey,
+      justifyLabel: isHorizontal ? false : widget.config.justifyLabel,
       widget: bang(sub)
     },
     rootKey
@@ -5559,7 +5616,7 @@ var WidgetGroup_BlockUI = observer47(function WidgetGroup_BlockUI_(p) {
 
 // src/controls/widgets/group/WidgetGroup.tsx
 import { runInAction as runInAction8 } from "mobx";
-import { nanoid as nanoid10 } from "nanoid";
+import { nanoid as nanoid11 } from "nanoid";
 var Widget_group = class extends BaseWidget {
   constructor(form, parent, spec, serial, preHydrate) {
     super();
@@ -5578,8 +5635,6 @@ var Widget_group = class extends BaseWidget {
     this.fields = {};
     // will be filled during constructor
     this.serial = {};
-    /* override */
-    this.background = true;
     this._defaultSerial = () => {
       return {
         type: "group",
@@ -5616,7 +5671,7 @@ var Widget_group = class extends BaseWidget {
         };
       }
     });
-    this.id = serial?.id ?? nanoid10();
+    this.id = serial?.id ?? nanoid11();
     this.serial = serial && serial.type === "group" ? serial : this._defaultSerial();
     if (this.serial.values_ == null)
       this.serial.values_ = {};
@@ -5695,8 +5750,8 @@ var Widget_group = class extends BaseWidget {
 registerWidgetClass("group", Widget_group);
 
 // src/controls/widgets/list/ListControlsUI.tsx
-import { observer as observer48 } from "mobx-react-lite";
-var ListControlsUI = observer48(function ListControlsUI_(p) {
+import { observer as observer49 } from "mobx-react-lite";
+var ListControlsUI = observer49(function ListControlsUI_(p) {
   const widget = p.widget;
   const max = widget.config.max;
   const min = widget.config.min;
@@ -5734,7 +5789,7 @@ var ListControlsUI = observer48(function ListControlsUI_(p) {
             subtle: true,
             disabled: !canClear,
             square: true,
-            icon: "mdiDeleteForever",
+            icon: "mdiDeleteOutline",
             onClick: (ev) => {
               if (!canClear)
                 return;
@@ -5775,10 +5830,10 @@ var ListControlsUI = observer48(function ListControlsUI_(p) {
 });
 
 // src/controls/widgets/list/WidgetListUI.tsx
-import { observer as observer49 } from "mobx-react-lite";
+import { observer as observer50 } from "mobx-react-lite";
 import { forwardRef as forwardRef2 } from "react";
 var { default: SortableList, SortableItem, SortableKnob } = await import("react-easy-sort");
-var WidgetList_LineUI = observer49(function WidgetList_LineUI_(p) {
+var WidgetList_LineUI = observer50(function WidgetList_LineUI_(p) {
   return /* @__PURE__ */ jsxs("div", { tw: "flex flex-1 items-center COLLAPSE-PASSTHROUGH", children: [
     /* @__PURE__ */ jsxs("div", { tw: "text-sm text-gray-500 italic", children: [
       p.widget.length,
@@ -5787,7 +5842,7 @@ var WidgetList_LineUI = observer49(function WidgetList_LineUI_(p) {
     p.widget.isAuto ? null : /* @__PURE__ */ jsx("div", { tw: "ml-auto", children: /* @__PURE__ */ jsx(ListControlsUI, { widget: p.widget }) })
   ] });
 });
-var WidgetList_BodyUI = observer49(function WidgetList_BodyUI_(p) {
+var WidgetList_BodyUI = observer50(function WidgetList_BodyUI_(p) {
   const widget = p.widget;
   const subWidgets = widget.items;
   const min = widget.config.min;
@@ -5846,7 +5901,7 @@ var ListDragHandleUI = forwardRef2((p, ref) => {
 
 // src/controls/widgets/list/WidgetList.ts
 import { observable as observable9, reaction } from "mobx";
-import { nanoid as nanoid11 } from "nanoid";
+import { nanoid as nanoid12 } from "nanoid";
 var Widget_list = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -5856,8 +5911,6 @@ var Widget_list = class extends BaseWidget {
     this.DefaultHeaderUI = WidgetList_LineUI;
     this.DefaultBodyUI = WidgetList_BodyUI;
     this.type = "list";
-    /* override */
-    this.background = true;
     this.reset = () => {
       if (!this.config.auto) {
         const defaultLength = clampOpt(this.config.defaultLength, this.config.min, this.config.max);
@@ -5958,7 +6011,7 @@ var Widget_list = class extends BaseWidget {
       instances.splice(newIndex, 0, bang(instances.splice(oldIndex, 1)[0]));
       this.bumpValue();
     };
-    this.id = serial?.id ?? nanoid11();
+    this.id = serial?.id ?? nanoid12();
     this.serial = serial ?? observable9({ type: "list", id: this.id, active: true, items_: [] });
     if (this.serial.items_ == null)
       this.serial.items_ = [];
@@ -6061,14 +6114,14 @@ var Widget_list = class extends BaseWidget {
 registerWidgetClass("list", Widget_list);
 
 // src/controls/widgets/markdown/WidgetMarkdownUI.tsx
-import { observer as observer50 } from "mobx-react-lite";
-var WidgetMardownUI = observer50(function WidgetMardownUI_(p) {
+import { observer as observer51 } from "mobx-react-lite";
+var WidgetMardownUI = observer51(function WidgetMardownUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx(MarkdownUI, { tw: "_WidgetMardownUI w-full", markdown: widget.markdown });
 });
 
 // src/controls/widgets/markdown/WidgetMarkdown.ts
-import { nanoid as nanoid12 } from "nanoid";
+import { nanoid as nanoid13 } from "nanoid";
 var Widget_markdown = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -6081,7 +6134,7 @@ var Widget_markdown = class extends BaseWidget {
     /** do nothing */
     this.reset = () => {
     };
-    this.id = serial?.id ?? nanoid12();
+    this.id = serial?.id ?? nanoid13();
     const config = spec.config;
     this.serial = serial ?? { type: "markdown", collapsed: config.startCollapsed, active: true, id: this.id };
     makeAutoObservableInheritance(this);
@@ -6095,10 +6148,6 @@ var Widget_markdown = class extends BaseWidget {
     if (this.config.inHeader)
       return void 0;
     return WidgetMardownUI;
-  }
-  get alignLabel() {
-    if (this.config.inHeader)
-      return false;
   }
   get baseErrors() {
     return null;
@@ -6121,8 +6170,8 @@ var Widget_markdown = class extends BaseWidget {
 registerWidgetClass("markdown", Widget_markdown);
 
 // src/controls/widgets/matrix/WidgetMatrixUI.tsx
-import { observer as observer51 } from "mobx-react-lite";
-var WidgetMatrixUI = observer51(function WidgetStrUI_(p) {
+import { observer as observer52 } from "mobx-react-lite";
+var WidgetMatrixUI = observer52(function WidgetStrUI_(p) {
   const widget = p.widget;
   const cols = widget.cols;
   const rows = widget.rows;
@@ -6155,7 +6204,7 @@ var WidgetMatrixUI = observer51(function WidgetStrUI_(p) {
         "td",
         {
           onClick: () => widget.setRow(row, !widget.getCell(row, cols[0]).value),
-          className: "bg-base-302 virtualBorder cursor-pointer",
+          className: "virtualBorder cursor-pointer",
           children: row
         }
       ),
@@ -6166,7 +6215,7 @@ var WidgetMatrixUI = observer51(function WidgetStrUI_(p) {
           {
             className: "hover:bg-gray-400 cursor-pointer virtualBorder",
             onClick: () => widget.setCell(row, col, !checked),
-            tw: [checked ? void 0 : "bg-base-200"],
+            tw: [checked ? void 0 : ""],
             style: {
               background: checked ? "oklch(var(--p)/.5)" : void 0,
               height: "2rem",
@@ -6182,8 +6231,9 @@ var WidgetMatrixUI = observer51(function WidgetStrUI_(p) {
 
 // src/controls/widgets/matrix/WidgetMatrix.ts
 import { runInAction as runInAction9 } from "mobx";
-import { nanoid as nanoid13 } from "nanoid";
+import { nanoid as nanoid14 } from "nanoid";
 var Widget_matrix = class extends BaseWidget {
+  // justifyLabel = false
   constructor(form, parent, spec, serial) {
     super();
     this.form = form;
@@ -6192,7 +6242,6 @@ var Widget_matrix = class extends BaseWidget {
     this.DefaultHeaderUI = WidgetMatrixUI;
     this.DefaultBodyUI = void 0;
     this.type = "matrix";
-    this.alignLabel = false;
     this.sep = " &&& ";
     this.store = /* @__PURE__ */ new Map();
     this.key = (row, col) => `${row}${this.sep}${col}`;
@@ -6230,7 +6279,7 @@ var Widget_matrix = class extends BaseWidget {
       cell.value = value;
       this.UPDATE();
     };
-    this.id = serial?.id ?? nanoid13();
+    this.id = serial?.id ?? nanoid14();
     const config = spec.config;
     this.serial = serial ?? { type: "matrix", collapsed: config.startCollapsed, id: this.id, active: true, selected: [] };
     const rows = config.rows;
@@ -6315,9 +6364,9 @@ var parseFloatNoRoundingErr = (str, maxDigitsAfterDot = 3) => {
 
 // src/csuite/input-number/InputNumberUI.tsx
 import { makeAutoObservable as makeAutoObservable10, runInAction as runInAction10 } from "mobx";
-import { observer as observer52 } from "mobx-react-lite";
+import { observer as observer53 } from "mobx-react-lite";
 import React3, { useEffect as useEffect3, useMemo as useMemo6 } from "react";
-var clamp3 = (x, min, max) => Math.max(min, Math.min(max, x));
+var clamp2 = (x, min, max) => Math.max(min, Math.min(max, x));
 var startValue = 0;
 var dragged = false;
 var cumulativeOffset = 0;
@@ -6350,9 +6399,9 @@ var InputNumberStableState = class {
       if (this.mode === "int")
         num = Math.round(num);
       if (soft && startValue <= this.rangeMax && startValue >= this.rangeMin) {
-        num = clamp3(num, this.rangeMin, this.rangeMax);
+        num = clamp2(num, this.rangeMin, this.rangeMax);
       } else {
-        num = clamp3(num, this.props.min ?? -Infinity, this.props.max ?? Infinity);
+        num = clamp2(num, this.props.min ?? -Infinity, this.props.max ?? Infinity);
       }
       if (!skipRounding) {
         const roundingPrecise = Math.ceil(-Math.log10(this.step * 0.01 * roundingModifier));
@@ -6419,7 +6468,7 @@ var InputNumberStableState = class {
     makeAutoObservable10(this);
   }
   get value() {
-    return this.props.value ?? clamp3(1, this.props.min ?? -Infinity, this.props.max ?? Infinity);
+    return this.props.value ?? clamp2(1, this.props.min ?? -Infinity, this.props.max ?? Infinity);
   }
   get mode() {
     return this.props.mode;
@@ -6446,7 +6495,7 @@ var InputNumberStableState = class {
     return this.mode === "int";
   }
 };
-var InputNumberUI = observer52(function InputNumberUI_(p) {
+var InputNumberUI = observer53(function InputNumberUI_(p) {
   const kit = useCSuite();
   const uist = useMemo6(() => new InputNumberStableState(p, kit), []);
   runInAction10(() => Object.assign(uist.props, p));
@@ -6469,7 +6518,7 @@ var InputNumberUI = observer52(function InputNumberUI_(p) {
         p.disabled && "pointer-events-none opacity-25",
         "h-input relative",
         "input-number-ui",
-        "flex-1 select-none min-w-16 cursor-ew-resize overflow-clip"
+        "flex-1 select-none min-w-24 cursor-ew-resize overflow-clip"
         // !isEditing && 'hover:border-base-200 hover:border-b-base-300 hover:bg-primary/40',
       ],
       onWheel: (ev) => {
@@ -6477,7 +6526,7 @@ var InputNumberUI = observer52(function InputNumberUI_(p) {
           let num = uist.isInteger ? step * -Math.sign(ev.deltaY) : step * -Math.sign(ev.deltaY) * 0.1;
           num = val + num;
           num = uist.isInteger ? Math.round(num) : parseFloatNoRoundingErr(num, rounding);
-          num = clamp3(num, p.min ?? -Infinity, p.max ?? Infinity);
+          num = clamp2(num, p.min ?? -Infinity, p.max ?? Infinity);
           uist.syncValues(num, void 0);
           ev.preventDefault();
           ev.stopPropagation();
@@ -6488,7 +6537,7 @@ var InputNumberUI = observer52(function InputNumberUI_(p) {
           Frame,
           {
             className: "inui-foreground",
-            base: { contrast: !p.hideSlider && !isEditing ? 0.08 : 0, chroma: 0.06 },
+            base: { contrast: p.hideSlider ? 0 : 0.1, chroma: 0.02 },
             tw: ["z-10 absolute left-0 h-input"],
             style: { width: `${(val - uist.rangeMin) / (uist.rangeMax - uist.rangeMin) * 100}%` }
           }
@@ -6632,8 +6681,8 @@ var InputNumberUI = observer52(function InputNumberUI_(p) {
 });
 
 // src/controls/widgets/number/WidgetNumberUI.tsx
-import { observer as observer53 } from "mobx-react-lite";
-var WidgetNumberUI = observer53(function WidgetNumberUI_(p) {
+import { observer as observer54 } from "mobx-react-lite";
+var WidgetNumberUI = observer54(function WidgetNumberUI_(p) {
   const widget = p.widget;
   const value = widget.serial.val;
   const mode = widget.config.mode;
@@ -6659,7 +6708,7 @@ var WidgetNumberUI = observer53(function WidgetNumberUI_(p) {
 
 // src/controls/widgets/number/WidgetNumber.tsx
 import { computed as computed4, observable as observable10, runInAction as runInAction11 } from "mobx";
-import { nanoid as nanoid14 } from "nanoid";
+import { nanoid as nanoid15 } from "nanoid";
 var Widget_number = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -6677,7 +6726,7 @@ var Widget_number = class extends BaseWidget {
         return;
       this.value = this.defaultValue;
     };
-    this.id = serial?.id ?? nanoid14();
+    this.id = serial?.id ?? nanoid15();
     const config = spec.config;
     this.serial = serial ?? {
       type: "number",
@@ -6721,7 +6770,7 @@ registerWidgetClass("number", Widget_number);
 
 // src/controls/widgets/optional/WidgetOptional.tsx
 import { computed as computed5, observable as observable11 } from "mobx";
-import { nanoid as nanoid15 } from "nanoid";
+import { nanoid as nanoid16 } from "nanoid";
 var Widget_optional = class extends BaseWidget {
   constructor(form, parent, spec, serial) {
     super();
@@ -6770,7 +6819,7 @@ var Widget_optional = class extends BaseWidget {
         this.serial.child = this.child.serial;
       }
     };
-    this.id = serial?.id ?? nanoid15();
+    this.id = serial?.id ?? nanoid16();
     const config = spec.config;
     const defaultActive = config.startActive;
     this.serial = serial ?? {
@@ -6836,8 +6885,8 @@ var Widget_optional = class extends BaseWidget {
 registerWidgetClass("optional", Widget_optional);
 
 // src/controls/widgets/seed/WidgetSeedUI.tsx
-import { observer as observer54 } from "mobx-react-lite";
-var WidgetSeedUI = observer54(function WidgetSeedUI_(p) {
+import { observer as observer55 } from "mobx-react-lite";
+var WidgetSeedUI = observer55(function WidgetSeedUI_(p) {
   const widget = p.widget;
   const val = widget.serial.val;
   const csuite = useCSuite();
@@ -6846,19 +6895,17 @@ var WidgetSeedUI = observer54(function WidgetSeedUI_(p) {
     /* @__PURE__ */ jsx(
       InputBoolToggleButtonUI,
       {
-        icon: "mdiShuffle",
+        icon: "mdiAutoFix",
         value: widget.serial.mode === "randomize",
-        onValueChange: () => widget.setToRandomize(),
-        text: "Random"
+        onValueChange: () => widget.setToRandomize()
       }
     ),
     /* @__PURE__ */ jsx(
       InputBoolToggleButtonUI,
       {
-        icon: "mdiDotsGrid",
+        icon: "mdiNumeric1CircleOutline",
         value: widget.serial.mode === "fixed",
-        onValueChange: () => widget.setToFixed(),
-        text: "Fixed"
+        onValueChange: () => widget.setToFixed()
       }
     ),
     /* @__PURE__ */ jsx(
@@ -6888,7 +6935,7 @@ var WidgetSeedUI = observer54(function WidgetSeedUI_(p) {
 });
 
 // src/controls/widgets/seed/WidgetSeed.ts
-import { nanoid as nanoid16 } from "nanoid";
+import { nanoid as nanoid17 } from "nanoid";
 var Widget_seed_fromValue = (value) => ({
   type: "seed",
   mode: "fixed",
@@ -6902,10 +6949,18 @@ var Widget_seed = class extends BaseWidget {
     this.spec = spec;
     this.DefaultHeaderUI = WidgetSeedUI;
     this.DefaultBodyUI = void 0;
-    this.defaultValue = this.config.default ?? 0;
-    // prettier-ignore
-    this.reset = () => this.value = this.defaultValue;
+    this.reset = () => {
+      this.setMode(this.defaultMode);
+      if (this.serial.mode !== "randomize")
+        this.setValue(this.defaultValue);
+    };
     this.type = "seed";
+    this.setMode = (mode) => {
+      if (this.serial.mode === mode)
+        return;
+      this.serial.mode = mode;
+      this.bumpValue();
+    };
     this.setToFixed = (val) => {
       this.serial.mode = "fixed";
       if (val)
@@ -6922,13 +6977,13 @@ var Widget_seed = class extends BaseWidget {
       this.serial.val = val;
       this.bumpValue();
     };
-    this.id = serial?.id ?? nanoid16();
+    this.id = serial?.id ?? nanoid17();
     const config = spec.config;
     this.serial = serial ?? {
       type: "seed",
       id: this.id,
-      val: config.default ?? 0,
-      mode: config.defaultMode ?? "randomize"
+      val: this.defaultValue,
+      mode: this.defaultMode
     };
     makeAutoObservableInheritance(this, {
       DefaultHeaderUI: false,
@@ -6939,7 +6994,17 @@ var Widget_seed = class extends BaseWidget {
     return null;
   }
   get hasChanges() {
-    return this.value !== this.defaultValue;
+    if (this.serial.mode !== this.defaultMode)
+      return true;
+    if (this.serial.mode === "fixed")
+      return this.value !== this.defaultValue;
+    return false;
+  }
+  get defaultMode() {
+    return this.config.defaultMode ?? "randomize";
+  }
+  get defaultValue() {
+    return this.config.default ?? 0;
   }
   set value(val) {
     this.serial.val = val;
@@ -6953,14 +7018,14 @@ var Widget_seed = class extends BaseWidget {
 registerWidgetClass("seed", Widget_seed);
 
 // src/controls/widgets/selectMany/WidgetSelectManyUI.tsx
-import { observer as observer55 } from "mobx-react-lite";
-var WidgetSelectManyUI = observer55(function WidgetSelectManyUI_(p) {
+import { observer as observer56 } from "mobx-react-lite";
+var WidgetSelectManyUI = observer56(function WidgetSelectManyUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectMany_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectMany_SelectUI, { widget });
 });
-var WidgetSelectMany_TabUI = observer55(function WidgetSelectMany_TabUI_(p) {
+var WidgetSelectMany_TabUI = observer56(function WidgetSelectMany_TabUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsxs("div", { tw: "rounded select-none flex flex-wrap gap-x-0.5 gap-y-0", children: [
@@ -6993,7 +7058,7 @@ var WidgetSelectMany_TabUI = observer55(function WidgetSelectMany_TabUI_(p) {
     widget.baseErrors && /* @__PURE__ */ jsx(MessageErrorUI, { children: /* @__PURE__ */ jsx("ul", { children: widget.baseErrors.map((e, ix) => /* @__PURE__ */ jsx("li", { children: e }, ix)) }) })
   ] });
 });
-var WidgetSelectMany_SelectUI = observer55(function WidgetSelectMany_SelectUI_(p) {
+var WidgetSelectMany_SelectUI = observer56(function WidgetSelectMany_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsxs("div", { tw: "flex-1", children: [
     /* @__PURE__ */ jsx(
@@ -7021,7 +7086,7 @@ var WidgetSelectMany_SelectUI = observer55(function WidgetSelectMany_SelectUI_(p
 
 // src/controls/widgets/selectMany/WidgetSelectMany.tsx
 import { runInAction as runInAction12 } from "mobx";
-import { nanoid as nanoid17 } from "nanoid";
+import { nanoid as nanoid18 } from "nanoid";
 var Widget_selectMany_fromValue = (values) => ({
   type: "selectMany",
   query: "",
@@ -7066,7 +7131,7 @@ var Widget_selectMany = class extends BaseWidget {
         this.bumpValue();
       }
     };
-    this.id = serial?.id ?? nanoid17();
+    this.id = serial?.id ?? nanoid18();
     const config = spec.config;
     this.serial = serial ?? {
       type: "selectMany",
@@ -7126,14 +7191,14 @@ var Widget_selectMany = class extends BaseWidget {
 registerWidgetClass("selectMany", Widget_selectMany);
 
 // src/controls/widgets/selectOne/WidgetSelectOneUI.tsx
-import { observer as observer56 } from "mobx-react-lite";
-var WidgetSelectOneUI = observer56(function WidgetSelectOneUI_(p) {
+import { observer as observer57 } from "mobx-react-lite";
+var WidgetSelectOneUI = observer57(function WidgetSelectOneUI_(p) {
   const widget = p.widget;
   if (widget.config.appearance === "tab")
     return /* @__PURE__ */ jsx(WidgetSelectOne_TabUI, { widget });
   return /* @__PURE__ */ jsx(WidgetSelectOne_SelectUI, { widget });
 });
-var WidgetSelectOne_TabUI = observer56(function WidgetSelectOne_TabUI_(p) {
+var WidgetSelectOne_TabUI = observer57(function WidgetSelectOne_TabUI_(p) {
   const widget = p.widget;
   const selected = widget.serial.val;
   return /* @__PURE__ */ jsxs("div", { children: [
@@ -7160,7 +7225,7 @@ var WidgetSelectOne_TabUI = observer56(function WidgetSelectOne_TabUI_(p) {
     ] })
   ] });
 });
-var WidgetSelectOne_SelectUI = observer56(function WidgetSelectOne_SelectUI_(p) {
+var WidgetSelectOne_SelectUI = observer57(function WidgetSelectOne_SelectUI_(p) {
   const widget = p.widget;
   return /* @__PURE__ */ jsx("div", { tw: "flex-1", children: /* @__PURE__ */ jsx(
     SelectUI,
@@ -7192,7 +7257,7 @@ var WidgetSelectOne_SelectUI = observer56(function WidgetSelectOne_SelectUI_(p) 
 
 // src/controls/widgets/selectOne/WidgetSelectOne.ts
 import { runInAction as runInAction13 } from "mobx";
-import { nanoid as nanoid18 } from "nanoid";
+import { nanoid as nanoid19 } from "nanoid";
 var Widget_selectOne_fromValue = (val) => ({
   type: "selectOne",
   query: "",
@@ -7211,7 +7276,7 @@ var Widget_selectOne = class extends BaseWidget {
     this.reset = () => {
       this.value = this.defaultValue;
     };
-    this.id = serial?.id ?? nanoid18();
+    this.id = serial?.id ?? nanoid19();
     const config = spec.config;
     const choices = this.choices;
     this.serial = serial ?? {
@@ -7272,7 +7337,7 @@ var Widget_selectOne = class extends BaseWidget {
 registerWidgetClass("selectOne", Widget_selectOne);
 
 // src/controls/widgets/shared/WidgetShared.tsx
-import { nanoid as nanoid19 } from "nanoid";
+import { nanoid as nanoid20 } from "nanoid";
 var Widget_shared_fromValue = (val) => ({
   type: "shared"
 });
@@ -7293,7 +7358,7 @@ var Widget_shared = class _Widget_shared extends BaseWidget {
       const spec2 = new ctor("shared", config);
       new _Widget_shared(this.form, null, spec2, this.serial);
     };
-    this.id = serial?.id ?? nanoid19();
+    this.id = serial?.id ?? nanoid20();
     const config = spec.config;
     this.serial = serial ?? { id: this.id, type: "shared", collapsed: config.startCollapsed };
     makeAutoObservableInheritance(this);
@@ -7430,14 +7495,14 @@ var ResolutionState = class {
 };
 
 // src/controls/widgets/size/WidgetSizeUI.tsx
-import { observer as observer57 } from "mobx-react-lite";
-var WigetSize_LineUI = observer57(function WigetSize_LineUI_(p) {
+import { observer as observer58 } from "mobx-react-lite";
+var WigetSize_LineUI = observer58(function WigetSize_LineUI_(p) {
   return /* @__PURE__ */ jsx(WidgetSizeX_LineUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WigetSize_BlockUI = observer57(function WigetSize_BlockUI_(p) {
+var WigetSize_BlockUI = observer58(function WigetSize_BlockUI_(p) {
   return /* @__PURE__ */ jsx(WigetSizeXUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
 });
-var WidgetSizeX_LineUI = observer57(function WidgetSize_LineUI_(p) {
+var WidgetSizeX_LineUI = observer58(function WidgetSize_LineUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx("div", { className: "flex flex-1 flex-col gap-1", children: /* @__PURE__ */ jsxs(
     Frame,
@@ -7485,7 +7550,7 @@ var WidgetSizeX_LineUI = observer57(function WidgetSize_LineUI_(p) {
     }
   ) });
 });
-var AspectLockButtonUI = observer57(function AspectLockButtonUI_(p) {
+var AspectLockButtonUI = observer58(function AspectLockButtonUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx(
     Frame,
@@ -7507,7 +7572,7 @@ var AspectLockButtonUI = observer57(function AspectLockButtonUI_(p) {
     }
   );
 });
-var AspectRatioSquareUI = observer57(function AspectRatioSquareUI_(p) {
+var AspectRatioSquareUI = observer58(function AspectRatioSquareUI_(p) {
   const uist = p.sizeHelper;
   const ratioDisplaySize = 26;
   return /* @__PURE__ */ jsx(
@@ -7541,7 +7606,7 @@ var AspectRatioSquareUI = observer57(function AspectRatioSquareUI_(p) {
     }
   );
 });
-var WigetSizeXUI = observer57(function WigetSizeXUI_(p) {
+var WigetSizeXUI = observer58(function WigetSizeXUI_(p) {
   const uist = p.sizeHelper;
   const resoBtn = (ar) => /* @__PURE__ */ jsx(
     InputBoolUI,
@@ -7592,7 +7657,7 @@ var WigetSizeXUI = observer57(function WigetSizeXUI_(p) {
 
 // src/controls/widgets/size/WidgetSize.ts
 import { runInAction as runInAction14 } from "mobx";
-import { nanoid as nanoid20 } from "nanoid";
+import { nanoid as nanoid21 } from "nanoid";
 var Widget_size_fromValue = (val) => ({
   ...val
 });
@@ -7605,7 +7670,7 @@ var Widget_size = class extends BaseWidget {
     this.DefaultHeaderUI = WigetSize_LineUI;
     this.DefaultBodyUI = WigetSize_BlockUI;
     this.type = "size";
-    this.id = serial?.id ?? nanoid20();
+    this.id = serial?.id ?? nanoid21();
     const config = spec.config;
     if (serial) {
       this.serial = serial;
@@ -7702,14 +7767,14 @@ var Widget_size = class extends BaseWidget {
 registerWidgetClass("size", Widget_size);
 
 // src/controls/widgets/spacer/WidgetSpacerUI.tsx
-import { observer as observer58 } from "mobx-react-lite";
-var WidgetSpacerUI = observer58(function WidgetSpacerUI_(p) {
+import { observer as observer59 } from "mobx-react-lite";
+var WidgetSpacerUI = observer59(function WidgetSpacerUI_(p) {
   return /* @__PURE__ */ jsx(SpacerUI, {});
 });
 
 // src/controls/widgets/spacer/WidgetSpacer.tsx
 import { observable as observable12 } from "mobx";
-import { nanoid as nanoid21 } from "nanoid";
+import { nanoid as nanoid22 } from "nanoid";
 var Widget_spacer_fromValue = (val) => ({
   type: "spacer"
 });
@@ -7725,7 +7790,7 @@ var Widget_spacer = class extends BaseWidget {
     this.hasChanges = false;
     this.reset = () => {
     };
-    this.id = serial?.id ?? nanoid21();
+    this.id = serial?.id ?? nanoid22();
     this.serial = serial ?? {
       id: this.id,
       type: "spacer",
@@ -7773,18 +7838,17 @@ var fmtNum1 = (n) => {
 };
 
 // src/csuite/input-string/InputStringUI.tsx
-import { observer as observer59 } from "mobx-react-lite";
-import { useState } from "react";
-var InputStringUI = observer59(function WidgetStringUI_(p) {
-  const widget = p;
-  const value = widget.getValue();
-  const isBuffered = Boolean(widget.buffered);
-  const temporaryValue = widget.buffered?.getTemporaryValue?.();
+import { observer as observer60 } from "mobx-react-lite";
+import { useState as useState2 } from "react";
+var InputStringUI = observer60(function WidgetStringUI_(p) {
+  const value = p.getValue();
+  const isBuffered = Boolean(p.buffered);
+  const temporaryValue = p.buffered?.getTemporaryValue?.();
   const isDirty = isBuffered && temporaryValue != null && temporaryValue !== value;
-  const [reveal, setReveal] = useState(false);
+  const [reveal, setReveal] = useState2(false);
   let inputTailwind;
   let visualHelper;
-  switch (widget.type) {
+  switch (p.type) {
     case "color":
       inputTailwind = "absolute w-full h-full !bg-transparent opacity-0 !p-0";
       visualHelper = /* @__PURE__ */ jsx(
@@ -7829,33 +7893,34 @@ var InputStringUI = observer59(function WidgetStringUI_(p) {
           "input",
           {
             tw: ["px-2", inputTailwind],
-            type: reveal ? "text" : widget.type,
-            pattern: widget.pattern,
-            placeholder: widget.placeHolder,
-            value: widget.buffered ? temporaryValue ?? value : value,
+            type: reveal ? "text" : p.type,
+            pattern: p.pattern,
+            placeholder: p.placeholder,
+            autoFocus: p.autofocus,
+            value: p.buffered ? temporaryValue ?? value : value,
             onChange: (ev) => {
-              if (widget.buffered)
-                widget.buffered.setTemporaryValue(ev.target.value);
+              if (p.buffered)
+                p.buffered.setTemporaryValue(ev.target.value);
               else
-                widget.setValue(ev.currentTarget.value);
+                p.setValue(ev.currentTarget.value);
             },
             onDragStart: (ev) => ev.preventDefault(),
             onFocus: (ev) => {
-              widget.buffered?.setTemporaryValue(widget.getValue() ?? "");
+              p.buffered?.setTemporaryValue(p.getValue() ?? "");
               ev.currentTarget.select();
             },
             onBlur: () => {
-              const tempValue = widget.buffered?.getTemporaryValue?.();
+              const tempValue = p.buffered?.getTemporaryValue?.();
               if (tempValue != null)
-                widget.setValue(tempValue);
+                p.setValue(tempValue);
             },
             onKeyDown: (ev) => {
               if (ev.key === "Enter") {
                 ev.currentTarget.blur();
               } else if (ev.key === "Escape") {
-                if (!widget.buffered && temporaryValue)
-                  widget.setValue(temporaryValue);
-                widget.buffered?.setTemporaryValue(null);
+                if (!p.buffered && temporaryValue)
+                  p.setValue(temporaryValue);
+                p.buffered?.setTemporaryValue(null);
                 ev.currentTarget.blur();
               }
             }
@@ -7878,8 +7943,8 @@ var InputStringUI = observer59(function WidgetStringUI_(p) {
 });
 
 // src/controls/widgets/string/WidgetStringUI.tsx
-import { observer as observer60 } from "mobx-react-lite";
-var WidgetString_TextareaHeaderUI = observer60(function WidgetString_TextareaHeaderUI_(p) {
+import { observer as observer61 } from "mobx-react-lite";
+var WidgetString_TextareaHeaderUI = observer61(function WidgetString_TextareaHeaderUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
     return null;
@@ -7887,7 +7952,7 @@ var WidgetString_TextareaHeaderUI = observer60(function WidgetString_TextareaHea
     return null;
   return /* @__PURE__ */ jsx("div", { tw: "line-clamp-1 italic opacity-50", children: p.widget.value });
 });
-var WidgetString_TextareaBodyUI = observer60(function WidgetString_TextareaBodyUI_(p) {
+var WidgetString_TextareaBodyUI = observer61(function WidgetString_TextareaBodyUI_(p) {
   const widget = p.widget;
   if (!widget.config.textarea)
     return null;
@@ -7910,7 +7975,7 @@ var WidgetString_TextareaBodyUI = observer60(function WidgetString_TextareaBodyU
     }
   ) });
 });
-var WidgetString_HeaderUI = observer60(function WidgetStringUI_2(p) {
+var WidgetString_HeaderUI = observer61(function WidgetStringUI_2(p) {
   const widget = p.widget;
   const config = widget.config;
   return /* @__PURE__ */ jsx(
@@ -7931,7 +7996,7 @@ var WidgetString_HeaderUI = observer60(function WidgetStringUI_2(p) {
 
 // src/controls/widgets/string/WidgetString.tsx
 import { runInAction as runInAction15 } from "mobx";
-import { nanoid as nanoid22 } from "nanoid";
+import { nanoid as nanoid23 } from "nanoid";
 var Widget_string_fromValue = (val) => ({
   type: "str",
   val
@@ -7952,7 +8017,7 @@ var Widget_string = class extends BaseWidget {
     this.reset = () => {
       this.value = this.defaultValue;
     };
-    this.id = serial?.id ?? nanoid22();
+    this.id = serial?.id ?? nanoid23();
     const config = spec.config;
     this.serial = serial ?? {
       type: "str",
@@ -8065,7 +8130,7 @@ var SimpleFormBuilder = class {
     /** [markdown variant]: inline=true, label=false */
     this.header = (config) => new SimpleSpec(
       "markdown",
-      typeof config === "string" ? { markdown: config, inHeader: true, label: false } : { inHeader: true, label: false, alignLabel: false, ...config }
+      typeof config === "string" ? { markdown: config, inHeader: true, label: false } : { inHeader: true, label: false, justifyLabel: false, ...config }
     );
     this.int = (config = {}) => {
       return new SimpleSpec("number", { mode: "int", ...config });
@@ -8235,20 +8300,74 @@ var SimpleFormBuilder = class {
   }
 };
 
-// src/controls/Channel.ts
+// src/csuite/ctx/CSuiteProvider.tsx
+import { observer as observer62 } from "mobx-react-lite";
+var CSuiteProvider = observer62(function CSuiteProvider_(p) {
+  const config = p.config;
+  return /* @__PURE__ */ jsx(CSuiteCtx.Provider, { value: config, children: /* @__PURE__ */ jsx(
+    Frame,
+    {
+      className: p.className,
+      tw: "w-full h-full flex-1",
+      base: cushy.theme.value.base,
+      text: cushy.themeText,
+      style: {
+        // @ts-expect-error 🔴
+        "--KLR": config.baseStr,
+        // '--KLRH': config.baseStr,
+        // '--input-border': getNum(config.inputBorder) / 100,
+        "--DIR": config.shiftDirection,
+        "--roundness": "5px",
+        "--input-height": `${config.inputHeight}rem`,
+        "--input-icon-height": `${config.inputHeight / 1.8}rem`
+      },
+      children: p.children
+    }
+  ) });
+});
+
+// src/csuite/ctx/CSuite_ThemeLoco.tsx
 import { makeAutoObservable as makeAutoObservable13 } from "mobx";
-import { nanoid as nanoid23 } from "nanoid";
-var Channel = class {
-  constructor(id = nanoid23()) {
-    this.id = id;
+var CSuite_ThemeLoco = class {
+  constructor() {
+    // form behaviour
+    this.clickAndSlideMultiplicator = 1;
+    this.showWidgetUndo = true;
+    this.showWidgetMenu = true;
+    this.showWidgetDiff = true;
+    this.showToggleButtonBox = false;
+    // theme
+    this.base = { lightness: 0.987, chroma: 0.01, hue: 286 };
+    this.text = { contrast: 0.824 };
+    this.inputBorder = new NumberVar("input-border", 8);
+    this.labelText = { contrast: 0.48, chroma: 0.035 };
+    this.inputHeight = 1.6;
+    this.showWidgetExtra = true;
+    this.truncateLabels = false;
     makeAutoObservable13(this);
+  }
+  get baseStr() {
+    return formatOKLCH(this.base);
+  }
+  get shiftDirection() {
+    return this.base.lightness > 0.5 ? -1 : 1;
+  }
+};
+
+// src/controls/Channel.ts
+import { makeAutoObservable as makeAutoObservable14 } from "mobx";
+import { nanoid as nanoid24 } from "nanoid";
+var Channel = class {
+  constructor(id = nanoid24()) {
+    this.id = id;
+    makeAutoObservable14(this);
   }
 };
 
 // src/operators/activity/ActivityUI.tsx
-import { observer as observer61 } from "mobx-react-lite";
+import { observer as observer63 } from "mobx-react-lite";
 import { Fragment as Fragment5 } from "react/jsx-runtime";
-var ActivityStackUI = observer61(function ActivityStackUI_(p) {
+var ActivityStackUI = observer63(function ActivityStackUI_(p) {
   return /* @__PURE__ */ jsx(Fragment5, { children: activityManager._stack.map((activity, ix) => /* @__PURE__ */ jsx(
     ActivityContainerUI,
     {
@@ -8269,7 +8388,7 @@ var ActivityStackUI = observer61(function ActivityStackUI_(p) {
     activity.uid
   )) });
 });
-var ActivityContainerUI = observer61(function ActivityContainerUI_(p) {
+var ActivityContainerUI = observer63(function ActivityContainerUI_(p) {
   const backdropzIndex = 1e3 + 100 * (p.ix ?? 1);
   const activityZIndex = backdropzIndex + 1;
   let pos = void 0;
@@ -8341,6 +8460,8 @@ export {
   BoundMenuSym,
   Button,
   CSuiteCtx,
+  CSuiteProvider,
+  CSuite_ThemeLoco,
   CSuite_theme1,
   Channel,
   ComboUI,
@@ -8363,6 +8484,7 @@ export {
   Ikon,
   IkonOf,
   InputBoolCheckboxUI,
+  InputBoolToggleButtonBoxUI,
   InputBoolToggleButtonUI,
   InputBoolUI,
   InputNumberUI,
@@ -8484,7 +8606,6 @@ export {
   activityManager,
   addRule,
   allIcons,
-  applyBoxToCtx,
   applyKolorToOKLCH,
   asSTRING_orCrash,
   bang,
@@ -8492,25 +8613,25 @@ export {
   clampOpt,
   command,
   commandManager,
-  compileKolorToCSSExpression,
+  compileOrRetrieveClassName,
   computePlacement,
+  configureFrameEngine,
   debounce,
   defaultHideDelay_whenNested,
   defaultHideDelay_whenRoot,
   defaultShowDelay_whenNested,
   defaultShowDelay_whenRoot,
   defaultTreeStorage,
-  exhaust,
-  extractNormalizeBox,
   formatOKLCH,
-  frames,
+  frameTemplateNames,
+  frameTemplates,
   genUID,
   getActualWidgetToDisplay,
-  getAllIcons,
-  getClassNameForSize,
   getCurrentForm_IMPL,
   getId,
-  getIfWidgetNeedAlignedLabel,
+  getIfWidgetNeedJustifiedLabel,
+  getInputBoolChroma,
+  getInputBoolContrast,
   getLCHFromString,
   getLCHFromStringAsString,
   getNum,
@@ -8519,7 +8640,6 @@ export {
   global_RevealStack,
   hasMod,
   hasRule,
-  hashKolor,
   isBoundCommand,
   isBoundMenu,
   isCommand,
@@ -8536,7 +8656,7 @@ export {
   menu,
   menuWithoutProps,
   menu_widgetActions,
-  normalizeBoxKolor,
+  normalizeBox,
   normalizeCushyShortcut,
   normalizeProblem,
   normalizeText,

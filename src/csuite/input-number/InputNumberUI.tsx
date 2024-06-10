@@ -260,7 +260,7 @@ export const InputNumberUI = observer(function InputNumberUI_(p: InputNumberProp
                 p.disabled && 'pointer-events-none opacity-25',
                 'h-input relative',
                 'input-number-ui',
-                'flex-1 select-none min-w-16 cursor-ew-resize overflow-clip',
+                'flex-1 select-none min-w-24 cursor-ew-resize overflow-clip',
                 // !isEditing && 'hover:border-base-200 hover:border-b-base-300 hover:bg-primary/40',
             ]}
             onWheel={(ev) => {
@@ -279,7 +279,7 @@ export const InputNumberUI = observer(function InputNumberUI_(p: InputNumberProp
         >
             <Frame /* Slider display */
                 className='inui-foreground'
-                base={{ contrast: !p.hideSlider && !isEditing ? 0.08 : 0, chroma: 0.06 }}
+                base={{ contrast: p.hideSlider ? 0 : 0.1, chroma: 0.02 }}
                 tw={['z-10 absolute left-0 h-input']}
                 style={{ width: `${((val - uist.rangeMin) / (uist.rangeMax - uist.rangeMin)) * 100}%` }}
             />

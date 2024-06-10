@@ -1,6 +1,6 @@
 {
     "name": "@cushy/forms",
-    "version": "0.0.1717688930152",
+    "version": "0.0.1718013358895",
     "author": {
         "name": "rvion",
         "url": "https://github.com/rvion/CushyStudio",
@@ -28,10 +28,11 @@
     "peerDeps": {
         "nanoid": "*",
         "colorjs.io": "*",
-        "mobx": "*",
         "react": "*",
         "@mdi/js": "*",
         "@mdi/react": "*",
+        "mobx": "*",
+        "crypto": "*",
         "mobx-react-lite": "*",
         "marked": "*",
         "https:": "*",

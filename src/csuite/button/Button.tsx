@@ -19,13 +19,13 @@ export const Button = observer(function Button_(
 
     // ensure any unmounting of this component will properly clean-up
     useEffect(() => uist.release, [])
-    const { size, look, onClick, ...rest } = p
+    const { size, look, subtle, borderless, onClick, ...rest } = p
     return (
         <Frame //
             size={size ?? 'input'}
             look={look}
-            base={p.subtle ? 0 : uist.running ? 10 : 5}
-            border={p.borderless ? 0 : 10}
+            base={subtle ? 0 : uist.running ? 10 : 5}
+            border={borderless ? 0 : 10}
             hover={p.disabled ? false : 3}
             active={uist.visuallyActive}
             disabled={p.disabled}
@@ -33,6 +33,7 @@ export const Button = observer(function Button_(
             tabIndex={p.tabIndex ?? -1}
             onMouseDown={uist.press}
             onClick={uist.onClick}
+            // iconSize='1.3em'
             {...rest}
             tw={[
                 'inline-flex',

@@ -3,21 +3,18 @@ INPUT:
     src/controls/utils/clamp.ts ([object Set])
     src/csuite/kolor/getLCHFromString.tsx ([object Set])
     src/csuite/box/BoxNormalized.tsx ([object Set])
-    src/csuite/tinyCSS/CSSVar.tsx ([object Set])
-    src/csuite/kolor/applyRelative.tsx ([object Set])
-    src/csuite/kolor/overrideKolor.tsx ([object Set])
-    src/csuite/box/compileBoxClassName.tsx ([object Set])
     src/csuite/box/CurrentStyleCtx.tsx ([object Set])
     src/csuite/button/usePressLogic.ts ([object Set])
     src/csuite/icons/icons.ts ([object Set])
     src/utils/custom-jsx/jsx-runtime.js ([object Set])
     src/csuite/icons/iconHelpers.tsx ([object Set])
-    src/csuite/kolor/compileKolorToCSSExpression.tsx ([object Set])
+    src/csuite/tinyCSS/CSSVar.tsx ([object Set])
+    src/csuite/kolor/applyRelative.tsx ([object Set])
     src/csuite/kolor/formatOKLCH.tsx ([object Set])
     src/csuite/kolor/OKLCH.tsx ([object Set])
+    src/csuite/kolor/overrideKolor.tsx ([object Set])
     src/csuite/tinyCSS/compileOrRetrieveClassName.tsx ([object Set])
-    src/utils/misc/exhaust.ts ([object Set])
-    src/csuite/frame/FrameSize.tsx ([object Set])
+    src/csuite/tinyCSS/quickClass.ts ([object Set])
     src/csuite/frame/FrameTemplates.ts ([object Set])
     src/csuite/frame/Frame.tsx ([object Set])
     src/csuite/button/Button.tsx ([object Set])
@@ -43,16 +40,18 @@ INPUT:
     src/utils/mobx-store-inheritance.ts ([object Set])
     src/controls/IWidget.ts ([object Set])
     src/controls/shared/getActualWidgetToDisplay.tsx ([object Set])
+    src/csuite/checkbox/_InputBoolChroma.ts ([object Set])
     src/csuite/checkbox/InputBoolCheckboxUI.tsx ([object Set])
+    src/csuite/ctx/CSuite_theme1.ts ([object Set])
+    src/csuite/ctx/CSuiteCtx.ts ([object Set])
+    src/csuite/ctx/useCSuite.ts ([object Set])
+    src/csuite/checkbox/_InputBoolToggleButtonBoxUI.tsx ([object Set])
     src/csuite/checkbox/InputBoolToggleButtonUI.tsx ([object Set])
     src/csuite/checkbox/InputBoolUI.tsx ([object Set])
     src/controls/shared/Widget_ToggleUI.tsx ([object Set])
     src/controls/shared/WidgetErrorsUI.tsx ([object Set])
     src/controls/shared/WidgetHeaderContainerUI.tsx ([object Set])
     src/controls/shared/WidgetLabelCaretUI.tsx ([object Set])
-    src/csuite/ctx/CSuite_theme1.ts ([object Set])
-    src/csuite/ctx/CSuiteCtx.ts ([object Set])
-    src/csuite/ctx/useCSuite.ts ([object Set])
     src/controls/shared/WidgetLabelContainerUI.tsx ([object Set])
     src/controls/shared/WidgetLabelIconUI.tsx ([object Set])
     src/widgets/workspace/JsonViewUI.tsx ([object Set])
@@ -149,6 +148,783 @@ INPUT:
     src/controls/widgets/string/WidgetStringUI.tsx ([object Set])
     src/controls/widgets/string/WidgetString.tsx ([object Set])
     src/controls/SimpleFormBuilder.ts ([object Set])
+    src/csuite/ctx/CSuiteProvider.tsx ([object Set])
+    src/csuite/ctx/CSuite_ThemeLoco.tsx ([object Set])
     src/controls/Channel.ts ([object Set])
     src/operators/activity/ActivityUI.tsx ([object Set])
     src/controls/SimpleForm.ts ([object Set])
+
+
+TYPES:
+    [🟢]: src/app/accelerators/ComboUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/app/accelerators/CommandManager
+    [🟢]: src/app/accelerators/CommandManager       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/app/accelerators/META_NAME.d.ts,/lib/operators/Command.d.ts,/lib/app/accelerators/ComboUI.d.ts,/lib/csuite/dropdown/MenuItem.d.ts files)
+        [🟢]: src/operators/Command
+        [🔵]: react
+        [🟢]: src/operators/RET
+    [🟢]: src/app/accelerators/getOS       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/app/accelerators/META_NAME       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/app/accelerators/CommandManager
+        [🔵]: react
+    [🟢]: src/app/shortcuts/shorcutKeys       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/controls/BaseWidget       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/Form.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/shared/Widget_ToggleUI.d.ts,/lib/controls/shared/WidgetErrorsUI.d.ts,/lib/controls/shared/WidgetHeaderContainerUI.d.ts,/lib/controls/shared/WidgetLabelCaretUI.d.ts,/lib/controls/shared/WidgetLabelIconUI.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts files)
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Channel
+        [🔵]: react/jsx-runtime
+        [🟢]: src/csuite/icons/icons
+        [🔴]: src/csuite/kolor/Kolor
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/shared/WidgetLabelContainerUI
+        [🔴]: src/controls/utils/CovariantFC
+        [🔵]: react
+        [🟢]: src/controls/Validation
+    [🟢]: src/controls/Channel       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleSpec.d.ts,/lib/controls/BaseWidget.d.ts,/lib/controls/SimpleForm.d.ts,/lib/controls/ISpec.d.ts files)
+        [🔴]: src/controls/utils/BivariantHack
+    [🟢]: src/controls/context/runWithGlobalForm       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟡]: src/controls/IFormBuilder
+    [🟢]: src/controls/Form       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/FormUI.d.ts,/lib/panels/Panel_Gallery/FormAsDropdownConfigUI.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/BaseWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleForm.d.ts,/lib/controls/IFormBuilder.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/BaseWidget
+        [🟢]: src/controls/FormManager
+        [🟡]: src/controls/FormSerial
+        [🟡]: src/controls/IFormBuilder
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🔴]: src/controls/utils/BivariantHack
+        [🟢]: src/controls/widgets/group/WidgetGroup
+        [🟢]: src/controls/FormUI
+    [🟢]: src/controls/FormManager       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/Form.d.ts,/lib/controls/SimpleForm.d.ts files)
+        [🟢]: src/controls/IWidget
+        [🟡]: src/controls/IFormBuilder
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/widgets/group/WidgetGroup
+        [🔵]: react
+        [🟢]: src/controls/Form
+    [🟢]: src/controls/FormUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/Form.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/box/Box
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🔴]: src/controls/utils/BivariantHack
+        [🔴]: src/controls/utils/CovariantFC
+    [🟢]: src/controls/IWidget       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/SimpleSpec.d.ts,/lib/panels/libraryUI/tree/nodes/TreeWidget.d.ts,/lib/controls/shared/getActualWidgetToDisplay.d.ts,/lib/controls/shared/getIfWidgetNeedAlignedLabel.d.ts,/lib/controls/shared/WidgetDebugIDUI.d.ts,/lib/controls/shared/WidgetLabelUI.d.ts,/lib/operators/menu/Menu.d.ts,/lib/controls/shared/WidgetMenu.d.ts,/lib/controls/shared/WidgetTooltipUI.d.ts,/lib/controls/shared/WidgetUndoChangesButtonUI.d.ts,/lib/controls/shared/WidgetWithLabelUI.d.ts,/lib/controls/BaseWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/widgets/list/WidgetList.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/number/WidgetNumber.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOne.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/IFormBuilder.d.ts,/lib/controls/ISpec.d.ts,/lib/controls/FormSerial.d.ts files)
+        [🔴]: src/csuite/box/Box
+        [🟢]: src/csuite/icons/icons
+        [🔴]: src/csuite/kolor/Kolor
+        [🟢]: src/controls/BaseWidget
+        [🟡]: src/controls/ISpec
+        [🔴]: src/controls/utils/BivariantHack
+        [🔴]: src/controls/utils/CovariantFC
+        [🟢]: src/controls/Validation
+    [🟢]: src/controls/shared/getActualWidgetToDisplay       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/controls/IWidget
+    [🟢]: src/controls/shared/getIfWidgetNeedAlignedLabel       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/controls/IWidget
+    [🟢]: src/controls/shared/Widget_ToggleUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/shared/WidgetDebugIDUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/IWidget
+    [🟢]: src/controls/shared/WidgetErrorsUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/shared/WidgetHeaderContainerUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/shared/WidgetHeaderControlsContainerUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/controls/shared/WidgetLabelCaretUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/shared/WidgetLabelContainerUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/BaseWidget.d.ts files)
+        [🔵]: react
+    [🟢]: src/controls/shared/WidgetLabelIconUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/shared/WidgetLabelUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/IWidget
+    [🟢]: src/controls/shared/WidgetMenu       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/operators/menu/Menu
+        [🟢]: src/controls/IWidget
+    [🟢]: src/controls/shared/WidgetsContainerUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/controls/shared/WidgetSingleLineSummaryUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/controls/shared/WidgetTooltipUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/IWidget
+    [🟢]: src/controls/shared/WidgetUndoChangesButtonUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/IWidget
+    [🟢]: src/controls/shared/WidgetWithLabelUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/IWidget
+    [🟢]: src/controls/SimpleForm       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/controls/FormManager
+        [🟢]: src/controls/SimpleFormBuilder
+        [🟢]: src/csuite/ctx/CSuiteProvider
+        [🟢]: src/csuite/ctx/CSuite_ThemeLoco
+        [🟡]: src/controls/IFormBuilder
+        [🟡]: src/controls/FormSerial
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🔴]: src/csuite/openrouter/OpenRouter_models
+        [🔴]: src/controls/SimpleSpecAliases
+        [🟢]: src/controls/Channel
+        [🟢]: src/operators/activity/ActivityUI
+    [🟢]: src/controls/SimpleForm.LIBRARY       (from  files)
+        [🟢]: src/controls/context/runWithGlobalForm
+        [🟢]: src/controls/utils/clamp
+        [🟢]: src/csuite/kolor/getLCHFromString
+        [🟢]: src/csuite/box/BoxNormalized
+        [🟢]: src/csuite/box/CurrentStyleCtx
+        [🟢]: src/csuite/button/usePressLogic
+        [🟢]: src/csuite/icons/icons
+        [🟢]: src/csuite/icons/iconHelpers
+        [🟢]: src/csuite/tinyCSS/CSSVar
+        [🟢]: src/csuite/kolor/applyRelative
+        [🟢]: src/csuite/kolor/formatOKLCH
+        [🟢]: src/csuite/kolor/OKLCH
+        [🟢]: src/csuite/kolor/overrideKolor
+        [🟢]: src/csuite/tinyCSS/compileOrRetrieveClassName
+        [🟢]: src/csuite/tinyCSS/quickClass
+        [🟢]: src/csuite/frame/FrameTemplates
+        [🟢]: src/csuite/frame/Frame
+        [🟢]: src/csuite/button/Button
+        [🟢]: src/csuite/markdown/MarkdownUI
+        [🟢]: src/csuite/tinyCSS/knownHues
+        [🟢]: src/csuite/messages/MessageUI
+        [🟢]: src/csuite/messages/MessageErrorUI
+        [🟢]: src/controls/FormUI
+        [🟢]: src/csuite/modal/ModalShell
+        [🟢]: src/csuite/reveal/RevealCtx
+        [🟢]: src/csuite/reveal/RevealStack
+        [🟢]: src/csuite/reveal/RevealPlacement
+        [🟢]: src/csuite/reveal/RevealState
+        [🟢]: src/csuite/reveal/RevealUI
+        [🟢]: src/panels/Panel_Gallery/FormAsDropdownConfigUI
+        [🟢]: src/utils/misc/debounce
+        [🟢]: src/controls/widgets/WidgetUI.DI
+        [🟢]: src/controls/Form
+        [🟢]: src/controls/FormManager
+        [🟢]: src/csuite/openrouter/OpenRouter_infos
+        [🟢]: src/controls/SimpleSpec
+        [🟢]: src/panels/libraryUI/tree/nodes/TreeWidget
+        [🟢]: src/utils/mobx-store-inheritance
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/shared/getActualWidgetToDisplay
+        [🟢]: src/csuite/checkbox/_InputBoolChroma
+        [🟢]: src/csuite/checkbox/InputBoolCheckboxUI
+        [🟢]: src/csuite/ctx/CSuite_theme1
+        [🟢]: src/csuite/ctx/CSuiteCtx
+        [🟢]: src/csuite/ctx/useCSuite
+        [🟢]: src/csuite/checkbox/_InputBoolToggleButtonBoxUI
+        [🟢]: src/csuite/checkbox/InputBoolToggleButtonUI
+        [🟢]: src/csuite/checkbox/InputBoolUI
+        [🟢]: src/controls/shared/Widget_ToggleUI
+        [🟢]: src/controls/shared/WidgetErrorsUI
+        [🟢]: src/controls/shared/WidgetHeaderContainerUI
+        [🟢]: src/controls/shared/WidgetLabelCaretUI
+        [🟢]: src/controls/shared/WidgetLabelContainerUI
+        [🟢]: src/controls/shared/WidgetLabelIconUI
+        [🟢]: src/widgets/workspace/JsonViewUI
+        [🟢]: src/csuite/errors/ErrorBoundaryFallback
+        [🟢]: src/csuite/errors/ErrorBoundaryUI
+        [🟢]: src/utils/misc/makeLabelFromFieldName
+        [🟢]: src/utils/misc/bang
+        [🟢]: src/controls/utils/useSizeOf
+        [🟢]: src/controls/utils/AnimatedSizeUI
+        [🟢]: src/controls/shared/getIfWidgetNeedAlignedLabel
+        [🟢]: src/controls/shared/WidgetDebugIDUI
+        [🟢]: src/controls/shared/WidgetHeaderControlsContainerUI
+        [🟢]: src/controls/shared/WidgetLabelUI
+        [🟢]: src/csuite/dropdown/MenuDividerUI
+        [🟢]: src/operators/RET
+        [🟢]: src/operators/activity/Activity
+        [🟢]: src/utils/misc/ManualPromise
+        [🟢]: src/app/accelerators/getOS
+        [🟢]: src/app/accelerators/META_NAME
+        [🟢]: src/app/accelerators/CommandManager
+        [🟢]: src/operators/introspect/_isBoundCommand
+        [🟢]: src/operators/introspect/_isCommand
+        [🟢]: src/operators/Command
+        [🟢]: src/operators/introspect/_isBoundMenu
+        [🟢]: src/app/accelerators/ComboUI
+        [🟢]: src/csuite/dropdown/MenuItem
+        [🟢]: src/operators/menu/SimpleMenuAction
+        [🟢]: src/operators/menu/SimpleMenuModal
+        [🟢]: src/operators/menu/MenuUI
+        [🟢]: src/operators/menu/Menu
+        [🟢]: src/db/SQLITE_boolean
+        [🟢]: src/panels/libraryUI/tree/xxx/utils
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+        [🟢]: src/panels/libraryUI/tree/xxx/Tree
+        [🟢]: src/app/shortcuts/shorcutKeys
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeCtx
+        [🟢]: src/panels/libraryUI/tree/RenderTreeIcon1
+        [🟢]: src/panels/libraryUI/tree/RenderItemTitleUI
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeEntryUI
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeUI
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeShortcuts
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeView
+        [🟢]: src/controls/shared/WidgetMenu
+        [🟢]: src/controls/shared/WidgetTooltipUI
+        [🟢]: src/controls/shared/WidgetUndoChangesButtonUI
+        [🟢]: src/controls/shared/WidgetWithLabelUI
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+        [🟢]: src/controls/widgets/spacer/SpacerUI
+        [🟢]: src/controls/widgets/bool/WidgetBoolUI
+        [🟢]: src/controls/widgets/bool/WidgetBool
+        [🟢]: src/controls/widgets/button/WidgetButtonUI
+        [🟢]: src/controls/widgets/button/WidgetButton
+        [🟢]: src/utils/misc/toasts
+        [🟢]: src/csuite/select/SelectPopupUI
+        [🟢]: src/utils/misc/searchMatches
+        [🟢]: src/csuite/select/SelectState
+        [🟢]: src/csuite/select/SelectUI
+        [🟢]: src/controls/shared/WidgetsContainerUI
+        [🟢]: src/controls/widgets/choices/WidgetChoicesUI
+        [🟢]: src/controls/widgets/choices/WidgetChoices
+        [🟢]: src/controls/widgets/color/WidgetColorUI
+        [🟢]: src/controls/widgets/color/WidgetColor
+        [🟢]: src/csuite/wrappers/FrameSubtle
+        [🟢]: src/controls/shared/WidgetSingleLineSummaryUI
+        [🟢]: src/controls/widgets/group/WidgetGroupUI
+        [🟢]: src/controls/widgets/group/WidgetGroup
+        [🟢]: src/controls/widgets/list/ListControlsUI
+        [🟢]: src/controls/widgets/list/WidgetListUI
+        [🟢]: src/controls/widgets/list/WidgetList
+        [🟢]: src/controls/widgets/markdown/WidgetMarkdownUI
+        [🟢]: src/controls/widgets/markdown/WidgetMarkdown
+        [🟢]: src/controls/widgets/matrix/WidgetMatrixUI
+        [🟢]: src/controls/widgets/matrix/WidgetMatrix
+        [🟢]: src/utils/misc/parseFloatNoRoundingErr
+        [🟢]: src/csuite/input-number/InputNumberUI
+        [🟢]: src/controls/widgets/number/WidgetNumberUI
+        [🟢]: src/controls/widgets/number/WidgetNumber
+        [🟢]: src/controls/widgets/optional/WidgetOptional
+        [🟢]: src/controls/widgets/seed/WidgetSeedUI
+        [🟢]: src/controls/widgets/seed/WidgetSeed
+        [🟢]: src/controls/widgets/selectMany/WidgetSelectManyUI
+        [🟢]: src/controls/widgets/selectMany/WidgetSelectMany
+        [🟢]: src/controls/widgets/selectOne/WidgetSelectOneUI
+        [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
+        [🟢]: src/controls/widgets/shared/WidgetShared
+        [🟢]: src/controls/widgets/size/ResolutionState
+        [🟢]: src/controls/widgets/size/WidgetSizeUI
+        [🟢]: src/controls/widgets/size/WidgetSize
+        [🟢]: src/controls/widgets/spacer/WidgetSpacerUI
+        [🟢]: src/controls/widgets/spacer/WidgetSpacer
+        [🟢]: src/csuite/kolor/getLCHFromStringAsString
+        [🟢]: src/csuite/input-string/InputStringUI
+        [🟢]: src/controls/widgets/string/WidgetStringUI
+        [🟢]: src/controls/widgets/string/WidgetString
+        [🟢]: src/controls/SimpleFormBuilder
+        [🟢]: src/csuite/ctx/CSuiteProvider
+        [🟢]: src/csuite/ctx/CSuite_ThemeLoco
+        [🟢]: src/controls/Channel
+        [🟢]: src/operators/activity/ActivityUI
+        [🟢]: src/controls/SimpleForm
+    [🟢]: src/controls/SimpleFormBuilder       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleForm.d.ts files)
+        [🟢]: src/controls/IWidget
+        [🔴]: src/csuite/openrouter/OpenRouter_models
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/IFormBuilder
+        [🟡]: src/controls/ISpec
+        [🔴]: src/controls/SimpleSpecAliases
+        [🟢]: src/controls/SimpleSpec
+        [🟢]: src/controls/widgets/bool/WidgetBool
+        [🟢]: src/controls/widgets/button/WidgetButton
+        [🟢]: src/controls/widgets/choices/WidgetChoices
+        [🟢]: src/controls/widgets/color/WidgetColor
+        [🟢]: src/controls/widgets/group/WidgetGroup
+        [🟢]: src/controls/widgets/list/WidgetList
+        [🟢]: src/controls/widgets/markdown/WidgetMarkdown
+        [🟢]: src/controls/widgets/matrix/WidgetMatrix
+        [🟢]: src/controls/widgets/number/WidgetNumber
+        [🟢]: src/controls/widgets/optional/WidgetOptional
+        [🟢]: src/controls/widgets/seed/WidgetSeed
+        [🟢]: src/controls/widgets/selectMany/WidgetSelectMany
+        [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
+        [🟢]: src/controls/widgets/shared/WidgetShared
+        [🟢]: src/controls/widgets/size/WidgetSize
+        [🟢]: src/controls/widgets/string/WidgetString
+    [🟢]: src/controls/SimpleSpec       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Channel
+        [🟡]: src/controls/ISpec
+        [🔴]: src/controls/SimpleSpecAliases
+        [🟢]: src/controls/widgets/list/WidgetList
+        [🟢]: src/controls/widgets/shared/WidgetShared
+    [🟢]: src/controls/utils/AnimatedSizeUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/controls/utils/clamp       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/controls/utils/useSizeOf       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/controls/Validation       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/IWidget.d.ts,/lib/controls/BaseWidget.d.ts,/lib/controls/widgets/bool/WidgetBool.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts,/lib/controls/widgets/choices/WidgetChoices.d.ts,/lib/controls/widgets/color/WidgetColor.d.ts,/lib/controls/widgets/group/WidgetGroup.d.ts,/lib/controls/widgets/markdown/WidgetMarkdown.d.ts,/lib/controls/widgets/matrix/WidgetMatrix.d.ts,/lib/controls/widgets/optional/WidgetOptional.d.ts,/lib/controls/widgets/seed/WidgetSeed.d.ts,/lib/controls/widgets/shared/WidgetShared.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts,/lib/controls/widgets/spacer/WidgetSpacer.d.ts,/lib/controls/widgets/string/WidgetString.d.ts files)
+    [🟢]: src/controls/widgets/bool/WidgetBool       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/bool/WidgetBoolUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/bool/WidgetBoolUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/bool/WidgetBool
+    [🟢]: src/controls/widgets/button/WidgetButton       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/button/WidgetButtonUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/csuite/frame/FrameTemplates
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/button/WidgetButtonUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/controls/widgets/button/WidgetButton
+    [🟢]: src/controls/widgets/choices/WidgetChoices       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/choices/WidgetChoicesUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🔵]: react/jsx-runtime
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/choices/WidgetChoicesUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🔵]: react
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/widgets/choices/WidgetChoices
+    [🟢]: src/controls/widgets/color/WidgetColor       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/color/WidgetColorUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/color/WidgetColorUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/color/WidgetColor
+    [🟢]: src/controls/widgets/group/WidgetGroup       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/Form.d.ts,/lib/controls/FormManager.d.ts,/lib/controls/widgets/group/WidgetGroupUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/IFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🟢]: src/controls/IWidget
+        [🔵]: react/jsx-runtime
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/group/WidgetGroupUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🔵]: react
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/widgets/group/WidgetGroup
+    [🟢]: src/controls/widgets/list/ListControlsUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/controls/widgets/list/WidgetList       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleSpec.d.ts,/lib/controls/widgets/list/WidgetListUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/controls/IWidget
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/list/WidgetListUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/controls/IWidget
+        [🔵]: react
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/widgets/list/WidgetList
+    [🟢]: src/controls/widgets/markdown/WidgetMarkdown       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/markdown/WidgetMarkdownUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/markdown/WidgetMarkdownUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/markdown/WidgetMarkdown
+    [🟢]: src/controls/widgets/matrix/WidgetMatrix       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/matrix/WidgetMatrixUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/matrix/WidgetMatrixUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/matrix/WidgetMatrix
+    [🟢]: src/controls/widgets/number/WidgetNumber       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/number/WidgetNumberUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/number/WidgetNumberUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/number/WidgetNumber
+    [🟢]: src/controls/widgets/optional/WidgetOptional       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/seed/WidgetSeed       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/seed/WidgetSeedUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/seed/WidgetSeedUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/seed/WidgetSeed
+    [🟢]: src/controls/widgets/selectMany/WidgetSelectMany       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/selectMany/WidgetSelectManyUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/selectMany/WidgetSelectManyUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
+        [🟢]: src/controls/widgets/selectMany/WidgetSelectMany
+    [🟢]: src/controls/widgets/selectOne/WidgetSelectOne       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/selectMany/WidgetSelectManyUI.d.ts,/lib/controls/widgets/selectMany/WidgetSelectMany.d.ts,/lib/controls/widgets/selectOne/WidgetSelectOneUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/selectOne/WidgetSelectOneUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/controls/widgets/selectOne/WidgetSelectOne
+    [🟢]: src/controls/widgets/shared/WidgetShared       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/controls/SimpleSpec.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/IFormBuilder.d.ts files)
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/size/ResolutionState       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/widgets/size/WidgetSize.d.ts files)
+        [🟡]: src/controls/widgets/size/WidgetSizeTypes
+    [🟢]: src/controls/widgets/size/WidgetSize       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/size/WidgetSizeUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟡]: src/controls/widgets/size/WidgetSizeTypes
+        [🟢]: src/controls/BaseWidget
+        [🟢]: src/controls/widgets/size/ResolutionState
+    [🟢]: src/controls/widgets/size/WidgetSizeUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/size/ResolutionState
+        [🟢]: src/controls/widgets/size/WidgetSize
+    [🟢]: src/controls/widgets/spacer/SpacerUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/controls/widgets/spacer/WidgetSpacer       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/spacer/WidgetSpacerUI.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/spacer/WidgetSpacerUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/spacer/WidgetSpacer
+    [🟢]: src/controls/widgets/string/WidgetString       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/widgets/WidgetUI.DI.d.ts,/lib/csuite/input-string/InputStringUI.d.ts,/lib/controls/widgets/string/WidgetStringUI.d.ts,/lib/controls/SimpleFormBuilder.d.ts,/lib/controls/SimpleSpecAliases.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/Form
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/Validation
+        [🟢]: src/controls/BaseWidget
+    [🟢]: src/controls/widgets/string/WidgetStringUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/string/WidgetString
+    [🟢]: src/controls/widgets/WidgetUI.DI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟡]: src/controls/ISpec
+        [🟢]: src/controls/IWidget
+        [🟢]: src/controls/widgets/group/WidgetGroup
+        [🟢]: src/controls/widgets/optional/WidgetOptional
+        [🟢]: src/controls/widgets/shared/WidgetShared
+        [🟢]: src/controls/widgets/string/WidgetString
+    [🟢]: src/csuite/box/BoxNormalized       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/frame/FrameTemplates.d.ts files)
+        [🔴]: src/csuite/kolor/Kolor
+        [🔴]: src/csuite/box/Box
+    [🟢]: src/csuite/box/CurrentStyleCtx       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/kolor/Kolor
+        [🟢]: src/csuite/kolor/OKLCH
+    [🟢]: src/csuite/button/Button       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔴]: src/csuite/frame/FrameSize
+        [🔵]: react
+        [🔴]: src/csuite/box/Box
+    [🟢]: src/csuite/button/usePressLogic       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/csuite/checkbox/_InputBoolChroma       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/csuite/checkbox/_InputBoolToggleButtonBoxUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/checkbox/InputBoolCheckboxUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/csuite/checkbox/InputBoolUI
+    [🟢]: src/csuite/checkbox/InputBoolToggleButtonUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/csuite/checkbox/InputBoolUI
+    [🟢]: src/csuite/checkbox/InputBoolUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/checkbox/InputBoolCheckboxUI.d.ts,/lib/csuite/checkbox/InputBoolToggleButtonUI.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/box/Box
+        [🟢]: src/csuite/icons/icons
+    [🟢]: src/csuite/ctx/CSuite_theme1       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔴]: src/csuite/ctx/CSuiteConfig
+    [🟢]: src/csuite/ctx/CSuite_ThemeLoco       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleForm.d.ts files)
+        [🔴]: src/csuite/kolor/Kolor
+        [🟢]: src/csuite/kolor/OKLCH
+        [🔴]: src/csuite/ctx/CSuiteConfig
+        [🟢]: src/csuite/tinyCSS/CSSVar
+    [🟢]: src/csuite/ctx/CSuiteCtx       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/ctx/CSuiteConfig
+    [🟢]: src/csuite/ctx/CSuiteProvider       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleForm.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/ctx/CSuiteConfig
+    [🟢]: src/csuite/ctx/useCSuite       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔴]: src/csuite/ctx/CSuiteConfig
+    [🟢]: src/csuite/dropdown/MenuDividerUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+    [🟢]: src/csuite/dropdown/MenuItem       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/app/accelerators/CommandManager
+    [🟢]: src/csuite/errors/ErrorBoundaryFallback       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+    [🟢]: src/csuite/errors/ErrorBoundaryUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/frame/Frame       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/box/BoxUIProps
+        [🟢]: src/csuite/icons/icons
+        [🔴]: src/csuite/frame/FrameSize
+        [🟢]: src/csuite/frame/FrameTemplates
+    [🟢]: src/csuite/frame/FrameTemplates       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/frame/Frame.d.ts,/lib/controls/widgets/button/WidgetButton.d.ts files)
+        [🟢]: src/csuite/box/BoxNormalized
+    [🟢]: src/csuite/icons/iconHelpers       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🔵]: @mdi/react/dist/IconProps
+        [🔵]: react
+        [🟢]: src/csuite/icons/icons
+    [🟢]: src/csuite/icons/icons       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/icons/iconHelpers.d.ts,/lib/csuite/frame/Frame.d.ts,/lib/controls/IWidget.d.ts,/lib/csuite/checkbox/InputBoolUI.d.ts,/lib/operators/menu/SimpleMenuAction.d.ts,/lib/controls/BaseWidget.d.ts files)
+    [🟢]: src/csuite/input-number/InputNumberUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/input-string/InputStringUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/widgets/string/WidgetString
+    [🟢]: src/csuite/kolor/applyRelative       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔴]: src/csuite/kolor/Kolor
+        [🟢]: src/csuite/kolor/OKLCH
+    [🟢]: src/csuite/kolor/formatOKLCH       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/csuite/kolor/OKLCH
+    [🟢]: src/csuite/kolor/getLCHFromString       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/csuite/kolor/OKLCH
+    [🟢]: src/csuite/kolor/getLCHFromStringAsString       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/csuite/kolor/OKLCH       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/kolor/getLCHFromString.d.ts,/lib/csuite/box/CurrentStyleCtx.d.ts,/lib/csuite/kolor/applyRelative.d.ts,/lib/csuite/kolor/formatOKLCH.d.ts,/lib/csuite/ctx/CSuite_ThemeLoco.d.ts,/lib/csuite/ctx/CSuiteConfig.d.ts files)
+    [🟢]: src/csuite/kolor/overrideKolor       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔴]: src/csuite/kolor/Kolor
+    [🟢]: src/csuite/markdown/MarkdownUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/messages/MessageErrorUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/messages/MessageUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/modal/ModalShell       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/openrouter/OpenRouter_infos       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔴]: src/csuite/openrouter/OpenRouter_models
+    [🟢]: src/csuite/reveal/RevealCtx       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/csuite/reveal/RevealState
+    [🟢]: src/csuite/reveal/RevealPlacement       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/reveal/RevealState.d.ts,/lib/operators/activity/Activity.d.ts,/lib/csuite/reveal/RevealProps.d.ts files)
+    [🟢]: src/csuite/reveal/RevealStack       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/csuite/reveal/RevealState
+    [🟢]: src/csuite/reveal/RevealState       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/reveal/RevealCtx.d.ts,/lib/csuite/reveal/RevealStack.d.ts,/lib/csuite/reveal/RevealProps.d.ts files)
+        [🟢]: src/csuite/reveal/RevealPlacement
+        [🔴]: src/csuite/reveal/RevealProps
+        [🔵]: react
+    [🟢]: src/csuite/reveal/RevealUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/reveal/RevealProps
+    [🟢]: src/csuite/select/SelectPopupUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/csuite/select/SelectState
+    [🟢]: src/csuite/select/SelectState       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/select/SelectPopupUI.d.ts,/lib/csuite/select/SelectUI.d.ts files)
+        [🟢]: src/csuite/select/SelectUI
+        [🔵]: react
+    [🟢]: src/csuite/select/SelectUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/select/SelectState.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🔵]: react
+        [🟢]: src/csuite/select/SelectState
+    [🟢]: src/csuite/tinyCSS/compileOrRetrieveClassName       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/csuite/tinyCSS/CSSVar       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/csuite/ctx/CSuite_ThemeLoco.d.ts,/lib/csuite/kolor/Kolor.d.ts,/lib/csuite/ctx/CSuiteConfig.d.ts files)
+    [🟢]: src/csuite/tinyCSS/knownHues       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/csuite/tinyCSS/quickClass       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/wrappers/FrameSubtle       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/box/BoxUIProps
+    [🟢]: src/db/SQLITE_boolean       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/Tree.d.ts files)
+    [🟢]: src/operators/activity/Activity       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/menu/Menu.d.ts,/lib/operators/activity/ActivityUI.d.ts files)
+        [🟢]: src/csuite/reveal/RevealPlacement
+        [🔵]: react
+        [🟢]: src/operators/RET
+    [🟢]: src/operators/activity/ActivityUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/controls/SimpleForm.d.ts files)
+        [🔵]: react
+        [🟢]: src/operators/activity/Activity
+    [🟢]: src/operators/Command       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/app/accelerators/CommandManager.d.ts,/lib/operators/introspect/_isBoundCommand.d.ts,/lib/operators/introspect/_isCommand.d.ts,/lib/operators/menu/Menu.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/app/accelerators/CommandManager
+        [🟢]: src/operators/RET
+    [🟢]: src/operators/introspect/_isBoundCommand       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/operators/Command
+    [🟢]: src/operators/introspect/_isBoundMenu       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/operators/menu/Menu
+    [🟢]: src/operators/introspect/_isCommand       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/operators/Command
+    [🟢]: src/operators/menu/Menu       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/introspect/_isBoundMenu.d.ts,/lib/operators/menu/MenuUI.d.ts,/lib/controls/shared/WidgetMenu.d.ts files)
+        [🔵]: react
+        [🟢]: src/controls/IWidget
+        [🟢]: src/operators/Command
+        [🔴]: src/operators/NO_PROPS
+        [🟢]: src/operators/RET
+        [🟢]: src/operators/menu/SimpleMenuModal
+        [🟢]: src/operators/activity/Activity
+        [🟢]: src/operators/menu/SimpleMenuAction
+    [🟢]: src/operators/menu/MenuUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/operators/menu/Menu
+    [🟢]: src/operators/menu/SimpleMenuAction       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/menu/Menu.d.ts files)
+        [🟢]: src/csuite/icons/icons
+    [🟢]: src/operators/menu/SimpleMenuModal       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/menu/Menu.d.ts files)
+        [🔵]: react
+    [🟢]: src/operators/RET       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/operators/activity/Activity.d.ts,/lib/app/accelerators/CommandManager.d.ts,/lib/operators/Command.d.ts,/lib/operators/menu/Menu.d.ts files)
+    [🟢]: src/panels/libraryUI/tree/nodes/TreeWidget       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🟢]: src/controls/IWidget
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/RenderItemTitleUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/RenderTreeIcon1       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/xxx/Tree       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/TreeNode.d.ts,/lib/panels/libraryUI/tree/xxx/TreeView.d.ts files)
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/db/SQLITE_boolean
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeCtx       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeView
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeEntryUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeNode       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/nodes/TreeWidget.d.ts,/lib/panels/libraryUI/tree/xxx/Tree.d.ts,/lib/panels/libraryUI/tree/RenderTreeIcon1.d.ts,/lib/panels/libraryUI/tree/RenderItemTitleUI.d.ts,/lib/panels/libraryUI/tree/xxx/TreeEntryUI.d.ts,/lib/panels/libraryUI/tree/xxx/TreeView.d.ts,/lib/panels/libraryUI/tree/TreeEntry.d.ts files)
+        [🔴]: src/panels/libraryUI/tree/TreeEntry
+        [🟢]: src/panels/libraryUI/tree/xxx/Tree
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeShortcuts       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/TreeView.d.ts files)
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeView
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeView
+    [🟢]: src/panels/libraryUI/tree/xxx/TreeView       (from /lib/controls/SimpleForm.LIBRARY.d.ts,/lib/panels/libraryUI/tree/xxx/TreeCtx.d.ts,/lib/panels/libraryUI/tree/xxx/TreeUI.d.ts,/lib/panels/libraryUI/tree/xxx/TreeShortcuts.d.ts files)
+        [🔵]: react
+        [🟢]: src/panels/libraryUI/tree/xxx/Tree
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeNode
+        [🟢]: src/panels/libraryUI/tree/xxx/TreeShortcuts
+    [🟢]: src/panels/libraryUI/tree/xxx/utils       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/panels/Panel_Gallery/FormAsDropdownConfigUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟡]: src/controls/IFormBuilder
+        [🟢]: src/controls/Form
+    [🟢]: src/utils/misc/bang       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/utils/misc/debounce       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/utils/misc/makeLabelFromFieldName       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/utils/misc/ManualPromise       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/utils/misc/parseFloatNoRoundingErr       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/utils/misc/searchMatches       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/utils/misc/toasts       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+    [🟢]: src/utils/mobx-store-inheritance       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: mobx
+    [🟢]: src/widgets/workspace/JsonViewUI       (from /lib/controls/SimpleForm.LIBRARY.d.ts files)
+        [🔵]: react
+
+
+❌ POSSIBLY UNWANTED FILES IN DTS:
+    🟡 src/controls/FormSerial (/lib/controls/FormSerial.d.ts)
+       <- 🟢 src/controls/Form
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🟡 src/controls/IFormBuilder (/lib/controls/IFormBuilder.d.ts)
+       <- 🟢 src/controls/context/runWithGlobalForm
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🟡 src/controls/ISpec (/lib/controls/ISpec.d.ts)
+       <- 🟢 src/controls/FormUI
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/controls/SimpleSpecAliases (/lib/controls/SimpleSpecAliases.d.ts)
+       <- 🟢 src/controls/SimpleSpec
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/controls/utils/BivariantHack (/lib/controls/utils/BivariantHack.d.ts)
+       <- 🟢 src/controls/FormUI
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/controls/utils/CovariantFC (/lib/controls/utils/CovariantFC.d.ts)
+       <- 🟢 src/controls/FormUI
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🟡 src/controls/widgets/size/WidgetSizeTypes (/lib/controls/widgets/size/WidgetSizeTypes.d.ts)
+       <- 🟢 src/controls/widgets/size/ResolutionState
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/csuite/RsuiteTypes (/lib/csuite/RsuiteTypes.d.ts)
+       <- 🔴 src/csuite/frame/FrameSize
+       <- 🟢 src/csuite/frame/Frame
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/csuite/box/Box (/lib/csuite/box/Box.d.ts)
+       <- 🟢 src/csuite/box/BoxNormalized
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/csuite/box/BoxUIProps (/lib/csuite/box/BoxUIProps.d.ts)
+       <- 🟢 src/csuite/frame/Frame
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/csuite/ctx/CSuiteConfig (/lib/csuite/ctx/CSuiteConfig.d.ts)
+       <- 🟢 src/csuite/ctx/CSuite_theme1
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/csuite/frame/FrameSize (/lib/csuite/frame/FrameSize.d.ts)
+       <- 🟢 src/csuite/frame/Frame
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/csuite/kolor/Kolor (/lib/csuite/kolor/Kolor.d.ts)
+       <- 🟢 src/csuite/box/BoxNormalized
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/csuite/openrouter/OpenRouter_models (/lib/csuite/openrouter/OpenRouter_models.d.ts)
+       <- 🟢 src/csuite/openrouter/OpenRouter_infos
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/csuite/reveal/RevealProps (/lib/csuite/reveal/RevealProps.d.ts)
+       <- 🟢 src/csuite/reveal/RevealState
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/operators/NO_PROPS (/lib/operators/NO_PROPS.d.ts)
+       <- 🟢 src/operators/menu/Menu
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔴 src/panels/libraryUI/tree/TreeEntry (/lib/panels/libraryUI/tree/TreeEntry.d.ts)
+       <- 🟢 src/panels/libraryUI/tree/nodes/TreeWidget
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔵 @mdi/react/dist/IconProps (@mdi/react/dist/IconProps.d.ts)
+       <- 🟢 src/csuite/icons/iconHelpers
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔵 mobx (mobx)
+       <- 🟢 src/utils/mobx-store-inheritance
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔵 react (react)
+       <- 🟢 src/csuite/box/CurrentStyleCtx
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+    🔵 react/jsx-runtime (react/jsx-runtime)
+       <- 🟢 src/csuite/icons/iconHelpers
+       <- 🟢 src/controls/SimpleForm.LIBRARY
+[🟢] all JS files are also present in the bundled DTS

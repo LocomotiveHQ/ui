@@ -8,20 +8,34 @@ import { Ikon } from '../../csuite/icons/iconHelpers'
 import { RevealUI } from '../../csuite/reveal/RevealUI'
 
 export const FormAsDropdownConfigUI = observer(function FormAsDropdownConfigUI_(p: {
-    //
+    form?: Form<any>
+    children?: React.ReactNode
     title?: string
-    form: Form<any>
+    className?: string
+    maxWidth?: string
+    minWidth?: string
+    width?: string
 }) {
     return (
         <RevealUI
             title={p.title}
+            className={p.className}
             content={() => (
-                <div style={{ width: '500px' }} tw='flex-shrink-0'>
-                    <FormUI form={p.form} />
+                <div //
+                    tw='flex-none'
+                    style={{
+                        // maxWidth: p.maxWidth ?? '500px',
+                        maxWidth: p.maxWidth,
+                        minWidth: p.minWidth,
+                        width: p.width,
+                    }}
+                >
+                    {p.form && <FormUI form={p.form} />}
+                    {p.children}
                 </div>
             )}
         >
-            <Button size='input'>
+            <Button size='input' tw='!gap-0'>
                 <Ikon.mdiCog />
                 <Ikon.mdiChevronDown />
             </Button>
