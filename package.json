@@ -1,6 +1,6 @@
 {
     "name": "@cushy/forms",
-    "version": "0.0.1718875708405",
+    "version": "0.0.1721245968916",
     "author": {
         "name": "rvion",
         "url": "https://github.com/rvion/CushyStudio",
@@ -26,16 +26,16 @@
         "rollup-plugin-visualizer": "^5.12.0"
     },
     "peerDeps": {
+        "react": "*",
         "mobx": "*",
         "colorjs.io": "*",
-        "react": "*",
         "@mdi/js": "*",
         "@mdi/react": "*",
         "nanoid": "*",
         "mobx-react-lite": "*",
+        "react-dom": "*",
         "marked": "*",
         "https:": "*",
-        "react-dom": "*",
         "@uiw/react-json-view": "*",
         "react-error-boundary": "*",
         "react-toastify": "*",

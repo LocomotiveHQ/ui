@@ -1,68 +1,70 @@
 INPUT:
-    src/csuite/tinyCSS/CSSVar.tsx ([object Set])
+    src/csuite/utils/bang.ts ([object Set])
+    src/csuite/model/Transaction.ts ([object Set])
+    src/csuite/model/Repository.ts ([object Set])
+    src/csuite/model/Factory.ts ([object Set])
     src/csuite/utils/clamp.ts ([object Set])
+    src/csuite/tinyCSS/CSSVar.tsx ([object Set])
     src/csuite/kolor/Kolor.tsx ([object Set])
+    src/csuite/kolor/Tint.tsx ([object Set])
     src/csuite/box/BoxNormalized.tsx ([object Set])
     src/csuite/box/CurrentStyleCtx.tsx ([object Set])
     src/csuite/button/usePressLogic.ts ([object Set])
+    src/csuite/icons/iconsCDI.ts ([object Set])
+    src/csuite/icons/iconsLDI.ts ([object Set])
+    src/csuite/icons/iconsXDI.ts ([object Set])
     src/csuite/icons/icons.ts ([object Set])
-    src/utils/custom-jsx/jsx-runtime.js ([object Set])
+    src/csuite/custom-jsx/jsx-runtime.js ([object Set])
     src/csuite/icons/iconHelpers.tsx ([object Set])
     src/csuite/kolor/overrideTint.tsx ([object Set])
     src/csuite/kolor/overrideTintV2.tsx ([object Set])
     src/csuite/tinyCSS/compileOrRetrieveClassName.tsx ([object Set])
     src/csuite/tinyCSS/quickClass.ts ([object Set])
     src/csuite/frame/FrameTemplates.ts ([object Set])
+    src/csuite/frame/tooltip.tsx ([object Set])
     src/csuite/frame/Frame.tsx ([object Set])
+    src/csuite/ctx/CSuite_ThemeSimple.ts ([object Set])
+    src/csuite/ctx/CSuiteCtx.ts ([object Set])
+    src/csuite/ctx/useCSuite.ts ([object Set])
+    src/csuite/ctx/CSuiteOverride.tsx ([object Set])
+    src/csuite/fields/WidgetUI.DI.ts ([object Set])
     src/csuite/button/Button.tsx ([object Set])
-    src/csuite/markdown/MarkdownUI.tsx ([object Set])
-    src/csuite/tinyCSS/knownHues.ts ([object Set])
-    src/csuite/messages/MessageUI.tsx ([object Set])
-    src/csuite/messages/MessageErrorUI.tsx ([object Set])
-    src/csuite/form/FormUI.tsx ([object Set])
     src/csuite/modal/ModalShell.tsx ([object Set])
     src/csuite/reveal/RevealCtx.ts ([object Set])
     src/csuite/reveal/RevealStack.ts ([object Set])
     src/csuite/reveal/RevealPlacement.tsx ([object Set])
     src/csuite/reveal/RevealState.tsx ([object Set])
     src/csuite/reveal/RevealUI.tsx ([object Set])
-    src/panels/Panel_Gallery/FormAsDropdownConfigUI.tsx ([object Set])
-    src/csuite/fields/WidgetUI.DI.ts ([object Set])
-    src/csuite/utils/debounce.ts ([object Set])
-    src/csuite/model/Model.ts ([object Set])
-    src/csuite/model/runWithGlobalForm.ts ([object Set])
-    src/csuite/model/ModelManager.ts ([object Set])
-    src/panels/libraryUI/tree/nodes/TreeWidget.tsx ([object Set])
-    src/utils/mobx-store-inheritance.ts ([object Set])
-    src/csuite/ctx/CSuite_theme1.ts ([object Set])
-    src/csuite/ctx/CSuiteCtx.ts ([object Set])
-    src/csuite/ctx/useCSuite.ts ([object Set])
-    src/csuite/ctx/CSuiteOverride.tsx ([object Set])
-    src/csuite/form/getActualWidgetToDisplay.tsx ([object Set])
-    src/csuite/checkbox/_InputBoolChroma.ts ([object Set])
-    src/csuite/checkbox/InputBoolCheckboxUI.tsx ([object Set])
-    src/csuite/checkbox/_InputBoolToggleButtonBoxUI.tsx ([object Set])
-    src/csuite/checkbox/InputBoolToggleButtonUI.tsx ([object Set])
-    src/csuite/checkbox/InputBoolUI.tsx ([object Set])
-    src/csuite/form/Widget_ToggleUI.tsx ([object Set])
+    src/csuite/markdown/MarkdownUI.tsx ([object Set])
+    src/csuite/tinyCSS/knownHues.ts ([object Set])
+    src/csuite/messages/MessageUI.tsx ([object Set])
+    src/csuite/messages/MessageErrorUI.tsx ([object Set])
+    src/csuite/form/FormUI.tsx ([object Set])
+    src/csuite/form/FormAsDropdownConfigUI.tsx ([object Set])
     src/csuite/form/WidgetErrorsUI.tsx ([object Set])
     src/csuite/form/WidgetHeaderContainerUI.tsx ([object Set])
     src/csuite/form/WidgetLabelCaretUI.tsx ([object Set])
     src/csuite/form/WidgetLabelContainerUI.tsx ([object Set])
     src/csuite/form/WidgetLabelIconUI.tsx ([object Set])
-    src/widgets/workspace/JsonViewUI.tsx ([object Set])
+    src/csuite/checkbox/_InputBoolChroma.ts ([object Set])
+    src/csuite/checkbox/InputBoolCheckboxUI.tsx ([object Set])
+    src/csuite/checkbox/_InputBoolToggleButtonBoxUI.tsx ([object Set])
+    src/csuite/checkbox/InputBoolToggleButtonUI.tsx ([object Set])
+    src/csuite/checkbox/InputBoolUI.tsx ([object Set])
+    src/csuite/form/WidgetToggleUI.tsx ([object Set])
+    src/csuite/json/JsonViewUI.tsx ([object Set])
     src/csuite/errors/ErrorBoundaryFallback.tsx ([object Set])
     src/csuite/errors/ErrorBoundaryUI.tsx ([object Set])
-    src/csuite/utils/bang.ts ([object Set])
     src/csuite/smooth-size/useSizeOf.tsx ([object Set])
     src/csuite/smooth-size/AnimatedSizeUI.tsx ([object Set])
     src/csuite/utils/makeLabelFromFieldName.tsx ([object Set])
-    src/csuite/form/getIfWidgetNeedAlignedLabel.tsx ([object Set])
     src/csuite/form/WidgetDebugIDUI.tsx ([object Set])
     src/csuite/form/WidgetHeaderControlsContainerUI.tsx ([object Set])
-    src/csuite/form/WidgetLabelUI.tsx ([object Set])
+    src/csuite/form/WidgetIndentUI.tsx ([object Set])
+    src/csuite/form/WidgetLabelTextUI.tsx ([object Set])
     src/csuite/dropdown/MenuDividerUI.tsx ([object Set])
     src/csuite/trigger/Trigger.ts ([object Set])
+    src/csuite/activity/Routine.ts ([object Set])
     src/csuite/activity/ActivityManager.ts ([object Set])
     src/csuite/introspect/_isBoundCommand.tsx ([object Set])
     src/csuite/introspect/_isCommand.tsx ([object Set])
@@ -72,6 +74,7 @@ INPUT:
     src/csuite/commands/CommandManager.ts ([object Set])
     src/csuite/commands/Command.tsx ([object Set])
     src/csuite/introspect/_isBoundMenu.tsx ([object Set])
+    src/csuite/menu/MenuBuilder.ts ([object Set])
     src/csuite/accelerators/ComboUI.tsx ([object Set])
     src/csuite/dropdown/MenuItem.tsx ([object Set])
     src/csuite/model/$FieldSym.ts ([object Set])
@@ -79,150 +82,185 @@ INPUT:
     src/csuite/menu/SimpleMenuModal.ts ([object Set])
     src/csuite/menu/MenuUI.tsx ([object Set])
     src/csuite/menu/Menu.ts ([object Set])
-    src/db/SQLITE_boolean.ts ([object Set])
+    src/csuite/types/SQLITE_boolean.ts ([object Set])
     src/csuite/tree/utils.ts ([object Set])
     src/csuite/tree/TreeNode.ts ([object Set])
     src/csuite/tree/Tree.ts ([object Set])
-    src/app/shortcuts/shorcutKeys.ts ([object Set])
     src/csuite/tree/TreeCtx.ts ([object Set])
     src/csuite/tree/RenderTreeIcon1.tsx ([object Set])
     src/csuite/tree/RenderItemTitleUI.tsx ([object Set])
     src/csuite/tree/TreeEntryUI.tsx ([object Set])
+    src/csuite/tree/TreeKeys.ts ([object Set])
     src/csuite/tree/TreeUI.tsx ([object Set])
     src/csuite/tree/TreeShortcuts.ts ([object Set])
     src/csuite/tree/TreeView.ts ([object Set])
     src/csuite/utils/toasts.tsx ([object Set])
+    src/csuite/utils/potatoClone.ts ([object Set])
     src/csuite/form/WidgetMenu.tsx ([object Set])
-    src/csuite/form/WidgetTooltipUI.tsx ([object Set])
     src/csuite/form/WidgetUndoChangesButtonUI.tsx ([object Set])
     src/csuite/form/WidgetWithLabelUI.tsx ([object Set])
+    src/csuite/mobx/mobx-store-inheritance.ts ([object Set])
+    src/csuite/model/autofix/autofixSerial_20240703.ts ([object Set])
+    src/csuite/model/autofix/autofixSerial_20240711.ts ([object Set])
+    src/csuite/model/BaseSchema.ts ([object Set])
+    src/csuite/utils/objectAssignTsEfficient.ts ([object Set])
+    src/csuite/simple/SimpleSchema.ts ([object Set])
+    src/csuite/model/FieldId.ts ([object Set])
+    src/csuite/model/TreeEntry_Field.tsx ([object Set])
     src/csuite/model/Validation.ts ([object Set])
-    src/csuite/model/BaseField.tsx ([object Set])
-    src/csuite/fields/spacer/SpacerUI.tsx ([object Set])
+    src/csuite/model/Field.tsx ([object Set])
+    src/csuite/components/SpacerUI.tsx ([object Set])
     src/csuite/fields/bool/WidgetBoolUI.tsx ([object Set])
-    src/csuite/fields/bool/WidgetBool.tsx ([object Set])
+    src/csuite/fields/bool/FieldBool.tsx ([object Set])
     src/csuite/fields/button/WidgetButtonUI.tsx ([object Set])
-    src/csuite/fields/button/WidgetButton.ts ([object Set])
-    src/csuite/form/WidgetsContainerUI.tsx ([object Set])
+    src/csuite/fields/button/FieldButton.ts ([object Set])
     src/csuite/select/SelectPopupUI.tsx ([object Set])
     src/csuite/hashUtils/hash.ts ([object Set])
     src/csuite/badge/BadgeUI.tsx ([object Set])
     src/csuite/utils/searchMatches.ts ([object Set])
     src/csuite/select/SelectState.tsx ([object Set])
     src/csuite/select/SelectUI.tsx ([object Set])
+    src/csuite/fields/choices/WidgetChoices_SelectHeaderUI.tsx ([object Set])
+    src/csuite/fields/choices/TabPositionConfig.tsx ([object Set])
+    src/csuite/fields/choices/WidgetChoices_TabHeaderUI.tsx ([object Set])
+    src/csuite/form/WidgetsContainerUI.tsx ([object Set])
     src/csuite/fields/choices/WidgetChoicesUI.tsx ([object Set])
-    src/csuite/fields/choices/WidgetChoices.tsx ([object Set])
+    src/csuite/fields/choices/FieldChoices.tsx ([object Set])
     src/csuite/fields/color/WidgetColorUI.tsx ([object Set])
-    src/csuite/fields/color/WidgetColor.tsx ([object Set])
+    src/csuite/fields/color/FieldColor.tsx ([object Set])
+    src/csuite/collapsible/CollapsibleState.tsx ([object Set])
+    src/csuite/collapsible/CollapsibleUI.tsx ([object Set])
+    src/csuite/utils/capitalize.ts ([object Set])
     src/csuite/wrappers/FrameSubtle.tsx ([object Set])
     src/csuite/form/WidgetSingleLineSummaryUI.tsx ([object Set])
     src/csuite/fields/group/WidgetGroupUI.tsx ([object Set])
-    src/csuite/fields/group/WidgetGroup.tsx ([object Set])
+    src/csuite/fields/group/FieldGroup.tsx ([object Set])
+    src/csuite/fields/link/FieldLink.tsx ([object Set])
     src/csuite/fields/list/ListControlsUI.tsx ([object Set])
     src/csuite/fields/list/WidgetListUI.tsx ([object Set])
-    src/csuite/fields/list/WidgetList.ts ([object Set])
+    src/csuite/fields/list/FieldList.ts ([object Set])
     src/csuite/fields/markdown/WidgetMarkdownUI.tsx ([object Set])
-    src/csuite/fields/markdown/WidgetMarkdown.ts ([object Set])
+    src/csuite/fields/markdown/FieldMarkdown.ts ([object Set])
     src/csuite/fields/matrix/WidgetMatrixUI.tsx ([object Set])
-    src/csuite/fields/matrix/WidgetMatrix.ts ([object Set])
+    src/csuite/fields/matrix/FieldMatrix.ts ([object Set])
     src/csuite/utils/parseFloatNoRoundingErr.ts ([object Set])
     src/csuite/input-number/InputNumberUI.tsx ([object Set])
     src/csuite/fields/number/WidgetNumberUI.tsx ([object Set])
-    src/csuite/fields/number/WidgetNumber.tsx ([object Set])
-    src/csuite/fields/optional/WidgetOptional.tsx ([object Set])
+    src/csuite/fields/number/FieldNumber.tsx ([object Set])
+    src/csuite/fields/optional/FieldOptional.tsx ([object Set])
+    src/csuite/fields/seed/Seeder.ts ([object Set])
     src/csuite/fields/seed/WidgetSeedUI.tsx ([object Set])
-    src/csuite/fields/seed/WidgetSeed.ts ([object Set])
-    src/panels/PanelHeader.tsx ([object Set])
+    src/csuite/fields/seed/FieldSeed.ts ([object Set])
+    src/csuite/utils/exhaust.ts ([object Set])
+    src/csuite/wrappers/PanelHeader.tsx ([object Set])
     src/csuite/resizableFrame/resizableFrameUI.tsx ([object Set])
     src/csuite/fields/selectMany/WidgetSelectMany_ListUI.tsx ([object Set])
-    src/csuite/utils/exhaust.ts ([object Set])
+    src/csuite/checkbox/InputBoolFlipButtonUI.tsx ([object Set])
     src/csuite/fields/selectMany/WidgetSelectMany_SelectUI.tsx ([object Set])
     src/csuite/fields/selectMany/WidgetSelectMany_TabUI.tsx ([object Set])
     src/csuite/fields/selectMany/WidgetSelectManyUI.tsx ([object Set])
-    src/csuite/fields/selectMany/WidgetSelectMany.tsx ([object Set])
+    src/csuite/fields/selectMany/FieldSelectMany.tsx ([object Set])
+    src/csuite/fields/selectOne/WidgetSelectOne_CellUI.tsx ([object Set])
     src/csuite/fields/selectOne/WidgetSelectOne_RollUI.tsx ([object Set])
     src/csuite/fields/selectOne/WidgetSelectOne_SelectUI.tsx ([object Set])
     src/csuite/fields/selectOne/WidgetSelectOne_TabUI.tsx ([object Set])
     src/csuite/fields/selectOne/WidgetSelectOneUI.tsx ([object Set])
-    src/csuite/fields/selectOne/WidgetSelectOne.ts ([object Set])
-    src/csuite/fields/shared/WidgetShared.tsx ([object Set])
-    src/csuite/fields/size/ResolutionState.tsx ([object Set])
+    src/csuite/fields/selectOne/FieldSelectOne.tsx ([object Set])
+    src/csuite/fields/shared/FieldShared.tsx ([object Set])
+    src/csuite/fields/size/WidgetSizeTypes.ts ([object Set])
     src/csuite/fields/size/WidgetSizeUI.tsx ([object Set])
-    src/csuite/fields/size/WidgetSize.ts ([object Set])
-    src/csuite/fields/spacer/WidgetSpacerUI.tsx ([object Set])
-    src/csuite/fields/spacer/WidgetSpacer.tsx ([object Set])
+    src/csuite/fields/size/FieldSize.tsx ([object Set])
     src/csuite/kolor/getLCHFromStringAsString.tsx ([object Set])
     src/csuite/input-string/InputStringUI.tsx ([object Set])
     src/csuite/fields/string/WidgetStringUI.tsx ([object Set])
-    src/csuite/fields/string/WidgetString.tsx ([object Set])
+    src/csuite/fields/string/FieldString.tsx ([object Set])
     src/csuite/openrouter/OpenRouter_infos.ts ([object Set])
-    src/csuite/simple/SimpleBlueprint.ts ([object Set])
-    src/csuite/simple/SimpleDomain.ts ([object Set])
+    src/csuite/simple/SimpleBuilder.ts ([object Set])
     src/csuite/ctx/CSuiteProvider.tsx ([object Set])
     src/csuite/ctx/CSuite_ThemeLoco.tsx ([object Set])
-    src/csuite/model/Channel.ts ([object Set])
-    src/csuite/activity/ActivityUI.tsx ([object Set])
+    src/csuite/model/pubsub/Channel.ts ([object Set])
+    src/csuite/activity/ActivityContainerUI.tsx ([object Set])
+    src/csuite/activity/ActivityStackUI.tsx ([object Set])
     src/csuite/index.ts ([object Set])
 
 
 TYPES:
-    [🟢]: src/app/shortcuts/shorcutKeys       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/accelerators/ComboUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/csuite/commands/CommandManager
     [🟢]: src/csuite/accelerators/META_NAME       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🟢]: src/csuite/commands/CommandManager
         [🔵]: react
-    [🟢]: src/csuite/activity/ActivityManager       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/activity/ActivityContainerUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/index.d.ts files)
+        [🔵]: react
+        [🟢]: src/csuite/activity/Routine
+    [🟢]: src/csuite/activity/ActivityManager       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/activity/Routine.d.ts files)
         [🔴]: src/csuite/activity/Activity
         [🟢]: src/csuite/trigger/Trigger
-    [🟢]: src/csuite/activity/ActivityUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/index.d.ts files)
+        [🟢]: src/csuite/activity/Routine
+    [🟢]: src/csuite/activity/ActivityStackUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/index.d.ts files)
         [🔵]: react
+    [🟢]: src/csuite/activity/Routine       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/activity/ActivityManager.d.ts,/lib/csuite/activity/ActivityContainerUI.d.ts,/lib/csuite/activity/Activity.d.ts files)
         [🔴]: src/csuite/activity/Activity
+        [🟢]: src/csuite/activity/ActivityManager
     [🟢]: src/csuite/badge/BadgeUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔴]: src/csuite/frame/FrameSize
         [🔵]: react
         [🔴]: src/csuite/box/Box
+        [🟢]: src/csuite/index.LIBRARY
     [🟢]: src/csuite/box/BoxNormalized       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/frame/FrameTemplates.d.ts files)
-        [🔴]: src/csuite/kolor/Tint
         [🔴]: src/csuite/box/Box
+        [🟢]: src/csuite/kolor/Tint
     [🟢]: src/csuite/box/CurrentStyleCtx       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🔴]: src/csuite/kolor/Tint
+        [🟢]: src/csuite/kolor/Tint
         [🟢]: src/csuite/kolor/Kolor
     [🟢]: src/csuite/button/Button       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔴]: src/csuite/frame/FrameSize
         [🔵]: react
         [🔴]: src/csuite/box/Box
+        [🟢]: src/csuite/index.LIBRARY
     [🟢]: src/csuite/button/usePressLogic       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/checkbox/_InputBoolChroma       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔴]: src/csuite/kolor/Tint
+        [🟢]: src/csuite/kolor/Tint
     [🟢]: src/csuite/checkbox/_InputBoolToggleButtonBoxUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/csuite/checkbox/InputBoolCheckboxUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/csuite/checkbox/InputBoolUI
+    [🟢]: src/csuite/checkbox/InputBoolFlipButtonUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/csuite/checkbox/InputBoolUI
     [🟢]: src/csuite/checkbox/InputBoolToggleButtonUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/csuite/checkbox/InputBoolUI
-    [🟢]: src/csuite/checkbox/InputBoolUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/checkbox/InputBoolCheckboxUI.d.ts,/lib/csuite/checkbox/InputBoolToggleButtonUI.d.ts files)
+    [🟢]: src/csuite/checkbox/InputBoolUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/checkbox/InputBoolCheckboxUI.d.ts,/lib/csuite/checkbox/InputBoolToggleButtonUI.d.ts,/lib/csuite/checkbox/InputBoolFlipButtonUI.d.ts files)
         [🔵]: react
         [🔴]: src/csuite/box/Box
         [🟢]: src/csuite/icons/icons
-    [🟢]: src/csuite/commands/Command       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/introspect/_isBoundCommand.d.ts,/lib/csuite/introspect/_isCommand.d.ts,/lib/csuite/commands/CommandManager.d.ts,/lib/csuite/menu/Menu.d.ts files)
+        [🟢]: src/csuite/reveal/RevealPlacement
+    [🟢]: src/csuite/collapsible/CollapsibleState       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/collapsible/CollapsibleProps.d.ts files)
+        [🔴]: src/csuite/collapsible/CollapsibleProps
+    [🟢]: src/csuite/collapsible/CollapsibleUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react
+        [🔴]: src/csuite/collapsible/CollapsibleProps
+    [🟢]: src/csuite/commands/Command       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/introspect/_isBoundCommand.d.ts,/lib/csuite/introspect/_isCommand.d.ts,/lib/csuite/commands/CommandManager.d.ts,/lib/csuite/menu/MenuEntry.d.ts files)
         [🔵]: react/jsx-runtime
+        [🟢]: src/csuite/icons/icons
         [🟢]: src/csuite/trigger/Trigger
         [🟢]: src/csuite/commands/CommandManager
     [🟢]: src/csuite/commands/CommandManager       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/accelerators/META_NAME.d.ts,/lib/csuite/commands/Command.d.ts,/lib/csuite/accelerators/ComboUI.d.ts,/lib/csuite/dropdown/MenuItem.d.ts files)
         [🟢]: src/csuite/commands/Command
         [🔵]: react
         [🟢]: src/csuite/trigger/Trigger
-    [🟢]: src/csuite/ctx/CSuite_theme1       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔴]: src/csuite/ctx/CSuiteConfig
+    [🟢]: src/csuite/components/SpacerUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react
     [🟢]: src/csuite/ctx/CSuite_ThemeLoco       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/index.d.ts files)
-        [🔴]: src/csuite/kolor/Tint
+        [🟢]: src/csuite/kolor/Tint
         [🔴]: src/csuite/ctx/CSuiteConfig
         [🟢]: src/csuite/kolor/Kolor
+    [🟢]: src/csuite/ctx/CSuite_ThemeSimple       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔴]: src/csuite/ctx/CSuiteConfig
     [🟢]: src/csuite/ctx/CSuiteCtx       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🔴]: src/csuite/ctx/CSuiteConfig
@@ -239,330 +277,369 @@ TYPES:
     [🟢]: src/csuite/dropdown/MenuItem       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/csuite/commands/CommandManager
+        [🟢]: src/csuite/icons/icons
     [🟢]: src/csuite/environment/getOS       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/errors/ErrorBoundaryFallback       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
     [🟢]: src/csuite/errors/ErrorBoundaryUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-    [🟢]: src/csuite/fields/bool/WidgetBool       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/bool/WidgetBoolUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔵]: react
+    [🟢]: src/csuite/fields/bool/FieldBool       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/bool/WidgetBoolUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🔵]: react
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/bool/WidgetBoolUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/bool/WidgetBool
-    [🟢]: src/csuite/fields/button/WidgetButton       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/button/WidgetButtonUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
+        [🟢]: src/csuite/fields/bool/FieldBool
+    [🟢]: src/csuite/fields/button/FieldButton       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/button/WidgetButtonUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react/jsx-runtime
         [🟢]: src/csuite/frame/FrameTemplates
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/button/WidgetButtonUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/button/WidgetButton
-    [🟢]: src/csuite/fields/choices/WidgetChoices       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/choices/WidgetChoicesUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔵]: react
+        [🟢]: src/csuite/fields/button/FieldButton
+    [🟢]: src/csuite/fields/choices/FieldChoices       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/choices/WidgetChoices_SelectHeaderUI.d.ts,/lib/csuite/fields/choices/WidgetChoices_TabHeaderUI.d.ts,/lib/csuite/fields/choices/WidgetChoicesUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react/jsx-runtime
+        [🔵]: react
+        [🟢]: src/csuite/icons/icons
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
+        [🔴]: src/csuite/model/SchemaDict
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🔴]: src/csuite/types/ReactUtils
+        [🟢]: src/csuite/fields/choices/TabPositionConfig
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/fields/choices/TabPositionConfig       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/choices/FieldChoices.d.ts,/lib/csuite/fields/selectMany/FieldSelectMany.d.ts,/lib/csuite/fields/selectOne/FieldSelectOne.d.ts files)
+    [🟢]: src/csuite/fields/choices/WidgetChoices_SelectHeaderUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🔴]: src/csuite/model/SchemaDict
+        [🟢]: src/csuite/fields/choices/FieldChoices
+    [🟢]: src/csuite/fields/choices/WidgetChoices_TabHeaderUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🔴]: src/csuite/model/SchemaDict
+        [🟢]: src/csuite/fields/choices/FieldChoices
     [🟢]: src/csuite/fields/choices/WidgetChoicesUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🔵]: react
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/fields/choices/WidgetChoices
-    [🟢]: src/csuite/fields/color/WidgetColor       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/color/WidgetColorUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
+        [🔴]: src/csuite/model/SchemaDict
+        [🟢]: src/csuite/fields/choices/FieldChoices
+    [🟢]: src/csuite/fields/color/FieldColor       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/color/WidgetColorUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/color/WidgetColorUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/color/WidgetColor
-    [🟢]: src/csuite/fields/group/WidgetGroup       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/model/Model.d.ts,/lib/csuite/model/ModelManager.d.ts,/lib/csuite/fields/group/WidgetGroupUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/model/IDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔴]: src/csuite/model/$FieldTypes
-        [🔵]: react/jsx-runtime
+        [🟢]: src/csuite/fields/color/FieldColor
+    [🟢]: src/csuite/fields/group/FieldGroup       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Factory.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/fields/group/WidgetGroupUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/model/IBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
+        [🔴]: src/csuite/model/SchemaDict
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🔴]: src/csuite/types/NO_PROPS
+        [🔴]: src/csuite/variance/CovariantFC
+        [🟢]: src/csuite/form/FormUI
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/group/WidgetGroupUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🔵]: react
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/fields/group/WidgetGroup
-    [🟢]: src/csuite/fields/list/ListControlsUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔴]: src/csuite/model/SchemaDict
+        [🟢]: src/csuite/fields/group/FieldGroup
+    [🟢]: src/csuite/fields/link/FieldLink       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🟢]: src/csuite/model/BaseSchema
+        [🔴]: src/csuite/model/FieldConfig
+        [🔴]: src/csuite/model/FieldSerial
+        [🟢]: src/csuite/model/Repository
+        [🟢]: src/csuite/model/Validation
+        [🔴]: src/csuite/variance/BivariantHack
         [🔵]: react
-    [🟢]: src/csuite/fields/list/WidgetList       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/list/WidgetListUI.d.ts,/lib/csuite/simple/SimpleBlueprint.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/fields/list/FieldList       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/simple/SimpleSchema.d.ts,/lib/csuite/fields/list/WidgetListUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react/jsx-runtime
         [🔴]: src/csuite/model/$FieldTypes
         [🔵]: react
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Repository
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/fields/list/ListControlsUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react
     [🟢]: src/csuite/fields/list/WidgetListUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🔴]: src/csuite/model/$FieldTypes
+        [🟢]: src/csuite/model/BaseSchema
+        [🟢]: src/csuite/model/Field
+        [🟢]: src/csuite/fields/list/FieldList
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/fields/list/WidgetList
-    [🟢]: src/csuite/fields/markdown/WidgetMarkdown       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/markdown/WidgetMarkdownUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔵]: react
+    [🟢]: src/csuite/fields/markdown/FieldMarkdown       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/markdown/WidgetMarkdownUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🔵]: react
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/markdown/WidgetMarkdownUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/markdown/WidgetMarkdown
-    [🟢]: src/csuite/fields/matrix/WidgetMatrix       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/matrix/WidgetMatrixUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
+        [🟢]: src/csuite/fields/markdown/FieldMarkdown
+    [🟢]: src/csuite/fields/matrix/FieldMatrix       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/matrix/WidgetMatrixUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/matrix/WidgetMatrixUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/matrix/WidgetMatrix
-    [🟢]: src/csuite/fields/number/WidgetNumber       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/number/WidgetNumberUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
+        [🟢]: src/csuite/fields/matrix/FieldMatrix
+    [🟢]: src/csuite/fields/number/FieldNumber       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/fields/number/WidgetNumberUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Repository
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/number/WidgetNumberUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/number/WidgetNumber
-    [🟢]: src/csuite/fields/optional/WidgetOptional       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
+        [🟢]: src/csuite/fields/number/FieldNumber
+    [🟢]: src/csuite/fields/optional/FieldOptional       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/fields/seed/WidgetSeed       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/seed/WidgetSeedUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/fields/seed/FieldSeed       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/seed/WidgetSeedUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
+        [🟢]: src/csuite/fields/seed/Seeder
+    [🟢]: src/csuite/fields/seed/Seeder       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/seed/FieldSeed.d.ts files)
     [🟢]: src/csuite/fields/seed/WidgetSeedUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/seed/WidgetSeed
+        [🟢]: src/csuite/fields/seed/FieldSeed
+    [🟢]: src/csuite/fields/selectMany/FieldSelectMany       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_ListUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_SelectUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_TabUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectManyUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/csuite/model/BaseSchema
+        [🔴]: src/csuite/model/FieldConfig
+        [🔴]: src/csuite/model/FieldSerial
+        [🟢]: src/csuite/model/Repository
+        [🟢]: src/csuite/fields/choices/TabPositionConfig
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/selectMany/WidgetSelectMany_ListUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-        [🟢]: src/csuite/fields/selectMany/WidgetSelectMany
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+        [🟢]: src/csuite/fields/selectMany/FieldSelectMany
     [🟢]: src/csuite/fields/selectMany/WidgetSelectMany_SelectUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-        [🟢]: src/csuite/fields/selectMany/WidgetSelectMany
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+        [🟢]: src/csuite/fields/selectMany/FieldSelectMany
     [🟢]: src/csuite/fields/selectMany/WidgetSelectMany_TabUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-        [🟢]: src/csuite/fields/selectMany/WidgetSelectMany
-    [🟢]: src/csuite/fields/selectMany/WidgetSelectMany       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_ListUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_SelectUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_TabUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectManyUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔵]: react/jsx-runtime
-        [🔴]: src/csuite/model/FieldConfig
-        [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+        [🟢]: src/csuite/fields/selectMany/FieldSelectMany
     [🟢]: src/csuite/fields/selectMany/WidgetSelectManyUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-        [🟢]: src/csuite/fields/selectMany/WidgetSelectMany
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+        [🟢]: src/csuite/fields/selectMany/FieldSelectMany
+    [🟢]: src/csuite/fields/selectOne/FieldSelectOne       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_ListUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_SelectUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_TabUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectManyUI.d.ts,/lib/csuite/fields/selectMany/FieldSelectMany.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne_CellUI.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne_RollUI.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne_SelectUI.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne_TabUI.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOneUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/csuite/icons/icons
+        [🟢]: src/csuite/model/BaseSchema
+        [🔴]: src/csuite/model/FieldConfig
+        [🔴]: src/csuite/model/FieldSerial
+        [🟢]: src/csuite/model/Repository
+        [🟢]: src/csuite/fields/choices/TabPositionConfig
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/fields/selectOne/WidgetSelectOne_CellUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react/jsx-runtime
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
     [🟢]: src/csuite/fields/selectOne/WidgetSelectOne_RollUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
     [🟢]: src/csuite/fields/selectOne/WidgetSelectOne_SelectUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
     [🟢]: src/csuite/fields/selectOne/WidgetSelectOne_TabUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-    [🟢]: src/csuite/fields/selectOne/WidgetSelectOne       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_ListUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_SelectUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany_TabUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectManyUI.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne_RollUI.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne_SelectUI.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne_TabUI.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOneUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/icons/icons
-        [🔴]: src/csuite/model/FieldConfig
-        [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
     [🟢]: src/csuite/fields/selectOne/WidgetSelectOneUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-    [🟢]: src/csuite/fields/shared/WidgetShared       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/simple/SimpleBlueprint.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/model/IDomain.d.ts files)
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+    [🟢]: src/csuite/fields/shared/FieldShared       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/model/Field.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/fields/size/ResolutionState       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/size/WidgetSizeUI.d.ts,/lib/csuite/fields/size/WidgetSize.d.ts files)
-        [🔴]: src/csuite/fields/size/WidgetSizeTypes
-    [🟢]: src/csuite/fields/size/WidgetSize       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/size/WidgetSizeUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/fields/size/FieldSize       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/size/WidgetSizeUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🔵]: react
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🔴]: src/csuite/fields/size/WidgetSizeTypes
-        [🟢]: src/csuite/model/BaseField
-        [🟢]: src/csuite/fields/size/ResolutionState
+        [🟢]: src/csuite/model/Field
+        [🟢]: src/csuite/fields/size/WidgetSizeTypes
+    [🟢]: src/csuite/fields/size/WidgetSizeTypes       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/size/FieldSize.d.ts files)
     [🟢]: src/csuite/fields/size/WidgetSizeUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/size/ResolutionState
-        [🟢]: src/csuite/fields/size/WidgetSize
-    [🟢]: src/csuite/fields/spacer/SpacerUI       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔵]: react
-    [🟢]: src/csuite/fields/spacer/WidgetSpacer       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/spacer/WidgetSpacerUI.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔵]: react
-        [🔴]: src/csuite/model/FieldConfig
-        [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
-        [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/fields/spacer/WidgetSpacerUI       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔵]: react
-        [🟢]: src/csuite/fields/spacer/WidgetSpacer
-    [🟢]: src/csuite/fields/string/WidgetString       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/input-string/InputStringUI.d.ts,/lib/csuite/fields/string/WidgetStringUI.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔵]: react
+        [🟢]: src/csuite/fields/size/FieldSize
+    [🟢]: src/csuite/fields/string/FieldString       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/input-string/InputStringUI.d.ts,/lib/csuite/fields/string/WidgetStringUI.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
         [🟢]: src/csuite/icons/icons
+        [🟢]: src/csuite/model/BaseSchema
         [🔴]: src/csuite/model/FieldConfig
         [🔴]: src/csuite/model/FieldSerial
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
+        [🔵]: react
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/fields/string/WidgetStringUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/string/WidgetString
+        [🟢]: src/csuite/fields/string/FieldString
     [🟢]: src/csuite/fields/WidgetUI.DI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🟢]: src/csuite/index
         [🔴]: src/csuite/model/$FieldTypes
-        [🟢]: src/csuite/model/BaseField
-        [🟢]: src/csuite/fields/group/WidgetGroup
-        [🟢]: src/csuite/fields/optional/WidgetOptional
-        [🟢]: src/csuite/fields/shared/WidgetShared
-        [🟢]: src/csuite/fields/string/WidgetString
-    [🟢]: src/csuite/form/FormUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Model.d.ts files)
+        [🟢]: src/csuite/model/Field
+        [🟢]: src/csuite/fields/group/FieldGroup
+        [🟢]: src/csuite/fields/link/FieldLink
+        [🟢]: src/csuite/fields/list/FieldList
+        [🟢]: src/csuite/fields/number/FieldNumber
+        [🟢]: src/csuite/fields/optional/FieldOptional
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+        [🟢]: src/csuite/fields/shared/FieldShared
+        [🟢]: src/csuite/fields/string/FieldString
+    [🟢]: src/csuite/form/FormAsDropdownConfigUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/form/FormUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Field.d.ts,/lib/csuite/fields/group/FieldGroup.d.ts files)
         [🔵]: react
         [🔴]: src/csuite/box/Box
         [🔴]: src/csuite/variance/BivariantHack
         [🔴]: src/csuite/variance/CovariantFC
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
-    [🟢]: src/csuite/form/getActualWidgetToDisplay       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/form/getIfWidgetNeedAlignedLabel       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/form/Widget_ToggleUI       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔵]: react
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/frame/FrameTemplates
+        [🟢]: src/csuite/icons/icons
+        [🟢]: src/csuite/model/Field
+        [🔴]: src/csuite/types/NO_PROPS
     [🟢]: src/csuite/form/WidgetDebugIDUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/form/WidgetErrorsUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/form/WidgetHeaderContainerUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/form/WidgetHeaderControlsContainerUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react
+    [🟢]: src/csuite/form/WidgetIndentUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/csuite/form/WidgetLabelCaretUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/form/WidgetLabelContainerUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/BaseField.d.ts files)
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/form/WidgetLabelContainerUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Field.d.ts files)
         [🔵]: react
+        [🟢]: src/csuite/reveal/RevealPlacement
     [🟢]: src/csuite/form/WidgetLabelIconUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/form/WidgetLabelUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/form/WidgetLabelTextUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/form/WidgetMenu       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/csuite/menu/Menu
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/form/WidgetsContainerUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/csuite/form/WidgetSingleLineSummaryUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-    [🟢]: src/csuite/form/WidgetTooltipUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/form/WidgetToggleUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/form/WidgetUndoChangesButtonUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/form/WidgetWithLabelUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/BaseField.d.ts files)
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/form/WidgetWithLabelUI       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Field.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/model/BaseField
+        [🟢]: src/csuite/model/Field
     [🟢]: src/csuite/frame/Frame       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/resizableFrame/resizableFrameUI.d.ts files)
         [🔵]: react
         [🔴]: src/csuite/box/BoxUIProps
         [🟢]: src/csuite/icons/icons
+        [🟢]: src/csuite/reveal/RevealPlacement
         [🔴]: src/csuite/frame/FrameSize
         [🟢]: src/csuite/frame/FrameTemplates
-    [🟢]: src/csuite/frame/FrameTemplates       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/frame/Frame.d.ts,/lib/csuite/fields/button/WidgetButton.d.ts files)
+    [🟢]: src/csuite/frame/FrameTemplates       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/frame/Frame.d.ts,/lib/csuite/form/FormUI.d.ts,/lib/csuite/fields/button/FieldButton.d.ts files)
         [🟢]: src/csuite/box/BoxNormalized
+    [🟢]: src/csuite/frame/tooltip       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🟢]: src/csuite/reveal/RevealPlacement
     [🟢]: src/csuite/hashUtils/hash       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/icons/iconHelpers       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🔵]: @mdi/react/dist/IconProps
         [🔵]: react
         [🟢]: src/csuite/icons/icons
-    [🟢]: src/csuite/icons/icons       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/icons/iconHelpers.d.ts,/lib/csuite/frame/Frame.d.ts,/lib/csuite/checkbox/InputBoolUI.d.ts,/lib/csuite/menu/SimpleMenuAction.d.ts,/lib/csuite/model/BaseField.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne.d.ts,/lib/csuite/fields/string/WidgetString.d.ts,/lib/csuite/model/FieldConfig.d.ts files)
-    [🟢]: src/csuite/index       (from /lib/csuite/index.LIBRARY.d.ts,/lib/panels/Panel_Gallery/FormAsDropdownConfigUI.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts files)
-        [🟢]: src/csuite/model/ModelManager
-        [🟢]: src/csuite/simple/SimpleDomain
+    [🟢]: src/csuite/icons/icons       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/icons/iconHelpers.d.ts,/lib/csuite/frame/Frame.d.ts,/lib/csuite/form/FormUI.d.ts,/lib/csuite/checkbox/InputBoolUI.d.ts,/lib/csuite/commands/Command.d.ts,/lib/csuite/dropdown/MenuItem.d.ts,/lib/csuite/menu/SimpleMenuAction.d.ts,/lib/csuite/menu/SimpleMenuModal.d.ts,/lib/csuite/menu/Menu.d.ts,/lib/csuite/model/Field.d.ts,/lib/csuite/fields/choices/FieldChoices.d.ts,/lib/csuite/fields/selectOne/FieldSelectOne.d.ts,/lib/csuite/fields/string/FieldString.d.ts,/lib/csuite/model/FieldConfig.d.ts files)
+    [🟢]: src/csuite/icons/iconsCDI       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/icons/iconsLDI       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/icons/iconsXDI       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/index       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts files)
+        [🟢]: src/csuite/model/Factory
+        [🟢]: src/csuite/simple/SimpleBuilder
         [🟢]: src/csuite/ctx/CSuiteProvider
         [🟢]: src/csuite/ctx/CSuite_ThemeLoco
-        [🔴]: src/csuite/model/IDomain
-        [🔴]: src/csuite/model/ModelSerial
-        [🟢]: src/csuite/model/Model
-        [🔴]: src/csuite/model/IBlueprint
+        [🔴]: src/csuite/model/IBuilder
+        [🔴]: src/csuite/model/EntitySerial
+        [🔴]: src/csuite/model/SchemaDict
+        [🟢]: src/csuite/model/BaseSchema
+        [🔴]: src/csuite/model/Entity
         [🔴]: src/csuite/openrouter/OpenRouter_models
-        [🔴]: src/csuite/simple/SimpleSpecAliases
-        [🟢]: src/csuite/model/Channel
-        [🟢]: src/csuite/activity/ActivityUI
-    [🟢]: src/csuite/index.LIBRARY       (from  files)
-        [🟢]: src/csuite/tinyCSS/CSSVar
+        [🔴]: src/csuite/variance/CovariantFC
+        [🔴]: src/csuite/variance/BivariantHack
+        [🔴]: src/csuite/simple/SimpleAliases
+        [🟢]: src/csuite/model/pubsub/Channel
+        [🟢]: src/csuite/activity/ActivityContainerUI
+        [🟢]: src/csuite/activity/ActivityStackUI
+    [🟢]: src/csuite/index.LIBRARY       (from /lib/csuite/button/Button.d.ts,/lib/csuite/badge/BadgeUI.d.ts files)
+        [🟢]: src/csuite/utils/bang
+        [🟢]: src/csuite/model/Transaction
+        [🟢]: src/csuite/model/Repository
+        [🟢]: src/csuite/model/Factory
         [🟢]: src/csuite/utils/clamp
+        [🟢]: src/csuite/tinyCSS/CSSVar
         [🟢]: src/csuite/kolor/Kolor
+        [🟢]: src/csuite/kolor/Tint
         [🟢]: src/csuite/box/BoxNormalized
         [🟢]: src/csuite/box/CurrentStyleCtx
         [🟢]: src/csuite/button/usePressLogic
+        [🟢]: src/csuite/icons/iconsCDI
+        [🟢]: src/csuite/icons/iconsLDI
+        [🟢]: src/csuite/icons/iconsXDI
         [🟢]: src/csuite/icons/icons
         [🟢]: src/csuite/icons/iconHelpers
         [🟢]: src/csuite/kolor/overrideTint
@@ -570,56 +647,50 @@ TYPES:
         [🟢]: src/csuite/tinyCSS/compileOrRetrieveClassName
         [🟢]: src/csuite/tinyCSS/quickClass
         [🟢]: src/csuite/frame/FrameTemplates
+        [🟢]: src/csuite/frame/tooltip
         [🟢]: src/csuite/frame/Frame
+        [🟢]: src/csuite/ctx/CSuite_ThemeSimple
+        [🟢]: src/csuite/ctx/CSuiteCtx
+        [🟢]: src/csuite/ctx/useCSuite
+        [🟢]: src/csuite/ctx/CSuiteOverride
+        [🟢]: src/csuite/fields/WidgetUI.DI
         [🟢]: src/csuite/button/Button
-        [🟢]: src/csuite/markdown/MarkdownUI
-        [🟢]: src/csuite/tinyCSS/knownHues
-        [🟢]: src/csuite/messages/MessageUI
-        [🟢]: src/csuite/messages/MessageErrorUI
-        [🟢]: src/csuite/form/FormUI
         [🟢]: src/csuite/modal/ModalShell
         [🟢]: src/csuite/reveal/RevealCtx
         [🟢]: src/csuite/reveal/RevealStack
         [🟢]: src/csuite/reveal/RevealPlacement
         [🟢]: src/csuite/reveal/RevealState
         [🟢]: src/csuite/reveal/RevealUI
-        [🟢]: src/panels/Panel_Gallery/FormAsDropdownConfigUI
-        [🟢]: src/csuite/fields/WidgetUI.DI
-        [🟢]: src/csuite/utils/debounce
-        [🟢]: src/csuite/model/Model
-        [🟢]: src/csuite/model/runWithGlobalForm
-        [🟢]: src/csuite/model/ModelManager
-        [🟢]: src/panels/libraryUI/tree/nodes/TreeWidget
-        [🟢]: src/utils/mobx-store-inheritance
-        [🟢]: src/csuite/ctx/CSuite_theme1
-        [🟢]: src/csuite/ctx/CSuiteCtx
-        [🟢]: src/csuite/ctx/useCSuite
-        [🟢]: src/csuite/ctx/CSuiteOverride
-        [🟢]: src/csuite/form/getActualWidgetToDisplay
-        [🟢]: src/csuite/checkbox/_InputBoolChroma
-        [🟢]: src/csuite/checkbox/InputBoolCheckboxUI
-        [🟢]: src/csuite/checkbox/_InputBoolToggleButtonBoxUI
-        [🟢]: src/csuite/checkbox/InputBoolToggleButtonUI
-        [🟢]: src/csuite/checkbox/InputBoolUI
-        [🟢]: src/csuite/form/Widget_ToggleUI
+        [🟢]: src/csuite/markdown/MarkdownUI
+        [🟢]: src/csuite/tinyCSS/knownHues
+        [🟢]: src/csuite/messages/MessageUI
+        [🟢]: src/csuite/messages/MessageErrorUI
+        [🟢]: src/csuite/form/FormUI
+        [🟢]: src/csuite/form/FormAsDropdownConfigUI
         [🟢]: src/csuite/form/WidgetErrorsUI
         [🟢]: src/csuite/form/WidgetHeaderContainerUI
         [🟢]: src/csuite/form/WidgetLabelCaretUI
         [🟢]: src/csuite/form/WidgetLabelContainerUI
         [🟢]: src/csuite/form/WidgetLabelIconUI
-        [🟢]: src/widgets/workspace/JsonViewUI
+        [🟢]: src/csuite/checkbox/_InputBoolChroma
+        [🟢]: src/csuite/checkbox/InputBoolCheckboxUI
+        [🟢]: src/csuite/checkbox/_InputBoolToggleButtonBoxUI
+        [🟢]: src/csuite/checkbox/InputBoolToggleButtonUI
+        [🟢]: src/csuite/checkbox/InputBoolUI
+        [🟢]: src/csuite/form/WidgetToggleUI
+        [🟢]: src/csuite/json/JsonViewUI
         [🟢]: src/csuite/errors/ErrorBoundaryFallback
         [🟢]: src/csuite/errors/ErrorBoundaryUI
-        [🟢]: src/csuite/utils/bang
         [🟢]: src/csuite/smooth-size/useSizeOf
         [🟢]: src/csuite/smooth-size/AnimatedSizeUI
         [🟢]: src/csuite/utils/makeLabelFromFieldName
-        [🟢]: src/csuite/form/getIfWidgetNeedAlignedLabel
         [🟢]: src/csuite/form/WidgetDebugIDUI
         [🟢]: src/csuite/form/WidgetHeaderControlsContainerUI
-        [🟢]: src/csuite/form/WidgetLabelUI
+        [🟢]: src/csuite/form/WidgetIndentUI
+        [🟢]: src/csuite/form/WidgetLabelTextUI
         [🟢]: src/csuite/dropdown/MenuDividerUI
         [🟢]: src/csuite/trigger/Trigger
+        [🟢]: src/csuite/activity/Routine
         [🟢]: src/csuite/activity/ActivityManager
         [🟢]: src/csuite/introspect/_isBoundCommand
         [🟢]: src/csuite/introspect/_isCommand
@@ -629,6 +700,7 @@ TYPES:
         [🟢]: src/csuite/commands/CommandManager
         [🟢]: src/csuite/commands/Command
         [🟢]: src/csuite/introspect/_isBoundMenu
+        [🟢]: src/csuite/menu/MenuBuilder
         [🟢]: src/csuite/accelerators/ComboUI
         [🟢]: src/csuite/dropdown/MenuItem
         [🟢]: src/csuite/model/$FieldSym
@@ -636,174 +708,217 @@ TYPES:
         [🟢]: src/csuite/menu/SimpleMenuModal
         [🟢]: src/csuite/menu/MenuUI
         [🟢]: src/csuite/menu/Menu
-        [🟢]: src/db/SQLITE_boolean
+        [🟢]: src/csuite/types/SQLITE_boolean
         [🟢]: src/csuite/tree/utils
         [🟢]: src/csuite/tree/TreeNode
         [🟢]: src/csuite/tree/Tree
-        [🟢]: src/app/shortcuts/shorcutKeys
         [🟢]: src/csuite/tree/TreeCtx
         [🟢]: src/csuite/tree/RenderTreeIcon1
         [🟢]: src/csuite/tree/RenderItemTitleUI
         [🟢]: src/csuite/tree/TreeEntryUI
+        [🟢]: src/csuite/tree/TreeKeys
         [🟢]: src/csuite/tree/TreeUI
         [🟢]: src/csuite/tree/TreeShortcuts
         [🟢]: src/csuite/tree/TreeView
         [🟢]: src/csuite/utils/toasts
+        [🟢]: src/csuite/utils/potatoClone
         [🟢]: src/csuite/form/WidgetMenu
-        [🟢]: src/csuite/form/WidgetTooltipUI
         [🟢]: src/csuite/form/WidgetUndoChangesButtonUI
         [🟢]: src/csuite/form/WidgetWithLabelUI
+        [🟢]: src/csuite/mobx/mobx-store-inheritance
+        [🟢]: src/csuite/model/autofix/autofixSerial_20240703
+        [🟢]: src/csuite/model/autofix/autofixSerial_20240711
+        [🟢]: src/csuite/model/BaseSchema
+        [🟢]: src/csuite/utils/objectAssignTsEfficient
+        [🟢]: src/csuite/simple/SimpleSchema
+        [🟢]: src/csuite/model/FieldId
+        [🟢]: src/csuite/model/TreeEntry_Field
         [🟢]: src/csuite/model/Validation
-        [🟢]: src/csuite/model/BaseField
-        [🟢]: src/csuite/fields/spacer/SpacerUI
+        [🟢]: src/csuite/model/Field
+        [🟢]: src/csuite/components/SpacerUI
         [🟢]: src/csuite/fields/bool/WidgetBoolUI
-        [🟢]: src/csuite/fields/bool/WidgetBool
+        [🟢]: src/csuite/fields/bool/FieldBool
         [🟢]: src/csuite/fields/button/WidgetButtonUI
-        [🟢]: src/csuite/fields/button/WidgetButton
-        [🟢]: src/csuite/form/WidgetsContainerUI
+        [🟢]: src/csuite/fields/button/FieldButton
         [🟢]: src/csuite/select/SelectPopupUI
         [🟢]: src/csuite/hashUtils/hash
         [🟢]: src/csuite/badge/BadgeUI
         [🟢]: src/csuite/utils/searchMatches
         [🟢]: src/csuite/select/SelectState
         [🟢]: src/csuite/select/SelectUI
+        [🟢]: src/csuite/fields/choices/WidgetChoices_SelectHeaderUI
+        [🟢]: src/csuite/fields/choices/TabPositionConfig
+        [🟢]: src/csuite/fields/choices/WidgetChoices_TabHeaderUI
+        [🟢]: src/csuite/form/WidgetsContainerUI
         [🟢]: src/csuite/fields/choices/WidgetChoicesUI
-        [🟢]: src/csuite/fields/choices/WidgetChoices
+        [🟢]: src/csuite/fields/choices/FieldChoices
         [🟢]: src/csuite/fields/color/WidgetColorUI
-        [🟢]: src/csuite/fields/color/WidgetColor
+        [🟢]: src/csuite/fields/color/FieldColor
+        [🟢]: src/csuite/collapsible/CollapsibleState
+        [🟢]: src/csuite/collapsible/CollapsibleUI
+        [🟢]: src/csuite/utils/capitalize
         [🟢]: src/csuite/wrappers/FrameSubtle
         [🟢]: src/csuite/form/WidgetSingleLineSummaryUI
         [🟢]: src/csuite/fields/group/WidgetGroupUI
-        [🟢]: src/csuite/fields/group/WidgetGroup
+        [🟢]: src/csuite/fields/group/FieldGroup
+        [🟢]: src/csuite/fields/link/FieldLink
         [🟢]: src/csuite/fields/list/ListControlsUI
         [🟢]: src/csuite/fields/list/WidgetListUI
-        [🟢]: src/csuite/fields/list/WidgetList
+        [🟢]: src/csuite/fields/list/FieldList
         [🟢]: src/csuite/fields/markdown/WidgetMarkdownUI
-        [🟢]: src/csuite/fields/markdown/WidgetMarkdown
+        [🟢]: src/csuite/fields/markdown/FieldMarkdown
         [🟢]: src/csuite/fields/matrix/WidgetMatrixUI
-        [🟢]: src/csuite/fields/matrix/WidgetMatrix
+        [🟢]: src/csuite/fields/matrix/FieldMatrix
         [🟢]: src/csuite/utils/parseFloatNoRoundingErr
         [🟢]: src/csuite/input-number/InputNumberUI
         [🟢]: src/csuite/fields/number/WidgetNumberUI
-        [🟢]: src/csuite/fields/number/WidgetNumber
-        [🟢]: src/csuite/fields/optional/WidgetOptional
+        [🟢]: src/csuite/fields/number/FieldNumber
+        [🟢]: src/csuite/fields/optional/FieldOptional
+        [🟢]: src/csuite/fields/seed/Seeder
         [🟢]: src/csuite/fields/seed/WidgetSeedUI
-        [🟢]: src/csuite/fields/seed/WidgetSeed
-        [🟢]: src/panels/PanelHeader
+        [🟢]: src/csuite/fields/seed/FieldSeed
+        [🟢]: src/csuite/utils/exhaust
+        [🟢]: src/csuite/wrappers/PanelHeader
         [🟢]: src/csuite/resizableFrame/resizableFrameUI
         [🟢]: src/csuite/fields/selectMany/WidgetSelectMany_ListUI
-        [🟢]: src/csuite/utils/exhaust
+        [🟢]: src/csuite/checkbox/InputBoolFlipButtonUI
         [🟢]: src/csuite/fields/selectMany/WidgetSelectMany_SelectUI
         [🟢]: src/csuite/fields/selectMany/WidgetSelectMany_TabUI
         [🟢]: src/csuite/fields/selectMany/WidgetSelectManyUI
-        [🟢]: src/csuite/fields/selectMany/WidgetSelectMany
+        [🟢]: src/csuite/fields/selectMany/FieldSelectMany
+        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne_CellUI
         [🟢]: src/csuite/fields/selectOne/WidgetSelectOne_RollUI
         [🟢]: src/csuite/fields/selectOne/WidgetSelectOne_SelectUI
         [🟢]: src/csuite/fields/selectOne/WidgetSelectOne_TabUI
         [🟢]: src/csuite/fields/selectOne/WidgetSelectOneUI
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-        [🟢]: src/csuite/fields/shared/WidgetShared
-        [🟢]: src/csuite/fields/size/ResolutionState
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+        [🟢]: src/csuite/fields/shared/FieldShared
+        [🟢]: src/csuite/fields/size/WidgetSizeTypes
         [🟢]: src/csuite/fields/size/WidgetSizeUI
-        [🟢]: src/csuite/fields/size/WidgetSize
-        [🟢]: src/csuite/fields/spacer/WidgetSpacerUI
-        [🟢]: src/csuite/fields/spacer/WidgetSpacer
+        [🟢]: src/csuite/fields/size/FieldSize
         [🟢]: src/csuite/kolor/getLCHFromStringAsString
         [🟢]: src/csuite/input-string/InputStringUI
         [🟢]: src/csuite/fields/string/WidgetStringUI
-        [🟢]: src/csuite/fields/string/WidgetString
+        [🟢]: src/csuite/fields/string/FieldString
         [🟢]: src/csuite/openrouter/OpenRouter_infos
-        [🟢]: src/csuite/simple/SimpleBlueprint
-        [🟢]: src/csuite/simple/SimpleDomain
+        [🟢]: src/csuite/simple/SimpleBuilder
         [🟢]: src/csuite/ctx/CSuiteProvider
         [🟢]: src/csuite/ctx/CSuite_ThemeLoco
-        [🟢]: src/csuite/model/Channel
-        [🟢]: src/csuite/activity/ActivityUI
+        [🟢]: src/csuite/model/pubsub/Channel
+        [🟢]: src/csuite/activity/ActivityContainerUI
+        [🟢]: src/csuite/activity/ActivityStackUI
         [🟢]: src/csuite/index
     [🟢]: src/csuite/input-number/InputNumberUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/csuite/input-string/InputStringUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-        [🟢]: src/csuite/fields/string/WidgetString
+        [🟢]: src/csuite/fields/string/FieldString
     [🟢]: src/csuite/introspect/_isBoundCommand       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🟢]: src/csuite/commands/Command
     [🟢]: src/csuite/introspect/_isBoundMenu       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🟢]: src/csuite/menu/Menu
     [🟢]: src/csuite/introspect/_isCommand       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🟢]: src/csuite/commands/Command
+    [🟢]: src/csuite/json/JsonViewUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: react
     [🟢]: src/csuite/kolor/getLCHFromStringAsString       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/kolor/Kolor       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/box/CurrentStyleCtx.d.ts,/lib/csuite/ctx/CSuite_ThemeLoco.d.ts,/lib/csuite/ctx/CSuiteConfig.d.ts files)
-        [🔴]: src/csuite/kolor/Tint
+        [🟢]: src/csuite/kolor/Tint
         [🔵]: colorjs.io
     [🟢]: src/csuite/kolor/overrideTint       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔴]: src/csuite/kolor/Tint
+        [🟢]: src/csuite/kolor/Tint
     [🟢]: src/csuite/kolor/overrideTintV2       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔴]: src/csuite/kolor/Tint
+        [🟢]: src/csuite/kolor/Tint
+    [🟢]: src/csuite/kolor/Tint       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/kolor/Kolor.d.ts,/lib/csuite/box/BoxNormalized.d.ts,/lib/csuite/box/CurrentStyleCtx.d.ts,/lib/csuite/kolor/overrideTint.d.ts,/lib/csuite/kolor/overrideTintV2.d.ts,/lib/csuite/checkbox/_InputBoolChroma.d.ts,/lib/csuite/model/Field.d.ts,/lib/csuite/ctx/CSuite_ThemeLoco.d.ts,/lib/csuite/box/Box.d.ts,/lib/csuite/ctx/CSuiteConfig.d.ts,/lib/csuite/model/FieldConfig.d.ts files)
+        [🟢]: src/csuite/tinyCSS/CSSVar
     [🟢]: src/csuite/markdown/MarkdownUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-    [🟢]: src/csuite/menu/Menu       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/introspect/_isBoundMenu.d.ts,/lib/csuite/menu/MenuUI.d.ts,/lib/csuite/form/WidgetMenu.d.ts files)
-        [🔵]: react
+    [🟢]: src/csuite/menu/Menu       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/introspect/_isBoundMenu.d.ts,/lib/csuite/menu/MenuUI.d.ts,/lib/csuite/form/WidgetMenu.d.ts,/lib/csuite/menu/MenuEntry.d.ts files)
         [🔴]: src/csuite/activity/Activity
-        [🟢]: src/csuite/commands/Command
-        [🟢]: src/csuite/model/BaseField
-        [🟢]: src/csuite/trigger/Trigger
-        [🔴]: src/csuite/types/NO_PROPS
-        [🟢]: src/csuite/menu/SimpleMenuModal
-        [🟢]: src/csuite/menu/SimpleMenuAction
-    [🟢]: src/csuite/menu/MenuUI       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔵]: react
-        [🟢]: src/csuite/menu/Menu
-    [🟢]: src/csuite/menu/SimpleMenuAction       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/menu/Menu.d.ts files)
         [🟢]: src/csuite/icons/icons
-    [🟢]: src/csuite/menu/SimpleMenuModal       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/menu/Menu.d.ts files)
+        [🔴]: src/csuite/types/NO_PROPS
+        [🔴]: src/csuite/menu/MenuEntry
+        [🔵]: react
+        [🟢]: src/csuite/trigger/Trigger
+        [🟢]: src/csuite/menu/MenuBuilder
+    [🟢]: src/csuite/menu/MenuBuilder       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/menu/Menu.d.ts files)
+        [🟢]: src/csuite/model/Field
+        [🔵]: react
+    [🟢]: src/csuite/menu/MenuUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🟢]: src/csuite/menu/Menu
+        [🔵]: react
+    [🟢]: src/csuite/menu/SimpleMenuAction       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/menu/MenuEntry.d.ts files)
+        [🟢]: src/csuite/icons/icons
+    [🟢]: src/csuite/menu/SimpleMenuModal       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/menu/MenuEntry.d.ts files)
+        [🟢]: src/csuite/icons/icons
         [🔵]: react
     [🟢]: src/csuite/messages/MessageErrorUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/csuite/messages/MessageUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
+    [🟢]: src/csuite/mobx/mobx-store-inheritance       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔵]: mobx
     [🟢]: src/csuite/modal/ModalShell       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
-    [🟢]: src/csuite/model/$FieldSym       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/BaseField.d.ts files)
+    [🟢]: src/csuite/model/$FieldSym       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Field.d.ts files)
         [🔴]: src/csuite/model/$FieldTypes
-        [🟢]: src/csuite/model/BaseField
-    [🟢]: src/csuite/model/BaseField       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/model/Model.d.ts,/lib/csuite/model/ModelManager.d.ts,/lib/panels/libraryUI/tree/nodes/TreeWidget.d.ts,/lib/csuite/form/getActualWidgetToDisplay.d.ts,/lib/csuite/form/Widget_ToggleUI.d.ts,/lib/csuite/form/WidgetErrorsUI.d.ts,/lib/csuite/form/WidgetHeaderContainerUI.d.ts,/lib/csuite/form/WidgetLabelCaretUI.d.ts,/lib/csuite/form/WidgetLabelIconUI.d.ts,/lib/csuite/form/getIfWidgetNeedAlignedLabel.d.ts,/lib/csuite/form/WidgetDebugIDUI.d.ts,/lib/csuite/form/WidgetLabelUI.d.ts,/lib/csuite/model/$FieldSym.d.ts,/lib/csuite/menu/Menu.d.ts,/lib/csuite/form/WidgetMenu.d.ts,/lib/csuite/form/WidgetTooltipUI.d.ts,/lib/csuite/form/WidgetUndoChangesButtonUI.d.ts,/lib/csuite/form/WidgetWithLabelUI.d.ts,/lib/csuite/fields/bool/WidgetBool.d.ts,/lib/csuite/fields/button/WidgetButton.d.ts,/lib/csuite/fields/choices/WidgetChoices.d.ts,/lib/csuite/fields/color/WidgetColor.d.ts,/lib/csuite/fields/group/WidgetGroup.d.ts,/lib/csuite/fields/list/WidgetListUI.d.ts,/lib/csuite/fields/list/WidgetList.d.ts,/lib/csuite/fields/markdown/WidgetMarkdown.d.ts,/lib/csuite/fields/matrix/WidgetMatrix.d.ts,/lib/csuite/fields/number/WidgetNumber.d.ts,/lib/csuite/fields/optional/WidgetOptional.d.ts,/lib/csuite/fields/seed/WidgetSeed.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne.d.ts,/lib/csuite/fields/shared/WidgetShared.d.ts,/lib/csuite/fields/size/WidgetSize.d.ts,/lib/csuite/fields/spacer/WidgetSpacer.d.ts,/lib/csuite/fields/string/WidgetString.d.ts,/lib/csuite/simple/SimpleBlueprint.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/model/IBlueprint.d.ts,/lib/csuite/model/$FieldTypes.d.ts,/lib/csuite/model/IDomain.d.ts files)
-        [🟢]: src/csuite/model/Channel
-        [🔵]: react/jsx-runtime
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/model/autofix/autofixSerial_20240703       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/model/autofix/autofixSerial_20240711       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/model/BaseSchema       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Factory.d.ts,/lib/csuite/simple/SimpleSchema.d.ts,/lib/csuite/model/Field.d.ts,/lib/csuite/fields/bool/FieldBool.d.ts,/lib/csuite/fields/button/FieldButton.d.ts,/lib/csuite/fields/choices/FieldChoices.d.ts,/lib/csuite/fields/color/FieldColor.d.ts,/lib/csuite/fields/group/FieldGroup.d.ts,/lib/csuite/fields/link/FieldLink.d.ts,/lib/csuite/fields/list/WidgetListUI.d.ts,/lib/csuite/fields/list/FieldList.d.ts,/lib/csuite/fields/markdown/FieldMarkdown.d.ts,/lib/csuite/fields/matrix/FieldMatrix.d.ts,/lib/csuite/fields/number/FieldNumber.d.ts,/lib/csuite/fields/optional/FieldOptional.d.ts,/lib/csuite/fields/seed/FieldSeed.d.ts,/lib/csuite/fields/selectMany/FieldSelectMany.d.ts,/lib/csuite/fields/selectOne/FieldSelectOne.d.ts,/lib/csuite/fields/shared/FieldShared.d.ts,/lib/csuite/fields/size/FieldSize.d.ts,/lib/csuite/fields/string/FieldString.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/index.d.ts,/lib/csuite/model/Entity.d.ts,/lib/csuite/model/IBuilder.d.ts,/lib/csuite/model/FieldConfig.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🔴]: src/csuite/variance/CovariantFC
+        [🟢]: src/csuite/model/Field
+        [🔴]: src/csuite/model/FieldSerial
+        [🟢]: src/csuite/model/pubsub/Channel
+        [🔴]: src/csuite/model/pubsub/FieldReaction
+        [🔴]: src/csuite/model/pubsub/Producer
+        [🟢]: src/csuite/model/Repository
+    [🟢]: src/csuite/model/Factory       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/index.d.ts files)
+        [🟢]: src/csuite/fields/group/FieldGroup
+        [🟢]: src/csuite/model/BaseSchema
+        [🔴]: src/csuite/model/Entity
+        [🔴]: src/csuite/model/IBuilder
+        [🔴]: src/csuite/model/SchemaDict
+        [🔵]: react
+        [🟢]: src/csuite/model/Repository
+    [🟢]: src/csuite/model/Field       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Transaction.d.ts,/lib/csuite/model/Repository.d.ts,/lib/csuite/fields/WidgetUI.DI.d.ts,/lib/csuite/form/FormUI.d.ts,/lib/csuite/form/FormAsDropdownConfigUI.d.ts,/lib/csuite/form/WidgetErrorsUI.d.ts,/lib/csuite/form/WidgetHeaderContainerUI.d.ts,/lib/csuite/form/WidgetLabelCaretUI.d.ts,/lib/csuite/form/WidgetLabelIconUI.d.ts,/lib/csuite/form/WidgetToggleUI.d.ts,/lib/csuite/form/WidgetDebugIDUI.d.ts,/lib/csuite/form/WidgetLabelTextUI.d.ts,/lib/csuite/menu/MenuBuilder.d.ts,/lib/csuite/model/$FieldSym.d.ts,/lib/csuite/form/WidgetMenu.d.ts,/lib/csuite/form/WidgetUndoChangesButtonUI.d.ts,/lib/csuite/form/WidgetWithLabelUI.d.ts,/lib/csuite/model/BaseSchema.d.ts,/lib/csuite/simple/SimpleSchema.d.ts,/lib/csuite/model/TreeEntry_Field.d.ts,/lib/csuite/fields/bool/FieldBool.d.ts,/lib/csuite/fields/button/FieldButton.d.ts,/lib/csuite/fields/choices/FieldChoices.d.ts,/lib/csuite/fields/color/FieldColor.d.ts,/lib/csuite/fields/group/FieldGroup.d.ts,/lib/csuite/fields/link/FieldLink.d.ts,/lib/csuite/fields/list/WidgetListUI.d.ts,/lib/csuite/fields/list/FieldList.d.ts,/lib/csuite/fields/markdown/FieldMarkdown.d.ts,/lib/csuite/fields/matrix/FieldMatrix.d.ts,/lib/csuite/fields/number/FieldNumber.d.ts,/lib/csuite/fields/optional/FieldOptional.d.ts,/lib/csuite/fields/seed/FieldSeed.d.ts,/lib/csuite/fields/selectMany/FieldSelectMany.d.ts,/lib/csuite/fields/selectOne/FieldSelectOne.d.ts,/lib/csuite/fields/shared/FieldShared.d.ts,/lib/csuite/fields/size/FieldSize.d.ts,/lib/csuite/fields/string/FieldString.d.ts,/lib/csuite/simple/SimpleBuilder.d.ts,/lib/csuite/model/pubsub/Channel.d.ts,/lib/csuite/model/$FieldTypes.d.ts,/lib/csuite/model/Entity.d.ts,/lib/csuite/model/IBuilder.d.ts,/lib/csuite/menu/MenuEntry.d.ts,/lib/csuite/model/Instanciable.d.ts,/lib/csuite/model/FieldConfig.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🟢]: src/csuite/fields/shared/FieldShared
         [🟢]: src/csuite/form/WidgetLabelContainerUI
         [🟢]: src/csuite/form/WidgetWithLabelUI
         [🟢]: src/csuite/icons/icons
-        [🔴]: src/csuite/kolor/Tint
+        [🟢]: src/csuite/kolor/Tint
         [🔴]: src/csuite/tree/TreeEntry
+        [🔴]: src/csuite/types/ReactUtils
         [🔴]: src/csuite/variance/CovariantFC
         [🔴]: src/csuite/model/$FieldTypes
-        [🔴]: src/csuite/model/IBlueprint
-        [🟢]: src/csuite/model/Model
+        [🟢]: src/csuite/model/BaseSchema
+        [🔴]: src/csuite/model/Instanciable
+        [🟢]: src/csuite/model/pubsub/Channel
+        [🔴]: src/csuite/model/pubsub/Producer
+        [🟢]: src/csuite/model/Repository
         [🟢]: src/csuite/model/Validation
         [🔵]: react
-        [🟢]: src/csuite/model/$FieldSym
-    [🟢]: src/csuite/model/Channel       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/BaseField.d.ts,/lib/csuite/simple/SimpleBlueprint.d.ts,/lib/csuite/index.d.ts,/lib/csuite/model/IBlueprint.d.ts files)
-        [🔴]: src/csuite/variance/BivariantHack
-    [🟢]: src/csuite/model/Model       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/form/FormUI.d.ts,/lib/panels/Panel_Gallery/FormAsDropdownConfigUI.d.ts,/lib/csuite/model/ModelManager.d.ts,/lib/csuite/model/BaseField.d.ts,/lib/csuite/fields/bool/WidgetBool.d.ts,/lib/csuite/fields/button/WidgetButton.d.ts,/lib/csuite/fields/choices/WidgetChoices.d.ts,/lib/csuite/fields/color/WidgetColor.d.ts,/lib/csuite/fields/group/WidgetGroup.d.ts,/lib/csuite/fields/list/WidgetList.d.ts,/lib/csuite/fields/markdown/WidgetMarkdown.d.ts,/lib/csuite/fields/matrix/WidgetMatrix.d.ts,/lib/csuite/fields/number/WidgetNumber.d.ts,/lib/csuite/fields/optional/WidgetOptional.d.ts,/lib/csuite/fields/seed/WidgetSeed.d.ts,/lib/csuite/fields/selectMany/WidgetSelectMany.d.ts,/lib/csuite/fields/selectOne/WidgetSelectOne.d.ts,/lib/csuite/fields/shared/WidgetShared.d.ts,/lib/csuite/fields/size/WidgetSize.d.ts,/lib/csuite/fields/spacer/WidgetSpacer.d.ts,/lib/csuite/fields/string/WidgetString.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/index.d.ts,/lib/csuite/model/IDomain.d.ts files)
-        [🔵]: react
-        [🟢]: src/csuite/fields/group/WidgetGroup
-        [🔴]: src/csuite/variance/BivariantHack
-        [🟢]: src/csuite/model/BaseField
-        [🔴]: src/csuite/model/IBlueprint
-        [🔴]: src/csuite/model/IDomain
-        [🟢]: src/csuite/model/ModelManager
-        [🔴]: src/csuite/model/ModelSerial
         [🟢]: src/csuite/form/FormUI
-    [🟢]: src/csuite/model/ModelManager       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Model.d.ts,/lib/csuite/index.d.ts files)
+        [🟢]: src/csuite/model/$FieldSym
+        [🟢]: src/csuite/model/FieldId
+    [🟢]: src/csuite/model/FieldId       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Repository.d.ts,/lib/csuite/model/Field.d.ts files)
+    [🟢]: src/csuite/model/pubsub/Channel       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/BaseSchema.d.ts,/lib/csuite/model/Field.d.ts,/lib/csuite/index.d.ts,/lib/csuite/model/pubsub/Producer.d.ts files)
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/model/Repository       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Transaction.d.ts,/lib/csuite/model/Factory.d.ts,/lib/csuite/model/BaseSchema.d.ts,/lib/csuite/simple/SimpleSchema.d.ts,/lib/csuite/model/Field.d.ts,/lib/csuite/fields/bool/FieldBool.d.ts,/lib/csuite/fields/button/FieldButton.d.ts,/lib/csuite/fields/choices/FieldChoices.d.ts,/lib/csuite/fields/color/FieldColor.d.ts,/lib/csuite/fields/group/FieldGroup.d.ts,/lib/csuite/fields/link/FieldLink.d.ts,/lib/csuite/fields/list/FieldList.d.ts,/lib/csuite/fields/markdown/FieldMarkdown.d.ts,/lib/csuite/fields/matrix/FieldMatrix.d.ts,/lib/csuite/fields/number/FieldNumber.d.ts,/lib/csuite/fields/optional/FieldOptional.d.ts,/lib/csuite/fields/seed/FieldSeed.d.ts,/lib/csuite/fields/selectMany/FieldSelectMany.d.ts,/lib/csuite/fields/selectOne/FieldSelectOne.d.ts,/lib/csuite/fields/shared/FieldShared.d.ts,/lib/csuite/fields/size/FieldSize.d.ts,/lib/csuite/fields/string/FieldString.d.ts,/lib/csuite/model/Instanciable.d.ts files)
         [🔴]: src/csuite/model/$FieldTypes
-        [🟢]: src/csuite/fields/group/WidgetGroup
-        [🟢]: src/csuite/model/BaseField
-        [🔴]: src/csuite/model/IBlueprint
-        [🔴]: src/csuite/model/IDomain
-        [🔵]: react
-        [🟢]: src/csuite/model/Model
-    [🟢]: src/csuite/model/runWithGlobalForm       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔴]: src/csuite/model/IDomain
-    [🟢]: src/csuite/model/Validation       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/BaseField.d.ts,/lib/csuite/fields/bool/WidgetBool.d.ts,/lib/csuite/fields/button/WidgetButton.d.ts,/lib/csuite/fields/choices/WidgetChoices.d.ts,/lib/csuite/fields/color/WidgetColor.d.ts,/lib/csuite/fields/group/WidgetGroup.d.ts,/lib/csuite/fields/markdown/WidgetMarkdown.d.ts,/lib/csuite/fields/matrix/WidgetMatrix.d.ts,/lib/csuite/fields/optional/WidgetOptional.d.ts,/lib/csuite/fields/seed/WidgetSeed.d.ts,/lib/csuite/fields/shared/WidgetShared.d.ts,/lib/csuite/fields/size/WidgetSize.d.ts,/lib/csuite/fields/spacer/WidgetSpacer.d.ts,/lib/csuite/fields/string/WidgetString.d.ts,/lib/csuite/model/FieldConfig.d.ts files)
+        [🟢]: src/csuite/model/Field
+        [🟢]: src/csuite/model/FieldId
+        [🟢]: src/csuite/model/Transaction
+    [🟢]: src/csuite/model/Transaction       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Repository.d.ts files)
+        [🔴]: src/csuite/model/$FieldTypes
+        [🟢]: src/csuite/model/Field
+        [🟢]: src/csuite/model/Repository
+    [🟢]: src/csuite/model/TreeEntry_Field       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🔴]: src/csuite/model/$FieldTypes
+        [🔴]: src/csuite/tree/TreeEntry
+        [🟢]: src/csuite/tree/TreeNode
+        [🟢]: src/csuite/model/Field
+    [🟢]: src/csuite/model/Validation       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/model/Field.d.ts,/lib/csuite/fields/bool/FieldBool.d.ts,/lib/csuite/fields/button/FieldButton.d.ts,/lib/csuite/fields/choices/FieldChoices.d.ts,/lib/csuite/fields/color/FieldColor.d.ts,/lib/csuite/fields/group/FieldGroup.d.ts,/lib/csuite/fields/link/FieldLink.d.ts,/lib/csuite/fields/markdown/FieldMarkdown.d.ts,/lib/csuite/fields/matrix/FieldMatrix.d.ts,/lib/csuite/fields/optional/FieldOptional.d.ts,/lib/csuite/fields/seed/FieldSeed.d.ts,/lib/csuite/fields/shared/FieldShared.d.ts,/lib/csuite/fields/size/FieldSize.d.ts,/lib/csuite/fields/string/FieldString.d.ts,/lib/csuite/model/FieldConfig.d.ts files)
     [🟢]: src/csuite/openrouter/OpenRouter_infos       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔴]: src/csuite/openrouter/OpenRouter_models
     [🟢]: src/csuite/resizableFrame/resizableFrameUI       (from /lib/csuite/index.LIBRARY.d.ts files)
@@ -812,7 +927,7 @@ TYPES:
     [🟢]: src/csuite/reveal/RevealCtx       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/csuite/reveal/RevealState
-    [🟢]: src/csuite/reveal/RevealPlacement       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/reveal/RevealState.d.ts,/lib/csuite/reveal/RevealProps.d.ts,/lib/csuite/activity/Activity.d.ts files)
+    [🟢]: src/csuite/reveal/RevealPlacement       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/frame/tooltip.d.ts,/lib/csuite/frame/Frame.d.ts,/lib/csuite/reveal/RevealState.d.ts,/lib/csuite/form/WidgetLabelContainerUI.d.ts,/lib/csuite/checkbox/InputBoolUI.d.ts,/lib/csuite/reveal/RevealProps.d.ts,/lib/csuite/activity/Activity.d.ts files)
     [🟢]: src/csuite/reveal/RevealStack       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🟢]: src/csuite/reveal/RevealState
     [🟢]: src/csuite/reveal/RevealState       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/reveal/RevealCtx.d.ts,/lib/csuite/reveal/RevealStack.d.ts,/lib/csuite/reveal/RevealProps.d.ts files)
@@ -833,39 +948,35 @@ TYPES:
     [🟢]: src/csuite/select/SelectUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react/jsx-runtime
         [🔴]: src/csuite/select/SelectProps
-    [🟢]: src/csuite/simple/SimpleBlueprint       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/simple/SimpleDomain.d.ts,/lib/csuite/simple/SimpleSpecAliases.d.ts files)
-        [🔴]: src/csuite/model/$FieldTypes
-        [🟢]: src/csuite/fields/list/WidgetList
-        [🟢]: src/csuite/fields/shared/WidgetShared
-        [🟢]: src/csuite/model/BaseField
-        [🟢]: src/csuite/model/Channel
-        [🔴]: src/csuite/model/IBlueprint
-        [🔴]: src/csuite/simple/SimpleSpecAliases
-    [🟢]: src/csuite/simple/SimpleDomain       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/index.d.ts files)
-        [🔴]: src/csuite/model/$FieldTypes
-        [🟢]: src/csuite/model/BaseField
-        [🔴]: src/csuite/model/IBlueprint
-        [🔴]: src/csuite/model/IDomain
-        [🟢]: src/csuite/model/Model
+    [🟢]: src/csuite/simple/SimpleBuilder       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/index.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🟢]: src/csuite/model/BaseSchema
+        [🟢]: src/csuite/model/Field
+        [🔴]: src/csuite/model/IBuilder
+        [🔴]: src/csuite/model/SchemaDict
         [🔴]: src/csuite/openrouter/OpenRouter_models
-        [🔴]: src/csuite/simple/SimpleSpecAliases
-        [🟢]: src/csuite/fields/bool/WidgetBool
-        [🟢]: src/csuite/fields/button/WidgetButton
-        [🟢]: src/csuite/fields/choices/WidgetChoices
-        [🟢]: src/csuite/fields/color/WidgetColor
-        [🟢]: src/csuite/fields/group/WidgetGroup
-        [🟢]: src/csuite/fields/list/WidgetList
-        [🟢]: src/csuite/fields/markdown/WidgetMarkdown
-        [🟢]: src/csuite/fields/matrix/WidgetMatrix
-        [🟢]: src/csuite/fields/number/WidgetNumber
-        [🟢]: src/csuite/fields/optional/WidgetOptional
-        [🟢]: src/csuite/fields/seed/WidgetSeed
-        [🟢]: src/csuite/fields/selectMany/WidgetSelectMany
-        [🟢]: src/csuite/fields/selectOne/WidgetSelectOne
-        [🟢]: src/csuite/fields/shared/WidgetShared
-        [🟢]: src/csuite/fields/size/WidgetSize
-        [🟢]: src/csuite/fields/string/WidgetString
-        [🟢]: src/csuite/simple/SimpleBlueprint
+        [🔴]: src/csuite/types/NO_PROPS
+        [🟢]: src/csuite/fields/bool/FieldBool
+        [🟢]: src/csuite/fields/button/FieldButton
+        [🟢]: src/csuite/fields/choices/FieldChoices
+        [🟢]: src/csuite/fields/color/FieldColor
+        [🟢]: src/csuite/fields/group/FieldGroup
+        [🟢]: src/csuite/fields/list/FieldList
+        [🟢]: src/csuite/fields/markdown/FieldMarkdown
+        [🟢]: src/csuite/fields/matrix/FieldMatrix
+        [🟢]: src/csuite/fields/number/FieldNumber
+        [🟢]: src/csuite/fields/optional/FieldOptional
+        [🟢]: src/csuite/fields/seed/FieldSeed
+        [🟢]: src/csuite/fields/selectMany/FieldSelectMany
+        [🟢]: src/csuite/fields/selectOne/FieldSelectOne
+        [🟢]: src/csuite/fields/size/FieldSize
+        [🟢]: src/csuite/fields/string/FieldString
+    [🟢]: src/csuite/simple/SimpleSchema       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/simple/SimpleAliases.d.ts files)
+        [🟢]: src/csuite/fields/list/FieldList
+        [🟢]: src/csuite/model/Field
+        [🔴]: src/csuite/model/Instanciable
+        [🟢]: src/csuite/model/Repository
+        [🔴]: src/csuite/variance/BivariantHack
+        [🟢]: src/csuite/model/BaseSchema
     [🟢]: src/csuite/smooth-size/AnimatedSizeUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
     [🟢]: src/csuite/smooth-size/useSizeOf       (from /lib/csuite/index.LIBRARY.d.ts files)
@@ -883,7 +994,7 @@ TYPES:
         [🟢]: src/csuite/tree/TreeNode
     [🟢]: src/csuite/tree/Tree       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/tree/TreeNode.d.ts,/lib/csuite/tree/TreeView.d.ts files)
         [🔴]: src/csuite/tree/TreeEntry
-        [🟢]: src/db/SQLITE_boolean
+        [🟢]: src/csuite/types/SQLITE_boolean
         [🟢]: src/csuite/tree/TreeNode
     [🟢]: src/csuite/tree/TreeCtx       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
@@ -891,7 +1002,8 @@ TYPES:
     [🟢]: src/csuite/tree/TreeEntryUI       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🟢]: src/csuite/tree/TreeNode
-    [🟢]: src/csuite/tree/TreeNode       (from /lib/csuite/index.LIBRARY.d.ts,/lib/panels/libraryUI/tree/nodes/TreeWidget.d.ts,/lib/csuite/tree/Tree.d.ts,/lib/csuite/tree/RenderTreeIcon1.d.ts,/lib/csuite/tree/RenderItemTitleUI.d.ts,/lib/csuite/tree/TreeEntryUI.d.ts,/lib/csuite/tree/TreeView.d.ts,/lib/csuite/tree/TreeEntry.d.ts files)
+    [🟢]: src/csuite/tree/TreeKeys       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/tree/TreeNode       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/tree/Tree.d.ts,/lib/csuite/tree/RenderTreeIcon1.d.ts,/lib/csuite/tree/RenderItemTitleUI.d.ts,/lib/csuite/tree/TreeEntryUI.d.ts,/lib/csuite/tree/TreeView.d.ts,/lib/csuite/model/TreeEntry_Field.d.ts,/lib/csuite/tree/TreeEntry.d.ts files)
         [🟢]: src/csuite/tree/Tree
         [🔴]: src/csuite/tree/TreeEntry
     [🟢]: src/csuite/tree/TreeShortcuts       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/tree/TreeView.d.ts files)
@@ -905,121 +1017,719 @@ TYPES:
         [🟢]: src/csuite/tree/TreeNode
         [🟢]: src/csuite/tree/TreeShortcuts
     [🟢]: src/csuite/tree/utils       (from /lib/csuite/index.LIBRARY.d.ts files)
-    [🟢]: src/csuite/trigger/Trigger       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/activity/ActivityManager.d.ts,/lib/csuite/commands/CommandManager.d.ts,/lib/csuite/commands/Command.d.ts,/lib/csuite/menu/Menu.d.ts,/lib/csuite/activity/Activity.d.ts files)
+    [🟢]: src/csuite/trigger/Trigger       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/activity/ActivityManager.d.ts,/lib/csuite/commands/CommandManager.d.ts,/lib/csuite/commands/Command.d.ts,/lib/csuite/menu/Menu.d.ts,/lib/csuite/utils/toasts.d.ts,/lib/csuite/activity/Activity.d.ts files)
+    [🟢]: src/csuite/types/SQLITE_boolean       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/tree/Tree.d.ts files)
     [🟢]: src/csuite/utils/bang       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/utils/capitalize       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/utils/clamp       (from /lib/csuite/index.LIBRARY.d.ts files)
-    [🟢]: src/csuite/utils/debounce       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/utils/exhaust       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/utils/makeLabelFromFieldName       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/utils/ManualPromise       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/utils/objectAssignTsEfficient       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/utils/parseFloatNoRoundingErr       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/utils/potatoClone       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/utils/searchMatches       (from /lib/csuite/index.LIBRARY.d.ts files)
     [🟢]: src/csuite/utils/toasts       (from /lib/csuite/index.LIBRARY.d.ts files)
+        [🟢]: src/csuite/trigger/Trigger
     [🟢]: src/csuite/wrappers/FrameSubtle       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
         [🔴]: src/csuite/box/BoxUIProps
-    [🟢]: src/db/SQLITE_boolean       (from /lib/csuite/index.LIBRARY.d.ts,/lib/csuite/tree/Tree.d.ts files)
-    [🟢]: src/panels/libraryUI/tree/nodes/TreeWidget       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔴]: src/csuite/model/$FieldTypes
-        [🟢]: src/csuite/model/BaseField
-        [🔴]: src/csuite/tree/TreeEntry
-        [🟢]: src/csuite/tree/TreeNode
-    [🟢]: src/panels/Panel_Gallery/FormAsDropdownConfigUI       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔵]: react
-        [🟢]: src/csuite/index
-        [🟢]: src/csuite/model/Model
-    [🟢]: src/panels/PanelHeader       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔵]: react
-    [🟢]: src/utils/mobx-store-inheritance       (from /lib/csuite/index.LIBRARY.d.ts files)
-        [🔵]: mobx
-    [🟢]: src/widgets/workspace/JsonViewUI       (from /lib/csuite/index.LIBRARY.d.ts files)
+    [🟢]: src/csuite/wrappers/PanelHeader       (from /lib/csuite/index.LIBRARY.d.ts files)
         [🔵]: react
 
 
 ❌ POSSIBLY UNWANTED FILES IN DTS:
     🔴 src/csuite/activity/Activity (/lib/csuite/activity/Activity.d.ts)
-       <- 🟢 src/csuite/activity/ActivityManager
+       <- 🟢 src/csuite/activity/Routine
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/box/Box (/lib/csuite/box/Box.d.ts)
        <- 🟢 src/csuite/box/BoxNormalized
        <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/box/BoxUIProps (/lib/csuite/box/BoxUIProps.d.ts)
        <- 🟢 src/csuite/frame/Frame
        <- 🟢 src/csuite/index.LIBRARY
-    🔴 src/csuite/ctx/CSuiteConfig (/lib/csuite/ctx/CSuiteConfig.d.ts)
-       <- 🟢 src/csuite/ctx/CSuite_theme1
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
-    🔴 src/csuite/fields/size/WidgetSizeTypes (/lib/csuite/fields/size/WidgetSizeTypes.d.ts)
-       <- 🟢 src/csuite/fields/size/ResolutionState
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/collapsible/CollapsibleProps (/lib/csuite/collapsible/CollapsibleProps.d.ts)
+       <- 🟢 src/csuite/collapsible/CollapsibleState
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/ctx/CSuiteConfig (/lib/csuite/ctx/CSuiteConfig.d.ts)
+       <- 🟢 src/csuite/ctx/CSuite_ThemeSimple
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/frame/FrameSize (/lib/csuite/frame/FrameSize.d.ts)
        <- 🟢 src/csuite/frame/Frame
        <- 🟢 src/csuite/index.LIBRARY
-    🔴 src/csuite/kolor/Tint (/lib/csuite/kolor/Tint.d.ts)
-       <- 🟢 src/csuite/kolor/Kolor
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/menu/MenuEntry (/lib/csuite/menu/MenuEntry.d.ts)
+       <- 🟢 src/csuite/menu/Menu
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/model/$FieldTypes (/lib/csuite/model/$FieldTypes.d.ts)
-       <- 🟢 src/csuite/fields/WidgetUI.DI
+       <- 🟢 src/csuite/model/Transaction
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/model/Entity (/lib/csuite/model/Entity.d.ts)
+       <- 🟢 src/csuite/model/Factory
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/model/EntitySerial (/lib/csuite/model/EntitySerial.d.ts)
+       <- 🟢 src/csuite/index
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/model/FieldConfig (/lib/csuite/model/FieldConfig.d.ts)
-       <- 🟢 src/csuite/fields/bool/WidgetBool
+       <- 🟢 src/csuite/fields/bool/FieldBool
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/model/FieldSerial (/lib/csuite/model/FieldSerial.d.ts)
-       <- 🟢 src/csuite/fields/bool/WidgetBool
+       <- 🟢 src/csuite/model/BaseSchema
        <- 🟢 src/csuite/index.LIBRARY
-    🔴 src/csuite/model/IBlueprint (/lib/csuite/model/IBlueprint.d.ts)
-       <- 🟢 src/csuite/form/FormUI
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
-    🔴 src/csuite/model/IDomain (/lib/csuite/model/IDomain.d.ts)
-       <- 🟢 src/csuite/model/Model
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
-    🔴 src/csuite/model/ModelSerial (/lib/csuite/model/ModelSerial.d.ts)
-       <- 🟢 src/csuite/model/Model
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/model/IBuilder (/lib/csuite/model/IBuilder.d.ts)
+       <- 🟢 src/csuite/model/Factory
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/model/Instanciable (/lib/csuite/model/Instanciable.d.ts)
+       <- 🟢 src/csuite/simple/SimpleSchema
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/model/SchemaDict (/lib/csuite/model/SchemaDict.d.ts)
+       <- 🟢 src/csuite/model/Factory
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/model/pubsub/FieldReaction (/lib/csuite/model/pubsub/FieldReaction.d.ts)
+       <- 🟢 src/csuite/model/BaseSchema
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/model/pubsub/Producer (/lib/csuite/model/pubsub/Producer.d.ts)
+       <- 🟢 src/csuite/model/BaseSchema
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/openrouter/OpenRouter_models (/lib/csuite/openrouter/OpenRouter_models.d.ts)
        <- 🟢 src/csuite/openrouter/OpenRouter_infos
        <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/reveal/RevealProps (/lib/csuite/reveal/RevealProps.d.ts)
        <- 🟢 src/csuite/reveal/RevealState
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/select/SelectProps (/lib/csuite/select/SelectProps.d.ts)
        <- 🟢 src/csuite/select/SelectState
        <- 🟢 src/csuite/index.LIBRARY
-    🔴 src/csuite/simple/SimpleSpecAliases (/lib/csuite/simple/SimpleSpecAliases.d.ts)
-       <- 🟢 src/csuite/simple/SimpleBlueprint
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/simple/SimpleAliases (/lib/csuite/simple/SimpleAliases.d.ts)
+       <- 🟢 src/csuite/index
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/tree/TreeEntry (/lib/csuite/tree/TreeEntry.d.ts)
-       <- 🟢 src/panels/libraryUI/tree/nodes/TreeWidget
+       <- 🟢 src/csuite/tree/TreeNode
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/types/NO_PROPS (/lib/csuite/types/NO_PROPS.d.ts)
-       <- 🟢 src/csuite/menu/Menu
+       <- 🟢 src/csuite/form/FormUI
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+    🔴 src/csuite/types/ReactUtils (/lib/csuite/types/ReactUtils.d.ts)
+       <- 🟢 src/csuite/model/Field
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/types/RsuiteTypes (/lib/csuite/types/RsuiteTypes.d.ts)
        <- 🔴 src/csuite/frame/FrameSize
        <- 🟢 src/csuite/frame/Frame
        <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
     🔴 src/csuite/variance/BivariantHack (/lib/csuite/variance/BivariantHack.d.ts)
        <- 🟢 src/csuite/form/FormUI
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔴 src/csuite/variance/CovariantFC (/lib/csuite/variance/CovariantFC.d.ts)
        <- 🟢 src/csuite/form/FormUI
        <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
     🔵 @mdi/react/dist/IconProps (@mdi/react/dist/IconProps.d.ts)
        <- 🟢 src/csuite/icons/iconHelpers
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔵 colorjs.io (colorjs.io)
        <- 🟢 src/csuite/kolor/Kolor
        <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
     🔵 mobx (mobx)
-       <- 🟢 src/utils/mobx-store-inheritance
+       <- 🟢 src/csuite/mobx/mobx-store-inheritance
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔵 react (react)
-       <- 🟢 src/csuite/box/CurrentStyleCtx
+       <- 🟢 src/csuite/model/Factory
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
     🔵 react-window (react-window)
        <- 🟢 src/csuite/select/SelectPopupUI
        <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
     🔵 react/jsx-runtime (react/jsx-runtime)
        <- 🟢 src/csuite/icons/iconHelpers
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
+       <- 🟢 src/csuite/index.LIBRARY
+       <- 🟢 src/csuite/button/Button
        <- 🟢 src/csuite/index.LIBRARY
 [🟢] all JS files are also present in the bundled DTS

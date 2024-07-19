@@ -328,14 +328,14 @@ var require_spark_md5 = __commonJS({
         }
         return String.fromCharCode.apply(String, bytes);
       }
-      function SparkMD5() {
+      function SparkMD52() {
         this.reset();
       }
-      SparkMD5.prototype.append = function(str) {
+      SparkMD52.prototype.append = function(str) {
         this.appendBinary(toUtf8(str));
         return this;
       };
-      SparkMD5.prototype.appendBinary = function(contents) {
+      SparkMD52.prototype.appendBinary = function(contents) {
         this._buff += contents;
         this._length += contents.length;
         var length = this._buff.length, i;
@@ -345,7 +345,7 @@ var require_spark_md5 = __commonJS({
         this._buff = this._buff.substring(i - 64);
         return this;
       };
-      SparkMD5.prototype.end = function(raw) {
+      SparkMD52.prototype.end = function(raw) {
         var buff = this._buff, length = buff.length, i, tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ret;
         for (i = 0; i < length; i += 1) {
           tail[i >> 2] |= buff.charCodeAt(i) << (i % 4 << 3);
@@ -358,31 +358,31 @@ var require_spark_md5 = __commonJS({
         this.reset();
         return ret;
       };
-      SparkMD5.prototype.reset = function() {
+      SparkMD52.prototype.reset = function() {
         this._buff = "";
         this._length = 0;
         this._hash = [1732584193, -271733879, -1732584194, 271733878];
         return this;
       };
-      SparkMD5.prototype.getState = function() {
+      SparkMD52.prototype.getState = function() {
         return {
           buff: this._buff,
           length: this._length,
           hash: this._hash.slice()
         };
       };
-      SparkMD5.prototype.setState = function(state) {
+      SparkMD52.prototype.setState = function(state) {
         this._buff = state.buff;
         this._length = state.length;
         this._hash = state.hash;
         return this;
       };
-      SparkMD5.prototype.destroy = function() {
+      SparkMD52.prototype.destroy = function() {
         delete this._hash;
         delete this._buff;
         delete this._length;
       };
-      SparkMD5.prototype._finish = function(tail, length) {
+      SparkMD52.prototype._finish = function(tail, length) {
         var i = length, tmp, lo, hi;
         tail[i >> 2] |= 128 << (i % 4 << 3);
         if (i > 55) {
@@ -399,17 +399,17 @@ var require_spark_md5 = __commonJS({
         tail[15] = hi;
         md5cycle(this._hash, tail);
       };
-      SparkMD5.hash = function(str, raw) {
-        return SparkMD5.hashBinary(toUtf8(str), raw);
+      SparkMD52.hash = function(str, raw) {
+        return SparkMD52.hashBinary(toUtf8(str), raw);
       };
-      SparkMD5.hashBinary = function(content, raw) {
-        var hash2 = md51(content), ret = hex(hash2);
+      SparkMD52.hashBinary = function(content, raw) {
+        var hash = md51(content), ret = hex(hash);
         return raw ? hexToBinaryString(ret) : ret;
       };
-      SparkMD5.ArrayBuffer = function() {
+      SparkMD52.ArrayBuffer = function() {
         this.reset();
       };
-      SparkMD5.ArrayBuffer.prototype.append = function(arr) {
+      SparkMD52.ArrayBuffer.prototype.append = function(arr) {
         var buff = concatenateArrayBuffers(this._buff.buffer, arr, true), length = buff.length, i;
         this._length += arr.byteLength;
         for (i = 64; i <= length; i += 64) {
@@ -418,7 +418,7 @@ var require_spark_md5 = __commonJS({
         this._buff = i - 64 < length ? new Uint8Array(buff.buffer.slice(i - 64)) : new Uint8Array(0);
         return this;
       };
-      SparkMD5.ArrayBuffer.prototype.end = function(raw) {
+      SparkMD52.ArrayBuffer.prototype.end = function(raw) {
         var buff = this._buff, length = buff.length, tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], i, ret;
         for (i = 0; i < length; i += 1) {
           tail[i >> 2] |= buff[i] << (i % 4 << 3);
@@ -431,51 +431,350 @@ var require_spark_md5 = __commonJS({
         this.reset();
         return ret;
       };
-      SparkMD5.ArrayBuffer.prototype.reset = function() {
+      SparkMD52.ArrayBuffer.prototype.reset = function() {
         this._buff = new Uint8Array(0);
         this._length = 0;
         this._hash = [1732584193, -271733879, -1732584194, 271733878];
         return this;
       };
-      SparkMD5.ArrayBuffer.prototype.getState = function() {
-        var state = SparkMD5.prototype.getState.call(this);
+      SparkMD52.ArrayBuffer.prototype.getState = function() {
+        var state = SparkMD52.prototype.getState.call(this);
         state.buff = arrayBuffer2Utf8Str(state.buff);
         return state;
       };
-      SparkMD5.ArrayBuffer.prototype.setState = function(state) {
+      SparkMD52.ArrayBuffer.prototype.setState = function(state) {
         state.buff = utf8Str2ArrayBuffer(state.buff, true);
-        return SparkMD5.prototype.setState.call(this, state);
+        return SparkMD52.prototype.setState.call(this, state);
       };
-      SparkMD5.ArrayBuffer.prototype.destroy = SparkMD5.prototype.destroy;
-      SparkMD5.ArrayBuffer.prototype._finish = SparkMD5.prototype._finish;
-      SparkMD5.ArrayBuffer.hash = function(arr, raw) {
-        var hash2 = md51_array(new Uint8Array(arr)), ret = hex(hash2);
+      SparkMD52.ArrayBuffer.prototype.destroy = SparkMD52.prototype.destroy;
+      SparkMD52.ArrayBuffer.prototype._finish = SparkMD52.prototype._finish;
+      SparkMD52.ArrayBuffer.hash = function(arr, raw) {
+        var hash = md51_array(new Uint8Array(arr)), ret = hex(hash);
         return raw ? hexToBinaryString(ret) : ret;
       };
-      return SparkMD5;
+      return SparkMD52;
     });
   }
 });
 
-// src/csuite/model/ModelManager.ts
-import { useMemo as useMemo3 } from "react";
+// src/csuite/model/Factory.ts
+import { useMemo } from "react";
 
-// src/csuite/model/Model.ts
-import { action, isObservable, makeAutoObservable as makeAutoObservable3, observable as observable4, toJS } from "mobx";
-import { nanoid } from "nanoid";
-import { createElement as createElement2 } from "react";
+// src/csuite/utils/bang.ts
+var bang = (x, msg = "") => {
+  if (x == null) {
+    console.error(`[\u{1F534}] BANG FAILED`, msg);
+    throw new Error("bang: " + (msg ?? "no message"));
+  }
+  return x;
+};
 
-// src/panels/Panel_Gallery/FormAsDropdownConfigUI.tsx
-import { observer as observer9 } from "mobx-react-lite";
+// src/csuite/model/Transaction.ts
+var Transaction = class {
+  constructor(repo) {
+    this.repo = repo;
+    /** fields that have been created during the transaction */
+    this.bump = {
+      create: 0,
+      serial: 0,
+      value: 0
+    };
+    this.touchedFields = /* @__PURE__ */ new Map();
+  }
+  track(field, mode) {
+    const prev = this.touchedFields.get(field);
+    if (prev === mode) return;
+    if (prev == null) {
+      this.touchedFields.set(field, mode);
+      this.bump[mode]++;
+    } else if (prev === "serial" && mode === "value") {
+      this.bump.serial--;
+      this.bump.value++;
+      this.touchedFields.set(field, "value");
+    } else if (prev === "value" && mode === "create") {
+      this.bump.value--;
+      this.bump.create++;
+      this.touchedFields.set(field, "create");
+    }
+    if (field.parent) {
+      const parentMode = mode === "create" ? "value" : mode;
+      this.track(field.parent, parentMode);
+    }
+  }
+  commit() {
+    this.repo.transactionCount++;
+    this.repo.totalValueTouched += this.bump.value;
+    this.repo.totalSerialTouched += this.bump.serial;
+    this.repo.totalCreations += this.bump.create;
+    const entries = Array.from(this.touchedFields.entries()).map(([field, mode]) => ({ field, mode, depth: field.trueDepth })).sort((a, b) => b.depth - a.depth);
+    for (const { field, mode } of entries) {
+      if (mode !== "create") continue;
+      this.repo.debugLog(`\u{1F7E2} ${`onInit`.padEnd(10)} ${field.path}`);
+      field.config.onInit?.(field);
+    }
+    for (const { field, mode } of entries) {
+      if (mode !== "value") continue;
+      this.repo.debugLog(`\u{1F536} ${`onValue`.padEnd(10)} ${field.path}`);
+      field.applyValueUpdateEffects();
+    }
+    for (const { mode, field } of entries) {
+      if (mode === "serial" || mode === "value") {
+        this.repo.debugLog(`\u274C ${`onSerial`.padEnd(10)} ${field.path}`);
+        field.applySerialUpdateEffects();
+      }
+    }
+    for (const { field, mode } of entries) {
+      if (mode !== "value") continue;
+      this.repo.debugLog(`\u{1F499} ${`publish`.padEnd(10)} ${field.path}`);
+      field.publishValue();
+    }
+  }
+};
 
-// src/csuite/button/Button.tsx
-import { makeAutoObservable, observable as observable2, runInAction } from "mobx";
+// src/csuite/model/Repository.ts
+var Repository = class {
+  constructor() {
+    /* STORE ------------------------------------------------------------ */
+    /** all root fields (previously called entities) */
+    this.allRoots = /* @__PURE__ */ new Map();
+    /** all fiels, root or not */
+    this.allFields = /* @__PURE__ */ new Map();
+    /** all fields by given type */
+    this.allFieldsByType = /* @__PURE__ */ new Map();
+    /* 📌 STATS --------------------------------------------------------- */
+    /** how many transactions have been executed on that repo */
+    this.transactionCount = 0;
+    this.totalValueTouched = 0;
+    this.totalSerialTouched = 0;
+    this.totalCreations = 0;
+    /* 📌 TEMP ---------------------------------------------------------- */
+    this.logs = [];
+    /* ------------------------------------------------------------------ */
+    /**
+     * return all currently instanciated widgets
+     * field of a given input type
+     */
+    this.getWidgetsByType = (type) => {
+      const typeStore = this.allFieldsByType.get(type);
+      if (!typeStore) return [];
+      return Array.from(typeStore.values());
+    };
+    this.tct = null;
+    /**
+     * last known transactions;
+     * added to help with testing
+     */
+    this.lastTransaction = null;
+  }
+  get allRootSize() {
+    return this.allRoots.size;
+  }
+  get allFieldSize() {
+    return this.allFields.size;
+  }
+  getEntityByID(entityId) {
+    return this.allRoots.get(entityId);
+  }
+  getFieldByID(fieldId) {
+    return this.allFields.get(fieldId);
+  }
+  /* 📌 FULL-CLEAR ---------------------------------------------------- */
+  /**
+   * fully clear the entity-map + reset stats
+   * @since 2024-07-08
+   * @stability unstable
+   */
+  reset() {
+    this.resetStats();
+    this.resetEntities();
+  }
+  resetEntities() {
+    for (const root of this.allRoots.values()) {
+      root.disposeTree();
+    }
+    if (this.allFields.size !== 0) {
+      throw new Error(
+        `[\u274C] INVARIANT VIOLATION: allFields should be empty but it's ${this.allFields.size} (${[...this.allFields.values()].map((i) => [i.type, i.summary])})`
+      );
+    }
+    if (this.allRoots.size !== 0)
+      throw new Error(
+        `[\u274C] INVARIANT VIOLATION: allRoots should be empty but it's ${this.allRoots.size} (${[...this.allRoots.values()].map((i) => [i.type, i.summary])})`
+      );
+  }
+  resetStats() {
+    this.transactionCount = 0;
+    this.totalValueTouched = 0;
+    this.totalSerialTouched = 0;
+    this.totalCreations = 0;
+  }
+  startRecording() {
+    this.logs.splice(0, this.logs.length);
+  }
+  debugLog(msg) {
+    this.logs.push(msg);
+  }
+  endRecording() {
+    return this.logs.slice();
+  }
+  endRecordingAndLog() {
+    console.log(this.logs.join("\n"));
+    return this.logs.slice();
+  }
+  /**
+   * un-register field
+   * should ONLY be called by `field.dispose()`
+   */
+  _unregisterField(field) {
+    this.allFields.delete(field.id);
+    this.allRoots.delete(field.id);
+    const typeStore = this.allFieldsByType.get(field.type);
+    if (typeStore) typeStore.delete(field.id);
+  }
+  _registerField(field) {
+    if (this.allFields.has(field.id)) {
+      throw new Error(`[\u{1F534}] INVARIANT VIOLATION: field already registered: ${field.id}`);
+    }
+    if (this.tct) {
+      this.tct.track(field, "create");
+    }
+    if (field.root == field) {
+      this.allRoots.set(field.id, field);
+    }
+    this.allFields.set(field.id, field);
+    const prev = this.allFieldsByType.get(field.type);
+    if (prev == null) {
+      this.allFieldsByType.set(field.type, /* @__PURE__ */ new Map([[field.id, field]]));
+    } else {
+      prev.set(field.id, field);
+    }
+  }
+  TRANSACT(fn, field, touchMode, _tctMode) {
+    let isRoot = this.tct == null;
+    let OUT;
+    this.tct ??= new Transaction(
+      this
+      /* tctMode */
+    );
+    if (touchMode === "auto") {
+      const prevValue = this.tct.bump.create + this.tct.bump.value;
+      const prevSerial = prevValue + this.tct.bump.serial;
+      OUT = fn(this.tct);
+      const nextValue = this.tct.bump.create + this.tct.bump.value;
+      const nextSerial = nextValue + this.tct.bump.serial;
+      if (prevValue !== nextValue) this.tct.track(field, "value");
+      else if (prevSerial !== nextSerial) this.tct.track(field, "serial");
+    } else {
+      OUT = fn(this.tct);
+      this.tct.track(field, touchMode);
+    }
+    if (isRoot) {
+      const tct = this.tct;
+      this.tct = null;
+      tct.commit();
+      this.lastTransaction = tct;
+    }
+    return OUT;
+  }
+  get tracked() {
+    return {
+      transactionCount: this.transactionCount,
+      allRootSize: this.allRootSize,
+      allFieldSize: this.allFieldSize,
+      totalValueTouched: this.totalValueTouched,
+      totalSerialTouched: this.totalSerialTouched,
+      totalCreations: this.totalCreations
+    };
+  }
+};
+var globalRepository = null;
+function getGlobalRepository() {
+  globalRepository = globalRepository ||= new Repository();
+  return bang(globalRepository);
+}
+
+// src/csuite/model/Factory.ts
+var Factory = class {
+  constructor(builder, repository) {
+    this.repository = repository ?? getGlobalRepository();
+    this.builder = builder;
+  }
+  /** LEGACY API; TYPES ARE COMPLICATED DUE TO MAINTAINING BACKWARD COMPAT */
+  fields(schemaExt, entityConfig = { name: "unnamed" }) {
+    const schema = this.builder.group({
+      label: false,
+      items: schemaExt(this.builder),
+      collapsed: false,
+      onSerialChange: entityConfig.onSerialChange,
+      onValueChange: entityConfig.onValueChange
+    });
+    return schema.instanciate(
+      //
+      this.repository,
+      null,
+      null,
+      entityConfig.serial?.()
+    );
+  }
+  /** simple alias to create a new Form */
+  define(schemaFn) {
+    return schemaFn(this.builder);
+  }
+  /** simple alias to create a new Form */
+  entity(schemaExt, entityConfig = {}) {
+    let schema = this.evalSchema(schemaExt);
+    if (entityConfig.onSerialChange || entityConfig.onValueChange)
+      schema = schema.withConfig({
+        onSerialChange: entityConfig.onSerialChange,
+        onValueChange: entityConfig.onValueChange
+      });
+    return schema.instanciate(
+      //
+      this.repository,
+      null,
+      null,
+      entityConfig.serial?.()
+    );
+  }
+  /** simple way to defined forms and in react components */
+  use(schemaExt, entityConfig = {}, deps = []) {
+    const schema = this.evalSchema(schemaExt);
+    return useMemo(() => this.entity(schema, entityConfig), deps);
+  }
+  /** eval schema if it's a function */
+  evalSchema(buildFn) {
+    if (typeof buildFn === "function") return buildFn(this.builder);
+    return buildFn;
+  }
+};
+
+// src/csuite/simple/SimpleBuilder.ts
+import { makeAutoObservable as makeAutoObservable13 } from "mobx";
+
+// src/csuite/fields/bool/FieldBool.tsx
+import { computed as computed3 } from "mobx";
+
+// src/csuite/model/Field.tsx
+import { observer as observer38 } from "mobx-react-lite";
+import { createElement as createElement5 } from "react";
+
+// src/csuite/ctx/CSuiteOverride.tsx
 import { observer as observer2 } from "mobx-react-lite";
-import { useEffect, useMemo } from "react";
+import { useMemo as useMemo2 } from "react";
 
 // src/csuite/frame/Frame.tsx
 import { observer } from "mobx-react-lite";
 import { forwardRef, useContext, useState } from "react";
+
+// src/csuite/utils/clamp.ts
+var clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+var clampOpt = (v, min, max) => {
+  if (v == null) return min ?? 0;
+  if (min == null && max == null) return v;
+  if (min == null) return Math.min(v, max);
+  if (max == null) return Math.max(v, min);
+  return Math.min(Math.max(v, min), max);
+};
 
 // src/csuite/kolor/Kolor.tsx
 import Color from "colorjs.io";
@@ -496,26 +795,10 @@ var NumberVar = class {
   }
 };
 function getNum(a, def) {
-  if (a == null)
-    return def;
-  if (a instanceof NumberVar)
-    return getNum(a.value);
+  if (a == null) return def;
+  if (a instanceof NumberVar) return getNum(a.value);
   return a;
 }
-
-// src/csuite/utils/clamp.ts
-var clamp = (v, min, max) => Math.min(Math.max(v, min), max);
-var clampOpt = (v, min, max) => {
-  if (v == null)
-    return min ?? 0;
-  if (min == null && max == null)
-    return v;
-  if (min == null)
-    return Math.min(v, max);
-  if (max == null)
-    return Math.max(v, min);
-  return Math.min(Math.max(v, min), max);
-};
 
 // src/csuite/kolor/Kolor.tsx
 var white = new Color("oklch", [1, 0, 0]);
@@ -528,20 +811,17 @@ var Kolor = class _Kolor {
     this.opacity = opacity;
     // prettier-ignore
     this.clampToRec2020 = () => {
-      if (this.isInRec2020Gamut)
-        return this;
+      if (this.isInRec2020Gamut) return this;
       const clamped = this.color.toGamut("rec2020");
       return new _Kolor(clamped.oklch[0], clamped.oklch[1], clamped.oklch[2]);
     };
     this.clampToP3 = () => {
-      if (this.isInP3Gamut)
-        return this;
+      if (this.isInP3Gamut) return this;
       const clamped = this.color.toGamut("p3");
       return new _Kolor(clamped.oklch[0], clamped.oklch[1], clamped.oklch[2]);
     };
     this.clampToRGB = () => {
-      if (this.isInRBGGamut)
-        return this;
+      if (this.isInRBGGamut) return this;
       const clamped = this.color.toGamut("srgb");
       return new _Kolor(clamped.oklch[0], clamped.oklch[1], clamped.oklch[2]);
     };
@@ -549,18 +829,12 @@ var Kolor = class _Kolor {
       if (isNaN(this.lightness)) {
         this.lightness = 0;
       }
-      if (isNaN(this.chroma))
-        throw new Error("isNaN(this.chroma)");
-      if (isNaN(this.hue))
-        throw new Error("isNaN(this.hue)");
-      if (this.lightness < 0)
-        throw new Error(`this.lightness (${this.lightness}) < 0`);
-      if (this.lightness > 1)
-        throw new Error(`this.lightness (${this.lightness}) > 1`);
-      if (this.chroma < 0)
-        throw new Error(`this.chroma (${this.chroma}) < 0`);
-      if (this.chroma > 1)
-        throw new Error(`this.chroma (${this.chroma}) > 1`);
+      if (isNaN(this.chroma)) throw new Error("isNaN(this.chroma)");
+      if (isNaN(this.hue)) throw new Error("isNaN(this.hue)");
+      if (this.lightness < 0) throw new Error(`this.lightness (${this.lightness}) < 0`);
+      if (this.lightness > 1) throw new Error(`this.lightness (${this.lightness}) > 1`);
+      if (this.chroma < 0) throw new Error(`this.chroma (${this.chroma}) < 0`);
+      if (this.chroma > 1) throw new Error(`this.chroma (${this.chroma}) > 1`);
     };
     this.toOKLCH = () => {
       const l = clamp(this.lightness, 1e-4, 0.9999).toFixed(3);
@@ -570,19 +844,16 @@ var Kolor = class _Kolor {
     };
     /** true if strictly same values */
     this.isSame = (b) => {
-      if (this.lightness !== b.lightness)
-        return false;
-      if (this.chroma !== b.chroma)
-        return false;
-      if (this.hue !== b.hue)
-        return false;
+      if (this.lightness !== b.lightness) return false;
+      if (this.chroma !== b.chroma) return false;
+      if (this.hue !== b.hue) return false;
       return true;
     };
     this.tintBg = (b, dir) => this.tint(b, "Bg", dir);
     this.tintFg = (b, dir) => this.tint(b, "Fg", dir);
+    this.tintBorder = (b, dir) => this.tint(b, "Bg", dir);
     this.tint = (b, usage, dir_) => {
-      if (b == null)
-        return this;
+      if (b == null) return this;
       const chroma = getNum(b.chroma) ?? this.chroma * getNum(b.chromaBlend, 1);
       const hue = getNum(b.hue) ?? this.hue + getNum(b.hueShift, 0);
       let lightness = this.lightness;
@@ -601,8 +872,7 @@ var Kolor = class _Kolor {
       }
       const clamped = new Color("oklch", [lightness, chroma, hue]).toGamut("srgb");
       const next = new _Kolor(clamped.oklch[0], clamped.oklch[1], or0(clamped.oklch[2]));
-      if (!next.isInRBGGamut)
-        console.error(`[\u{1F534}] ${usage} out of gamut: ${next.toOKLCH()} - ${next.webLink}`);
+      if (!next.isInRBGGamut) console.error(`[\u{1F534}] ${usage} out of gamut: ${next.toOKLCH()} - ${next.webLink}`);
       return next;
     };
     /** super dumb */
@@ -623,8 +893,7 @@ var Kolor = class _Kolor {
       }
       const dir = distToBlack < distToWhite ? 1 : -1;
       for (let i = min; i < max; i += step) {
-        if (this.lightness + 0.01 * i * dir < 0 || this.lightness + 0.01 * i * dir > 1)
-          continue;
+        if (this.lightness + 0.01 * i * dir < 0 || this.lightness + 0.01 * i * dir > 1) continue;
         candidate = col.clone().set({ l: (l) => l + 0.01 * i * dir }).toGamut("srgb");
         const obtained = usage === "Fg" ? Math.abs(col.contrastAPCA(candidate) / 108) : col.contrastWCAG21(candidate) / 21;
         const contrastDiff = Math.abs(Math.abs(desired) - Math.abs(obtained));
@@ -681,36 +950,29 @@ var Kolor = class _Kolor {
 };
 var or0 = (n) => n == null ? 0 : isNaN(n) ? 0 : n;
 
+// src/csuite/kolor/Tint.tsx
+function normalizeTint(tint) {
+  if (tint == null) return {};
+  if (typeof tint === "boolean") return { contrast: tint ? (
+    /* 0.2 */
+    0.08
+  ) : 0 };
+  if (typeof tint === "number") return { contrast: clamp(tint / 100, 0, 1) };
+  if (typeof tint === "string") return Kolor.fromString(tint);
+  return tint;
+}
+
 // src/csuite/box/BoxNormalized.tsx
 function normalizeBox(box) {
   const out = {};
-  if (box.base != null)
-    out.base = _normalizeTint(box.base);
-  if (box.hover != null)
-    out.hover = _normalizeTint(box.hover);
-  if (box.shock != null)
-    out.shock = _normalizeTint(box.shock);
-  if (box.text != null)
-    out.text = _normalizeTint(box.text);
-  if (box.textShadow != null)
-    out.textShadow = _normalizeTint(box.textShadow);
-  if (box.shadow != null)
-    out.shadow = _normalizeTint(box.shadow);
-  if (box.border != null)
-    out.border = _normalizeTint(box.border);
+  if (box.base != null) out.base = normalizeTint(box.base);
+  if (box.hover != null) out.hover = normalizeTint(box.hover);
+  if (box.shock != null) out.shock = normalizeTint(box.shock);
+  if (box.text != null) out.text = normalizeTint(box.text);
+  if (box.textShadow != null) out.textShadow = normalizeTint(box.textShadow);
+  if (box.shadow != null) out.shadow = normalizeTint(box.shadow);
+  if (box.border != null) out.border = normalizeTint(box.border);
   return out;
-}
-function _normalizeTint(tint) {
-  if (typeof tint === "boolean")
-    return { contrast: tint ? (
-      /* 0.2 */
-      0.03
-    ) : 0 };
-  if (typeof tint === "number")
-    return { contrast: clamp(tint / 100, 0, 1) };
-  if (typeof tint === "string")
-    return Kolor.fromString(tint);
-  return tint;
 }
 
 // src/csuite/box/CurrentStyleCtx.tsx
@@ -758,10 +1020,8 @@ var usePressLogic = (p, value) => {
       }
     },
     onMouseEnter: (ev) => {
-      if (startingState === value)
-        return;
-      if (draggedElement != null)
-        p.onClick?.(ev);
+      if (startingState === value) return;
+      if (draggedElement != null) p.onClick?.(ev);
     }
   };
 };
@@ -770,30 +1030,25 @@ var usePressLogic = (p, value) => {
 import * as IconImport from "@mdi/react";
 
 // src/csuite/icons/icons.ts
+import * as icons3 from "@mdi/js";
+
+// src/csuite/icons/iconsCDI.ts
 import * as icons from "@mdi/js";
-var myCustomIcons = {
-  // semantic stuff ----------------------------------------------------------------
-  _missedCall: icons.mdiPhoneMissed,
-  _transferredCall: icons.mdiPhoneInTalk,
-  _close: icons.mdiClose,
-  _clear: icons.mdiClose,
-  _check: icons.mdiCheck,
-  _edit: icons.mdiPencil,
-  // grid
-  _gridFilter: icons.mdiFilterOutline,
-  _gridSortedAsc: icons.mdiArrowUp,
-  _gridSortedDesc: icons.mdiArrowDown,
-  _gridGroupBy: icons.mdiViewGrid,
-  // features
-  _webchat: icons.mdiChatProcessing,
-  // cushy -------------------------------------------------------------------------
-  cdiTest: "M 2.40,7.20 A 20,20 0,0,1 12.00,7.20 A 20,20 0,0,1 21.60,7.20 Q 21.60,14.40 12.00,21.60 Q 2.40,14.40 2.40,7.20 z",
+var _CushyIcons = {
+  /* Inherited Icons */
   cdiDraft: icons.mdiPencil,
   cdiApp: icons.mdiAbacus,
   cdiStep: icons.mdiAccessPoint,
   cdiPreset: icons.mdiAccessPoint,
-  // AI stuff goes there
-  // ....
+  cdiExternalCivitai: icons.mdiCityVariant,
+  cdiExternalSquoosh: icons.mdiCigar,
+  /* Custom Icons */
+  cdiTest: "M 2.40,7.20 A 20,20 0,0,1 12.00,7.20 A 20,20 0,0,1 21.60,7.20 Q 21.60,14.40 12.00,21.60 Q 2.40,14.40 2.40,7.20 z",
+  cdiNodes: "M 16,5 C 16,3.89 15.1,3 14,3 H 8 C 6.8954305,3 6,3.8954305 6,5 v 3 c 0,1 1,2 2,2 V 7 6 h 6 V 8 H 8 v 2 h 6 c 1,0 2,-1 2,-2 V 5 h 1 c 1,0 1,1 1,1 h 2 c 1,0 1,1 1,1 v 10 c 0,0 0,1 -1,1 h -5 c 0,0 0,1 -1,1 v -3 h -1 v 3 c 0,0 0,2 -2,2 V 19 17 H 5 v 2 h 6 v 2 H 5 C 3,21 3,19 3,19 v -3 c 0,0 0,-2 2,-2 h 6 c 2,0 2,2 2,2 h 1 c 1,0 1,1 1,1 h 5 V 16 7 h -2 c 0,1 -1,1 -1,1 V 5 Z"
+};
+
+// src/csuite/icons/iconsLDI.ts
+var _IconsLDI = {
   // locomotive ---------------------------------------------------------------------
   ldiRegularStar: "M11.049 2.92664C11.3483 2.00537 12.6517 2.00538 12.951 2.92664L14.4699 7.60055C14.6038 8.01254 14.9877 8.29148 15.4209 8.29149L20.3354 8.29168C21.3041 8.29172 21.7068 9.53127 20.9232 10.1007L16.9474 12.9895C16.5969 13.2441 16.4503 13.6955 16.5841 14.1075L18.1026 18.7815C18.4019 19.7028 17.3475 20.4689 16.5638 19.8995L12.5878 17.011C12.2373 16.7564 11.7627 16.7564 11.4122 17.011L7.43622 19.8995C6.65252 20.4689 5.5981 19.7028 5.8974 18.7815L7.41589 14.1075C7.54974 13.6955 7.40309 13.2441 7.05263 12.9895L3.07683 10.1007C2.29317 9.53127 2.69592 8.29172 3.66461 8.29168L8.57911 8.29149C9.01231 8.29148 9.39623 8.01254 9.53011 7.60055L11.049 2.92664Z",
   ldiRegularStatusOnline: "M5.63604 18.3646C2.12132 14.8499 2.12132 9.15144 5.63604 5.63672M18.364 5.63672C21.8787 9.15144 21.8787 14.8499 18.364 18.3646M8.46447 15.5362C6.51184 13.5836 6.51184 10.4178 8.46447 8.46515M15.5355 8.46515C17.4882 10.4178 17.4882 13.5836 15.5355 15.5362M13 12.0007C13 12.553 12.5523 13.0007 12 13.0007C11.4477 13.0007 11 12.553 11 12.0007C11 11.4484 11.4477 11.0007 12 11.0007C12.5523 11.0007 13 11.4484 13 12.0007Z",
@@ -811,28 +1066,52 @@ var myCustomIcons = {
   ldiSolidStar: "M7.49288 0.76784C7.88896 0.0878043 8.87138 0.0878028 9.26747 0.767838L11.2236 4.12633C11.3687 4.37544 11.6118 4.55208 11.8936 4.6131L15.6922 5.43567C16.4613 5.60223 16.7649 6.53657 16.2406 7.12341L13.6509 10.0216C13.4589 10.2366 13.366 10.5224 13.395 10.8092L13.7865 14.6761C13.8658 15.4591 13.071 16.0365 12.3509 15.7192L8.79424 14.1519C8.53043 14.0357 8.22991 14.0357 7.9661 14.1519L4.40948 15.7192C3.68932 16.0365 2.89453 15.4591 2.9738 14.6761L3.36532 10.8092C3.39436 10.5224 3.30149 10.2366 3.10941 10.0216L0.51978 7.12341C-0.00457591 6.53657 0.299008 5.60223 1.06816 5.43567L4.86676 4.6131C5.14851 4.55208 5.39164 4.37544 5.53673 4.12633L7.49288 0.76784Z",
   ldiSolidX: "M4.29289 4.29289C4.68342 3.90237 5.31658 3.90237 5.70711 4.29289L10 8.58579L14.2929 4.29289C14.6834 3.90237 15.3166 3.90237 15.7071 4.29289C16.0976 4.68342 16.0976 5.31658 15.7071 5.70711L11.4142 10L15.7071 14.2929C16.0976 14.6834 16.0976 15.3166 15.7071 15.7071C15.3166 16.0976 14.6834 16.0976 14.2929 15.7071L10 11.4142L5.70711 15.7071C5.31658 16.0976 4.68342 16.0976 4.29289 15.7071C3.90237 15.3166 3.90237 14.6834 4.29289 14.2929L8.58579 10L4.29289 5.70711C3.90237 5.31658 3.90237 4.68342 4.29289 4.29289Z"
 };
-var allIcons = {
-  ...icons,
-  ...myCustomIcons
+
+// src/csuite/icons/iconsXDI.ts
+import * as icons2 from "@mdi/js";
+var _IconsXDI = {
+  // semantic stuff ----------------------------------------------------------------
+  _missedCall: icons2.mdiPhoneMissed,
+  _transferredCall: icons2.mdiPhoneInTalk,
+  _close: icons2.mdiClose,
+  _clear: icons2.mdiClose,
+  _check: icons2.mdiCheck,
+  _edit: icons2.mdiPencil,
+  // grid
+  _gridFilter: icons2.mdiFilterOutline,
+  _gridSortedAsc: icons2.mdiArrowUp,
+  _gridSortedDesc: icons2.mdiArrowDown,
+  _gridGroupBy: icons2.mdiViewGrid,
+  // features
+  _webchat: icons2.mdiChatProcessing
 };
 
-// src/utils/custom-jsx/jsx-runtime.js
+// src/csuite/icons/icons.ts
+var allIcons = {
+  _: "M 0,0 z",
+  // made by pictogrammers, for all
+  ...icons3,
+  // made by/for ???
+  ..._IconsXDI,
+  // made by/for locomotive
+  ..._IconsLDI,
+  // made by/for cushy
+  ..._CushyIcons
+};
+
+// src/csuite/custom-jsx/jsx-runtime.js
 import { jsx as jsx_, jsxs as jsxs_ } from "react/jsx-runtime";
 import { Fragment } from "react/jsx-runtime";
 var joinCls = (tw) => {
-  if (typeof tw === "string")
-    return tw;
+  if (typeof tw === "string") return tw;
   if (Array.isArray(tw)) {
     const out = [];
     for (const arg of tw) {
-      if (arg == null)
-        continue;
-      if (typeof arg === "string")
-        out.push(arg);
+      if (arg == null) continue;
+      if (typeof arg === "string") out.push(arg);
       if (typeof arg === "object") {
         for (const key of Object.keys(arg)) {
-          if (arg[key])
-            out.push(key);
+          if (arg[key]) out.push(key);
         }
       }
     }
@@ -841,19 +1120,15 @@ var joinCls = (tw) => {
   return "";
 };
 function jsx(type, props, key) {
-  if (props.tw == null)
-    return jsx_(type, props, key);
+  if (props.tw == null) return jsx_(type, props, key);
   const { tw, className, ...rest } = props;
-  if (className)
-    return jsx_(type, { ...rest, className: `${className} ${joinCls(tw)}` }, key);
+  if (className) return jsx_(type, { ...rest, className: `${className} ${joinCls(tw)}` }, key);
   return jsx_(type, { ...rest, className: joinCls(tw) }, key);
 }
 function jsxs(type, props, key) {
-  if (props.tw == null)
-    return jsxs_(type, props, key);
+  if (props.tw == null) return jsxs_(type, props, key);
   const { tw, className, ...rest } = props;
-  if (className)
-    return jsxs_(type, { ...rest, className: `${className} ${joinCls(tw)}` }, key);
+  if (className) return jsxs_(type, { ...rest, className: `${className} ${joinCls(tw)}` }, key);
   return jsxs_(type, { ...rest, className: joinCls(tw) }, key);
 }
 
@@ -861,8 +1136,7 @@ function jsxs(type, props, key) {
 var Icon2 = IconImport.Icon;
 var Ikon = new Proxy({}, {
   get(target, key) {
-    if (key in target)
-      return target[key];
+    if (key in target) return target[key];
     return target[key] = (p) => /* @__PURE__ */ jsx(Icon2, { path: allIcons[key], size: "1.1em", ...p });
   }
 });
@@ -879,37 +1153,22 @@ var IkonOf = function IkonOf_({ name, size: size2, ...p }) {
 
 // src/csuite/kolor/overrideTint.tsx
 var overrideTint = (a, b) => {
-  if (a == null && b == null)
-    return {};
-  if (a == null)
-    return b;
-  if (b == null)
-    return a;
+  if (a == null && b == null) return {};
+  if (a == null) return b;
+  if (b == null) return a;
   const out = {};
-  if (b.lightness != null)
-    out.lightness = b.lightness;
-  else if (b.contrast != null)
-    out.contrast = b.contrast;
-  else if (a.lightness != null)
-    out.lightness = a.lightness;
-  else if (a.contrast != null)
-    out.contrast = a.contrast;
-  if (b.chroma != null)
-    out.chroma = b.chroma;
-  else if (b.chromaBlend != null)
-    out.chromaBlend = b.chromaBlend;
-  else if (a.chroma != null)
-    out.chroma = a.chroma;
-  else if (a.chromaBlend != null)
-    out.chromaBlend = a.chromaBlend;
-  if (b.hue != null)
-    out.hue = b.hue;
-  else if (b.hueShift != null)
-    out.hueShift = b.hueShift;
-  else if (a.hue != null)
-    out.hue = a.hue;
-  else if (a.hueShift != null)
-    out.hueShift = a.hueShift;
+  if (b.lightness != null) out.lightness = b.lightness;
+  else if (b.contrast != null) out.contrast = b.contrast;
+  else if (a.lightness != null) out.lightness = a.lightness;
+  else if (a.contrast != null) out.contrast = a.contrast;
+  if (b.chroma != null) out.chroma = b.chroma;
+  else if (b.chromaBlend != null) out.chromaBlend = b.chromaBlend;
+  else if (a.chroma != null) out.chroma = a.chroma;
+  else if (a.chromaBlend != null) out.chromaBlend = a.chromaBlend;
+  if (b.hue != null) out.hue = b.hue;
+  else if (b.hueShift != null) out.hueShift = b.hueShift;
+  else if (a.hue != null) out.hue = a.hue;
+  else if (a.hueShift != null) out.hueShift = a.hueShift;
   return out;
 };
 
@@ -917,10 +1176,8 @@ var overrideTint = (a, b) => {
 function overrideTintV2(...tints) {
   const out = {};
   for (const tint of tints) {
-    if (typeof tint === "boolean")
-      continue;
-    if (tint == null)
-      continue;
+    if (typeof tint === "boolean") continue;
+    if (tint == null) continue;
     if (tint.lightness != null) {
       out.lightness = tint.lightness;
       delete out.contrast;
@@ -955,8 +1212,7 @@ var knownRules = /* @__PURE__ */ new Set();
 function addRule(selector, block = "") {
   const styleSheet = getStyleElement().sheet;
   const rules = styleSheet.cssRules;
-  if (rules == null)
-    throw new Error("\u274C no rules");
+  if (rules == null) throw new Error("\u274C no rules");
   if (knownRules.size > 0 && knownRules.size % 100 === 0)
     console.log(`[\u{1F3DB}\uFE0F] ${knownRules.size}th rule added`, selector, knownRules.has(selector));
   knownRules.add(selector);
@@ -965,8 +1221,7 @@ function addRule(selector, block = "") {
 }
 var _styleElement = null;
 function getStyleElement() {
-  if (_styleElement != null)
-    return _styleElement;
+  if (_styleElement != null) return _styleElement;
   if (_styleElement) {
     _styleElement = _styleElement;
   } else {
@@ -982,13 +1237,11 @@ var mkClassName = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST
 var cache = {};
 var compileOrRetrieveClassName = (appearance) => {
   const vals = JSON.stringify(appearance);
-  const uid = (0, import_spark_md5.hash)(vals);
-  if (uid in cache)
-    return cache[uid];
+  const uid = import_spark_md5.default.hash(vals);
+  if (uid in cache) return cache[uid];
   const className = "box-" + mkClassName();
   const cssBlock = Object.entries(appearance).map(([key, val]) => {
-    if (val == null)
-      return "";
+    if (val == null) return "";
     return `${key}: ${val};`;
   }).join("\n");
   addRule(`.${className}`, cssBlock);
@@ -1059,6 +1312,12 @@ var frameTemplates = {
 };
 var frameTemplateNames = Object.keys(frameTemplates);
 
+// src/csuite/frame/tooltip.tsx
+import { observable as observable2 } from "mobx";
+var tooltipStuff = observable2({
+  tooltip: null
+});
+
 // src/csuite/frame/Frame.tsx
 var frameMode = 1 - 1 === 1 ? "STYLE" : "CLASSNAME";
 var Frame = observer(
@@ -1096,13 +1355,14 @@ var Frame = observer(
       triggerOnPress,
       // interractions
       tooltip,
+      tooltipPlacement,
       // remaining properties
       ...rest
     } = p;
     const prevCtx = useContext(CurrentStyleCtx);
     const box = normalizeBox(p);
     const [hovered_, setHovered] = useState(false);
-    const hovered = hovered__ ?? hovered_;
+    const hovered = hovered__ ? hovered__(hovered_) : hovered_;
     const variables = {};
     const dir = prevCtx.dir;
     const template = look != null ? frameTemplates[look] : void 0;
@@ -1117,10 +1377,8 @@ var Frame = observer(
     }
     if (look != null) {
       const template2 = frameTemplates[look];
-      if (template2.border)
-        box.border = overrideTint(template2.border, box.border);
-      if (template2.text)
-        box.text = overrideTint(template2.text, box.text);
+      if (template2.border) box.border = overrideTint(template2.border, box.border);
+      if (template2.text) box.text = overrideTint(template2.text, box.text);
     }
     if (disabled) {
       box.text = { contrast: 0.1 };
@@ -1131,33 +1389,35 @@ var Frame = observer(
     const _goingTooDark = prevCtx.dir === 1 && KBase.lightness > 0.7;
     const _goingTooLight = prevCtx.dir === -1 && KBase.lightness < 0.45;
     const nextDir = _goingTooDark ? -1 : _goingTooLight ? 1 : prevCtx.dir;
-    if (nextDir !== prevCtx.dir)
-      variables["--DIR"] = nextDir.toString();
-    if (!prevCtx.base.isSame(KBase))
-      variables["--KLR"] = KBase.toOKLCH();
-    if (box.shock)
-      variables.background = KBase.tintBg(box.shock, dir).toOKLCH();
-    else
-      variables.background = KBase.toOKLCH();
+    if (nextDir !== prevCtx.dir) variables["--DIR"] = nextDir.toString();
+    if (!prevCtx.base.isSame(KBase)) variables["--KLR"] = KBase.toOKLCH();
+    if (box.shock) variables.background = KBase.tintBg(box.shock, dir).toOKLCH();
+    else variables.background = KBase.toOKLCH();
     const nextext = overrideTint(prevCtx.text, box.text);
     const boxText = box.text ?? prevCtx.text;
-    if (boxText != null)
-      variables.color = KBase.tintFg(boxText).toOKLCH();
-    if (box.textShadow)
-      variables.textShadow = `0px 0px 2px ${KBase.tintFg(box.textShadow).toOKLCH()}`;
-    if (box.border)
-      variables.border = `1px solid ${KBase.tintFg(box.border).toOKLCH()}`;
-    let _onMouseOver = void 0;
-    let _onMouseOut = void 0;
-    if (p.hover != null) {
-      _onMouseOver = () => setHovered(true);
-      _onMouseOut = () => setHovered(false);
-    }
+    if (boxText != null) variables.color = KBase.tintFg(boxText).toOKLCH();
+    if (box.textShadow) variables.textShadow = `0px 0px 2px ${KBase.tintFg(box.textShadow).toOKLCH()}`;
+    if (box.border) variables.border = `1px solid ${KBase.tintBorder(box.border, dir).toOKLCH()}`;
+    const _onMouseOver = (ev) => {
+      if (p.hover != null) setHovered(true);
+      if (p.tooltip != null)
+        tooltipStuff.tooltip = {
+          ref: ev.currentTarget,
+          text: p.tooltip ?? "test",
+          placement: tooltipPlacement ?? "bottom"
+        };
+    };
+    const _onMouseOut = (ev) => {
+      if (p.hover != null) setHovered(false);
+      if (p.tooltip != null && //
+      tooltipStuff.tooltip?.ref === ev.currentTarget) {
+        tooltipStuff.tooltip = null;
+      }
+    };
     return /* @__PURE__ */ jsx(
       "div",
       {
         ref,
-        title: tooltip,
         onMouseOver: _onMouseOver,
         onMouseOut: _onMouseOut,
         tw: [
@@ -1193,9 +1453,99 @@ var Frame = observer(
   })
 );
 
+// src/csuite/ctx/CSuiteCtx.ts
+import { createContext as createContext2 } from "react";
+
+// src/csuite/ctx/CSuite_ThemeSimple.ts
+var CSuite_theme1 = {
+  clickAndSlideMultiplicator: 1,
+  showWidgetUndo: true,
+  showWidgetMenu: true,
+  showWidgetDiff: true,
+  showToggleButtonBox: false,
+  inputBorder: new NumberVar("input-border", 8),
+  inputContrast: 0,
+  labelBackground: 5,
+  labellayout: "fixed-left",
+  base: new Kolor(0.987, 0.01, 286),
+  baseStr: "oklch(0.987 0.01 286)",
+  text: { contrast: 0.824 },
+  labelText: { contrast: 0.48, chroma: 0.035 },
+  shiftDirection: 1,
+  widgetHeight: 1.8,
+  inputHeight: 1.6,
+  showWidgetExtra: true,
+  truncateLabels: false,
+  fieldGroups: {}
+};
+
+// src/csuite/ctx/CSuiteCtx.ts
+var CSuiteCtx = createContext2(CSuite_theme1);
+
+// src/csuite/ctx/useCSuite.ts
+import { useContext as useContext2 } from "react";
+var useCSuite = () => useContext2(CSuiteCtx);
+
+// src/csuite/ctx/CSuiteOverride.tsx
+var CSuiteOverride = observer2(function CSuiteOverride_(p) {
+  const prev = useCSuite();
+  const config = useMemo2(
+    () => new Proxy(p.config, {
+      get: (target, prop) => prop in target ? target[prop] : prev[prop]
+    }),
+    [p.config]
+  );
+  return /* @__PURE__ */ jsx(CSuiteCtx.Provider, { value: config, children: /* @__PURE__ */ jsx(
+    Frame,
+    {
+      className: p.className,
+      style: {
+        // @ts-expect-error 🔴
+        "--KLR": config.baseStr,
+        "--DIR": config.shiftDirection,
+        "--roundness": "5px",
+        "--input-height": `${config.inputHeight}rem`,
+        "--input-icon-height": `${config.inputHeight / 1.8}rem`
+        // '--input-border': getNum(config.inputBorder) / 100,
+      },
+      children: p.children
+    }
+  ) });
+});
+
+// src/csuite/fields/WidgetUI.DI.ts
+var KNOWN_FIELDS = {};
+var getFieldClass = (fieldType) => {
+  return bang(KNOWN_FIELDS[fieldType]);
+};
+var getFieldOptionalClass = () => getFieldClass("optional");
+var getFieldLinkClass = () => getFieldClass("link");
+var getFieldSharedClass = () => getFieldClass("shared");
+var getFieldListClass = () => getFieldClass("list");
+var registerFieldClass = (type, kls) => {
+  KNOWN_FIELDS[type] = kls;
+};
+var isFieldOptional = _checkIfIs("optional");
+var isFieldLink = _checkIfIs("link");
+var isFieldShared = _checkIfIs("shared");
+var isFieldGroup = _checkIfIs("group");
+var isFieldString = _checkIfIs("str");
+var isFieldNumber = _checkIfIs("number");
+var isFieldList = _checkIfIs("list");
+var isFieldSelectOne = _checkIfIs("selectOne");
+function _checkIfIs(type) {
+  return (widget) => widget.type === type;
+}
+
+// src/csuite/form/FormAsDropdownConfigUI.tsx
+import { observer as observer10 } from "mobx-react-lite";
+
 // src/csuite/button/Button.tsx
-var Button = observer2(function Button_(p) {
-  const uist = useMemo(() => new ButtonState(p), []);
+import { makeAutoObservable, observable as observable3, runInAction } from "mobx";
+import { observer as observer3 } from "mobx-react-lite";
+import { useEffect, useMemo as useMemo3 } from "react";
+var Button = observer3(function Button_(p) {
+  const uist = useMemo3(() => new ButtonState(p), []);
   runInAction(() => uist.props = p);
   useEffect(() => uist.release, []);
   const { size: size2, look, subtle, borderless, iconSize, onClick, ...rest } = p;
@@ -1237,14 +1587,11 @@ var ButtonState = class {
     this.pressed = false;
     this.running = false;
     this.onClick = (ev) => {
-      if (this.props.disabled)
-        return;
-      if (this.running)
-        return;
+      if (this.props.disabled) return;
+      if (this.running) return;
       if (this.props.onClick) {
         const res = this.props.onClick(ev);
-        if (res == null)
-          return;
+        if (res == null) return;
         if (res instanceof Promise) {
           runInAction(() => this.running = true);
           void res.finally(() => runInAction(() => this.running = false));
@@ -1253,10 +1600,8 @@ var ButtonState = class {
       }
     };
     this.press = (_ev) => {
-      if (this.props.disabled)
-        return;
-      if (this.running)
-        return;
+      if (this.props.disabled) return;
+      if (this.running) return;
       this.pressed = true;
       window.addEventListener("pointerup", this.release, true);
     };
@@ -1264,134 +1609,23 @@ var ButtonState = class {
       this.pressed = false;
       window.removeEventListener("pointerup", this.release, true);
     };
-    makeAutoObservable(this, { props: observable2.ref });
+    makeAutoObservable(this, { props: observable3.ref });
   }
   /** 2024-06-04 for now, "active" means "pressed or active" */
   get visuallyActive() {
-    if (this.props.disabled)
-      return false;
+    if (this.props.disabled) return false;
     return this.pressed ? !this.props.active : this.props.active;
   }
 };
 
-// src/csuite/form/FormUI.tsx
-import { observer as observer6 } from "mobx-react-lite";
-
-// src/csuite/messages/MessageErrorUI.tsx
-import { observer as observer5 } from "mobx-react-lite";
-
-// src/csuite/messages/MessageUI.tsx
-import { observer as observer4, useLocalObservable } from "mobx-react-lite";
-
-// src/csuite/markdown/MarkdownUI.tsx
-import { marked } from "marked";
-import { observer as observer3 } from "mobx-react-lite";
-var MarkdownUI = observer3(function MarkdownUI_(p) {
-  if (p.markdown == null)
-    return null;
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      tw: "_MD",
-      className: p.className,
-      dangerouslySetInnerHTML: { __html: marked(p.markdown) }
-    }
-  );
-});
-
-// src/csuite/tinyCSS/knownHues.ts
-var knownOKLCHHues = {
-  error: 0,
-  info: 220,
-  success: 135,
-  warning: 90
-};
-
-// src/csuite/messages/MessageUI.tsx
-var MessageUI = observer4(function MessageInfoUI_(p) {
-  const uist = useLocalObservable(() => ({ closed: false }));
-  if (uist.closed)
-    return null;
-  return /* @__PURE__ */ jsxs(
-    Frame,
-    {
-      base: { contrast: 0.05, hue: p.hue ?? knownOKLCHHues.info, chroma: 0.04 },
-      border: 10,
-      className: p.className,
-      tw: "p-0.5 rounded flex items-start gap-1",
-      children: [
-        p.icon && /* @__PURE__ */ jsx(Frame, { text: { chroma: 0.1, contrast: 0.2 }, children: /* @__PURE__ */ jsx(IkonOf, { name: p.icon, tw: "flex-none text-lg h-input" }) }),
-        /* @__PURE__ */ jsxs("div", { children: [
-          p.title && /* @__PURE__ */ jsx("div", { tw: "w-full font-bold", children: p.title }),
-          p.children,
-          /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
-        ] }),
-        (p.closable ?? true) && /* @__PURE__ */ jsx(
-          Button,
-          {
-            onClick: () => uist.closed = true,
-            tw: "ml-auto",
-            size: "input",
-            text: { contrast: 0.3 },
-            border: 0,
-            subtle: true,
-            square: true,
-            icon: "mdiClose"
-          }
-        )
-      ]
-    }
-  );
-});
-
-// src/csuite/messages/MessageErrorUI.tsx
-var MessageErrorUI = observer5(function MessageErrorUI_(p) {
-  return /* @__PURE__ */ jsx(
-    MessageUI,
-    {
-      type: "error",
-      icon: "mdiSkull",
-      hue: 0,
-      ...p
-    }
-  );
-});
-
-// src/csuite/form/FormUI.tsx
-var FormUI = observer6(function FormUI_(p) {
-  const form = p.form;
-  if (form == null)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: `form is not yet initialized` });
-  if (form.error)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: form.error });
-  if (form.root == null)
-    return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: "form.root is null" });
-  const submitAction = p.submitAction;
-  return /* @__PURE__ */ jsxs(Frame, { ...p.theme, className: p.className, style: p.style, children: [
-    form.root.renderWithLabel(),
-    p.submitButton ?? (submitAction == null ? null : submitAction === "confetti" ? /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(
-      Button,
-      {
-        look: "primary",
-        tw: "ml-auto",
-        onClick: async () => {
-          const fire = (await import("https://cdn.skypack.dev/canvas-confetti")).default;
-          fire({ zIndex: 1e5, particleCount: 100, spread: 70 });
-        },
-        children: p.submitLabel ?? "Submit"
-      }
-    ) }) : /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(Button, { look: "primary", tw: "ml-auto", onClick: () => submitAction(form), children: p.submitLabel ?? "Submit" }) }))
-  ] });
-});
-
 // src/csuite/reveal/RevealUI.tsx
-import { observer as observer8 } from "mobx-react-lite";
-import { createElement, useEffect as useEffect2, useMemo as useMemo2, useRef } from "react";
+import { observer as observer5 } from "mobx-react-lite";
+import { createElement, useEffect as useEffect2, useMemo as useMemo4, useRef } from "react";
 import { createPortal } from "react-dom";
 
 // src/csuite/modal/ModalShell.tsx
-import { observer as observer7 } from "mobx-react-lite";
-var ModalShellUI = observer7(function ModalShellUI_(p) {
+import { observer as observer4 } from "mobx-react-lite";
+var ModalShellUI = observer4(function ModalShellUI_(p) {
   return /* @__PURE__ */ jsxs(Frame, { border: true, className: p.className, tw: ["animate-in fade-in", "p-4 shadow-xl"], onClick: (ev) => ev.stopPropagation(), children: [
     /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
       /* @__PURE__ */ jsx("div", { tw: "text-xl", children: p.title }),
@@ -1417,10 +1651,10 @@ var ModalShellUI = observer7(function ModalShellUI_(p) {
 });
 
 // src/csuite/reveal/RevealCtx.ts
-import { createContext as createContext2, useContext as useContext2 } from "react";
-var RevealCtx = createContext2(null);
+import { createContext as createContext3, useContext as useContext3 } from "react";
+var RevealCtx = createContext3(null);
 var useRevealOrNull = () => {
-  const val = useContext2(RevealCtx);
+  const val = useContext3(RevealCtx);
   return val;
 };
 
@@ -1428,16 +1662,13 @@ var useRevealOrNull = () => {
 var global_RevealStack = [];
 
 // src/csuite/reveal/RevealState.tsx
-import { makeAutoObservable as makeAutoObservable2, observable as observable3 } from "mobx";
+import { makeAutoObservable as makeAutoObservable2, observable as observable4 } from "mobx";
 
 // src/csuite/reveal/RevealPlacement.tsx
 var computePlacement = (placement, rect) => {
-  if (placement === "popup-xs")
-    return { top: 0, left: 0 };
-  if (placement === "popup-sm")
-    return { top: 0, left: 0 };
-  if (placement === "popup-lg")
-    return { top: 0, left: 0 };
+  if (placement === "popup-xs") return { top: 0, left: 0 };
+  if (placement === "popup-sm") return { top: 0, left: 0 };
+  if (placement === "popup-lg") return { top: 0, left: 0 };
   if (placement === "autoHorizontalStart") {
     placement = rect.left + rect.width / 2 < window.innerWidth / 2 ? "rightStart" : "leftStart";
   }
@@ -1461,30 +1692,18 @@ var computePlacement = (placement, rect) => {
       return minY == top ? minX == left ? "bottomStart" : "bottomEnd" : minX == left ? "topStart" : "topEnd";
     })();
   }
-  if (placement == "bottomStart")
-    return { top: rect.bottom, left: rect.left };
-  if (placement == "bottom")
-    return { top: rect.bottom, left: rect.left + rect.width / 2, transform: "translate(-50%)" };
-  if (placement == "bottomEnd")
-    return { top: rect.bottom, left: rect.right, transform: "translate(-100%)" };
-  if (placement == "topStart")
-    return { top: rect.top, left: rect.left, transform: "translateY(-100%)" };
-  if (placement == "top")
-    return { top: rect.top, left: rect.left + rect.width / 2, transform: "translate(-50%, -100%)" };
-  if (placement == "topEnd")
-    return { top: rect.top, left: rect.right, transform: "translate(-100%, -100%)" };
-  if (placement == "leftStart")
-    return { top: rect.top, left: rect.left, transform: "translateX(-100%)" };
-  if (placement == "left")
-    return { top: rect.top + rect.height / 2, left: rect.left, transform: "translate(-100%, -50%)" };
-  if (placement == "leftEnd")
-    return { top: rect.bottom, left: rect.left, transform: "translate(-100%, -100%)" };
-  if (placement == "rightStart")
-    return { top: rect.top, left: rect.right };
-  if (placement == "right")
-    return { top: rect.top + rect.height / 2, left: rect.right, transform: "translateY(-50%)" };
-  if (placement == "rightEnd")
-    return { top: rect.bottom, left: rect.right, transform: "translateY(-100%)" };
+  if (placement == "bottomStart") return { top: rect.bottom, left: rect.left };
+  if (placement == "bottom") return { top: rect.bottom, left: rect.left + rect.width / 2, transform: "translate(-50%)" };
+  if (placement == "bottomEnd") return { top: rect.bottom, left: rect.right, transform: "translate(-100%)" };
+  if (placement == "topStart") return { top: rect.top, left: rect.left, transform: "translateY(-100%)" };
+  if (placement == "top") return { top: rect.top, left: rect.left + rect.width / 2, transform: "translate(-50%, -100%)" };
+  if (placement == "topEnd") return { top: rect.top, left: rect.right, transform: "translate(-100%, -100%)" };
+  if (placement == "leftStart") return { top: rect.top, left: rect.left, transform: "translateX(-100%)" };
+  if (placement == "left") return { top: rect.top + rect.height / 2, left: rect.left, transform: "translate(-100%, -50%)" };
+  if (placement == "leftEnd") return { top: rect.bottom, left: rect.left, transform: "translate(-100%, -100%)" };
+  if (placement == "rightStart") return { top: rect.top, left: rect.right };
+  if (placement == "right") return { top: rect.top + rect.height / 2, left: rect.right, transform: "translateY(-50%)" };
+  if (placement == "rightEnd") return { top: rect.bottom, left: rect.right, transform: "translateY(-100%)" };
   return { top: rect.bottom, left: rect.left };
 };
 
@@ -1500,10 +1719,8 @@ var RevealStateLazy = class {
     this.parents = parents;
     this.uistOrNull = null;
     this.getUist = () => {
-      if (this.uistOrNull)
-        return this.uistOrNull;
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F499}] init RevealUI`);
+      if (this.uistOrNull) return this.uistOrNull;
+      if (DEBUG_REVEAL) console.log(`[\u{1F499}] init RevealUI`);
       this.uistOrNull = new RevealState({ ...this.p }, this.parents);
       return this.uistOrNull;
     };
@@ -1522,13 +1739,10 @@ var RevealState = class _RevealState {
     };
     this.onLeftClick = (ev) => {
       const toc = this.triggerOnClick;
-      if (!toc)
-        return;
+      if (!toc) return;
       ev.stopPropagation();
-      if (this.visible)
-        this.leaveAnchor();
-      else
-        this.enterAnchor();
+      if (this.visible) this.leaveAnchor();
+      else this.enterAnchor();
     };
     // ------------------------------------------------
     this.inAnchor = false;
@@ -1549,23 +1763,19 @@ var RevealState = class _RevealState {
     this.enterAnchorTimeoutId = null;
     this.leaveAnchorTimeoutId = null;
     this.onMouseEnterAnchor = () => {
-      if (!this.triggerOnHover && !this.visible)
-        return;
-      if (_RevealState.shared.current)
-        return this.enterAnchor();
+      if (!this.triggerOnHover && !this.visible) return;
+      if (_RevealState.shared.current) return this.enterAnchor();
       this._resetAllAnchorTimouts();
       this.enterAnchorTimeoutId = setTimeout(this.enterAnchor, this.showDelay);
     };
     this.onMouseLeaveAnchor = () => {
-      if (this.placement.startsWith("popup"))
-        return;
+      if (this.placement.startsWith("popup")) return;
       this._resetAllAnchorTimouts();
       this.leaveAnchorTimeoutId = setTimeout(this.leaveAnchor, this.hideDelay);
     };
     // ---
     this.enterAnchor = () => {
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] ENTERING anchor ${this.ix}`);
+      if (DEBUG_REVEAL) console.log(`[\u{1F920}] ENTERING anchor ${this.ix}`);
       if (_RevealState.shared.current != this && !this.parents.includes(_RevealState.shared.current))
         _RevealState.shared.current?.close();
       _RevealState.shared.current = this;
@@ -1573,10 +1783,8 @@ var RevealState = class _RevealState {
       this.inAnchor = true;
     };
     this.leaveAnchor = () => {
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] LEAVING anchor  ${this.ix}`);
-      if (_RevealState.shared.current == this)
-        _RevealState.shared.current = null;
+      if (DEBUG_REVEAL) console.log(`[\u{1F920}] LEAVING anchor  ${this.ix}`);
+      if (_RevealState.shared.current == this) _RevealState.shared.current = null;
       this._resetAllAnchorTimouts();
       this.inAnchor = false;
     };
@@ -1605,26 +1813,21 @@ var RevealState = class _RevealState {
       this.enterTooltipTimeoutId = setTimeout(this.enterTooltip, this.showDelay);
     };
     this.onMouseLeaveTooltip = () => {
-      if (this.placement.startsWith("popup"))
-        return;
+      if (this.placement.startsWith("popup")) return;
       this._resetAllTooltipTimouts();
       this.leaveTooltipTimeoutId = setTimeout(this.leaveTooltip, this.hideDelay);
     };
     // ---
     this.enterTooltip = () => {
       this._resetAllTooltipTimouts();
-      for (const [ix, p] of this.parents.entries())
-        p.enterChildren(ix);
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] enter tooltip of ${this.ix}`);
+      for (const [ix, p] of this.parents.entries()) p.enterChildren(ix);
+      if (DEBUG_REVEAL) console.log(`[\u{1F920}] enter tooltip of ${this.ix}`);
       this.inTooltip = true;
     };
     this.leaveTooltip = () => {
       this._resetAllTooltipTimouts();
-      for (const [ix, p] of this.parents.entries())
-        p.leaveChildren(ix);
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] leaving tooltip of ${this.ix}`);
+      for (const [ix, p] of this.parents.entries()) p.leaveChildren(ix);
+      if (DEBUG_REVEAL) console.log(`[\u{1F920}] leaving tooltip of ${this.ix}`);
       this.inTooltip = false;
     };
     // ---
@@ -1646,13 +1849,11 @@ var RevealState = class _RevealState {
     };
     // --------------------
     this.enterChildren = (depth) => {
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] entering children (of ${this.ix}) ${depth}`);
+      if (DEBUG_REVEAL) console.log(`[\u{1F920}] entering children (of ${this.ix}) ${depth}`);
       this.inChildren.add(depth);
     };
     this.leaveChildren = (depth) => {
-      if (DEBUG_REVEAL)
-        console.log(`[\u{1F920}] leaving children (of ${this.ix}) ${depth}`);
+      if (DEBUG_REVEAL) console.log(`[\u{1F920}] leaving children (of ${this.ix}) ${depth}`);
       this.inChildren.delete(depth);
     };
     this.contentFn = () => p.content(this);
@@ -1662,13 +1863,12 @@ var RevealState = class _RevealState {
     this.nextUID = 1;
   }
   static {
-    this.shared = observable3({ current: null }, { current: observable3.ref });
+    this.shared = observable4({ current: null }, { current: observable4.ref });
   }
   /** how deep in the reveal stack we are */
   get ix() {
     return this.parents.length;
   }
-  // prettier-ignore
   get debugColor() {
     return {
       borderLeft: this.inAnchor ? `3px solid red` : void 0,
@@ -1678,8 +1878,7 @@ var RevealState = class _RevealState {
   }
   /** toolip is visible if either inAnchor or inTooltip */
   get visible() {
-    if (this._lock)
-      return true;
+    if (this._lock) return true;
     return this.inAnchor || this.inTooltip || this.inChildren.size > 0;
   }
   close() {
@@ -1708,33 +1907,26 @@ var RevealState = class _RevealState {
   }
   // UI --------------------------------------------
   get defaultCursor() {
-    if (!this.triggerOnHover)
-      return "cursor-pointer";
+    if (!this.triggerOnHover) return "cursor-pointer";
     return "cursor-help";
   }
 };
 
 // src/csuite/reveal/RevealUI.tsx
-var RevealUI = observer8(function RevealUI_(p) {
+var RevealUI = observer5(function RevealUI_(p) {
   const ref = useRef(null);
   const parents = useRevealOrNull()?.tower ?? [];
-  const SELF = useMemo2(() => new RevealStateLazy(p, parents.map((p2) => p2.getUist())), []);
+  const SELF = useMemo4(() => new RevealStateLazy(p, parents.map((p2) => p2.getUist())), []);
   const { uistOrNull, getUist: uist2 } = SELF;
-  const nextTower = useMemo2(() => ({ tower: [...parents, SELF] }), []);
+  const nextTower = useMemo4(() => ({ tower: [...parents, SELF] }), []);
   useEffect2(() => {
     const x = uistOrNull;
-    if (x == null)
-      return;
-    if (p.content !== x.p.content)
-      x.contentFn = () => p.content(x);
-    if (p.trigger !== x.p.trigger)
-      x.p.trigger = p.trigger;
-    if (p.placement !== x.p.placement)
-      x.p.placement = p.placement;
-    if (p.showDelay !== x.p.showDelay)
-      x.p.showDelay = p.showDelay;
-    if (p.hideDelay !== x.p.hideDelay)
-      x.p.hideDelay = p.hideDelay;
+    if (x == null) return;
+    if (p.content !== x.p.content) x.contentFn = () => p.content(x);
+    if (p.trigger !== x.p.trigger) x.p.trigger = p.trigger;
+    if (p.placement !== x.p.placement) x.p.placement = p.placement;
+    if (p.showDelay !== x.p.showDelay) x.p.showDelay = p.showDelay;
+    if (p.hideDelay !== x.p.hideDelay) x.p.hideDelay = p.hideDelay;
   }, [p.content, p.trigger, p.placement, p.showDelay, p.hideDelay]);
   useEffect2(() => {
     if (uistOrNull?.visible && ref.current) {
@@ -1760,10 +1952,8 @@ var RevealUI = observer8(function RevealUI_(p) {
       },
       onClick: (ev) => uist2().onLeftClick(ev),
       onAuxClick: (ev) => {
-        if (ev.button === 1)
-          return uist2().onMiddleClick(ev);
-        if (ev.button === 2)
-          return uist2().onRightClick(ev);
+        if (ev.button === 1) return uist2().onMiddleClick(ev);
+        if (ev.button === 2) return uist2().onRightClick(ev);
       },
       onMouseEnter: () => uist2().onMouseEnterAnchor(),
       onMouseLeave: () => uist2().onMouseLeaveAnchor(),
@@ -1775,10 +1965,8 @@ var RevealUI = observer8(function RevealUI_(p) {
   ) });
 });
 var mkTooltip = (uist) => {
-  if (uist == null)
-    return null;
-  if (!uist?.visible)
-    return null;
+  if (uist == null) return null;
+  if (!uist?.visible) return null;
   const element = document.getElementById(
     uist.p.placement?.startsWith("#") ? uist.p.placement.slice(1) : "tooltip-root"
   );
@@ -1791,8 +1979,7 @@ var mkTooltip = (uist) => {
       "div",
       {
         ref: (e) => {
-          if (e == null)
-            return global_RevealStack.filter((p2) => p2 !== uist);
+          if (e == null) return global_RevealStack.filter((p2) => p2 !== uist);
           global_RevealStack.push(uist);
         },
         onKeyUp: (ev) => {
@@ -1818,8 +2005,7 @@ var mkTooltip = (uist) => {
         "div",
         {
           ref: (e) => {
-            if (e == null)
-              return global_RevealStack.filter((p2) => p2 !== uist);
+            if (e == null) return global_RevealStack.filter((p2) => p2 !== uist);
             global_RevealStack.push(uist);
           },
           onKeyUp: (ev) => {
@@ -1884,8 +2070,149 @@ var mkTooltip = (uist) => {
   return createPortal(revealedContent, element);
 };
 
-// src/panels/Panel_Gallery/FormAsDropdownConfigUI.tsx
-var FormAsDropdownConfigUI = observer9(function FormAsDropdownConfigUI_(p) {
+// src/csuite/form/FormUI.tsx
+import { observer as observer9 } from "mobx-react-lite";
+
+// src/csuite/messages/MessageErrorUI.tsx
+import { observer as observer8 } from "mobx-react-lite";
+
+// src/csuite/messages/MessageUI.tsx
+import { observer as observer7, useLocalObservable } from "mobx-react-lite";
+
+// src/csuite/markdown/MarkdownUI.tsx
+import { marked } from "marked";
+import { observer as observer6 } from "mobx-react-lite";
+var MarkdownUI = observer6(function MarkdownUI_(p) {
+  if (p.markdown == null) return null;
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      tw: "_MD",
+      className: p.className,
+      dangerouslySetInnerHTML: { __html: marked(p.markdown) }
+    }
+  );
+});
+
+// src/csuite/tinyCSS/knownHues.ts
+var knownOKLCHHues = {
+  error: 0,
+  info: 220,
+  success: 135,
+  warning: 90
+};
+
+// src/csuite/messages/MessageUI.tsx
+var MessageUI = observer7(function MessageInfoUI_(p) {
+  const uist = useLocalObservable(() => ({ closed: false }));
+  if (uist.closed) return null;
+  return /* @__PURE__ */ jsxs(
+    Frame,
+    {
+      base: { contrast: 0.05, hue: p.hue ?? knownOKLCHHues.info, chroma: 0.04 },
+      border: 10,
+      className: p.className,
+      tw: "p-0.5 rounded flex items-start gap-1",
+      children: [
+        p.icon && /* @__PURE__ */ jsx(Frame, { text: { chroma: 0.1, contrast: 0.2 }, children: /* @__PURE__ */ jsx(IkonOf, { name: p.icon, tw: "flex-none text-lg h-input" }) }),
+        /* @__PURE__ */ jsxs("div", { children: [
+          p.title && /* @__PURE__ */ jsx("div", { tw: "w-full font-bold", children: p.title }),
+          p.children,
+          /* @__PURE__ */ jsx(MarkdownUI, { markdown: p.markdown })
+        ] }),
+        (p.closable ?? true) && /* @__PURE__ */ jsx(
+          Button,
+          {
+            onClick: () => uist.closed = true,
+            tw: "ml-auto",
+            size: "input",
+            text: { contrast: 0.3 },
+            border: 0,
+            subtle: true,
+            square: true,
+            icon: "mdiClose"
+          }
+        )
+      ]
+    }
+  );
+});
+
+// src/csuite/messages/MessageErrorUI.tsx
+var MessageErrorUI = observer8(function MessageErrorUI_(p) {
+  return /* @__PURE__ */ jsx(
+    MessageUI,
+    {
+      type: "error",
+      icon: "mdiSkull",
+      hue: 0,
+      ...p
+    }
+  );
+});
+
+// src/csuite/form/FormUI.tsx
+var Form = class {
+  constructor(props) {
+    this.props = props;
+  }
+  render(p) {
+    return /* @__PURE__ */ jsx(FormUI, { ...this.props, ...p });
+  }
+  asModal(p) {
+    return /* @__PURE__ */ jsx(
+      RevealUI,
+      {
+        placement: "popup-lg",
+        title: p?.title,
+        content: ({ close }) => {
+          return this.render({
+            className: "min-w-[600px]",
+            ...p,
+            submitAction: async (x) => {
+              if (this.props.submitAction == null) return;
+              if (this.props.submitAction === "confetti") {
+                const fire = (await import("https://cdn.skypack.dev/canvas-confetti")).default;
+                fire({ zIndex: 1e5, particleCount: 100, spread: 70 });
+              } else this.props.submitAction(x);
+              if (p?.shouldClose !== false) close();
+            }
+          });
+        },
+        children: /* @__PURE__ */ jsx(Button, { look: p?.look, icon: p?.icon, children: p?.label ?? "Cliquez ici \u{1F536}" })
+      }
+    );
+  }
+};
+var FormUI = observer9(function FormUI_(p) {
+  const form = p.field;
+  if (form == null) return /* @__PURE__ */ jsx(MessageErrorUI, { markdown: `form is not yet initialized` });
+  const submitAction = p.submitAction;
+  const component = p.component ?? (() => form.renderWithLabel());
+  const canSubmit = p.allowSubmitWhenErrors || //
+  p.field == null || //
+  p.field.allErrorsIncludingChildrenErros.length === 0;
+  return /* @__PURE__ */ jsxs(Frame, { tw: "UI-Form", ...p.theme, className: p.className, style: p.style, children: [
+    component({}),
+    p.submitButton ?? (submitAction == null ? null : submitAction === "confetti" ? /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(
+      Button,
+      {
+        look: "primary",
+        tw: "ml-auto",
+        disabled: !canSubmit,
+        onClick: async () => {
+          if (!canSubmit) return;
+          const fire = (await import("https://cdn.skypack.dev/canvas-confetti")).default;
+          fire({ zIndex: 1e5, particleCount: 100, spread: 70 });
+        },
+        children: p.submitLabel ?? "Submit"
+      }
+    ) }) : /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsx(Button, { look: "primary", tw: "ml-auto", disabled: !canSubmit, onClick: () => submitAction(form), children: p.submitLabel ?? "Submit" }) }))
+  ] });
+});
+
+// src/csuite/form/FormAsDropdownConfigUI.tsx
+var FormAsDropdownConfigUI = observer10(function FormAsDropdownConfigUI_(p) {
   return /* @__PURE__ */ jsx(
     RevealUI,
     {
@@ -1902,7 +2229,7 @@ var FormAsDropdownConfigUI = observer9(function FormAsDropdownConfigUI_(p) {
             width: p.width
           },
           children: [
-            p.form && /* @__PURE__ */ jsx(FormUI, { form: p.form }),
+            p.form && /* @__PURE__ */ jsx(FormUI, { field: p.form }),
             p.children
           ]
         }
@@ -1915,514 +2242,171 @@ var FormAsDropdownConfigUI = observer9(function FormAsDropdownConfigUI_(p) {
   );
 });
 
-// src/csuite/fields/WidgetUI.DI.ts
-var WidgetDI = {};
-var registerWidgetClass = (type, kls) => {
-  WidgetDI[type] = kls;
-};
-var isWidgetOptional = (widget) => widget.type === "optional";
-var isWidgetShared = (widget) => widget.type === "shared";
-var isWidgetGroup = (widget) => widget.type === "group";
+// src/csuite/form/WidgetErrorsUI.tsx
+import { observer as observer11 } from "mobx-react-lite";
+var WidgetErrorsUI = observer11(function WidgerErrorsUI_(p) {
+  const field = p.field;
+  if (field.hasErrors === false) return null;
+  return /* @__PURE__ */ jsx(MessageErrorUI, { children: field.errors.map((e, i) => /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
+    /* @__PURE__ */ jsx(Ikon.mdiAlert, {}),
+    e.message
+  ] }, i)) });
+});
 
-// src/csuite/utils/debounce.ts
-function debounce(func, delay, maxWait) {
-  let timeoutId = null;
-  let lastInvokeTime = Date.now();
-  return (...args) => {
-    const now2 = Date.now();
-    const needInvoke = maxWait !== void 0 && now2 - lastInvokeTime >= maxWait;
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    if (needInvoke) {
-      func(...args);
-      lastInvokeTime = now2;
-    } else {
-      timeoutId = setTimeout(() => {
-        func(...args);
-        lastInvokeTime = Date.now();
-      }, delay);
-    }
-  };
-}
-
-// src/csuite/model/Model.ts
-var Model = class {
-  constructor(manager, buildFn, config, context) {
-    this.manager = manager;
-    this.buildFn = buildFn;
-    this.config = config;
-    this.context = context;
-    /** current form snapshot */
-    this.snapshot = void 0;
-    /** loading error  */
-    this.error = null;
-    /** shortcut to access the <FormUI /> component without having to import it first */
-    this.FormUI = FormUI;
-    /**
-     * allow to quickly render the model as a react form
-     * without having to import any component; usage:
-     * | <div>{x.render()}</div>
-     */
-    this.render = (p = {}) => {
-      return createElement2(FormUI, { form: this, ...p });
-    };
-    /**
-     * allow to quickly render the form in a dropdown button
-     * without having to import any component; usage:
-     * | <div>{x.renderAsConfigBtn()}</div>
-     */
-    this.renderAsConfigBtn = (p) => createElement2(FormAsDropdownConfigUI, { form: this, ...p });
-    /** Out of Tree unmounted serials  */
-    this.shared = {};
-    // Change tracking ------------------------------------
-    /** timestamp at which form value was last updated, or 0 when form still pristine */
-    this.valueLastUpdatedAt = 0;
-    /** timestamp at which form serial was last updated, or 0 when form still pristine */
-    this.serialLastUpdatedAt = 0;
-    this._onSerialChange = this.config.onSerialChange ? debounce(this.config.onSerialChange, 200) : null;
-    this._onValueChange = this.config.onValueChange ? debounce(this.config.onValueChange, 5) : null;
-    /** every widget node must call this function once it's value change */
-    this.valueChanged = (widget) => {
-      this.valueLastUpdatedAt = Date.now();
-      this.serialChanged(widget);
-      this._onValueChange?.(this);
-    };
-    this._allFormWidgets = /* @__PURE__ */ new Map();
-    this.knownShared = /* @__PURE__ */ new Map();
-    this.getWidgetByID = (id) => {
-      return this._allFormWidgets.get(id);
-    };
-    /** every widget node must call this function once it's serial changed */
-    this.serialChanged = (_widget) => {
-      this.serialLastUpdatedAt = Date.now();
-      this._onSerialChange?.(this);
-    };
-    this.ready = false;
-    this.init = () => {
-      console.log(`[\u{1F950}] Building form ${this.config.name}`);
-      const formBuilder = this.builder;
-      try {
-        let formSerial = this.config.initialSerial?.(this.context);
-        this._uid = formSerial?.uid ?? nanoid();
-        if (formSerial && !isObservable(formSerial))
-          formSerial = observable4(formSerial);
-        if (formSerial != null && Object.keys(formSerial).length === 0) {
-          formSerial = null;
-        }
-        if (formSerial != null && //
-        formSerial.type !== "FormSerial" && "values_" in formSerial) {
-          console.log(`[\u{1F534}\u{1F534}\u{1F534}\u{1F534}\u{1F534}\u{1F534}\u{1F534}] `, toJS(formSerial));
-          const oldSerial = formSerial;
-          const oldsharedSerial = {};
-          for (const [k, v] of Object.entries(oldSerial.values_)) {
-            if (k.startsWith("__")) {
-              oldsharedSerial[k.slice(2, -2)] = v;
-              delete oldSerial.values_[k];
-            }
-          }
-          formSerial = {
-            name: this.config.name,
-            uid: nanoid(),
-            type: "FormSerial",
-            root: formSerial,
-            shared: oldsharedSerial,
-            serialLastUpdatedAt: 0,
-            valueLastUpdatedAt: 0
-          };
-          console.log(`[\u{1F534}] MIGRATED formSerial:`, JSON.stringify(formSerial, null, 3).slice(0, 800));
-        }
-        if (formSerial != null && formSerial.type !== "FormSerial") {
-          throw new Error("\u274C INVALID form serial");
-        }
-        this.shared = formSerial?.shared || {};
-        this.snapshot = formSerial?.snapshot;
-        const spec = this.buildFn?.(formBuilder, this.context);
-        const rootWidget = formBuilder._HYDRATE(null, spec, formSerial?.root);
-        this.ready = true;
-        this.error = null;
-        return rootWidget;
-      } catch (e) {
-        console.error(`[\u{1F459}\u{1F534}] Building form ${this.config.name} FAILED`, this);
-        console.error(e);
-        this.error = "invalid form definition";
-        const spec = this.buildFn?.(formBuilder, this.context);
-        return formBuilder._HYDRATE(null, spec, null);
-      }
-    };
-    this.builder = manager.getBuilder(this);
-    makeAutoObservable3(this, {
-      //
-      // builder: false,
-      root: false,
-      init: action
-    });
-  }
-  /**
-   * update current model snapshot
-   */
-  saveSnapshot() {
-    this.snapshot = JSON.parse(JSON.stringify(this.root.serial));
-  }
-  /**
-   * rever to the last snapshot
-   */
-  revertToSnapshot() {
-    throw new Error("\u274C not implemented");
-  }
-  /**
-   * @since 2024-06-20
-   * @status broken
-   * shrot text summarizing changes from default
-   */
-  get diffSummaryFromDefault() {
-    return this.root.diffSummaryFromDefault;
-  }
-  /**
-   * @since 2024-06-20
-   * @status broken
-   * shrot text summarizing changes from default
-   * */
-  get diffSummaryFromSnapshot() {
-    return this.root.diffSummaryFromDefault;
-  }
-  get value() {
-    return this.root.value;
-  }
-  get serial() {
-    return {
-      type: "FormSerial",
-      uid: this.uid,
-      name: this.config.name,
-      root: this.root.serial,
-      snapshot: this.snapshot,
-      shared: this.shared,
-      serialLastUpdatedAt: this.serialLastUpdatedAt,
-      valueLastUpdatedAt: this.valueLastUpdatedAt
-    };
-  }
-  /** @deprecated ; only work when root is a Widget_group */
-  get fields() {
-    if (isWidgetGroup(this.root))
-      return this.root.fields;
-    throw new Error("\u{1F534} root is not a group");
-  }
-  // 🔴 👇 remove that
-  get root() {
-    const root = this.init();
-    Object.defineProperty(this, "root", { value: root });
-    return root;
-  }
-  get uid() {
-    if (this._uid == null)
-      throw new Error("\u{1F534} uid not available before form is initialized");
-    return this._uid;
+// src/csuite/form/WidgetHeaderContainerUI.tsx
+import { observer as observer12 } from "mobx-react-lite";
+var isDragging = false;
+var wasEnabled = false;
+var isDraggingListener2 = (ev) => {
+  if (ev.button == 0) {
+    isDragging = false;
+    window.removeEventListener("mouseup", isDraggingListener2, true);
   }
 };
-
-// src/csuite/model/runWithGlobalForm.ts
-import { nanoid as nanoid2 } from "nanoid";
-var GlobalFormCtx = class {
-  constructor() {
-    this.id = nanoid2();
-    this.currentForm = null;
-  }
-};
-var globalCtx = new GlobalFormCtx();
-globalThis.globalCtx = globalCtx;
-var runWithGlobalForm = (form, f) => {
-  if (globalCtx.currentForm === form)
-    return f();
-  const prev = globalCtx.currentForm;
-  globalCtx.currentForm = form;
-  const res = f();
-  globalCtx.currentForm = prev;
-  return res;
-};
-var getCurrentForm_IMPL = () => {
-  if (globalCtx.currentForm == null) {
-    console.log(`[\u{1F459}] `, globalCtx);
-    debugger;
-    throw new Error(`No form in context !`);
-  }
-  return globalCtx.currentForm;
-};
-
-// src/csuite/model/ModelManager.ts
-var ModelManager = class {
-  constructor(builderCtor) {
-    this.builderCtor = builderCtor;
-    //
-    this._allForms = /* @__PURE__ */ new Map();
-    this._allWidgets = /* @__PURE__ */ new Map();
-    this._allWidgetsByType = /* @__PURE__ */ new Map();
-    this.getFormByID = (uid) => {
-      return this._allForms.get(uid);
-    };
-    this.getWidgetByID = (widgetUID) => {
-      return this._allWidgets.get(widgetUID);
-    };
-    /**
-     * return all currently instanciated widgets
-     * field of a given input type
-     */
-    this.getWidgetsByType = (type) => {
-      const typeStore = this._allWidgetsByType.get(type);
-      if (!typeStore)
-        return [];
-      return Array.from(typeStore.values());
-    };
-    this._builders = /* @__PURE__ */ new WeakMap();
-    this.getBuilder = (form) => {
-      const prev = this._builders.get(form);
-      if (prev)
-        return prev;
-      const builder = new this.builderCtor(form);
-      this._builders.set(form, builder);
-      return builder;
-    };
-    /** LEGACY API; TYPES ARE COMPLICATED DUE TO MAINTAINING BACKWARD COMPAT */
-    this.fields = (buildFn, modelConfig = { name: "unnamed" }) => {
-      const FN = (domain) => {
-        return runWithGlobalForm(
-          domain,
-          () => domain.group({
-            label: false,
-            items: buildFn(domain),
-            collapsed: false
-          })
-        );
-      };
-      const form = new Model(this, FN, modelConfig, null);
-      return form;
-    };
-  }
-  /** simple alias to create a new Form */
-  form(buildFn, modelConfig = { name: "unnamed" }) {
-    return new Model(this, buildFn, modelConfig, null);
-  }
-  /** simple way to defined forms and in react components */
-  use(ui, formProperties = { name: "unnamed" }, deps = []) {
-    return useMemo3(() => {
-      return new Model(this, ui, formProperties, null);
-    }, deps);
-  }
-  formWithContext(buildFn, context, modelConfig = { name: "unnamed" }) {
-    return new Model(this, buildFn, modelConfig, context);
-  }
-  /** simple way to defined forms and in react components */
-  useWithContext(buildFn, context, formProperties = { name: "unnamed" }, deps = []) {
-    return useMemo3(() => {
-      return new Model(this, buildFn, formProperties, context);
-    }, deps);
-  }
-};
-
-// src/csuite/simple/SimpleDomain.ts
-import { makeAutoObservable as makeAutoObservable13, reaction as reaction2 } from "mobx";
-
-// src/csuite/fields/bool/WidgetBool.tsx
-import { computed as computed3, observable as observable8, runInAction as runInAction4 } from "mobx";
-import { nanoid as nanoid6 } from "nanoid";
-
-// src/csuite/model/BaseField.tsx
-import { observer as observer38 } from "mobx-react-lite";
-
-// src/panels/libraryUI/tree/nodes/TreeWidget.tsx
-import { makeAutoObservable as makeAutoObservable4 } from "mobx";
-var TreeWidget = class {
-  constructor(widgetWithKey) {
-    this.widgetWithKey = widgetWithKey;
-    /** packed with a bunch of sane default for now; we'll see if this is ever */
-    // get icon() {
-    //     const w = this.widget
-    //     if (w.type === 'choices') return <Ikon.mdiCheckboxMultipleMarked />
-    //     if (w.type === 'choice') return <Ikon.mdiCheckboxMarked />
-    //     if (isWidgetGroup(w)) {
-    //         if (Object.keys(w.fields).length === 0) return <Ikon.mdiCircle />
-    //         return <Ikon.mdiFolder />
-    //     }
-    //     if (w.type === 'optional') return <Ikon.mdiCheckboxBlankOutline />
-    //     if (w.type === 'list') return <Ikon.mdiFormatListBulleted />
-    //     if (w.type === 'enum') return <Ikon.mdiFormatListBulletedSquare />
-    //     if (w.type === 'markdown') return <Ikon.mdiFormatListBulletedSquare />
-    //     if (isWidgetString(w)) {
-    //         const it = w.config.inputType
-    //         if (it === 'color') return <Ikon.mdiPalette />
-    //         if (it === 'date') return <Ikon.mdiCalendar />
-    //         if (it === 'datetime-local') return <Ikon.mdiCalendarClock />
-    //         if (it === 'email') return <Ikon.mdiEmailOutline />
-    //         if (it === 'password') return <Ikon.mdiLockOutline />
-    //         if (it === 'tel') return <Ikon.mdiPhoneOutline />
-    //         if (it === 'text') return <Ikon.mdiTextBoxOutline />
-    //         if (it === 'time') return <Ikon.mdiClockOutline />
-    //         if (it === 'url') return <Ikon.mdiWeb />
-    //         return <Ikon.mdiTextBoxOutline />
-    //     }
-    //     if (w.type === 'number') return <Ikon.mdiNumeric />
-    //     if (w.type === 'boolean') return <Ikon.mdiCheckboxBlankOutline />
-    //     //
-    //     return <Ikon.mdiBatteryUnknown tw='text-red-400' />
-    //     // return <span className='material-symbols-outlined'>Draft</span>
-    // }
-    this.onPrimaryAction = (n) => {
-    };
-    this.children = () => {
-      return this.widget.subWidgetsWithKeys.map((w) => w.widget.asTreeElement(w.key));
-    };
-    // extra = () => (
-    //     <>
-    //         {this.app?.isLoadedInMemory ? <span className='material-symbols-outlined text-green-500'>memory</span> : null}
-    //         <TreeApp_BtnFavUI entry={this} />
-    //     </>
-    // )
-    this.actions = [
-      // {
-      //     name: 'add Draft',
-      //     icon: 'add',
-      //     mode: 'small',
-      //     onClick: (node) => {
-      //         if (this.app == null) return
-      //         this.app.createDraft()
-      //         node.open()
-      //     },
-      // },
-    ];
-    makeAutoObservable4(this);
-  }
-  get widget() {
-    return this.widgetWithKey.widget;
-  }
-  /** config label, or parent key */
-  get label() {
-    if (this.widget.config.label)
-      return this.widget.config.label;
-    return this.widgetWithKey.key;
-  }
-  get name() {
-    return `${this.label} = ${this.widget.id}`;
-  }
-  get isFolder() {
-    return this.widget.subWidgets.length > 0;
-  }
-};
-
-// src/utils/mobx-store-inheritance.ts
-import { $mobx, isObservable as isObservable2, makeObservable as makeObservable2 } from "mobx";
-var annotationsSymbol = Symbol();
-var objectPrototype = Object.prototype;
-var makeAutoObservableInheritance = (target, overrides, options) => {
-  if (isObservable2(target)) {
-    throw new Error("Target must not be observable");
-  }
-  let annotations = target[annotationsSymbol];
-  if (!annotations) {
-    annotations = {};
-    let current = target;
-    while (current && current !== objectPrototype) {
-      Reflect.ownKeys(current).forEach((key) => {
-        if (key === $mobx || key === "constructor")
-          return;
-        annotations[key] = !overrides ? true : key in overrides ? overrides[key] : true;
-      });
-      current = Object.getPrototypeOf(current);
-    }
-    const proto = Object.getPrototypeOf(target);
-    if (proto && proto !== objectPrototype) {
-      Object.defineProperty(proto, annotationsSymbol, { value: annotations });
-    }
-  } else {
-    const tmp = {};
-    for (const key in target) {
-      if (annotations[key]) {
-        tmp[key] = annotations[key];
-      }
-    }
-    annotations = tmp;
-  }
-  return makeObservable2(target, annotations, options);
-};
-
-// src/csuite/ctx/CSuiteOverride.tsx
-import { observer as observer10 } from "mobx-react-lite";
-import { useMemo as useMemo4 } from "react";
-
-// src/csuite/ctx/CSuiteCtx.ts
-import { createContext as createContext3 } from "react";
-
-// src/csuite/ctx/CSuite_theme1.ts
-var CSuite_theme1 = {
-  clickAndSlideMultiplicator: 1,
-  showWidgetUndo: true,
-  showWidgetMenu: true,
-  showWidgetDiff: true,
-  showToggleButtonBox: false,
-  inputBorder: new NumberVar("input-border", 8),
-  base: new Kolor(0.987, 0.01, 286),
-  baseStr: "oklch(0.987 0.01 286)",
-  text: { contrast: 0.824 },
-  labelText: { contrast: 0.48, chroma: 0.035 },
-  shiftDirection: 1,
-  inputHeight: 1.6,
-  showWidgetExtra: true,
-  truncateLabels: false
-};
-
-// src/csuite/ctx/CSuiteCtx.ts
-var CSuiteCtx = createContext3(CSuite_theme1);
-
-// src/csuite/ctx/useCSuite.ts
-import { useContext as useContext3 } from "react";
-var useCSuite = () => useContext3(CSuiteCtx);
-
-// src/csuite/ctx/CSuiteOverride.tsx
-var CSuiteOverride = observer10(function CSuiteOverride_(p) {
-  const prev = useCSuite();
-  const config = useMemo4(
-    () => new Proxy(p.config, {
-      get: (target, prop) => prop in target ? target[prop] : prev[prop]
-    }),
-    [p.config]
-  );
-  return /* @__PURE__ */ jsx(CSuiteCtx.Provider, { value: config, children: /* @__PURE__ */ jsx(
-    Frame,
+var WidgetHeaderContainerUI = observer12(function WidgetHeaderContainerUI_(p) {
+  const field = p.field;
+  return /* @__PURE__ */ jsx(
+    "div",
     {
-      className: p.className,
-      base: cushy.theme.value.base,
-      text: cushy.themeText,
-      style: {
-        // @ts-expect-error 🔴
-        "--KLR": config.baseStr,
-        // '--KLRH': config.baseStr,
-        // '--input-border': getNum(config.inputBorder) / 100,
-        "--DIR": config.shiftDirection,
-        "--roundness": "5px",
-        "--input-height": `${config.inputHeight}rem`,
-        "--input-icon-height": `${config.inputHeight / 1.8}rem`
+      className: "UI-WidgetHeaderContainer COLLAPSE-PASSTHROUGH",
+      tw: [
+        "flex gap-0.5 select-none",
+        // 2024-06-03 rvion, changing 'items-center' to 'items-start'
+        // as well as adding some `h-input` class to <WidgetLabelContainerUI />
+        "items-start"
+      ],
+      onMouseDown: (ev) => {
+        if (ev.button != 0 || !field.isCollapsible) return;
+        const target = ev.target;
+        if (!target.classList.contains("COLLAPSE-PASSTHROUGH")) return;
+        isDragging = true;
+        window.addEventListener("mouseup", isDraggingListener2, true);
+        wasEnabled = !field.serial.collapsed;
+        field.setCollapsed(wasEnabled);
+      },
+      onMouseMove: (ev) => {
+        if (!isDragging || !field.isCollapsible) return;
+        field.setCollapsed(wasEnabled);
       },
       children: p.children
     }
-  ) });
+  );
 });
 
-// src/csuite/form/getActualWidgetToDisplay.tsx
-function getActualWidgetToDisplay(originalWidget) {
-  if (isWidgetOptional(originalWidget))
-    return getActualWidgetToDisplay(originalWidget.child);
-  if (isWidgetShared(originalWidget))
-    return getActualWidgetToDisplay(originalWidget.shared);
-  return originalWidget;
-}
+// src/csuite/form/WidgetLabelCaretUI.tsx
+import { observer as observer13 } from "mobx-react-lite";
+var WidgetLabelCaretUI = observer13(function WidgetLabelCaretUI_(p) {
+  if (!p.field.isCollapsed && !p.field.isCollapsible)
+    return /* @__PURE__ */ jsx(
+      Ikon._,
+      {
+        className: p.className,
+        tw: [
+          //
+          "UI-WidgetLabelCaret self-start minh-widget ABDDE",
+          "COLLAPSE-PASSTHROUGH shrink-0"
+        ]
+      }
+    );
+  return /* @__PURE__ */ jsx(
+    WidgetLabelCaretAlwaysUI,
+    {
+      className: p.className,
+      isCollapsed: p.field.isCollapsed
+    }
+  );
+});
+var WidgetLabelCaretAlwaysUI = observer13(function WidgetLabelCaretAlways_({
+  isCollapsed,
+  className
+}) {
+  if (isCollapsed)
+    return /* @__PURE__ */ jsx(
+      Ikon.mdiChevronRight,
+      {
+        className,
+        tw: [
+          //
+          "UI-WidgetLabelCaret self-start minh-widget ABDDE",
+          "COLLAPSE-PASSTHROUGH shrink-0"
+        ]
+      }
+    );
+  return /* @__PURE__ */ jsx(
+    Ikon.mdiChevronDown,
+    {
+      className,
+      tw: [
+        //
+        "UI-WidgetLabelCaret self-start minh-widget ABDDE",
+        "COLLAPSE-PASSTHROUGH shrink-0 opacity-35"
+      ]
+    }
+  );
+});
 
-// src/csuite/form/Widget_ToggleUI.tsx
+// src/csuite/form/WidgetLabelContainerUI.tsx
+import { observer as observer14 } from "mobx-react-lite";
+var WidgetLabelContainerUI = observer14(function WidgetLabelContainerUI_(p) {
+  const csuite = useCSuite();
+  return /* @__PURE__ */ jsx(
+    Frame,
+    {
+      base: csuite.labelBackground,
+      tooltip: p.tooltip,
+      tooltipPlacement: p.tooltipPlacement ?? "topStart",
+      className: p.className,
+      hover: true,
+      expand: true,
+      tw: [
+        "UI-WidgetLabelContainer",
+        //
+        "COLLAPSE-PASSTHROUGH",
+        "flex items-center self-stretch",
+        "flex-none shrink-0"
+      ],
+      style: p.justify ? justifiedStyle : void 0,
+      text: csuite.labelText,
+      children: p.children
+    }
+  );
+});
+var justifiedStyle = {
+  minWidth: "8rem",
+  // 🔴 move to theme options
+  // maxWidth: '20rem', // 🔴 move to theme options
+  maxWidth: "15rem",
+  // 🔴 move to theme options
+  width: "35%",
+  // 🔴 move to theme options
+  justifyContent: "flex-start"
+};
+
+// src/csuite/form/WidgetLabelIconUI.tsx
 import { observer as observer15 } from "mobx-react-lite";
+var WidgetLabelIconUI = observer15(function WidgetLabelIconUI_(p) {
+  const iconName = p.widget.icon;
+  if (iconName == null) return null;
+  return /* @__PURE__ */ jsx(
+    Frame,
+    {
+      tw: "UI-WidgetLabelIcon self-start minh-widget ABDDE flex items-center",
+      className: p.className,
+      text: { chroma: 0.2, contrast: 0.9 },
+      children: /* @__PURE__ */ jsx(IkonOf, { name: iconName })
+    }
+  );
+});
+
+// src/csuite/form/WidgetToggleUI.tsx
+import { observer as observer20 } from "mobx-react-lite";
 
 // src/csuite/checkbox/InputBoolUI.tsx
-import { observer as observer14 } from "mobx-react-lite";
-import { createElement as createElement3 } from "react";
+import { observer as observer19 } from "mobx-react-lite";
+import { createElement as createElement2 } from "react";
 
 // src/csuite/checkbox/InputBoolCheckboxUI.tsx
-import { observer as observer11 } from "mobx-react-lite";
+import { observer as observer16 } from "mobx-react-lite";
 
 // src/csuite/checkbox/_InputBoolChroma.ts
 var getInputBoolChroma = (isActive) => {
@@ -2433,7 +2417,7 @@ var getInputBoolContrast = (isActive) => {
 };
 
 // src/csuite/checkbox/InputBoolCheckboxUI.tsx
-var InputBoolCheckboxUI = observer11(function InputBoolCheckboxUI_(p) {
+var InputBoolCheckboxUI = observer16(function InputBoolCheckboxUI_(p) {
   const isActive = p.value ?? false;
   const label = p.text;
   const mode = p.mode ?? false;
@@ -2445,13 +2429,14 @@ var InputBoolCheckboxUI = observer11(function InputBoolCheckboxUI_(p) {
       style: p.style,
       className: p.className,
       disabled: p.disabled,
+      tooltip: p.tooltip,
+      tooltipPlacement: p.tooltipPlacement,
       hover: true,
       triggerOnPress: { startingState: isActive },
       expand: p.expand,
       tw: ["flex flex-row !select-none cursor-pointer"],
       onClick: (ev) => {
-        if (!p.onValueChange)
-          return;
+        if (!p.onValueChange) return;
         ev.stopPropagation();
         p.onValueChange(!isActive);
       },
@@ -2477,18 +2462,18 @@ var InputBoolCheckboxUI = observer11(function InputBoolCheckboxUI_(p) {
 });
 
 // src/csuite/checkbox/InputBoolToggleButtonUI.tsx
-import { observer as observer13 } from "mobx-react-lite";
+import { observer as observer18 } from "mobx-react-lite";
 
 // src/csuite/checkbox/_InputBoolToggleButtonBoxUI.tsx
-import { observer as observer12 } from "mobx-react-lite";
-var InputBoolToggleButtonBoxUI = observer12(function InputBoolToggleButtonBoxUI_(p) {
+import { observer as observer17 } from "mobx-react-lite";
+var InputBoolToggleButtonBoxUI = observer17(function InputBoolToggleButtonBoxUI_(p) {
   const { mode, isActive } = p;
   const chroma = isActive ? 0.08 : 0.02;
   return /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(Frame, { tw: "text-lg mr-1", text: { contrast: 0.3, chroma: isActive ? 0.15 : chroma }, children: mode === "radio" ? isActive ? /* @__PURE__ */ jsx(Ikon.mdiCheckCircle, {}) : /* @__PURE__ */ jsx(Ikon.mdiCircleOutline, {}) : mode === "checkbox" ? isActive ? /* @__PURE__ */ jsx(Ikon.mdiCheckboxMarked, {}) : /* @__PURE__ */ jsx(Ikon.mdiCheckboxBlankOutline, {}) : null }) });
 });
 
 // src/csuite/checkbox/InputBoolToggleButtonUI.tsx
-var InputBoolToggleButtonUI = observer13(function InputBoolToggleButtonUI_(p) {
+var InputBoolToggleButtonUI = observer18(function InputBoolToggleButtonUI_(p) {
   const isActive = p.value ?? false;
   const expand = p.expand;
   const chroma = getInputBoolChroma(isActive);
@@ -2499,10 +2484,12 @@ var InputBoolToggleButtonUI = observer13(function InputBoolToggleButtonUI_(p) {
       tw: "InputBoolToggleButtonUI minh-input !select-none cursor-pointer justify-center px-1 text-sm flex items-center",
       className: p.className,
       triggerOnPress: { startingState: isActive },
+      tooltip: p.tooltip,
+      tooltipPlacement: p.tooltipPlacement,
       look: "default",
       base: { contrast: getInputBoolContrast(isActive), chroma },
       border: 10,
-      iconSize: "1.5em",
+      iconSize: p.iconSize ?? "1.5em",
       hover: !p.disabled,
       expand,
       style: p.style,
@@ -2512,8 +2499,7 @@ var InputBoolToggleButtonUI = observer13(function InputBoolToggleButtonUI_(p) {
       onClick: (ev) => {
         ev.stopPropagation();
         p.onValueChange?.(!isActive);
-        if (p.preventDefault)
-          ev.preventDefault();
+        if (p.preventDefault) ev.preventDefault();
       },
       children: [
         (p.showToggleButtonBox ?? kit.showToggleButtonBox) && p.mode && /* @__PURE__ */ jsx(InputBoolToggleButtonBoxUI, { isActive, mode: p.mode }),
@@ -2524,138 +2510,26 @@ var InputBoolToggleButtonUI = observer13(function InputBoolToggleButtonUI_(p) {
 });
 
 // src/csuite/checkbox/InputBoolUI.tsx
-var InputBoolUI = observer14(function InputBoolUI_(p) {
+var InputBoolUI = observer19(function InputBoolUI_(p) {
   const display = p.display ?? "check";
-  if (display === "check")
-    return createElement3(InputBoolCheckboxUI, p);
-  return createElement3(InputBoolToggleButtonUI, p);
+  if (display === "check") return createElement2(InputBoolCheckboxUI, p);
+  return createElement2(InputBoolToggleButtonUI, p);
 });
 
-// src/csuite/form/Widget_ToggleUI.tsx
-var Widget_ToggleUI = observer15(function Widget_ToggleUI_(p) {
-  if (!isWidgetOptional(p.widget))
-    return null;
-  const widget = p.widget;
+// src/csuite/form/WidgetToggleUI.tsx
+var WidgetToggleUI = observer20(function WidgetToggleUI_(p) {
+  if (!isFieldOptional(p.field)) return null;
+  const field = p.field;
   return /* @__PURE__ */ jsx(
     InputBoolUI,
     {
+      tw: "UI-WidgetToggle self-stretch items-center",
       className: p.className,
-      value: widget.serial.active,
+      value: field.serial.active,
       expand: false,
-      onValueChange: (value) => widget.setActive(value)
+      onValueChange: (value) => field.setActive(value)
     }
   );
-});
-
-// src/csuite/form/WidgetErrorsUI.tsx
-import { observer as observer16 } from "mobx-react-lite";
-var WidgetErrorsUI = observer16(function WidgerErrorsUI_(p) {
-  const widget = p.widget;
-  if (widget.hasErrors === false)
-    return null;
-  return /* @__PURE__ */ jsx(MessageErrorUI, { children: widget.errors.map((e, i) => /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
-    /* @__PURE__ */ jsx(Ikon.mdiAlert, {}),
-    e.message
-  ] }, i)) });
-});
-
-// src/csuite/form/WidgetHeaderContainerUI.tsx
-import { observer as observer17 } from "mobx-react-lite";
-var isDragging = false;
-var wasEnabled = false;
-var isDraggingListener2 = (ev) => {
-  if (ev.button == 0) {
-    isDragging = false;
-    window.removeEventListener("mouseup", isDraggingListener2, true);
-  }
-};
-var WidgetHeaderContainerUI = observer17(function WidgetHeaderContainerUI_(p) {
-  const widget = p.widget;
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      className: "WIDGET-HEADER COLLAPSE-PASSTHROUGH",
-      tw: [
-        "flex gap-0.5 select-none",
-        // 2024-06-03 rvion, changing 'items-center' to 'items-start'
-        // as well as adding some `h-input` class to <WidgetLabelContainerUI />
-        "items-start"
-      ],
-      onMouseDown: (ev) => {
-        if (ev.button != 0 || !widget.isCollapsible)
-          return;
-        const target = ev.target;
-        if (!target.classList.contains("COLLAPSE-PASSTHROUGH"))
-          return;
-        isDragging = true;
-        window.addEventListener("mouseup", isDraggingListener2, true);
-        wasEnabled = !widget.serial.collapsed;
-        widget.setCollapsed(wasEnabled);
-      },
-      onMouseMove: (ev) => {
-        if (!isDragging || !widget.isCollapsible)
-          return;
-        widget.setCollapsed(wasEnabled);
-      },
-      children: p.children
-    }
-  );
-});
-
-// src/csuite/form/WidgetLabelCaretUI.tsx
-import { observer as observer18 } from "mobx-react-lite";
-var WidgetLabelCaretUI = observer18(function WidgetLabelCaretUI_(p) {
-  if (!p.widget.isCollapsed && !p.widget.isCollapsible)
-    return null;
-  return /* @__PURE__ */ jsx(WidgetLabelCaretAlwaysUI, { isCollapsed: p.widget.isCollapsed });
-});
-var WidgetLabelCaretAlwaysUI = observer18(function WidgetLabelCaretAlways_({ isCollapsed }) {
-  if (isCollapsed)
-    return /* @__PURE__ */ jsx(Ikon.mdiChevronRight, { tw: "COLLAPSE-PASSTHROUGH" });
-  return /* @__PURE__ */ jsx(Ikon.mdiChevronDown, { tw: "COLLAPSE-PASSTHROUGH" });
-});
-
-// src/csuite/form/WidgetLabelContainerUI.tsx
-import { observer as observer19 } from "mobx-react-lite";
-var WidgetLabelContainerUI = observer19(function WidgetLabelContainerUI_(p) {
-  const csuite = useCSuite();
-  return /* @__PURE__ */ jsx(
-    Frame,
-    {
-      className: p.className,
-      hover: true,
-      tw: [
-        "COLLAPSE-PASSTHROUGH",
-        "minh-input",
-        "flex",
-        // gap-0.5
-        "flex-none shrink-0",
-        "items-center"
-      ],
-      style: p.justify ? justifiedStyle : void 0,
-      text: csuite.labelText,
-      children: p.children
-    }
-  );
-});
-var justifiedStyle = {
-  textAlign: "right",
-  minWidth: "8rem",
-  // 🔴 move to theme options
-  width: "35%",
-  // 🔴 move to theme options
-  marginRight: "0.25rem",
-  // 🔴 move to theme options
-  justifyContent: "flex-end"
-};
-
-// src/csuite/form/WidgetLabelIconUI.tsx
-import { observer as observer20 } from "mobx-react-lite";
-var WidgetLabelIconUI = observer20(function WidgetLabelIconUI_(p) {
-  const iconName = p.widget.icon;
-  if (iconName == null)
-    return null;
-  return /* @__PURE__ */ jsx(Frame, { tw: "mr-1", text: { chroma: 0.2, contrast: 0.9 }, children: /* @__PURE__ */ jsx(IkonOf, { name: iconName }) });
 });
 
 // src/csuite/form/WidgetWithLabelUI.tsx
@@ -2665,7 +2539,7 @@ import { observer as observer37 } from "mobx-react-lite";
 import { observer as observer22 } from "mobx-react-lite";
 import { ErrorBoundary } from "react-error-boundary";
 
-// src/widgets/workspace/JsonViewUI.tsx
+// src/csuite/json/JsonViewUI.tsx
 import JsonView from "@uiw/react-json-view";
 import { observer as observer21 } from "mobx-react-lite";
 var JsonViewUI = observer21(function JsonViewUI_(p) {
@@ -2742,17 +2616,6 @@ import { observer as observer23 } from "mobx-react-lite";
 import { runInAction as runInAction2 } from "mobx";
 import { useLocalObservable as useLocalObservable2 } from "mobx-react-lite";
 import { useCallback } from "react";
-
-// src/csuite/utils/bang.ts
-var bang = (x, msg = "") => {
-  if (x == null) {
-    console.error(`[\u{1F534}] BANG FAILED`, msg);
-    throw new Error("bang: " + (msg ?? "no message"));
-  }
-  return x;
-};
-
-// src/csuite/smooth-size/useSizeOf.tsx
 var useSizeOf = () => {
   const size2 = useLocalObservable2(
     () => ({
@@ -2771,8 +2634,7 @@ var useSizeOf = () => {
   );
   const refFn = useCallback(
     (e) => {
-      if (e == null)
-        return size2.observer.disconnect();
+      if (e == null) return size2.observer.disconnect();
       size2.observer.observe(e);
     },
     [size2]
@@ -2804,10 +2666,8 @@ function makeLabelFromFieldName(s) {
   if (typeof s !== "string") {
     console.log(`[\u274C] makeLabelFromFieldName: expected string, got ${typeof s} (${s})`);
   }
-  if (s == null)
-    return "";
-  if (s.length === 0)
-    return s;
+  if (s == null) return "";
+  if (s.length === 0) return s;
   s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
   s = s.replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
   s = s.replace(/_/g, " ");
@@ -2818,21 +2678,12 @@ function makeLabelFromFieldName(s) {
   return s[0].toUpperCase() + s.slice(1);
 }
 
-// src/csuite/form/getIfWidgetNeedAlignedLabel.tsx
-var getIfWidgetNeedJustifiedLabel = (widget) => {
-  if (widget.config.justifyLabel != null)
-    return widget.config.justifyLabel;
-  if (widget.DefaultBodyUI)
-    return false;
-  return true;
-};
-
 // src/csuite/form/WidgetDebugIDUI.tsx
 import { observer as observer24 } from "mobx-react-lite";
 var WidgetDebugIDUI = observer24(function WidgetDebugIDUI_(p) {
   return /* @__PURE__ */ jsxs("span", { tw: "COLLAPSE-PASSTHROUGH opacity-50 italic text-sm", children: [
     "#",
-    p.widget.id.slice(0, 3)
+    p.field.id.slice(0, 3)
   ] });
 });
 
@@ -2845,23 +2696,59 @@ var WidgetHeaderControlsContainerUI = observer25(function WidgetHeaderControlsCo
       className: p.className,
       tw: [
         //
-        "widget-header-container-ui",
+        "UI-WidgetHeaderControlsContainer",
         "COLLAPSE-PASSTHROUGH",
-        "flex flex-1 items-center gap-0.5"
+        "flex flex-1 items-center"
       ],
       children: p.children
     }
   );
 });
 
-// src/csuite/form/WidgetLabelUI.tsx
+// src/csuite/form/WidgetIndentUI.tsx
 import { observer as observer26 } from "mobx-react-lite";
-var WidgetLabelUI = observer26(function WidgetLabelUI_(p) {
+var WidgetIndentUI = observer26(function WidgetIndentUI_(p) {
+  const depth = p.depth;
+  if (depth - 1 <= 0) return null;
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: "UI-WidgetIndent",
+      style: {
+        // background: 'linear-gradient(90deg, red 0%, blue 100%)',
+        // marginLeft: '.5rem',
+        // marginRight: '.2rem',
+        display: "flex",
+        alignSelf: "stretch",
+        flexShrink: 0
+      },
+      children: new Array(depth - 1).fill(0).map((_, i) => /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "UI-WidgetIndent",
+          style: {
+            width: `${0.7}rem`,
+            // marginRight: '.2rem',
+            flexShrink: 0,
+            alignSelf: "stretch",
+            borderRight: "1px solid oklch(from var(--KLR) calc(l + 0.1 * var(--DIR)) c h)"
+          }
+        },
+        i
+      ))
+    }
+  );
+});
+
+// src/csuite/form/WidgetLabelTextUI.tsx
+import { observer as observer27 } from "mobx-react-lite";
+var WidgetLabelTextUI = observer27(function WidgetLabelTextUI_(p) {
   const csuite = useCSuite();
   return /* @__PURE__ */ jsx(
     "span",
     {
       tw: [
+        "UI-WidgetLabel self-start minh-widget lh-widget ABDDE",
         // 1. indicate we can click on the label
         p.widget.isCollapsed || p.widget.isCollapsible ? "cursor-pointer COLLAPSE-PASSTHROUGH" : null,
         // 3. label wrappign strategy
@@ -2884,7 +2771,7 @@ var WidgetLabelUI = observer26(function WidgetLabelUI_(p) {
 });
 
 // src/csuite/form/WidgetMenu.tsx
-import { observer as observer34 } from "mobx-react-lite";
+import { observer as observer35 } from "mobx-react-lite";
 
 // src/csuite/dropdown/MenuDividerUI.tsx
 function MenuDividerUI_() {
@@ -2892,33 +2779,73 @@ function MenuDividerUI_() {
 }
 
 // src/csuite/menu/Menu.ts
-import { nanoid as nanoid3 } from "nanoid";
-import { createElement as createElement5, useMemo as useMemo5 } from "react";
+import { nanoid as nanoid2 } from "nanoid";
+import { createElement as createElement4, useMemo as useMemo5 } from "react";
 
 // src/csuite/activity/ActivityManager.ts
-import { makeAutoObservable as makeAutoObservable5 } from "mobx";
+import { makeAutoObservable as makeAutoObservable3 } from "mobx";
+
+// src/csuite/activity/Routine.ts
+import { nanoid } from "nanoid";
+var Routine = class {
+  constructor(manager, activity) {
+    this.manager = manager;
+    this.activity = activity;
+    this.uid = nanoid();
+  }
+  stop() {
+    this.manager.stop(this);
+  }
+};
+
+// src/csuite/activity/ActivityManager.ts
 var ActivityManager = class {
   constructor() {
+    // ACCESSING ---------------------------------------------------------------
     /** currently active activities */
-    this._stack = [];
-    this.startActivity = (activity) => {
-      this._stack.push(activity);
+    this.routines = [];
+    this.current = () => this.routines[this.routines.length - 1];
+    // STARTING ---------------------------------------------------------------
+    this.startFromClass = (ActivityKls, ctx) => {
+      const activity = new ActivityKls(ctx);
+      const routine = new Routine(this, activity);
+      this.routines.push(routine);
       activity.onStart?.();
       return "SUCCESS" /* Success */;
     };
-    this.stopCurrentActivity = () => {
-      const activity = this._stack.pop();
-      activity?.onStop?.();
+    /**
+     * start an activity, return the created routine
+     */
+    this.start = (activity) => {
+      const routine = new Routine(this, activity);
+      this.routines.push(routine);
+      activity.onStart?.();
+      return routine;
     };
-    this.current = () => this._stack[this._stack.length - 1];
-    makeAutoObservable5(this);
+    /**
+     * similar to `start`.
+     * start an activity, return Trigger.Success */
+    this.start_ = (activity) => {
+      const routine = new Routine(this, activity);
+      this.routines.push(routine);
+      activity.onStart?.();
+      return "SUCCESS" /* Success */;
+    };
+    this.stopLast = () => {
+      const routine = this.routines.pop();
+      if (routine == null) return "UNMATCHED" /* UNMATCHED */;
+      routine.activity.onStop?.();
+      return "SUCCESS" /* Success */;
+    };
+    makeAutoObservable3(this);
   }
-  stopActivity(activity) {
-    const ix = this._stack.indexOf(activity);
-    if (ix === -1)
-      return;
-    this._stack.splice(ix, 1);
-    activity.onStop?.();
+  // STOPPING ---------------------------------------------------------------
+  stop(routine) {
+    const ix = this.routines.indexOf(routine);
+    if (ix === -1) return "UNMATCHED" /* UNMATCHED */;
+    this.routines.splice(ix, 1);
+    routine.activity.onStop?.();
+    return "SUCCESS" /* Success */;
   }
 };
 var activityManager = new ActivityManager();
@@ -2934,13 +2861,12 @@ var isCommand = (x) => x != null && //
 typeof x === "object" && "$SYM" in x && x.$SYM === CommandSym;
 
 // src/csuite/commands/CommandManager.ts
-import { computed as computed2, makeObservable as makeObservable4, observable as observable6 } from "mobx";
+import { computed as computed2, makeObservable as makeObservable3, observable as observable6 } from "mobx";
 
 // src/csuite/environment/getOS.ts
 var _os;
 function getOS() {
-  if (_os)
-    return _os;
+  if (_os) return _os;
   _os = getOS_();
   return _os;
 }
@@ -2948,16 +2874,11 @@ function getOS_() {
   try {
     const userAgent = window.navigator.userAgent;
     const platform2 = window.navigator.platform;
-    if (["Macintosh", "MacIntel", "MacPPC", "Mac68K"].indexOf(platform2) !== -1)
-      return "Mac";
-    else if (["iPhone", "iPad", "iPod"].indexOf(platform2) !== -1)
-      return "iOS";
-    else if (["Win32", "Win64", "Windows", "WinCE"].indexOf(platform2) !== -1)
-      return "Windows";
-    else if (/Android/.test(userAgent))
-      return "Android";
-    else if (/Linux/.test(platform2))
-      return "Linux";
+    if (["Macintosh", "MacIntel", "MacPPC", "Mac68K"].indexOf(platform2) !== -1) return "Mac";
+    else if (["iPhone", "iPad", "iPod"].indexOf(platform2) !== -1) return "iOS";
+    else if (["Win32", "Win64", "Windows", "WinCE"].indexOf(platform2) !== -1) return "Windows";
+    else if (/Android/.test(userAgent)) return "Android";
+    else if (/Linux/.test(platform2)) return "Linux";
     return "unknown";
   } catch (e) {
     return "unknown";
@@ -2970,7 +2891,7 @@ var MOD_KEY = platform === "Mac" ? "cmd" : "ctrl";
 var META_NAME = platform === "Mac" ? "cmd" : "win";
 
 // src/csuite/utils/ManualPromise.ts
-import { action as action2, makeObservable as makeObservable3, observable as observable5, runInAction as runInAction3 } from "mobx";
+import { action, makeObservable as makeObservable2, observable as observable5, runInAction as runInAction3 } from "mobx";
 var isPromise = (p) => {
   return p != null && typeof p.then === "function";
 };
@@ -3004,30 +2925,22 @@ var CommandManager = class {
     };
     this.inputToken = (ev) => {
       const inputAccum = [];
-      if (ev.ctrlKey)
-        inputAccum.push("ctrl");
-      if (ev.shiftKey)
-        inputAccum.push("shift");
-      if (ev.altKey)
-        inputAccum.push("alt");
-      if (ev.metaKey)
-        inputAccum.push(META_NAME);
+      if (ev.ctrlKey) inputAccum.push("ctrl");
+      if (ev.shiftKey) inputAccum.push("shift");
+      if (ev.altKey) inputAccum.push("alt");
+      if (ev.metaKey) inputAccum.push(META_NAME);
       const key = ev.key;
       if (key) {
-        if (key === " ")
-          inputAccum.push("space");
-        else
-          inputAccum.push(key.toLowerCase());
+        if (key === " ") inputAccum.push("space");
+        else inputAccum.push(key.toLowerCase());
       }
       const input = inputAccum.sort(sortKeyNamesFn).join("+").toLowerCase();
       return input;
     };
     this.processKeyDownEvent = (ev) => {
       const input = this.inputToken(ev);
-      if (this.conf.log)
-        this.log(input);
-      if (this.inputHistory.length > 3)
-        this.inputHistory.shift();
+      if (this.conf.log) this.log(input);
+      if (this.inputHistory.length > 3) this.inputHistory.shift();
       this.inputHistory.push(input);
       const inInput = this.evInInput(ev);
       const lastX = this.inputHistory.slice(-5);
@@ -3035,36 +2948,27 @@ var CommandManager = class {
         const shortcut = lastX.slice(x).join(" ");
         const matches = this.commandByShortcut.get(shortcut);
         for (const s of matches || []) {
-          if (inInput && !s.validInInput)
-            continue;
-          if (this.conf.log || s.action == null)
-            this.log(shortcut, `triggered (${s.label})`);
+          if (inInput && !s.validInInput) continue;
+          if (this.conf.log || s.action == null) this.log(shortcut, `triggered (${s.label})`);
           const done = this.tryToRun(s, ev);
-          if (done)
-            return "SUCCESS" /* Success */;
+          if (done) return "SUCCESS" /* Success */;
         }
       }
-      if (this.conf.log)
-        this.log("nothing found");
+      if (this.conf.log) this.log("nothing found");
       return "UNMATCHED" /* UNMATCHED */;
     };
     this.tryToRun = (s, ev) => {
-      if (s.action == null)
-        return false;
+      if (s.action == null) return false;
       const res = s.execute();
       if (isPromise(res)) {
         return true;
       }
       if (this.conf.log) {
-        if (res === "SUCCESS" /* Success */)
-          this.log("          -> executed");
+        if (res === "SUCCESS" /* Success */) this.log("          -> executed");
       }
-      if (res === "UNMATCHED" /* UNMATCHED */)
-        return false;
-      if (res === "DONE" /* FAILED */)
-        return false;
-      if (res === "SUCCESS" /* Success */ && s.continueAfterSuccess)
-        return false;
+      if (res === "UNMATCHED" /* UNMATCHED */) return false;
+      if (res === "DONE" /* FAILED */) return false;
+      if (res === "SUCCESS" /* Success */ && s.continueAfterSuccess) return false;
       if (res === "SUCCESS" /* Success */) {
         ev.stopPropagation();
         ev.preventDefault();
@@ -3073,7 +2977,7 @@ var CommandManager = class {
       exhaust(res);
       throw new Error(`INVALID CASE`);
     };
-    makeObservable4(this, {
+    makeObservable3(this, {
       inputHistory: true,
       contextByName: observable6.shallow,
       commandByShortcut: observable6.shallow,
@@ -3093,36 +2997,24 @@ var normalizeCushyShortcut = (combo) => {
   return combo.split(" ").map(normalizeInputToken).join(" ");
 };
 function normalizeInputToken(input) {
-  if (input.includes(" "))
-    throw new Error(`invalid raw input token: "${input}"`);
+  if (input.includes(" ")) throw new Error(`invalid raw input token: "${input}"`);
   return input.split("+").map(normalizeKey).sort(sortKeyNamesFn).join("+").toLowerCase();
 }
 function normalizeKey(key) {
-  if (key === "up")
-    return "ArrowUp";
-  if (key === "down")
-    return "ArrowDown";
-  if (key === "left")
-    return "ArrowLeft";
-  if (key === "right")
-    return "ArrowRight";
-  if (key === "mod")
-    return MOD_KEY;
-  if (key === "meta")
-    return META_NAME;
+  if (key === "up") return "ArrowUp";
+  if (key === "down") return "ArrowDown";
+  if (key === "left") return "ArrowLeft";
+  if (key === "right") return "ArrowRight";
+  if (key === "mod") return MOD_KEY;
+  if (key === "meta") return META_NAME;
   return key;
 }
 var keyPriorityWhenSorting = (key) => {
-  if (key === "ctrl")
-    return "__1ctrl";
-  if (key === "win")
-    return "__1win";
-  if (key === "cmd")
-    return "__1cmd";
-  if (key === "shift")
-    return "__2shift";
-  if (key === "alt")
-    return "__3alt";
+  if (key === "ctrl") return "__1ctrl";
+  if (key === "win") return "__1win";
+  if (key === "cmd") return "__1cmd";
+  if (key === "shift") return "__2shift";
+  if (key === "alt") return "__3alt";
   return key;
 };
 var sortKeyNamesFn = (a, b) => {
@@ -3156,6 +3048,13 @@ var Command = class {
     };
     Object.assign(this, conf);
   }
+  get firstCombo() {
+    if (this.combos == null) return void 0;
+    if (Array.isArray(this.combos)) {
+      if (this.combos.length === 0) return void 0;
+      else return this.combos[0];
+    } else return this.combos;
+  }
   /** bind a command to a static context, bypassing its context provider */
   bind(ctx) {
     return new BoundCommand(this, ctx);
@@ -3174,6 +3073,9 @@ var BoundCommand = class {
       return /* @__PURE__ */ jsx("div", { onClick: () => this.execute(), children: p.label ?? this.label });
     };
   }
+  get icon() {
+    return this.command.icon;
+  }
   get label() {
     return this.ui?.label ?? this.command.label;
   }
@@ -3184,20 +3086,33 @@ var BoundMenuSym = Symbol("BoundMenu");
 var isBoundMenu = (x) => x != null && //
 typeof x === "object" && "$SYM" in x && x.$SYM === BoundMenuSym;
 
+// src/csuite/menu/MenuBuilder.ts
+var MenuBuilder = class {
+  field(field) {
+    return field;
+  }
+  Component(component) {
+    return component;
+  }
+  // Command<T extends Command>(command: T): T {
+  //     return new Command()
+  // }
+};
+var menuBuilder = new MenuBuilder();
+
 // src/csuite/menu/MenuUI.tsx
-import { observer as observer29 } from "mobx-react-lite";
-import { createElement as createElement4 } from "react";
-import { Fragment as Fragment3 } from "react/jsx-runtime";
+import { observer as observer30 } from "mobx-react-lite";
+import * as React from "react";
+import { createElement as createElement3 } from "react";
 
 // src/csuite/dropdown/MenuItem.tsx
-import { observer as observer28 } from "mobx-react-lite";
+import { observer as observer29 } from "mobx-react-lite";
 
 // src/csuite/accelerators/ComboUI.tsx
-import { observer as observer27 } from "mobx-react-lite";
+import { observer as observer28 } from "mobx-react-lite";
 import { Fragment as Fragment2 } from "react";
-var ComboUI = observer27(function ComboUI_(p) {
-  if (p.combo == null)
-    return null;
+var ComboUI = observer28(function ComboUI_(p) {
+  if (p.combo == null) return null;
   const iss = parseShortcutToInputSequence(p.combo);
   return /* @__PURE__ */ jsx("div", { tw: "whitespace-nowrap flex gap-2", children: iss.map((token) => {
     const keys = token.split("+");
@@ -3220,33 +3135,25 @@ var ComboUI = observer27(function ComboUI_(p) {
   }) });
 });
 var formatKeyName = (keyName) => {
-  if (keyName === "arrowup")
-    return "\u2191";
-  if (keyName === "arrowdown")
-    return "\u2193";
-  if (keyName === "arrowleft")
-    return "\u2190";
-  if (keyName === "arrowright")
-    return "\u2192";
-  if (keyName === "alt")
-    return "\u2325";
-  if (keyName === "shift")
-    return "\u21E7";
-  if (keyName === "cmd")
-    return "\u2318";
-  if (keyName === "ctrl")
-    return "\u2303";
-  if (keyName === "win")
-    return "win";
+  if (keyName === "arrowup") return "\u2191";
+  if (keyName === "arrowdown") return "\u2193";
+  if (keyName === "arrowleft") return "\u2190";
+  if (keyName === "arrowright") return "\u2192";
+  if (keyName === "alt") return "\u2325";
+  if (keyName === "shift") return "\u21E7";
+  if (keyName === "cmd") return "\u2318";
+  if (keyName === "ctrl") return "\u2303";
+  if (keyName === "win") return "win";
   return keyName.toUpperCase();
 };
 
 // src/csuite/dropdown/MenuItem.tsx
-var MenuItem = observer28(function DropdownItem_(p) {
+var MenuItem = observer29(function DropdownItem_(p) {
   const { size: size2, label, disabled, icon, children, active, onClick, ...rest } = p;
   return /* @__PURE__ */ jsxs(
     Frame,
     {
+      loading: p.loading,
       text: { contrast: disabled ? 0.5 : 1 },
       base: {
         contrast: active ? 0.1 : 0,
@@ -3256,19 +3163,36 @@ var MenuItem = observer28(function DropdownItem_(p) {
       onClick: (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
-        p.onClick?.(ev);
+        return p.onClick?.(ev);
       },
       style: { lineHeight: "1.6rem" },
-      tw: ["_MenuItem", "px-2 py-0.5 flex items-center gap-2 whitespace-nowrap cursor-pointer"],
+      tw: [
+        //
+        "_MenuItem ",
+        "px-2 py-0.5 flex items-center gap-2 whitespace-nowrap cursor-pointer",
+        // Grid this so we have a consistent icon width and every label lines up
+        "grid grid-cols-[18px_1fr]"
+      ],
       ...rest,
       children: [
-        icon,
-        label,
-        children,
-        p.shortcut ? /* @__PURE__ */ jsx("div", { tw: "ml-auto pl-2 text-xs italic", children: p.shortcut && /* @__PURE__ */ jsx(ComboUI, { combo: p.shortcut }) }) : null
+        icon ? (
+          //
+          /* @__PURE__ */ jsx(IkonOf, { name: icon, className: p.iconClassName ?? void 0 })
+        ) : /* @__PURE__ */ jsx("div", {}),
+        /* @__PURE__ */ jsxs("div", { tw: "flex items-center", children: [
+          label,
+          children,
+          p.beforeShortcut,
+          p.localShortcut ? /* @__PURE__ */ jsx("div", { tw: "ml-auto pl-2 text-xs italic", children: p.localShortcut && /* @__PURE__ */ jsx(ComboUI, { combo: p.localShortcut }) }) : null,
+          p.globalShortcut ? /* @__PURE__ */ jsx("div", { tw: "ml-auto pl-2 text-xs italic", children: p.globalShortcut && /* @__PURE__ */ jsx(ComboUI, { combo: p.globalShortcut }) }) : null,
+          p.afterShortcut
+        ] })
       ]
     }
   );
+});
+var MenuDivider = observer29(function Divider_(p) {
+  return /* @__PURE__ */ jsx("div", { className: "divider px-2 !h-input my-2 text-sm", children: p.children ?? /* @__PURE__ */ jsx(Fragment, {}) });
 });
 
 // src/csuite/model/$FieldSym.ts
@@ -3293,10 +3217,10 @@ var SimpleMenuModal = class {
 };
 
 // src/csuite/menu/MenuUI.tsx
-var MenuRootUI = observer29(function MenuRootUI_(p) {
+var MenuRootUI = observer30(function MenuRootUI_(p) {
   return /* @__PURE__ */ jsx(RevealUI, { className: "dropdown", placement: "bottomStart", content: () => /* @__PURE__ */ jsx(p.menu.UI, {}), children: /* @__PURE__ */ jsx("label", { tabIndex: 0, tw: [`flex-nowrap btn btn-ghost btn-sm py-0 px-1.5`], children: p.menu.menu.title }) });
 });
-var MenuUI = observer29(function MenuUI_(p) {
+var MenuUI = observer30(function MenuUI_(p) {
   return /* @__PURE__ */ jsx(
     "div",
     {
@@ -3308,12 +3232,9 @@ var MenuUI = observer29(function MenuUI_(p) {
         const key = ev.key;
         for (const entry of p.menu.entriesWithKb) {
           if (entry.char === key) {
-            if (entry.entry instanceof SimpleMenuAction)
-              entry.entry.opts.onPick();
-            else if (isBoundCommand(entry.entry))
-              void entry.entry.execute();
-            else if (isCommand(entry.entry))
-              void entry.entry.execute();
+            if (entry.entry instanceof SimpleMenuAction) entry.entry.opts.onPick();
+            else if (isBoundCommand(entry.entry)) void entry.entry.execute();
+            else if (isCommand(entry.entry)) void entry.entry.execute();
             p.menu.onStop();
             ev.stopPropagation();
             ev.preventDefault();
@@ -3327,9 +3248,9 @@ var MenuUI = observer29(function MenuUI_(p) {
             MenuItem,
             {
               tw: "_SimpleMenuAction min-w-60",
-              shortcut: char,
+              localShortcut: char,
               label: entry.opts.label,
-              icon: entry.opts.icon ? /* @__PURE__ */ jsx(IkonOf, { name: entry.opts.icon }) : void 0,
+              icon: entry.opts.icon,
               onClick: () => {
                 entry.opts.onPick();
                 p.menu.onStop();
@@ -3343,12 +3264,12 @@ var MenuUI = observer29(function MenuUI_(p) {
             MenuItem,
             {
               tw: "_SimpleMenuModal min-w-60",
-              shortcut: char,
+              icon: entry.p.icon,
+              localShortcut: char,
               label: entry.p.label,
               onClick: (event) => {
-                activityManager.startActivity({
+                activityManager.start({
                   event,
-                  uid: "createPreset\u2753",
                   placement: "auto",
                   shell: "popup-lg",
                   UI: (p2) => /* @__PURE__ */ jsx(
@@ -3371,16 +3292,17 @@ var MenuUI = observer29(function MenuUI_(p) {
             MenuItem,
             {
               tw: "min-w-60",
-              shortcut: char,
+              globalShortcut: isCommand(entry) ? entry.firstCombo : char,
+              icon: entry.icon,
               onClick: () => {
                 void entry.execute();
                 p.menu.onStop();
               },
-              label: charIx != null ? /* @__PURE__ */ jsxs("div", { children: [
+              label: /* @__PURE__ */ jsx(Fragment, { children: charIx != null ? /* @__PURE__ */ jsxs("div", { children: [
                 /* @__PURE__ */ jsx("span", { children: label.slice(0, charIx) }),
                 /* @__PURE__ */ jsx("span", { tw: "underline text-red", children: label[charIx] }),
                 /* @__PURE__ */ jsx("span", { children: label.slice(charIx + 1) })
-              ] }) : label
+              ] }) : label })
             },
             ix
           );
@@ -3390,21 +3312,20 @@ var MenuUI = observer29(function MenuUI_(p) {
             RevealUI,
             {
               trigger: "hover",
-              tw: "min-w-60",
+              tw: "min-w-60 !block",
               placement: "rightStart",
               content: () => /* @__PURE__ */ jsx(MenuUI, { menu: entry.init(p.menu.allocatedKeys) }),
               children: /* @__PURE__ */ jsx(
                 MenuItem,
                 {
-                  shortcut: char,
-                  label: /* @__PURE__ */ jsxs(Fragment3, { children: [
-                    charIx != null ? /* @__PURE__ */ jsxs("div", { children: [
-                      /* @__PURE__ */ jsx("span", { children: label.slice(0, charIx) }),
-                      /* @__PURE__ */ jsx("span", { tw: "underline text-red", children: label[charIx] }),
-                      /* @__PURE__ */ jsx("span", { children: label.slice(charIx + 1) })
-                    ] }) : label,
-                    /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: "keyboard_arrow_right" })
-                  ] })
+                  localShortcut: char,
+                  icon: entry.icon,
+                  afterShortcut: /* @__PURE__ */ jsx(IkonOf, { name: "mdiMenuRight" }),
+                  label: /* @__PURE__ */ jsx(Fragment, { children: charIx != null ? /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("span", { tw: "font-bold", children: label.slice(0, charIx) }),
+                    /* @__PURE__ */ jsx("span", { tw: "underline text-red", children: label[charIx] }),
+                    /* @__PURE__ */ jsx("span", { children: label.slice(charIx + 1) })
+                  ] }) : label })
                 },
                 ix
               )
@@ -3413,7 +3334,7 @@ var MenuUI = observer29(function MenuUI_(p) {
         } else if (isWidget(entry)) {
           return entry.renderWithLabel();
         } else {
-          return /* @__PURE__ */ jsx(Fragment3, { children: createElement4(entry) }, ix);
+          return /* @__PURE__ */ jsx(React.Fragment, { children: createElement3(entry) }, ix);
         }
       })
     }
@@ -3424,21 +3345,20 @@ var MenuUI = observer29(function MenuUI_(p) {
 var MenuManager = class {
   constructor() {
     this.operators = [];
-    this.registerMenu = (menu2) => this.operators.push(menu2);
+    this.registerMenu = (menu) => this.operators.push(menu);
     this.getMenuById = (id) => this.operators.find((op) => op.def.id === id);
   }
 };
 var menuManager = new MenuManager();
 var Menu = class {
-  // prettier-ignore
   constructor(def) {
     this.def = def;
-    this.UI = (p) => createElement5(MenuUI, { menu: useMemo5(() => new MenuInstance(this, p.props), []) });
-    this.DropDownUI = (p) => createElement5(MenuRootUI, { menu: useMemo5(() => new MenuInstance(this, p.props), []) });
+    this.UI = (p) => createElement4(MenuUI, { menu: useMemo5(() => new MenuInstance(this, p.props), []) });
+    this.DropDownUI = (p) => createElement4(MenuRootUI, { menu: useMemo5(() => new MenuInstance(this, p.props), []) });
     // prettier-ignore
     /** bind a menu to give props */
     this.bind = (props, ui) => new BoundMenu(this, props, ui);
-    this.id = def.id ?? nanoid3();
+    this.id = def.id ?? nanoid2();
     menuManager.registerMenu(this);
   }
   get title() {
@@ -3447,26 +3367,22 @@ var Menu = class {
   /** push the menu to current activity */
   open(props) {
     const instance = new MenuInstance(this, props);
-    return activityManager.startActivity(instance);
+    activityManager.start(instance);
+    return "SUCCESS" /* Success */;
   }
 };
 var MenuInstance = class {
-  constructor(menu2, props, keysTaken = /* @__PURE__ */ new Set()) {
-    this.menu = menu2;
+  constructor(menu, props, keysTaken = /* @__PURE__ */ new Set()) {
+    this.menu = menu;
     this.props = props;
     this.keysTaken = keysTaken;
-    this.onStart = () => {
-    };
-    this.UI = () => createElement5(MenuUI, { menu: this });
+    this.UI = () => createElement4(MenuUI, { menu: this });
+    this.uid = nanoid2();
     this.onEvent = (event) => {
-      event.stopImmediatePropagation();
       event.stopPropagation();
       event.preventDefault();
       return null;
     };
-    this.onStop = () => {
-    };
-    this.uid = nanoid3();
     this.findSuitableKeys = (label, allocatedKeys) => {
       let ix = 0;
       for (const char of [...label]) {
@@ -3479,8 +3395,12 @@ var MenuInstance = class {
       }
     };
   }
+  onStart() {
+  }
+  onStop() {
+  }
   get entries() {
-    return this.menu.def.entries(this.props);
+    return this.menu.def.entries(this.props, menuBuilder);
   }
   get entriesWithKb() {
     return this.acceleratedEntries.out;
@@ -3494,19 +3414,13 @@ var MenuInstance = class {
     for (const entry of this.entries) {
       if (entry instanceof SimpleMenuAction) {
         const res = this.findSuitableKeys(entry.opts.label, allocatedKeys);
-        if (res == null)
-          continue;
-        out.push({ entry, char: res.char, charIx: res.pos });
+        out.push({ entry, char: res?.char, charIx: res?.pos });
       } else if (entry instanceof Command) {
         const res = this.findSuitableKeys(entry.label, allocatedKeys);
-        if (res == null)
-          continue;
-        out.push({ entry, char: res.char, charIx: res.pos });
+        out.push({ entry, char: res?.char, charIx: res?.pos });
       } else if (entry instanceof BoundMenu) {
         const res = this.findSuitableKeys(entry.menu.title, allocatedKeys);
-        if (res == null)
-          continue;
-        out.push({ entry, char: res.char, charIx: res.pos });
+        out.push({ entry, char: res?.char, charIx: res?.pos });
       } else {
         out.push({ entry });
       }
@@ -3514,10 +3428,10 @@ var MenuInstance = class {
     return { out, allocatedKeys };
   }
 };
-var menu = (def) => new Menu(def);
+var menuWithProps = (def) => new Menu(def);
 var BoundMenu = class {
-  constructor(menu2, props, ui) {
-    this.menu = menu2;
+  constructor(menu, props, ui) {
+    this.menu = menu;
     this.props = props;
     this.ui = ui;
     this.$SYM = BoundMenuSym;
@@ -3527,18 +3441,21 @@ var BoundMenu = class {
   get title() {
     return this.ui?.title ?? this.menu.title;
   }
+  get icon() {
+    return this.menu.def.icon;
+  }
 };
 
 // src/csuite/tree/Tree.ts
-import { makeAutoObservable as makeAutoObservable7, observable as observable7 } from "mobx";
-import { nanoid as nanoid4 } from "nanoid";
+import { makeAutoObservable as makeAutoObservable5, observable as observable7 } from "mobx";
+import { nanoid as nanoid3 } from "nanoid";
 
-// src/db/SQLITE_boolean.ts
+// src/csuite/types/SQLITE_boolean.ts
 var SQLITE_true = 1;
 var SQLITE_false = 0;
 
 // src/csuite/tree/TreeNode.ts
-import { makeAutoObservable as makeAutoObservable6 } from "mobx";
+import { makeAutoObservable as makeAutoObservable4 } from "mobx";
 
 // src/csuite/tree/utils.ts
 import { customAlphabet as customAlphabet2 } from "nanoid";
@@ -3572,7 +3489,7 @@ var TreeNode = class _TreeNode {
       // @ts-ignore
       ctor(elem.props)
     );
-    makeAutoObservable6(this, { _children_: false });
+    makeAutoObservable4(this, { _children_: false });
   }
   scrollIntoView(p) {
     document.getElementById(this.id)?.scrollIntoView({
@@ -3593,10 +3510,8 @@ var TreeNode = class _TreeNode {
     this.entryL.update({ isExpanded: SQLITE_false });
   }
   toggle() {
-    if (this.isOpen)
-      this.close();
-    else
-      this.open();
+    if (this.isOpen) this.close();
+    else this.open();
   }
   get valid() {
     return true;
@@ -3625,13 +3540,11 @@ var TreeNode = class _TreeNode {
     return out;
   }
   get depth() {
-    if (this.parent == null)
-      return 0;
+    if (this.parent == null) return 0;
     return 1 + this.parent.depth;
   }
   get siblingsIncludingSelf() {
-    if (this.parent == null)
-      return this.tree.topLevelNodes;
+    if (this.parent == null) return this.tree.topLevelNodes;
     return this.parent.children;
   }
   get siblingsExcludingSelf() {
@@ -3639,26 +3552,20 @@ var TreeNode = class _TreeNode {
   }
   get nextSibling() {
     let siblings = this.siblingsIncludingSelf;
-    if (siblings.length === 0)
-      FAIL("IMPOSSIBLE 1");
-    if (siblings[siblings.length - 1] === this)
-      return;
+    if (siblings.length === 0) FAIL("IMPOSSIBLE 1");
+    if (siblings[siblings.length - 1] === this) return;
     for (let i = 0; i < siblings.length - 1; i++) {
-      if (siblings[i] === this)
-        return siblings[i + 1];
+      if (siblings[i] === this) return siblings[i + 1];
     }
     return;
   }
   get prevSibling() {
     let siblings = this.siblingsIncludingSelf;
     let SELF = this;
-    if (siblings.length === 0)
-      FAIL("IMPOSSIBLE 2");
-    if (siblings[0] === SELF)
-      return;
+    if (siblings.length === 0) FAIL("IMPOSSIBLE 2");
+    if (siblings[0] === SELF) return;
     for (let i = siblings.length - 1; i > 0; i--) {
-      if (siblings[i] === SELF)
-        return siblings[i - 1];
+      if (siblings[i] === SELF) return siblings[i - 1];
     }
     return;
   }
@@ -3666,8 +3573,7 @@ var TreeNode = class _TreeNode {
    * or undefined if node has no child */
   get firstChild() {
     const children = this.children;
-    if (children.length === 0)
-      return;
+    if (children.length === 0) return;
     return children[0];
   }
   get_descendant_and_self(mode) {
@@ -3675,16 +3581,13 @@ var TreeNode = class _TreeNode {
     let ix = 0;
     let at;
     while (at = stack[ix++]) {
-      if (mode === "bfs")
-        stack.push(...at.children);
-      else
-        stack.splice(ix, 0, ...at.children);
+      if (mode === "bfs") stack.push(...at.children);
+      else stack.splice(ix, 0, ...at.children);
     }
     return stack;
   }
   get lastChild() {
-    if (this.children.length === 0)
-      return;
+    if (this.children.length === 0) return;
     return this.children[this.children.length - 1];
   }
   /** return the last descendant
@@ -3692,8 +3595,7 @@ var TreeNode = class _TreeNode {
   get lastDescendant() {
     let at = this;
     let out;
-    while (at = at.lastChild)
-      out = at;
+    while (at = at.lastChild) out = at;
     return out;
   }
   get isRoot() {
@@ -3718,12 +3620,10 @@ var TreeNode = class _TreeNode {
   get lastOpenedDescendant() {
     let at = this;
     let out;
-    if (!at.isOpen)
-      return;
+    if (!at.isOpen) return;
     while (at = at.lastChild) {
       out = at;
-      if (!at.isOpen)
-        break;
+      if (!at.isOpen) break;
     }
     return out;
   }
@@ -3740,14 +3640,10 @@ var TreeNode = class _TreeNode {
     return this.prevSibling?.lastOpenedDescendant ?? this.prevSibling ?? this.parent;
   }
   get nodeBelowInView() {
-    if (this.isOpen && this.firstChild)
-      return this.firstChild;
-    if (this.nextSibling)
-      return this.nextSibling;
+    if (this.isOpen && this.firstChild) return this.firstChild;
+    if (this.nextSibling) return this.nextSibling;
     let at = this;
-    while (at = at.parent)
-      if (at.nextSibling)
-        return at.nextSibling;
+    while (at = at.parent) if (at.nextSibling) return at.nextSibling;
   }
 };
 
@@ -3766,86 +3662,40 @@ var Tree = class {
   constructor(rootNodes, config = { getNodeState: defaultTreeStorage }) {
     this.config = config;
     this.topLevelNodes = [];
-    this.KeyboardNavigableDomNodeID = nanoid4();
+    this.KeyboardNavigableDomNodeID = nanoid3();
     for (let uid of rootNodes) {
       const node = new TreeNode(this, uid, void 0);
       this.topLevelNodes.push(node);
     }
-    makeAutoObservable7(this, {
+    makeAutoObservable5(this, {
       // indexNode: action
     });
   }
 };
 
 // src/csuite/tree/TreeUI.tsx
-import { observer as observer33 } from "mobx-react-lite";
-
-// src/app/shortcuts/shorcutKeys.ts
-var KEYS = {
-  search: "mod+f",
-  // misc
-  closeCurrentTab: "mod+w",
-  closeDialogOrPopupsOrFullScreenPanel: "escape",
-  // tree navigation -------------------------------------------------------------------------------
-  // navigation -------------------------------------------------------------------------------------
-  openFull_Library: "mod+p",
-  openPage_Config: "mod+,",
-  openPage_Hosts: "mod+shift+,",
-  openPage_Shortcuts: "mod+k mod+s",
-  //
-  openPage_Civitai: "mod+k 1",
-  openPage_Squoosh: "mod+k 2",
-  openPage_Posemy: "mod+k 3",
-  openPage_Paint: "mod+k 4",
-  openPage_Unsplash: "mod+k 5",
-  openPage_ComfyUI: "mod+4",
-  openPage_Gallery: "mod+5",
-  openPage_Models: "mod+6",
-  openPage_Marketplace: "mod+7",
-  // draft actions
-  duplicateCurrentDraft: "mod+shift+d",
-  resizeWindowForVideoCapture: "mod+u mod+2",
-  resizeWindowForLaptop: "mod+u mod+3",
-  resetLayout: "mod+u mod+1",
-  // tree actions
-  // global
-  focusAppAndDraftTree: ["mod+1", "mod+shift+e", "mod+b"],
-  focusFileExplorerTree: "mod+2",
-  collapseAllTree: "mod+shift+k",
-  // in-tree stuff
-  // tree_focusFilter:                 '/',
-  tree_moveUp: "ArrowUp",
-  tree_moveDown: "ArrowDown",
-  tree_moveRight: "ArrowRight",
-  tree_moveLeft: "ArrowLeft",
-  tree_deleteNodeAndFocusNodeAbove: "Backspace",
-  tree_deleteNodeAndFocusNodeBelow: "Delete",
-  tree_onPrimaryAction: "Enter",
-  tree_movePageUp: "PageUp",
-  tree_movePageDown: "PageDown"
-};
+import { observer as observer34 } from "mobx-react-lite";
 
 // src/csuite/tree/TreeCtx.ts
 import { createContext as createContext4, useContext as useContext4 } from "react";
 var TreeViewCtx = createContext4(null);
 var useTreeView = () => {
   const val = useContext4(TreeViewCtx);
-  if (val == null)
-    throw new Error("missing editor in current widget react contexts");
+  if (val == null) throw new Error("missing editor in current widget react contexts");
   return val;
 };
 
 // src/csuite/tree/TreeEntryUI.tsx
-import { observer as observer32 } from "mobx-react-lite";
+import { observer as observer33 } from "mobx-react-lite";
 import { Fragment as Fragment4 } from "react";
 
 // src/csuite/tree/RenderItemTitleUI.tsx
-import { observer as observer31 } from "mobx-react-lite";
+import { observer as observer32 } from "mobx-react-lite";
 
 // src/csuite/tree/RenderTreeIcon1.tsx
-import { observer as observer30 } from "mobx-react-lite";
-var TreeIcon1UI = observer30(function TreeIcon1UI_(p) {
-  const action3 = p;
+import { observer as observer31 } from "mobx-react-lite";
+var TreeIcon1UI = observer31(function TreeIcon1UI_(p) {
+  const action2 = p;
   return /* @__PURE__ */ jsx(
     "div",
     {
@@ -3853,16 +3703,16 @@ var TreeIcon1UI = observer30(function TreeIcon1UI_(p) {
       tw: "btn btn-xs btn-square btn-ghost",
       onClick: (e) => {
         e.stopPropagation();
-        action3.onClick?.(p.node);
+        action2.onClick?.(p.node);
       },
-      children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: action3.icon })
+      children: /* @__PURE__ */ jsx("span", { className: "material-symbols-outlined", children: action2.icon })
     },
-    action3.name
+    action2.name
   );
 });
 
 // src/csuite/tree/RenderItemTitleUI.tsx
-var RenderItemTitleUI = observer31(function RenderItemTitleUI_(p) {
+var RenderItemTitleUI = observer32(function RenderItemTitleUI_(p) {
   const node = p.node;
   const item = node.data;
   let icon = node.isOpen ? item.iconExpanded ?? item.icon : item.icon ?? item.iconExpanded;
@@ -3891,15 +3741,15 @@ var RenderItemTitleUI = observer31(function RenderItemTitleUI_(p) {
     ),
     /* @__PURE__ */ jsxs("div", { tw: "ml-auto opacity-40 hover:opacity-100", children: [
       item.extra?.(),
-      item.actions?.map((action3, ix) => {
-        return /* @__PURE__ */ jsx(TreeIcon1UI, { node, ...action3 }, ix);
+      item.actions?.map((action2, ix) => {
+        return /* @__PURE__ */ jsx(TreeIcon1UI, { node, ...action2 }, ix);
       })
     ] })
   ] });
 });
 
 // src/csuite/tree/TreeEntryUI.tsx
-var TreeEntryUI = observer32(function TreeEntryUI_(p) {
+var TreeEntryUI = observer33(function TreeEntryUI_(p) {
   const n = p.node;
   const children = n.childKeys;
   const hasChildren = children.length > 0;
@@ -3914,7 +3764,6 @@ var TreeEntryUI = observer32(function TreeEntryUI_(p) {
         onClick: () => tv.setFocusAt(n),
         tw: [
           // 'py-1',
-          // selected ? 'virtualBorder' : null,
           {
             _line: true,
             _hasChildren: hasChildren,
@@ -3959,8 +3808,23 @@ var TreeEntryUI = observer32(function TreeEntryUI_(p) {
   ] }, n.id);
 });
 
+// src/csuite/tree/TreeKeys.ts
+var TreeKeys = {
+  // tree_focusFilter:                 '/',
+  tree_moveUp: "ArrowUp",
+  tree_moveDown: "ArrowDown",
+  tree_moveRight: "ArrowRight",
+  tree_moveLeft: "ArrowLeft",
+  tree_deleteNodeAndFocusNodeAbove: "Backspace",
+  tree_deleteNodeAndFocusNodeBelow: "Delete",
+  tree_onPrimaryAction: "Enter",
+  tree_movePageUp: "PageUp",
+  tree_movePageDown: "PageDown",
+  collapseAllTree: "mod+shift+k"
+};
+
 // src/csuite/tree/TreeUI.tsx
-var TreeUI = observer33(function TreeEditorUI_(p) {
+var TreeUI = observer34(function TreeEditorUI_(p) {
   const tv = p.treeView;
   return /* @__PURE__ */ jsx(TreeViewCtx.Provider, { value: tv, children: /* @__PURE__ */ jsxs("div", { tw: "_TreeUI flex flex-col", className: p.className, children: [
     /* @__PURE__ */ jsxs("div", { tw: "flex items-center gap-1", children: [
@@ -3972,7 +3836,7 @@ var TreeUI = observer33(function TreeEditorUI_(p) {
           trigger: "hover",
           content: () => /* @__PURE__ */ jsxs("div", { tw: "flex gap-1 whitespace-nowrap p-2", children: [
             "collapse tree: ",
-            /* @__PURE__ */ jsx(ComboUI, { combo: KEYS.collapseAllTree })
+            /* @__PURE__ */ jsx(ComboUI, { combo: TreeKeys.collapseAllTree })
           ] }),
           children: tv.tree.config.updateAll && /* @__PURE__ */ jsx(
             "div",
@@ -4000,30 +3864,21 @@ var TreeUI = observer33(function TreeEditorUI_(p) {
 });
 
 // src/csuite/tree/TreeView.ts
-import { makeAutoObservable as makeAutoObservable8 } from "mobx";
-import { nanoid as nanoid5 } from "nanoid";
+import { makeAutoObservable as makeAutoObservable6 } from "mobx";
+import { nanoid as nanoid4 } from "nanoid";
 import { createRef } from "react";
 
 // src/csuite/tree/TreeShortcuts.ts
 var onKeyDownHandlers = (ev, view) => {
-  if (ev.key === KEYS.tree_deleteNodeAndFocusNodeAbove)
-    return view.deleteNodeAndFocusNodeAbove;
-  if (ev.key === KEYS.tree_deleteNodeAndFocusNodeBelow)
-    return view.deleteNodeAndFocusNodeBelow;
-  if (ev.key === KEYS.tree_onPrimaryAction)
-    return view.at?.onPrimaryAction;
-  if (ev.key === KEYS.tree_movePageUp)
-    return view.movePageUp;
-  if (ev.key === KEYS.tree_movePageDown)
-    return view.movePageDown;
-  if (ev.key === KEYS.tree_moveUp)
-    return view.moveUp;
-  if (ev.key === KEYS.tree_moveDown)
-    return view.moveDown;
-  if (ev.key === KEYS.tree_moveRight)
-    return view.moveRight;
-  if (ev.key === KEYS.tree_moveLeft)
-    return view.moveLeft;
+  if (ev.key === TreeKeys.tree_deleteNodeAndFocusNodeAbove) return view.deleteNodeAndFocusNodeAbove;
+  if (ev.key === TreeKeys.tree_deleteNodeAndFocusNodeBelow) return view.deleteNodeAndFocusNodeBelow;
+  if (ev.key === TreeKeys.tree_onPrimaryAction) return view.at?.onPrimaryAction;
+  if (ev.key === TreeKeys.tree_movePageUp) return view.movePageUp;
+  if (ev.key === TreeKeys.tree_movePageDown) return view.movePageDown;
+  if (ev.key === TreeKeys.tree_moveUp) return view.moveUp;
+  if (ev.key === TreeKeys.tree_moveDown) return view.moveDown;
+  if (ev.key === TreeKeys.tree_moveRight) return view.moveRight;
+  if (ev.key === TreeKeys.tree_moveLeft) return view.moveLeft;
 };
 
 // src/csuite/tree/TreeView.ts
@@ -4032,13 +3887,12 @@ var TreeView = class {
     this.tree = tree;
     this.conf = conf;
     /** treeview id; only for debugging purpose */
-    this.id = nanoid5(4);
+    this.id = nanoid4(4);
     this.filterRef = createRef();
     this.updateFilter = (xPath) => this.filter = xPath;
     this.focusFilter = () => {
       const curr = this.filterRef.current;
-      if (!(curr instanceof HTMLElement))
-        return;
+      if (!(curr instanceof HTMLElement)) return;
       curr.focus();
     };
     this.revealAndFocusAtPath = (path_v2) => {
@@ -4077,15 +3931,13 @@ var TreeView = class {
     };
     this.onKeyDownHandlers = (ev) => onKeyDownHandlers(ev, this);
     this.deleteNodeAndFocusNodeAbove = () => {
-      if (this.at == null)
-        return this.resetCaretPos();
+      if (this.at == null) return this.resetCaretPos();
       const parent = this.at.nodeAboveInView;
       this.at.delete();
       this.setFocusAt(parent);
     };
     this.deleteNodeAndFocusNodeBelow = () => {
-      if (this.at == null)
-        return this.resetCaretPos();
+      if (this.at == null) return this.resetCaretPos();
       let parent = this.at.nodeAboveInView;
       this.at.delete();
       this.setFocusAt(parent?.nodeBelowInView ?? parent);
@@ -4094,18 +3946,15 @@ var TreeView = class {
       this.setFocusAt(this.tree.topLevelNodes[0]);
     };
     this.moveUp = () => {
-      if (this.at == null)
-        return this.resetCaretPos();
+      if (this.at == null) return this.resetCaretPos();
       const nextAt = this.at.nodeAboveInView;
-      if (nextAt)
-        this.setFocusAt(nextAt);
+      if (nextAt) this.setFocusAt(nextAt);
     };
     this.movePageUp = () => {
       return this.resetCaretPos();
     };
     this.movePageDown = () => {
-      if (this.at == null)
-        return this.resetCaretPos();
+      if (this.at == null) return this.resetCaretPos();
       let ptr = this.at;
       let max = 100;
       let final = this.at;
@@ -4115,42 +3964,33 @@ var TreeView = class {
       this.setFocusAt(final);
     };
     this.moveDown = () => {
-      if (this.at == null)
-        return this.resetCaretPos();
+      if (this.at == null) return this.resetCaretPos();
       const nextAt = this.at.nodeBelowInView;
-      if (nextAt)
-        this.setFocusAt(nextAt);
+      if (nextAt) this.setFocusAt(nextAt);
     };
     this.moveRight = () => {
-      if (this.at == null)
-        return this.resetCaretPos();
+      if (this.at == null) return this.resetCaretPos();
       const children = this.at.children;
       if (children.length > 0) {
-        if (this.at.isOpen)
-          return this.setFocusAt(children[0]);
-        else
-          return this.at.open();
+        if (this.at.isOpen) return this.setFocusAt(children[0]);
+        else return this.at.open();
       }
       return this.moveDown();
     };
     this.moveLeft = () => {
-      if (this.at == null)
-        return this.resetCaretPos();
-      if (this.at.isOpen)
-        return this.at.close();
-      if (this.at.parent)
-        return this.at = this.at.parent;
+      if (this.at == null) return this.resetCaretPos();
+      if (this.at.isOpen) return this.at.close();
+      if (this.at.parent) return this.at = this.at.parent;
     };
     this.resetCaretPos();
-    makeAutoObservable8(this, { filterRef: false, id: false });
+    makeAutoObservable6(this, { filterRef: false, id: false });
   }
   get nodes() {
     return this.tree.topLevelNodes;
   }
   get cursorInfos() {
     const at = this.at;
-    if (at == null)
-      return null;
+    if (at == null) return null;
     return {
       nodeAboveInTreeview: at.nodeAboveInView?.id,
       nodeBelowInTreeview: at.nodeBelowInView?.id,
@@ -4173,14 +4013,70 @@ var TreeView = class {
 // src/csuite/utils/toasts.tsx
 import { toast } from "react-toastify";
 var position = "bottom-right";
-var toastInfo = (msg) => void toast(msg, { type: "info", position });
-var toastError = (msg) => void toast(msg, { type: "error", position });
+var toastInfo = (msg) => {
+  toast(msg, { type: "info", position });
+  return "UNMATCHED" /* UNMATCHED */;
+};
+var toastError = (msg) => {
+  toast(msg, { type: "error", position });
+  return "UNMATCHED" /* UNMATCHED */;
+};
+
+// src/csuite/utils/potatoClone.ts
+var potatoSymbol = Symbol.for("\u{1F954}");
+function potatoClone(obj) {
+  if (obj === null || typeof obj !== "object") return obj;
+  if ("potatoClone" in obj) return obj.potatoClone();
+  if (potatoSymbol in obj) return obj[potatoSymbol]();
+  if (obj.constructor === Object) {
+    const newObj = {};
+    for (const key in obj) {
+      newObj[key] = potatoClone(obj[key]);
+    }
+    return newObj;
+  }
+  if (obj instanceof Array) return obj.map(potatoClone);
+  if (obj instanceof Set) return new Set([...obj.values()].map(potatoClone));
+  if (obj instanceof Map) return new Map([...obj.entries()].map(([k, v]) => [k, potatoClone(v)]));
+  if (obj instanceof Date) return new Date(obj.getTime());
+  if (obj instanceof RegExp) return new RegExp(obj);
+  if (obj instanceof Promise) return obj;
+  if (obj instanceof Error) return obj;
+  if (obj instanceof Function) return obj;
+  if (obj instanceof WeakMap) return obj;
+  if (obj instanceof WeakSet) return obj;
+  if (obj instanceof ArrayBuffer) return obj.slice(0);
+  if (obj instanceof DataView) return new DataView(obj.buffer.slice(0));
+  if (obj instanceof Float32Array) return new Float32Array(obj);
+  if (obj instanceof Float64Array) return new Float64Array(obj);
+  if (obj instanceof Int8Array) return new Int8Array(obj);
+  if (obj instanceof Int16Array) return new Int16Array(obj);
+  if (obj instanceof Int32Array) return new Int32Array(obj);
+  if (obj instanceof Uint8Array) return new Uint8Array(obj);
+  if (obj instanceof Uint8ClampedArray) return new Uint8ClampedArray(obj);
+  if (obj instanceof Uint16Array) return new Uint16Array(obj);
+  if (obj instanceof Uint32Array) return new Uint32Array(obj);
+  if (obj instanceof BigInt64Array) return new BigInt64Array(obj);
+  if (obj instanceof BigUint64Array) return new BigUint64Array(obj);
+  return obj;
+}
 
 // src/csuite/form/WidgetMenu.tsx
-var WidgetMenuUI = observer34(function WidgetMenuUI_(p) {
-  return /* @__PURE__ */ jsx(RevealUI, { className: p.className, content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: p.widget }), children: /* @__PURE__ */ jsx(Button, { subtle: true, icon: "mdiDotsVertical", look: "ghost", square: true, size: "input" }) });
+var WidgetMenuUI = observer35(function WidgetMenuUI_(p) {
+  return /* @__PURE__ */ jsx(RevealUI, { className: p.className, content: () => /* @__PURE__ */ jsx(menu_fieldActions.UI, { props: p.widget }), children: /* @__PURE__ */ jsx(
+    Button,
+    {
+      tooltip: "Open field menu",
+      borderless: true,
+      subtle: true,
+      icon: "mdiDotsVertical",
+      look: "ghost",
+      square: true,
+      size: "input"
+    }
+  ) });
 });
-var menu_widgetActions = menu({
+var menu_fieldActions = menuWithProps({
   title: "widget actions",
   entries: (field) => {
     const out = [];
@@ -4189,7 +4085,26 @@ var menu_widgetActions = menu({
         label: "Reset",
         icon: "mdiUndoVariant",
         disabled: () => !field.hasChanges,
-        onPick: () => field.reset()
+        onPick: () => void field.reset()
+      })
+    );
+    out.push(MenuDividerUI_);
+    out.push(
+      new SimpleMenuAction({
+        label: "Save Snapshot",
+        icon: "mdiArrowLeftBox",
+        onPick: () => {
+          const snap = field.saveSnapshot();
+          console.log(JSON.stringify(potatoClone(snap), null, 4));
+        }
+      })
+    );
+    out.push(
+      new SimpleMenuAction({
+        label: "Restore Snapshot",
+        icon: "mdiArrowRightBox",
+        disabled: () => !field.hasSnapshot,
+        onPick: () => void field.revertToSnapshot()
       })
     );
     out.push(MenuDividerUI_);
@@ -4212,15 +4127,15 @@ var menu_widgetActions = menu({
     out.push(
       new SimpleMenuModal({
         label: "Create Preset",
+        icon: "mdiPlus",
         submit: () => {
           console.log(`[\u{1F920}] values`);
         },
-        UI: (w) => /* @__PURE__ */ jsx(CreatePresetUI, { widget: field })
+        UI: (w) => /* @__PURE__ */ jsx(CreatePresetUI, { field })
       })
     );
     const presets = field.config.presets ?? [];
     if (presets.length > 0) {
-      out.push(MenuDividerUI_);
       for (const entry of presets) {
         out.push(
           new SimpleMenuAction({
@@ -4245,8 +4160,8 @@ var menu_widgetActions = menu({
     return out;
   }
 });
-var CreatePresetUI = observer34(function CreatePresetUI_(p) {
-  const tree = new Tree([p.widget.asTreeElement("root")]);
+var CreatePresetUI = observer35(function CreatePresetUI_(p) {
+  const tree = new Tree([p.field.asTreeElement("root")]);
   const treeView = new TreeView(tree, { selectable: true });
   return /* @__PURE__ */ jsx(
     TreeUI,
@@ -4257,24 +4172,19 @@ var CreatePresetUI = observer34(function CreatePresetUI_(p) {
   );
 });
 
-// src/csuite/form/WidgetTooltipUI.tsx
-import { observer as observer35 } from "mobx-react-lite";
-var WidgetTooltipUI = observer35(function WidgetTooltipUI_(p) {
-  const widget = p.widget;
-  return /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx("div", { children: widget.config.tooltip }), children: /* @__PURE__ */ jsx(Frame, { square: true, icon: "mdiInformationOutline" }) });
-});
-
 // src/csuite/form/WidgetUndoChangesButtonUI.tsx
 import { observer as observer36 } from "mobx-react-lite";
 var WidgetUndoChangesButtonUI = observer36(function WidgetUndoChangesButtonUI_(p) {
-  const widget = p.widget;
+  const field = p.field;
   return /* @__PURE__ */ jsx(
     Button,
     {
       subtle: true,
+      tooltip: "Reset to default values",
+      borderless: true,
       className: p.className,
-      onClick: () => widget?.reset(),
-      disabled: !(widget?.hasChanges ?? false),
+      onClick: () => field?.reset(),
+      disabled: !(field?.hasChanges ?? false),
       icon: "mdiUndoVariant",
       look: "ghost",
       size: "input",
@@ -4285,81 +4195,412 @@ var WidgetUndoChangesButtonUI = observer36(function WidgetUndoChangesButtonUI_(p
 
 // src/csuite/form/WidgetWithLabelUI.tsx
 var WidgetWithLabelUI = observer37(function WidgetWithLabelUI_(p) {
-  if (p.widget.isHidden)
-    return null;
-  const originalWidget = p.widget;
-  const widget = getActualWidgetToDisplay(originalWidget);
-  const HeaderUI = widget.header();
-  const BodyUI = widget.body();
-  const justify = p.justifyLabel ?? getIfWidgetNeedJustifiedLabel(widget);
-  const extraClass = originalWidget.isDisabled ? "pointer-events-none opacity-30 bg-[#00000005]" : void 0;
+  if (p.field.isHidden) return null;
+  const originalField = p.field;
+  const field = originalField.actualWidgetToDisplay;
+  const HeaderUI = field.header();
+  const BodyUI = field.body();
+  const extraClass = originalField.isDisabled ? "pointer-events-none opacity-30 bg-[#00000005]" : void 0;
   const csuite = useCSuite();
-  const labelText = p.label ?? widget.config.label ?? makeLabelFromFieldName(p.fieldName);
+  const labelText = p.label ?? field.config.label ?? makeLabelFromFieldName(p.fieldName);
+  const justifyOld = p.justifyLabel ?? field.justifyLabel;
+  const labellayout = justifyOld ? csuite.labellayout : "fixed-left";
+  const justify = p.justifyLabel ?? (labellayout === "fluid" ? false : true);
   const WUI = /* @__PURE__ */ jsxs(
     Frame,
     {
       className: p.className,
-      tw: "WidgetWithLabelUI flex flex-col gap-1",
-      base: widget.background,
-      border: widget.border,
-      ...p.widget.config.box,
+      tw: "UI-WidgetWithLabel !border-l-0 !border-r-0 !border-b-0",
+      base: field.background,
+      border: field.border,
+      ...p.field.config.box,
       children: [
-        !p.noHeader && /* @__PURE__ */ jsxs(WidgetHeaderContainerUI, { widget, children: [
-          /* @__PURE__ */ jsxs(WidgetLabelContainerUI, { justify, children: [
-            /* @__PURE__ */ jsx(WidgetLabelCaretUI, { widget }),
-            /* @__PURE__ */ jsx(WidgetLabelIconUI, { widget }),
-            !justify && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "mr-1", widget: originalWidget }),
-            widget.config.tooltip && /* @__PURE__ */ jsx(WidgetTooltipUI, { widget }),
-            /* @__PURE__ */ jsx(WidgetLabelUI, { widget, children: labelText }),
-            widget.config.showID && /* @__PURE__ */ jsx(WidgetDebugIDUI, { widget }),
-            justify && /* @__PURE__ */ jsx(Widget_ToggleUI, { tw: "ml-1", widget: originalWidget })
-          ] }),
+        !p.noHeader && /* @__PURE__ */ jsxs(WidgetHeaderContainerUI, { field, children: [
+          /* @__PURE__ */ jsxs(
+            WidgetLabelContainerUI,
+            {
+              tooltip: field.config.tooltip,
+              justify,
+              children: [
+                labellayout === "fixed-left" ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                  /* @__PURE__ */ jsx(WidgetIndentUI, { depth: originalField.depth }),
+                  p.slotDragKnob,
+                  /* @__PURE__ */ jsx(WidgetLabelCaretUI, { field }),
+                  /* @__PURE__ */ jsx(WidgetLabelIconUI, { tw: "mr-1", widget: field }),
+                  /* @__PURE__ */ jsx(WidgetLabelTextUI, { widget: field, children: labelText }),
+                  field.config.showID && /* @__PURE__ */ jsx(WidgetDebugIDUI, { field })
+                ] }) : labellayout === "fixed-right" ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                  /* @__PURE__ */ jsx(WidgetIndentUI, { depth: field.depth }),
+                  p.slotDragKnob,
+                  /* @__PURE__ */ jsx(WidgetLabelCaretUI, { tw: "mr-auto", field }),
+                  !p.field.isCollapsed && !p.field.isCollapsible && /* @__PURE__ */ jsx("div", { tw: "mr-auto" }),
+                  /* @__PURE__ */ jsx(WidgetLabelTextUI, { widget: field, children: labelText }),
+                  field.config.showID && /* @__PURE__ */ jsx(WidgetDebugIDUI, { field }),
+                  /* @__PURE__ */ jsx(WidgetLabelIconUI, { tw: "mx-1", widget: field })
+                ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+                  p.slotDragKnob,
+                  /* @__PURE__ */ jsx(WidgetLabelCaretUI, { field }),
+                  /* @__PURE__ */ jsx(WidgetToggleUI, { tw: "mr-1", field: originalField }),
+                  /* @__PURE__ */ jsx(WidgetLabelIconUI, { tw: "mr-1", widget: field }),
+                  /* @__PURE__ */ jsx(WidgetLabelTextUI, { widget: field, children: labelText }),
+                  field.config.showID && /* @__PURE__ */ jsx(WidgetDebugIDUI, { field })
+                ] }),
+                /* @__PURE__ */ jsx("div", { tw: "w-1" })
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsx("div", { tw: "w-0.5" }),
+          justify && /* @__PURE__ */ jsx(WidgetToggleUI, { field: originalField }),
           HeaderUI && /* @__PURE__ */ jsx(WidgetHeaderControlsContainerUI, { className: extraClass, children: /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: HeaderUI }) }),
-          (p.showWidgetExtra ?? csuite.showWidgetExtra) && widget.spec.LabelExtraUI && /* @__PURE__ */ jsx(widget.spec.LabelExtraUI, { widget }),
-          (p.showWidgetUndo ?? csuite.showWidgetUndo) && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { widget: originalWidget }),
-          (p.showWidgetMenu ?? csuite.showWidgetMenu) && /* @__PURE__ */ jsx(WidgetMenuUI, { widget })
+          p.slotDelete,
+          (p.showWidgetExtra ?? csuite.showWidgetExtra) && field.schema.LabelExtraUI && /* @__PURE__ */ jsx(field.schema.LabelExtraUI, { field }),
+          (p.showWidgetUndo ?? csuite.showWidgetUndo) && /* @__PURE__ */ jsx(WidgetUndoChangesButtonUI, { field: originalField }),
+          (p.showWidgetMenu ?? csuite.showWidgetMenu) && /* @__PURE__ */ jsx(WidgetMenuUI, { widget: field })
         ] }),
-        !p.noBody && BodyUI && !widget.isCollapsed && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { className: extraClass, tw: [widget.isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
-        !p.noErrors && /* @__PURE__ */ jsx(WidgetErrorsUI, { widget })
+        !p.noBody && BodyUI && !field.isCollapsed && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { className: extraClass, tw: [field.isCollapsible && "WIDGET-BLOCK"], children: BodyUI }) }),
+        !p.noErrors && /* @__PURE__ */ jsx(WidgetErrorsUI, { field })
       ]
     }
   );
-  if (widget.animateResize && !p.noBody && BodyUI)
-    return /* @__PURE__ */ jsx(AnimatedSizeUI, { children: WUI });
+  if (field.animateResize && !p.noBody && BodyUI) return /* @__PURE__ */ jsx(AnimatedSizeUI, { children: WUI });
   return WUI;
 });
 
+// src/csuite/mobx/mobx-store-inheritance.ts
+import { $mobx, isObservable, makeObservable as makeObservable4 } from "mobx";
+var annotationsSymbol = Symbol();
+var objectPrototype = Object.prototype;
+var makeAutoObservableInheritance = (target, overrides, options) => {
+  if (isObservable(target)) {
+    throw new Error("Target must not be observable");
+  }
+  let annotations = target[annotationsSymbol];
+  if (!annotations) {
+    annotations = {};
+    let current = target;
+    while (current && current !== objectPrototype) {
+      Reflect.ownKeys(current).forEach((key) => {
+        if (key === $mobx || key === "constructor") return;
+        annotations[key] = !overrides ? true : key in overrides ? overrides[key] : true;
+      });
+      current = Object.getPrototypeOf(current);
+    }
+    const proto = Object.getPrototypeOf(target);
+    if (proto && proto !== objectPrototype) {
+      Object.defineProperty(proto, annotationsSymbol, { value: annotations });
+    }
+  } else {
+    const tmp = {};
+    for (const key in target) {
+      if (annotations[key]) {
+        tmp[key] = annotations[key];
+      }
+    }
+    annotations = tmp;
+  }
+  return makeObservable4(target, annotations, options);
+};
+
+// src/csuite/simple/SimpleSchema.ts
+import { makeObservable as makeObservable5 } from "mobx";
+
+// src/csuite/model/BaseSchema.ts
+import { reaction } from "mobx";
+
+// src/csuite/model/autofix/autofixSerial_20240703.ts
+function autofixSerial_20240703(serial) {
+  if (serial?.type === "FormSerial") {
+    const prev = serial;
+    const next = prev.root;
+    return next;
+  }
+  return serial;
+}
+
+// src/csuite/model/autofix/autofixSerial_20240711.ts
+function autofixSerial_20240711(serial) {
+  if (
+    // if serial is from pre-2024-07-11 format
+    serial != null && typeof serial === "object" && "type" in serial && !("$" in serial)
+  ) {
+    serial["$"] = serial["type"];
+    delete serial["type"];
+  }
+}
+
+// src/csuite/model/BaseSchema.ts
+var BaseSchema = class {
+  // ------------------------------------------------------------
+  applyExts(field) {
+    for (const ext of this.config.customFieldProperties ?? []) {
+      const xxx = ext(field);
+      Object.defineProperties(field, Object.getOwnPropertyDescriptors(xxx));
+    }
+  }
+  extend(extensions) {
+    const x = this.withConfig({
+      customFieldProperties: [...this.config.customFieldProperties ?? [], extensions]
+    });
+    return x;
+  }
+  applySchemaExtensions() {
+    for (const ext of this.config.customSchemaProperties ?? []) {
+      const xxx = ext(this);
+      Object.defineProperties(this, Object.getOwnPropertyDescriptors(xxx));
+    }
+  }
+  /** clone the schema, and patch the cloned config to make it hidden */
+  hidden() {
+    return this.withConfig({ hidden: true });
+  }
+  // PubSub -----------------------------------------------------
+  publish(chan, produce) {
+    return this.withConfig({
+      producers: [...this.config.producers ?? [], { chan, produce }]
+    });
+  }
+  subscribe(chan, effect) {
+    return this.addReaction(
+      (self2) => self2.consume(chan),
+      (arg, self2) => {
+        if (arg == null) return;
+        effect(arg, self2);
+      }
+    );
+  }
+  get reactions() {
+    return this.config.reactions ?? [];
+  }
+  get producers() {
+    return this.config.producers ?? [];
+  }
+  addReaction(expr, effect) {
+    return this.withConfig({
+      reactions: [...this.config.reactions ?? [], { expr, effect }]
+    });
+  }
+  // ------------------------------------------------------------
+  // Instanciation
+  create(serial, repository) {
+    return this.instanciate(repository ?? getGlobalRepository(), null, null, serial);
+  }
+  instanciate(repo, root, parent, serial) {
+    serial = autofixSerial_20240703(serial);
+    autofixSerial_20240711(serial);
+    if (serial != null && serial.$ !== this.type) {
+      if (this.type === "list") {
+        const prev = serial;
+        const next = { $: "list", items_: [prev] };
+        serial = next;
+      } else if (serial.$ === "list") {
+        const prev = serial;
+        const next = prev.items_[0] ?? null;
+        serial = next;
+      }
+    }
+    if (this.config.beforeInit) {
+      const oldVersion = serial?._version ?? "default";
+      const newVersion = this.config.version ?? "default";
+      if (oldVersion !== newVersion) {
+        serial = this.config.beforeInit(serial);
+        serial._version = newVersion;
+      }
+    }
+    if (serial != null && serial.$ !== this.type) {
+      console.log(`[\u{1F536}] INVALID SERIAL (expected: ${this.type}, got: ${serial.$})`);
+      console.log(`[\u{1F536}] INVALID SERIAL:`, serial);
+      serial = null;
+    }
+    const field = new this.FieldClass_UNSAFE(repo, root, parent, this, serial);
+    field.publishValue();
+    for (const { expr, effect } of this.reactions) {
+      reaction(
+        () => expr(field),
+        (arg) => effect(arg, field),
+        { fireImmediately: true }
+      );
+    }
+    return field;
+  }
+};
+
+// src/csuite/utils/objectAssignTsEfficient.ts
+var objectAssignTsEfficient_t_pt = (target, source) => Object.assign(target, source);
+
+// src/csuite/simple/SimpleSchema.ts
+var SimpleSchema = class _SimpleSchema extends BaseSchema {
+  constructor(FieldClass, config) {
+    super();
+    this.config = config;
+    this.FieldClass_UNSAFE = FieldClass;
+    this.applySchemaExtensions();
+    makeObservable5(this, {
+      config: true,
+      FieldClass_UNSAFE: false
+    });
+  }
+  get type() {
+    return this.FieldClass_UNSAFE.type;
+  }
+  /**
+   * chain construction
+   * @since 2024-06-30
+   * TODO: WRITE MORE DOC
+   */
+  useIn(fn) {
+    const FieldLinkClass = getFieldLinkClass();
+    const linkConf = { share: this, children: fn };
+    return new _SimpleSchema(FieldLinkClass, linkConf);
+  }
+  /** wrap field schema to list stuff */
+  list(config = {}) {
+    const FieldListClass = getFieldListClass();
+    return new _SimpleSchema(FieldListClass, {
+      ...config,
+      element: this
+    });
+  }
+  /** make field optional (A => Maybe<A>) */
+  optional(startActive = false) {
+    const FieldOptionalClass = getFieldOptionalClass();
+    return new _SimpleSchema(FieldOptionalClass, {
+      schema: this,
+      startActive,
+      label: this.config.label,
+      startCollapsed: this.config.startCollapsed,
+      collapsed: this.config.collapsed,
+      border: this.config.border
+    });
+  }
+  /** clone the schema, and patch the cloned config */
+  withConfig(config) {
+    const mergedConfig = objectAssignTsEfficient_t_pt(potatoClone(this.config), config);
+    const cloned = new _SimpleSchema(this.FieldClass_UNSAFE, mergedConfig);
+    return cloned;
+  }
+};
+
+// src/csuite/model/FieldId.ts
+import { nanoid as nanoid5 } from "nanoid";
+function mkNewFieldId() {
+  return nanoid5(8);
+}
+
+// src/csuite/model/TreeEntry_Field.tsx
+import { makeAutoObservable as makeAutoObservable7 } from "mobx";
+var TreeEntry_Field = class {
+  constructor(widgetWithKey) {
+    this.widgetWithKey = widgetWithKey;
+    /** packed with a bunch of sane default for now; we'll see if this is ever */
+    // get icon() {
+    //     const w = this.widget
+    //     if (w.type === 'choices') return <Ikon.mdiCheckboxMultipleMarked />
+    //     if (w.type === 'choice') return <Ikon.mdiCheckboxMarked />
+    //     if (isWidgetGroup(w)) {
+    //         if (Object.keys(w.fields).length === 0) return <Ikon.mdiCircle />
+    //         return <Ikon.mdiFolder />
+    //     }
+    //     if (w.type === 'optional') return <Ikon.mdiCheckboxBlankOutline />
+    //     if (w.type === 'list') return <Ikon.mdiFormatListBulleted />
+    //     if (w.type === 'enum') return <Ikon.mdiFormatListBulletedSquare />
+    //     if (w.type === 'markdown') return <Ikon.mdiFormatListBulletedSquare />
+    //     if (isWidgetString(w)) {
+    //         const it = w.config.inputType
+    //         if (it === 'color') return <Ikon.mdiPalette />
+    //         if (it === 'date') return <Ikon.mdiCalendar />
+    //         if (it === 'datetime-local') return <Ikon.mdiCalendarClock />
+    //         if (it === 'email') return <Ikon.mdiEmailOutline />
+    //         if (it === 'password') return <Ikon.mdiLockOutline />
+    //         if (it === 'tel') return <Ikon.mdiPhoneOutline />
+    //         if (it === 'text') return <Ikon.mdiTextBoxOutline />
+    //         if (it === 'time') return <Ikon.mdiClockOutline />
+    //         if (it === 'url') return <Ikon.mdiWeb />
+    //         return <Ikon.mdiTextBoxOutline />
+    //     }
+    //     if (w.type === 'number') return <Ikon.mdiNumeric />
+    //     if (w.type === 'boolean') return <Ikon.mdiCheckboxBlankOutline />
+    //     //
+    //     return <Ikon.mdiBatteryUnknown tw='text-red-400' />
+    //     // return <span className='material-symbols-outlined'>Draft</span>
+    // }
+    this.onPrimaryAction = (n) => {
+    };
+    this.children = () => {
+      return this.widget.subFieldsWithKeys.map((w) => w.field.asTreeElement(w.key));
+    };
+    // extra = () => (
+    //     <>
+    //         {this.app?.isLoadedInMemory ? <span className='material-symbols-outlined text-green-500'>memory</span> : null}
+    //         <TreeApp_BtnFavUI entry={this} />
+    //     </>
+    // )
+    this.actions = [
+      // {
+      //     name: 'add Draft',
+      //     icon: 'add',
+      //     mode: 'small',
+      //     onClick: (node) => {
+      //         if (this.app == null) return
+      //         this.app.createDraft()
+      //         node.open()
+      //     },
+      // },
+    ];
+    makeAutoObservable7(this);
+  }
+  get widget() {
+    return this.widgetWithKey.widget;
+  }
+  /** config label, or parent key */
+  get label() {
+    if (this.widget.config.label) return this.widget.config.label;
+    return this.widgetWithKey.key;
+  }
+  get name() {
+    return `${this.label} = ${this.widget.id}`;
+  }
+  get isFolder() {
+    return this.widget.subFields.length > 0;
+  }
+};
+
 // src/csuite/model/Validation.ts
 var normalizeProblem = (problem) => {
-  if (problem === true)
-    return [];
-  if (problem === false)
-    return [{ message: "Error" }];
-  if (problem == null)
-    return [];
-  if (typeof problem === "string")
-    return [{ message: problem }];
-  if (Array.isArray(problem))
-    return problem.flatMap((p) => normalizeProblem(p));
+  if (problem === true) return [];
+  if (problem === false) return [{ message: "Error" }];
+  if (problem == null) return [];
+  if (typeof problem === "string") return [{ message: problem }];
+  if (Array.isArray(problem)) return problem.flatMap((p) => normalizeProblem(p));
   return [problem];
 };
 
-// src/csuite/model/BaseField.tsx
+// src/csuite/model/Field.tsx
 var ensureObserver = (fn) => {
-  if (fn == null)
-    return null;
+  if (fn == null) return null;
   const isObserver = "$$typeof" in fn && fn.$$typeof === Symbol.for("react.memo");
   const FmtUI = isObserver ? fn : observer38(fn);
   return FmtUI;
 };
-var BaseField = class {
-  constructor() {
-    this.UIToggle = (p) => /* @__PURE__ */ jsx(Widget_ToggleUI, { widget: this, ...p });
-    this.UIErrors = () => /* @__PURE__ */ jsx(WidgetErrorsUI, { widget: this });
-    this.UILabelCaret = () => /* @__PURE__ */ jsx(WidgetLabelCaretUI, { widget: this });
+var Field = class {
+  constructor(repo, root, parent, schema, serial) {
+    /**
+     * list of all functions to run at dispose time
+     * allow for instance to register mobx disposers from reactions
+     * and other similar stuff that may need to be cleaned up to
+     * avoid memory leak.
+     */
+    this.disposeFns = [];
+    /**
+     * will be set to true after the first initialization
+     * TODO: also use that to wait for whole tree to be patched before applying effects
+     * */
+    this.ready = false;
+    this.UIToggle = (p) => /* @__PURE__ */ jsx(WidgetToggleUI, { field: this, ...p });
+    this.UIErrors = () => /* @__PURE__ */ jsx(WidgetErrorsUI, { field: this });
+    this.UILabelCaret = () => /* @__PURE__ */ jsx(WidgetLabelCaretUI, { field: this });
     this.UILabelIcon = () => /* @__PURE__ */ jsx(WidgetLabelIconUI, { widget: this });
     this.UILabelContainer = (p) => /* @__PURE__ */ jsx(WidgetLabelContainerUI, { ...p });
-    this.UIHeaderContainer = (p) => /* @__PURE__ */ jsx(WidgetHeaderContainerUI, { widget: this, children: p.children });
+    this.UIHeaderContainer = (p) => /* @__PURE__ */ jsx(WidgetHeaderContainerUI, { field: this, children: p.children });
     /**
      * 2024-05-24 rvion: do we want some abstract defaultValue() too ?
      * feels like it's going to be PITA to use for higher level objects 🤔
@@ -4367,25 +4608,126 @@ var BaseField = class {
      * 🔶 some widget like `WidgetPrompt` would not work with such logic
      * 🔶 some widget like `Optional` have no simple way to retrieve the default value
      */
-    // abstract readonly defaultValue: this['spec']['$Value'] |
+    // abstract readonly defaultValue: this['schema']['$Value'] |
     this.$FieldSym = $FieldSym;
     /**
      * when this widget or one of its descendant publishes a value,
      * it will be stored here and possibly consumed by other descendants
      */
     this._advertisedValues = {};
+    this._hasBeenInitialized = false;
+    this.id = mkNewFieldId();
+    this.repo = repo;
+    this.root = root ?? this;
+    this.parent = parent;
+    this.schema = schema;
+    this.serial = serial ?? { $: this.constructor.type };
+  }
+  // static get mobxOverrideds() {
+  //     throw new Error('`mobxOverrideds` should be overridden in subclass')
+  // }
+  // static get type(): Field['$Type'] {
+  //     throw new Error('This method should be overridden in subclass')
+  // }
+  get type() {
+    return this.constructor.type;
+  }
+  /**
+   * TODO later: make abstract to make sure we
+   * have that on every single field + add field config option
+   * to customize that. useful for tests.
+   */
+  randomize() {
+  }
+  /** field is already instanciated => probably used as a linked */
+  instanciate(repo, root, parent, serial) {
+    const FieldSharedClass = getFieldSharedClass();
+    const schema = new SimpleSchema(FieldSharedClass, { field: this });
+    return schema.instanciate(repo, root, parent, serial);
+  }
+  /**
+   * lifecycle method, is called
+   * TODO: 🔴
+   * @since 2024-07-05
+   */
+  disposeTree() {
+    this.disposeSelf();
+    for (const sub of this.subFields) {
+      sub.disposeTree();
+    }
+  }
+  disposeSelf() {
+    this.repo._unregisterField(this);
+    for (const disposeFn of this.disposeFns) {
+      disposeFn();
+    }
+  }
+  /** YOU PROBABLY DO NOT WANT TO OVERRIDE THIS */
+  setSerial(serial) {
+    autofixSerial_20240711(serial);
+    this.runInValueTransaction(() => {
+      this.copyCommonSerialFiels(serial);
+      this.setOwnSerial(serial);
+    });
+  }
+  copyCommonSerialFiels(s) {
+    if (s == null) return;
+    if (s._version) this.serial._version = s._version;
+    if (s.collapsed) this.serial.collapsed = s.collapsed;
+    if (s.custom) this.serial.custom = s.custom;
+    if (s.lastUpdatedAt != void 0) this.serial.lastUpdatedAt = s.lastUpdatedAt;
+  }
+  /** unified api to allow setting serial from value */
+  setValue(val) {
+    this.value = val;
+  }
+  RECONCILE(p) {
+    let child = p.existingChild;
+    if (child != null && child.type === p.correctChildSchema.type) {
+      child.setSerial(p.targetChildSerial);
+    } else {
+      if (child) child.disposeTree();
+      child = p.correctChildSchema.instanciate(
+        //
+        this.repo,
+        this.root,
+        this,
+        p.targetChildSerial
+      );
+      p.attach(child);
+    }
+  }
+  get actualWidgetToDisplay() {
+    return this;
+  }
+  get indentChildren() {
+    return 1;
+  }
+  get justifyLabel() {
+    if (this.config.justifyLabel != null) return this.config.justifyLabel;
+    if (this.DefaultBodyUI) return false;
+    return true;
+  }
+  get depth() {
+    if (this.parent == null) return 0;
+    return this.parent.depth + this.parent.indentChildren;
+  }
+  /** DO NOT OVERRIDE; used internally to properly schedule events */
+  get trueDepth() {
+    if (this.parent == null) return 0;
+    return this.parent.trueDepth + 1;
   }
   // abstract readonly id: string
   asTreeElement(key) {
     return {
       key: this.id,
-      ctor: TreeWidget,
+      ctor: TreeEntry_Field,
       props: { key, widget: this }
     };
   }
-  /** shorthand access to spec.config */
+  /** shorthand access to schema.config */
   get config() {
-    return this.spec.config;
+    return this.schema.config;
   }
   get animateResize() {
     return true;
@@ -4395,58 +4737,89 @@ var BaseField = class {
    * return flase when widget has one or more child
    * */
   get hasNoChild() {
-    return this.subWidgets.length === 0;
+    return this.subFields.length === 0;
   }
+  /**
+   * @status NOT IMPLEMENTED
+   * @deprecated
+   * return a short summary of changes from last snapshot
+   * */
   get diffSummaryFromSnapshot() {
     throw new Error("\u274C not implemented");
   }
+  /**
+   * @since 2024-06-20
+   * @status broken
+   * return a short summary of changes from default
+   */
   get diffSummaryFromDefault() {
     return [
       this.hasChanges ? `${this.path}(${this.value?.toString?.() ?? "."})` : null,
-      ...this.subWidgets.map((w) => w.diffSummaryFromDefault)
+      ...this.subFields.map((w) => w.diffSummaryFromDefault)
     ].filter(Boolean).join("\n");
   }
   /** path within the model */
   get path() {
     const p = this.parent;
-    if (p == null)
-      return "$";
+    if (p == null) return "$";
     return p.path + "." + this.mountKey;
   }
   get mountKey() {
-    if (this.parent == null)
-      return "$";
-    return this.parent.subWidgetsWithKeys.find(({ widget }) => widget === this)?.key ?? "<error>";
+    if (this.parent == null) return "$";
+    return this.parent.subFieldsWithKeys.find(({ field }) => field === this)?.key ?? "<error>";
   }
   /** collapse all children that can be collapsed */
   collapseAllChildren() {
-    for (const _item of this.subWidgets) {
-      const item = getActualWidgetToDisplay(_item);
-      if (item.serial.collapsed)
-        continue;
+    for (const _item of this.subFields) {
+      const item = _item.actualWidgetToDisplay;
+      if (item.serial.collapsed) continue;
       const isCollapsible = item.isCollapsible;
-      if (isCollapsible)
-        item.setCollapsed(true);
+      if (isCollapsible) item.setCollapsed(true);
     }
   }
   /** expand all children that can are collapsed */
   expandAllChildren() {
-    for (const _item of this.subWidgets) {
-      const item = getActualWidgetToDisplay(_item);
+    for (const _item of this.subFields) {
+      const item = _item.actualWidgetToDisplay;
       item.setCollapsed(void 0);
     }
   }
+  // change management ------------------------------------------------
   /**
-   * when consuming an advertised value, walk upward the parent chain, and look for
+   *
+   * RULES:
+   * - every component should be able to be restet and must implement
+   *   the reset function
+   * - Reset MUST NEVER be called fromt the constructor
+   * - RESET WILL TRIGGER VALUE/SERIAL update events.
+   *
+   * 2024-05-24 rvion: we could have some generic reset function that
+   * | simply do a this.setValue(this.defaultValue)
+   * | but it feels like a wrong implementation 🤔
+   * | it's simpler  though
+   * 🔶 some widget like `WidgetPrompt` would not work with such logic
+   * */
+  reset() {
+    this.setSerial(null);
+  }
+  /** return a cloned/detached value object you can use anywhere without care */
+  toValueJSON() {
+    return JSON.parse(JSON.stringify(this.value));
+  }
+  /** return a clone/detached serial object you can use anywhere without care */
+  toSerialJSON() {
+    return JSON.parse(JSON.stringify(this.serial));
+  }
+  /**
+   * when consuming an advertised value,
+   * walk upward the parent chain, and look for
    * a value stored in the advsertised values
    */
-  // 🚴🏠 -> consume / pull / receive / fetch / ... ?
   consume(chan) {
     const channelId = typeof chan === "string" ? chan : chan.id;
     let at = this;
     while (at != null) {
-      if (channelId in at._advertisedValues)
-        return at._advertisedValues[channelId];
+      if (channelId in at._advertisedValues) return at._advertisedValues[channelId];
       at = at.parent;
     }
     return null;
@@ -4457,50 +4830,129 @@ var BaseField = class {
     return errors.length > 0;
   }
   /**
-   * return a short string summary
-   * expected to be overriden in child classes
+   * return a short string summary that display the value in a simple way.
+   * This method is expected to be overriden in most child classes
    */
   get summary() {
     return JSON.stringify(this.value);
   }
-  /** all errors: base (built-in widget) + custom (user-defined in config) */
-  get errors() {
-    const SELF = this;
-    const baseErrors = normalizeProblem(SELF.baseErrors);
-    return [...baseErrors, ...this.customErrors];
+  /**
+   * Retrive the config custom data.
+   * 🔶: NOT TO BE CONFUSED WITH `getFieldCustom`
+   * Config custom data is NOT persisted anywhere,
+   * You can set config.custom when defining your schema.
+   * This data is completely unused internally by CSuite.
+   * It is READONLY.
+   */
+  getConfigCustom() {
+    return this.config.custom ?? {};
   }
-  get customErrors() {
-    const SELF = this;
-    if (SELF.config.check == null)
+  /**
+   * Retrive the field custom data.
+   * 🔶: NOT TO BE CONFUSED WITH `getConfigCustom`
+   * Field custom data are persisted in the serial.custom.
+   * This data is completely unused internally by CSuite.
+   * You can use them however you want provided you keep them serializable.
+   * It's just a quick/hacky place to store stuff
+   */
+  getFieldCustom() {
+    return this.serial.custom;
+  }
+  /**
+   * update
+   * You can either return a new value, or patch the initial value
+   * use `deleteFieldCustomData` instead to replace the value by null or undefined.
+   */
+  updateFieldCustom(fn) {
+    const prev = this.value;
+    const next = fn(prev) ?? prev;
+    this.serial.custom = JSON.parse(JSON.stringify(next));
+    this.applySerialUpdateEffects();
+    return this;
+  }
+  /** delete field custom data (delete this.serial.custom)  */
+  deleteFieldCustomData() {
+    delete this.serial.custom;
+    this.applySerialUpdateEffects();
+    return this;
+  }
+  /**
+   * all own errors:
+   *  + base/default (built-in field, e.g. minLength for string)
+   *  + custom       (user-defined in config) */
+  get errors() {
+    const ownProblems = normalizeProblem(this.ownProblems);
+    return [...ownProblems, ...this.customOwnProblems];
+  }
+  get allErrorsIncludingChildrenErros() {
+    return this.errors.concat(this.subFields.flatMap((f) => f.allErrorsIncludingChildrenErros));
+  }
+  /**
+   * returns the list of all ancestors, NOT including self
+   * @since 2024-07-08
+   */
+  get ancestors() {
+    const result = [];
+    let current = this.parent;
+    while (current) {
+      result.push(current);
+      current = current.parent;
+    }
+    return result;
+  }
+  /**
+   * returns the list of all ancestors, including self
+   * @since 2024-07-08
+   */
+  get ancestorsIncludingSelf() {
+    const result = [];
+    let current = this;
+    while (current) {
+      result.push(current);
+      current = current.parent;
+    }
+    return result;
+  }
+  get customOwnProblems() {
+    if (this.config.check == null)
       return [
         /* { message: 'No check function provided' } */
       ];
-    const res = SELF.config.check(this);
+    const res = this.config.check(this);
     return normalizeProblem(res);
   }
   // BUMP ----------------------------------------------------
-  bumpSerial() {
-    this.form.serialChanged(this);
+  /**
+   * everytime a field serial is udpated, we should call this function.
+   * this function is called recursivelu upwards.
+   * persistance will usually be done at the root field reacting to this event.
+   */
+  applySerialUpdateEffects() {
+    this.config.onSerialChange?.(this);
   }
   // 💬 2024-03-15 rvion: use this regexp to quickly review manual serial set patterns
   // | `serial\.[a-zA-Z_]+(\[[a-zA-Z_]+\])? = `
-  bumpValue() {
-    this.serial.lastUpdatedAt = Date.now();
-    this.form.valueChanged(this);
-    this.config.onValueChange?.(this.value, this);
-    this.publishValue();
+  applyValueUpdateEffects() {
+    this.config.onValueChange?.(this);
   }
+  /** recursively walk upwards on any field change  */
+  // private applyValueUpdateEffects_OF_CHILD(child: Field): void {
+  //     this.serial.lastUpdatedAt = Date.now() as Timestamp
+  //     this.parent?.applyValueUpdateEffects_OF_CHILD(child)
+  //     this.config.onValueChange?.(this /* TODO: add extra param here:, child  */)
+  //     this.publishValue() // 🔴  should probably be a reaction rather than this
+  // }
   /**
    * this method can be heavilly optimized
+   * ping @globi
    * todo:
    *  - by storing the published value locally
    *  - by defining a getter on the _advertisedValues object of all parents
    *  - by only setting this getter up once.
    * */
   publishValue() {
-    const producers = this.spec.producers;
-    if (producers.length === 0)
-      return;
+    const producers = this.schema.producers;
+    if (producers.length === 0) return;
     const producedValues = {};
     for (const producer of producers) {
       const channelId = typeof producer.chan === "string" ? producer.chan : producer.chan.id;
@@ -4513,33 +4965,28 @@ var BaseField = class {
     }
   }
   get isHidden() {
-    if (this.config.hidden != null)
-      return this.config.hidden;
-    if (isWidgetGroup(this) && Object.keys(this.fields).length === 0)
-      return true;
+    if (this.config.hidden != null) return this.config.hidden;
+    if (isFieldGroup(this) && Object.keys(this.fields).length === 0) return true;
     return false;
   }
   /** whether the widget should be considered inactive */
   get isDisabled() {
-    return isWidgetOptional(this) && !this.serial.active;
+    return isFieldOptional(this) && !this.serial.active;
+  }
+  get isCollapsedByDefault() {
+    return false;
   }
   get isCollapsed() {
-    if (!this.isCollapsible)
-      return false;
-    if (this.serial.collapsed != null)
-      return this.serial.collapsed;
-    if (this.parent?.isDisabled)
-      return true;
-    return false;
+    if (!this.isCollapsible) return false;
+    if (this.serial.collapsed != null) return this.serial.collapsed;
+    if (this.parent?.isDisabled) return true;
+    return this.isCollapsedByDefault ?? false;
   }
   /** if specified, override the default algorithm to decide if the widget should have borders */
   get isCollapsible() {
-    if (this.config.collapsed != null)
-      return this.config.collapsed;
-    if (!this.DefaultBodyUI)
-      return false;
-    if (this.config.label === false)
-      return false;
+    if (this.config.collapsed != null) return this.config.collapsed;
+    if (!this.DefaultBodyUI) return false;
+    if (this.config.label === false) return false;
     return true;
   }
   get background() {
@@ -4547,31 +4994,43 @@ var BaseField = class {
   }
   /** if provided, override the default logic to decide if the widget need to be bordered */
   get border() {
-    if (this.parent == null)
-      return false;
-    if (this.config.border != null)
-      return this.config.border;
-    if (this.DefaultBodyUI == null)
-      return false;
-    return 5;
+    if (this.parent == null) return false;
+    if (this.config.border != null) return this.config.border;
+    if (this.DefaultBodyUI == null) return false;
+    return false;
   }
   // FOLD ----------------------------------------------------
   setCollapsed(val) {
-    if (this.serial.collapsed === val)
-      return;
+    if (this.serial.collapsed === val) return;
     this.serial.collapsed = val;
-    this.form.serialChanged(this);
+    this.applySerialUpdateEffects();
   }
   toggleCollapsed() {
     this.serial.collapsed = !this.serial.collapsed;
-    this.form.serialChanged(this);
+    this.applySerialUpdateEffects();
   }
   // UI ----------------------------------------------------
+  /**
+   * allow to quickly render the model as a react form
+   * without having to import any component; usage:
+   * | <div>{x.render()}</div>
+   */
+  render(p = {}) {
+    return createElement5(FormUI, { field: this, ...p });
+  }
+  /**
+   * allow to quickly render the form in a dropdown button
+   * without having to import any component; usage:
+   * | <div>{x.renderAsConfigBtn()}</div>
+   */
+  renderAsConfigBtn(p) {
+    return createElement5(FormAsDropdownConfigUI, { form: this, ...p });
+  }
   renderSimple(p) {
     return /* @__PURE__ */ jsx(
       WidgetWithLabelUI,
       {
-        widget: this,
+        field: this,
         showWidgetMenu: false,
         showWidgetExtra: false,
         showWidgetUndo: false,
@@ -4591,7 +5050,7 @@ var BaseField = class {
           showWidgetExtra: false,
           showWidgetUndo: false
         },
-        children: /* @__PURE__ */ jsx(WidgetWithLabelUI, { widget: this, fieldName: "_", ...p }, this.id)
+        children: /* @__PURE__ */ jsx(WidgetWithLabelUI, { field: this, fieldName: "_", ...p }, this.id)
       }
     );
   }
@@ -4599,106 +5058,129 @@ var BaseField = class {
     return /* @__PURE__ */ jsx(
       WidgetWithLabelUI,
       {
-        widget: this,
-        fieldName: "_",
+        field: this,
+        fieldName: p?.fieldName ?? "_",
         ...p
       },
       this.id
     );
   }
   defaultHeader() {
-    if (this.DefaultHeaderUI == null)
-      return;
-    return /* @__PURE__ */ jsx(this.DefaultHeaderUI, { widget: this });
+    if (this.DefaultHeaderUI == null) return;
+    return /* @__PURE__ */ jsx(this.DefaultHeaderUI, { field: this });
   }
   defaultBody() {
-    if (this.DefaultBodyUI == null)
-      return;
-    return /* @__PURE__ */ jsx(this.DefaultBodyUI, { widget: this });
+    if (this.DefaultBodyUI == null) return;
+    return /* @__PURE__ */ jsx(this.DefaultBodyUI, { field: this });
   }
   header() {
     const HeaderUI = "header" in this.config ? ensureObserver(this.config.header) : this.DefaultHeaderUI;
-    if (HeaderUI == null)
-      return;
-    return /* @__PURE__ */ jsx(HeaderUI, { widget: this });
+    if (HeaderUI == null) return;
+    return /* @__PURE__ */ jsx(HeaderUI, { field: this });
   }
   body() {
     const BodyUI = "body" in this.config ? ensureObserver(this.config.body) : this.DefaultBodyUI;
-    if (BodyUI == null)
-      return;
-    return /* @__PURE__ */ jsx(BodyUI, { widget: this });
+    if (BodyUI == null) return;
+    return /* @__PURE__ */ jsx(BodyUI, { field: this });
   }
   /** list of all subwidgets, without named keys */
-  get subWidgets() {
+  get subFields() {
     return [];
   }
   /** list of all subwidgets, without named keys */
-  get subWidgetsWithKeys() {
+  get subFieldsWithKeys() {
     return [];
+  }
+  /**
+   * proxy this.repo.action
+   * defined to shorted call and allow per-field override
+   */
+  runInValueTransaction(fn) {
+    return this.repo.TRANSACT(fn, this, "value", "WITH_EFFECT");
+  }
+  runInAutoTransaction(fn) {
+    return this.repo.TRANSACT(fn, this, "auto", "WITH_EFFECT");
+  }
+  runInSerialTransaction(fn) {
+    return this.repo.TRANSACT(fn, this, "serial", "WITH_EFFECT");
+  }
+  runInCreateTransaction(fn) {
+    return this.repo.TRANSACT(fn, this, "create", "NO_EFFECT");
   }
   // --------------------------------------------------------------------------------
   // 🔶 the 5 getters bellow are temporary hacks to make shared keep working
   // until every shared usage has been migrated
-  /** getter that resolve to `this.spec.producers` */
+  /** getter that resolve to `this.schema.producers` */
   get producers() {
-    return this.spec.producers;
+    return this.schema.producers;
   }
-  /** getter that resolve to `this.spec.publish` */
+  /** getter that resolve to `this.schema.publish` */
   get publish() {
-    return this.spec.publish;
+    return this.schema.publish;
   }
-  /** getter that resolve to `this.spec.subscribe` */
+  /** getter that resolve to `this.schema.subscribe` */
   get subscribe() {
-    return this.spec.subscribe;
+    return this.schema.subscribe;
   }
-  /** getter that resolve to `this.spec.reactions` */
+  /** getter that resolve to `this.schema.reactions` */
   get reactions() {
-    return this.spec.reactions;
+    return this.schema.reactions;
   }
-  /** getter that resolve to `this.spec.addReaction` */
+  /** getter that resolve to `this.schema.addReaction` */
   get addReaction() {
-    return this.spec.addReaction;
+    return this.schema.addReaction;
   }
   get icon() {
-    const x = this.spec.config.icon;
-    if (x == null)
-      return null;
-    if (typeof x === "string")
-      return x;
+    const x = this.schema.config.icon;
+    if (x == null) return null;
+    if (typeof x === "string") return x;
     return x(this);
   }
   /** this function MUST be called at the end of every widget constructor */
-  init(mobxOverrides) {
-    makeAutoObservableInheritance(this, mobxOverrides);
-    const self2 = this;
-    const config = self2.config;
-    const serial = self2.serial;
-    if (config.onCreate) {
-      const oldKey = serial._creationKey;
-      const newKey = config.onCreate.evaluationKey ?? "default";
-      if (oldKey !== newKey) {
-        config.onCreate(this);
-        serial._creationKey = newKey;
-      }
+  init(serial, mobxOverrides) {
+    autofixSerial_20240711(serial);
+    if (this._hasBeenInitialized) {
+      console.error(`[\u{1F536}] Field.init has already been called => ABORTING`);
+      return;
     }
-    if (config.onInit) {
-      config.onInit(this);
+    this._hasBeenInitialized = true;
+    this.schema.applyExts(this);
+    this.runInCreateTransaction(() => {
+      this.copyCommonSerialFiels(serial);
+      this.setOwnSerial(serial);
+      makeAutoObservableInheritance(this, mobxOverrides);
+      this.repo._registerField(this);
+      this.ready = true;
+    });
+  }
+  get hasSnapshot() {
+    return this.serial.snapshot != null;
+  }
+  deleteSnapshot() {
+    delete this.serial.snapshot;
+    this.applySerialUpdateEffects();
+  }
+  /** update current field snapshot */
+  saveSnapshot() {
+    const snapshot = potatoClone(this.serial);
+    delete snapshot.snapshot;
+    this.serial.snapshot = snapshot;
+    this.applySerialUpdateEffects();
+    return snapshot;
+  }
+  /** rever to the last snapshot */
+  revertToSnapshot() {
+    if (this.serial.snapshot == null) {
+      return this.reset();
     }
-    this.form._allFormWidgets.set(this.id, this);
-    this.form.manager._allWidgets.set(this.id, this);
-    const prev = this.form.manager._allWidgetsByType.get(this.type);
-    if (prev == null) {
-      this.form.manager._allWidgetsByType.set(this.type, /* @__PURE__ */ new Map([[this.id, this]]));
-    } else {
-      prev.set(this.id, this);
-    }
+    this.setSerial(this.serial.snapshot);
   }
 };
 
 // src/csuite/fields/bool/WidgetBoolUI.tsx
 import { observer as observer40 } from "mobx-react-lite";
 
-// src/csuite/fields/spacer/SpacerUI.tsx
+// src/csuite/components/SpacerUI.tsx
 import { observer as observer39 } from "mobx-react-lite";
 var SpacerUI = observer39(function SpacerUI_(p) {
   return /* @__PURE__ */ jsx("div", { tw: ["ml-auto"] });
@@ -4706,188 +5188,157 @@ var SpacerUI = observer39(function SpacerUI_(p) {
 
 // src/csuite/fields/bool/WidgetBoolUI.tsx
 var WidgetBoolUI = observer40(function WidgetBoolUI_(p) {
-  const widget = p.widget;
-  if (widget.config.label2) {
+  const field = p.field;
+  if (field.config.label2) {
     console.warn("label2 is deprecated, please use the text option instead. label2 will be removed in the future");
   }
   return /* @__PURE__ */ jsxs("div", { tw: "flex w-full h-full ", children: [
     /* @__PURE__ */ jsx(
       InputBoolUI,
       {
-        display: widget.config.display,
-        expand: widget.config.display === "button" ? widget.config.expand : true,
-        icon: widget.icon,
-        text: widget.config.text ?? widget.config.label2,
-        value: widget.value,
-        onValueChange: (value) => widget.value = value
+        display: field.config.display,
+        expand: field.config.display === "button" ? field.config.expand : true,
+        icon: field.icon,
+        text: field.config.text ?? field.config.label2,
+        value: field.value,
+        onValueChange: (value) => field.value = value
       }
     ),
     /* @__PURE__ */ jsx(SpacerUI, {})
   ] });
 });
 
-// src/csuite/fields/bool/WidgetBool.tsx
-var Widget_bool = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/bool/FieldBool.tsx
+var Field_bool = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WidgetBoolUI;
     this.DefaultBodyUI = void 0;
-    this.type = "bool";
-    this.setOn = () => this.value = true;
-    this.setOff = () => this.value = false;
-    this.toggle = () => this.value = !this.value;
-    this.defaultValue = this.config.default ?? false;
-    // prettier-ignore
-    this.reset = () => this.value = this.defaultValue;
-    this.id = serial?.id ?? nanoid6();
-    this.serial = serial ?? {
-      id: this.id,
-      type: "bool",
-      active: this.spec.config.default ?? false,
-      collapsed: this.spec.config.startCollapsed
-    };
-    this.init({
-      serial: observable8,
+    this.init(serial, {
       value: computed3,
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
   }
-  get baseErrors() {
-    return null;
+  static {
+    this.type = "bool";
   }
-  get hasChanges() {
-    return this.value !== this.defaultValue;
+  setOwnSerial(serial) {
+    this.serial.value = serial?.active ?? // ⏱️ backward compat
+    serial?.value ?? this.defaultValue;
   }
   get value() {
-    return this.serial.active ?? false;
-  }
-  setValue(val) {
-    this.value = val;
+    return this.serial.value ?? this.defaultValue;
   }
   set value(next) {
-    if (this.serial.active === next)
-      return;
-    runInAction4(() => {
-      this.serial.active = next;
-      this.bumpValue();
-    });
+    if (this.serial.value === next) return;
+    this.runInValueTransaction(() => this.serial.value = next);
   }
-};
-registerWidgetClass("bool", Widget_bool);
-
-// src/csuite/fields/button/WidgetButton.ts
-import { runInAction as runInAction6 } from "mobx";
-import { nanoid as nanoid7 } from "nanoid";
-
-// src/csuite/fields/button/WidgetButtonUI.tsx
-import { runInAction as runInAction5 } from "mobx";
-import { observer as observer41 } from "mobx-react-lite";
-var WidgetInlineRunUI = observer41(function WidgetInlineRunUI_(p) {
-  const extra = p.widget.config.useContext?.();
-  const context = { widget: p.widget, context: extra };
-  return /* @__PURE__ */ jsx(
-    Button,
-    {
-      look: p.widget.config.look,
-      className: "self-start",
-      icon: p.widget.icon,
-      expand: p.widget.config.expand,
-      onClick: () => runInAction5(() => p.widget.config.onClick?.(context)),
-      children: p.widget.config.text ?? `Run`
-    }
-  );
-});
-
-// src/csuite/fields/button/WidgetButton.ts
-var Widget_button = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
-    this.DefaultHeaderUI = WidgetInlineRunUI;
-    this.DefaultBodyUI = void 0;
-    this.type = "button";
-    // prettier-ignore
-    this.reset = () => this.value = this.defaultValue;
-    this.id = serial?.id ?? nanoid7();
-    const config = spec.config;
-    if (config.text) {
-      config.label = config.label ?? ` `;
-    }
-    this.serial = serial ?? {
-      type: "button",
-      collapsed: config.startCollapsed,
-      id: this.id,
-      val: config.default ?? false
-    };
-    this.init({
-      DefaultHeaderUI: false,
-      DefaultBodyUI: false
-    });
-  }
-  get baseErrors() {
+  get ownProblems() {
     return null;
+  }
+  /** set the value to true */
+  setOn() {
+    this.value = true;
+  }
+  /** set the value to false */
+  setOff() {
+    this.value = false;
+  }
+  /**
+   * set value to true if false, and to false if true
+   * return new value
+   */
+  toggle() {
+    this.value = !this.value;
   }
   get defaultValue() {
     return this.config.default ?? false;
   }
-  // prettier-ignore
   get hasChanges() {
-    return this.serial.val !== this.defaultValue;
-  }
-  get value() {
-    return this.serial.val;
-  }
-  setValue(val) {
-    this.value = val;
-  }
-  set value(next) {
-    if (this.serial.val === next)
-      return;
-    runInAction6(() => {
-      this.serial.val = next;
-      this.bumpValue();
-    });
+    return this.value !== this.defaultValue;
   }
 };
-registerWidgetClass("button", Widget_button);
+registerFieldClass("bool", Field_bool);
 
-// src/csuite/fields/choices/WidgetChoices.tsx
-import { nanoid as nanoid8 } from "nanoid";
-
-// src/csuite/fields/choices/WidgetChoicesUI.tsx
-import { observer as observer46 } from "mobx-react-lite";
-
-// src/csuite/form/WidgetsContainerUI.tsx
-import { observer as observer42 } from "mobx-react-lite";
-var WidgetsContainerUI = observer42(function WidgetsContainerUI_(p) {
-  const isHorizontal = p.layout === "H";
+// src/csuite/fields/button/WidgetButtonUI.tsx
+import { runInAction as runInAction4 } from "mobx";
+import { observer as observer41 } from "mobx-react-lite";
+var WidgetButtonUI = observer41(function WidgetButtonUI_(p) {
+  const extra = p.field.config.useContext?.();
+  const context = { widget: p.field, context: extra };
   return /* @__PURE__ */ jsx(
-    "div",
+    Button,
     {
-      className: p.className,
-      tw: [
-        //
-        isHorizontal ? `flex gap-1 flex-wrap` : `flex gap-1 flex-col`,
-        "w-full overflow-auto",
-        p.className
-      ],
-      children: p.children
+      look: p.field.config.look,
+      className: "self-start",
+      icon: p.field.icon,
+      expand: p.field.config.expand,
+      onClick: () => runInAction4(() => p.field.config.onClick?.(context)),
+      children: p.field.config.text ?? `Run`
     }
   );
 });
 
-// src/csuite/select/SelectUI.tsx
+// src/csuite/fields/button/FieldButton.ts
+var Field_button = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
+    this.DefaultHeaderUI = WidgetButtonUI;
+    this.DefaultBodyUI = void 0;
+    const config = schema.config;
+    if (config.text) config.label = config.label ?? ` `;
+    this.init(serial, {
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
+  }
+  static {
+    this.type = "button";
+  }
+  setOwnSerial(serial) {
+    this.serial.val = serial?.val ?? this.defaultValue;
+  }
+  get value() {
+    return this.serial.val ?? this.defaultValue;
+  }
+  set value(next) {
+    if (this.serial.val === next) return;
+    this.runInValueTransaction(() => this.serial.val = next);
+  }
+  get ownProblems() {
+    return null;
+  }
+  /** set the value to true */
+  setOn() {
+    return this.value = true;
+  }
+  /** set the value to false */
+  setOff() {
+    return this.value = false;
+  }
+  /** set value to true if false, and to false if true */
+  toggle() {
+    return this.value = !this.value;
+  }
+  get defaultValue() {
+    return this.config.default ?? false;
+  }
+  get hasChanges() {
+    return this.value !== this.defaultValue;
+  }
+};
+registerFieldClass("button", Field_button);
+
+// src/csuite/fields/choices/WidgetChoices_SelectHeaderUI.tsx
 import { observer as observer45 } from "mobx-react-lite";
+
+// src/csuite/select/SelectUI.tsx
+import { observer as observer44 } from "mobx-react-lite";
 import { useMemo as useMemo6 } from "react";
 
 // src/csuite/select/SelectPopupUI.tsx
-import { observer as observer43 } from "mobx-react-lite";
+import { observer as observer42 } from "mobx-react-lite";
 import { createPortal as createPortal2 } from "react-dom";
 
 // node_modules/@babel/runtime/helpers/esm/extends.js
@@ -5485,29 +5936,31 @@ var FixedSizeList = /* @__PURE__ */ createListComponent({
 });
 
 // src/csuite/select/SelectPopupUI.tsx
-var SelectPopupUI = observer43(function SelectPopupUI_(p) {
+var trueMinWidth = "40rem";
+var SelectPopupUI = observer42(function SelectPopupUI_(p) {
   const s = p.s;
   return createPortal2(
-    /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsxs(
       Frame,
       {
         ref: s.popupRef,
         tw: [
           "MENU-ROOT _SelectPopupUI flex",
-          "overflow-auto",
+          "overflow-auto flex-col",
           s.tooltipPosition.bottom != null ? "rounded-t border-t" : "rounded-b border-b"
         ],
+        onMouseUp: () => s.closeIfShouldCloseAfterSelection(),
         style: {
-          minWidth: s.anchorRef.current?.clientWidth ?? "100%",
+          minWidth: s.anchorRef.current?.clientWidth ? `max(${s.anchorRef.current.clientWidth}px, ${trueMinWidth})` : trueMinWidth,
           maxWidth: window.innerWidth - (s.tooltipPosition.left != null ? s.tooltipPosition.left : s.tooltipPosition.right ?? 0),
+          maxHeight: `${s.tooltipMaxHeight}px`,
           pointerEvents: "initial",
           position: "absolute",
           zIndex: 99999999,
           top: s.tooltipPosition.top != null ? `${s.tooltipPosition.top}px` : "unset",
           bottom: s.tooltipPosition.bottom != null ? `${s.tooltipPosition.bottom}px` : "unset",
           left: s.tooltipPosition.left != null ? `${s.tooltipPosition.left}px` : "unset",
-          right: s.tooltipPosition.right != null ? `${s.tooltipPosition.right}px` : "unset",
-          maxHeight: `${s.tooltipMaxHeight}px`
+          right: s.tooltipPosition.right != null ? `${s.tooltipPosition.right}px` : "unset"
           // Adjust positioning as needed
         },
         onMouseDown: (ev) => {
@@ -5515,18 +5968,13 @@ var SelectPopupUI = observer43(function SelectPopupUI_(p) {
           ev.stopPropagation();
         },
         onMouseEnter: (ev) => {
-          if (s.isOpen)
-            s.hasMouseEntered = true;
+          if (s.isOpen) s.hasMouseEntered = true;
         },
-        children: /* @__PURE__ */ jsxs("ul", { className: "max-h-96", tw: "flex-col w-full", children: [
+        children: [
           (p.showValues ?? true) && /* @__PURE__ */ jsx(
             "div",
             {
-              tw: [
-                //
-                "overflow-au flex flex-wrap gap-0.5",
-                "max-w-sm"
-              ],
+              tw: ["overflow-auto flex flex-wrap gap-0.5"],
               children: s.displayValue
             }
           ),
@@ -5543,13 +5991,13 @@ var SelectPopupUI = observer43(function SelectPopupUI_(p) {
               itemData: { s }
             }
           )
-        ] })
+        ]
       }
     ),
     document.getElementById("tooltip-root")
   );
 });
-var SelectOptionUI = observer43(function FooUI_({
+var SelectOptionUI = observer42(function FooUI_({
   data,
   index,
   style
@@ -5566,11 +6014,10 @@ var SelectOptionUI = observer43(function FooUI_({
       mode,
       preventDefault: true,
       showToggleButtonBox: true,
-      hovered: s.selectedIndex === index,
+      hovered: (b) => b || s.selectedIndex === index,
       value: isSelected,
       onValueChange: (value) => {
-        if (value != isSelected)
-          s.selectOption(index);
+        if (value != isSelected) s.selectOption(index);
       },
       children: /* @__PURE__ */ jsx("div", { tw: "w-full", children: s.p.getLabelUI ? s.p.getLabelUI(option) : s.p.getLabelText(option) })
     }
@@ -5578,34 +6025,36 @@ var SelectOptionUI = observer43(function FooUI_({
 });
 
 // src/csuite/select/SelectState.tsx
-import { makeAutoObservable as makeAutoObservable9 } from "mobx";
-import React from "react";
+import { makeAutoObservable as makeAutoObservable8 } from "mobx";
+import React2 from "react";
 
 // src/csuite/badge/BadgeUI.tsx
-import { observer as observer44 } from "mobx-react-lite";
+import { observer as observer43 } from "mobx-react-lite";
 
 // src/csuite/hashUtils/hash.ts
 var hashStringToNumber = (s) => {
-  let hash2 = 0, i, chr;
+  let hash = 0, i, chr;
   for (i = 0; i < s.length; i++) {
     chr = s.charCodeAt(i);
-    hash2 = (hash2 << 5) - hash2 + chr;
-    hash2 |= 0;
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
   }
-  return hash2;
+  return hash;
 };
 
 // src/csuite/badge/BadgeUI.tsx
-var BadgeUI = observer44(function BadgeUI_({
+var BadgeUI = observer43(function BadgeUI_({
   hue,
   autoHue,
   children,
   ...rest
 }) {
+  const hasAction = Boolean(rest.onClick);
   return /* @__PURE__ */ jsx(
     Frame,
     {
-      tw: "rounded px-2 whitespace-nowrap",
+      tw: ["rounded px-2 whitespace-nowrap", hasAction && "cursor-pointer"],
+      hover: hasAction,
       base: {
         //
         hue: hue ?? (autoHue ? typeof autoHue === "boolean" ? typeof children === "string" ? hashStringToNumber(children) : void 0 : hashStringToNumber(autoHue) : void 0),
@@ -5657,13 +6106,12 @@ var AutoCompleteSelectState = class {
      *
      */
     this.isEqual = (a, b) => {
-      if (this.p.equalityCheck)
-        return this.p.equalityCheck(a, b);
+      if (this.p.equalityCheck) return this.p.equalityCheck(a, b);
       return a === b;
     };
-    this.anchorRef = React.createRef();
-    this.inputRef = React.createRef();
-    this.popupRef = React.createRef();
+    this.anchorRef = React2.createRef();
+    this.inputRef = React2.createRef();
+    this.popupRef = React2.createRef();
     this.selectedIndex = 0;
     this.isOpen = false;
     this.isDragging = false;
@@ -5674,8 +6122,7 @@ var AutoCompleteSelectState = class {
     this.tooltipMaxHeight = 100;
     this.updatePosition = () => {
       const rect = this.anchorRef.current?.getBoundingClientRect();
-      if (rect == null)
-        return;
+      if (rect == null) return;
       this.tooltipPosition = {
         top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX,
@@ -5708,13 +6155,6 @@ var AutoCompleteSelectState = class {
       this.inputRef.current?.focus();
       window.addEventListener("mousemove", this.MouseMoveTooFar, true);
     };
-    // click means focus change => means need to refocus the input
-    this.onMenuEntryClick = (ev, index) => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      this.selectOption(index);
-      this.inputRef.current?.focus();
-    };
     this.handleInputChange = (event) => {
       this.filterOptions(event.target.value);
       this.updatePosition();
@@ -5744,16 +6184,13 @@ var AutoCompleteSelectState = class {
         this.closeMenu();
       }
     };
-    this.onBlur = (_ev) => {
-      this.closeMenu();
-    };
     this.handleTooltipKeyDown = (ev) => {
-      if (ev.key === "ArrowDown")
-        this.navigateSelection("down");
-      else if (ev.key === "ArrowUp")
-        this.navigateSelection("up");
-      else if (ev.key === "Enter" && !ev.metaKey && !ev.ctrlKey)
+      if (ev.key === "ArrowDown") this.navigateSelection("down");
+      else if (ev.key === "ArrowUp") this.navigateSelection("up");
+      else if (ev.key === "Enter" && !ev.metaKey && !ev.ctrlKey) {
         this.selectOption(this.selectedIndex);
+        this.closeIfShouldCloseAfterSelection();
+      }
     };
     this.onRealInputKeyUp = (ev) => {
       if (ev.key === "Enter" && !this.isOpen) {
@@ -5775,7 +6212,7 @@ var AutoCompleteSelectState = class {
         ev.stopPropagation();
       }
     };
-    makeAutoObservable9(this, {
+    makeAutoObservable8(this, {
       popupRef: false,
       anchorRef: false,
       inputRef: false
@@ -5788,16 +6225,12 @@ var AutoCompleteSelectState = class {
     return this.p.getSearchQuery?.() ?? this._searchQuery;
   }
   set searchQuery(value) {
-    if (this.p.setSearchQuery)
-      this.p.setSearchQuery(value);
-    else
-      this._searchQuery = value;
+    if (this.p.setSearchQuery) this.p.setSearchQuery(value);
+    else this._searchQuery = value;
   }
   get filteredOptions() {
-    if (this.searchQuery === "")
-      return this.options;
-    if (this.p.disableLocalFiltering)
-      return this.options;
+    if (this.searchQuery === "") return this.options;
+    if (this.p.disableLocalFiltering) return this.options;
     return this.options.filter((p) => {
       const label = this.p.getLabelText(p);
       return searchMatches(label, this.searchQuery);
@@ -5810,18 +6243,15 @@ var AutoCompleteSelectState = class {
    */
   get indexOfFirstSelectedItemAmongstOptions() {
     const firstSelection = this.firstValue;
-    if (firstSelection == null)
-      return null;
+    if (firstSelection == null) return null;
     return this.options.findIndex((o) => this.isEqual(o, firstSelection));
   }
   /** return the first selected value */
   get firstValue() {
     const v = this.value;
-    if (v == null)
-      return null;
+    if (v == null) return null;
     if (Array.isArray(v)) {
-      if (v.length === 0)
-        return null;
+      if (v.length === 0) return null;
       return v[0];
     }
     return v;
@@ -5833,22 +6263,18 @@ var AutoCompleteSelectState = class {
   /** list of all selected values */
   get values() {
     const v = this.value;
-    if (v == null)
-      return [];
+    if (v == null) return [];
     return Array.isArray(v) ? v : [v];
   }
   get displayValue() {
-    if (this.p.hideValue)
-      return this.p.placeholder ?? "";
+    if (this.p.hideValue) return this.p.placeholder ?? "";
     let value = this.value;
     const placeHolderStr = this.p.placeholder ?? "Select...";
-    if (value == null)
-      return placeHolderStr;
+    if (value == null) return placeHolderStr;
     value = Array.isArray(value) ? value : [value];
     const str = value.length === 0 ? placeHolderStr : value.map((i) => {
       const label = this.p.getLabelText(i);
-      if (!this.p.multiple)
-        return label;
+      if (!this.p.multiple) return label;
       return /* @__PURE__ */ jsx(
         BadgeUI,
         {
@@ -5880,17 +6306,24 @@ var AutoCompleteSelectState = class {
     this.isOpen = true;
     this.setNavigationIndex(0);
   }
+  // click means focus change => means need to refocus the input
+  // ⏸️ onMenuEntryClick = (ev: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
+  // ⏸️     ev.preventDefault()
+  // ⏸️     ev.stopPropagation()
+  // ⏸️     this.selectOption(index)
+  // ⏸️     this.inputRef.current?.focus()
+  // ⏸️ }
   selectOption(index) {
     const selectedOption = this.filteredOptions[index];
     if (selectedOption != null) {
       this.p.onChange?.(selectedOption, this);
       const shouldResetQuery = this.p.resetQueryOnPick ?? false;
-      const shouldCloseMenu = this.p.closeOnPick ?? !this.isMultiSelect;
-      if (shouldResetQuery)
-        this.searchQuery = "";
-      if (shouldCloseMenu)
-        this.closeMenu();
+      if (shouldResetQuery) this.searchQuery = "";
     }
+  }
+  closeIfShouldCloseAfterSelection() {
+    const shouldCloseMenu = this.p.closeOnPick ?? !this.isMultiSelect;
+    if (shouldCloseMenu) this.closeMenu();
   }
   navigateSelection(direction) {
     this.updatePosition();
@@ -5904,21 +6337,22 @@ var AutoCompleteSelectState = class {
     this.updatePosition();
     this.selectedIndex = value;
   }
+  onBlur(_ev) {
+    this.closeMenu();
+  }
 };
 
 // src/csuite/select/SelectUI.tsx
-var SelectUI = observer45(function SelectUI_(p) {
+var SelectUI = observer44(function SelectUI_(p) {
   const s = useMemo6(() => new AutoCompleteSelectState(
     /* st, */
     p
   ), []);
   const csuite = useCSuite();
   const border = csuite.inputBorder;
-  return /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs(
     Frame,
     {
-      base: { contrast: 0.05 },
-      hover: true,
       tabIndex: -1,
       tw: ["SelectUI minh-input", "flex flex-1 items-center relative"],
       border: { contrast: border },
@@ -5933,144 +6367,89 @@ var SelectUI = observer45(function SelectUI_(p) {
           s.openMenu();
         }
       },
-      onBlur: s.onBlur,
-      children: /* @__PURE__ */ jsxs("div", { className: "flex-1 h-full ", children: [
-        /* @__PURE__ */ jsx(
-          "div",
+      onBlur: (ev) => s.onBlur(ev),
+      children: [
+        /* @__PURE__ */ jsxs(
+          Frame,
           {
-            tabIndex: -1,
-            tw: [
-              //
-              "text-sm",
-              "flex gap-1",
-              "p-0 h-full bg-transparent",
-              "select-none overflow-clip"
-            ],
-            children: false ? null : (
-              /* Using grid here to make sure that inner text will truncate instead of pushing the right-most icon out of the container. */
-              /* @__PURE__ */ jsxs("div", { tw: ["w-full", "px-0.5", "grid"], style: { gridTemplateColumns: "24px 1fr 24px" }, children: [
-                /* @__PURE__ */ jsx(
-                  Ikon.mdiTextBoxSearchOutline,
-                  {
-                    tw: "box-border m-[2px]",
-                    size: "calc((var(--input-height) - 4px - 2px)"
-                  }
-                ),
-                /* @__PURE__ */ jsx(
-                  "div",
-                  {
-                    tw: [
-                      "flex gap-0.5 flex-grow items-center lh-input-2 ",
-                      p.wrap ? "flex-wrap" : "overflow-hidden line-clamp-1 text-ellipsis whitespace-nowrap"
-                    ],
-                    children: s.displayValue
-                  }
-                ),
-                /* @__PURE__ */ jsx(
-                  Ikon.mdiChevronDown,
-                  {
-                    tw: "box-border m-[2px]",
-                    size: "calc((var(--input-height) - 4px - 2px)"
-                  }
-                )
-              ] })
-            )
+            base: { contrast: csuite.inputContrast ?? 0.05 },
+            hover: true,
+            className: "flex-1 h-full ",
+            children: [
+              /* @__PURE__ */ jsx(
+                "div",
+                {
+                  tabIndex: -1,
+                  tw: [
+                    //
+                    "text-sm",
+                    "flex gap-1",
+                    "p-0 h-full bg-transparent",
+                    "select-none overflow-clip"
+                  ],
+                  children: false ? null : (
+                    /* Using grid here to make sure that inner text will truncate instead of pushing the right-most icon out of the container. */
+                    /* @__PURE__ */ jsxs("div", { tw: ["w-full", "px-0.5", "grid"], style: { gridTemplateColumns: "24px 1fr 24px" }, children: [
+                      /* @__PURE__ */ jsx(
+                        Ikon.mdiTextBoxSearchOutline,
+                        {
+                          tw: "box-border m-[2px]",
+                          size: "calc((var(--input-height) - 4px - 2px)"
+                        }
+                      ),
+                      /* @__PURE__ */ jsx(
+                        "div",
+                        {
+                          tw: [
+                            "flex gap-0.5 flex-grow items-center lh-input-2 ",
+                            p.wrap ? "flex-wrap" : "overflow-hidden line-clamp-1 text-ellipsis whitespace-nowrap"
+                          ],
+                          children: s.displayValue
+                        }
+                      ),
+                      /* @__PURE__ */ jsx(
+                        Ikon.mdiChevronDown,
+                        {
+                          tw: "box-border m-[2px]",
+                          size: "calc((var(--input-height) - 4px - 2px)"
+                        }
+                      )
+                    ] })
+                  )
+                }
+              ),
+              /* @__PURE__ */ jsx("div", { tw: "absolute top-0 left-0 right-0 z-50 h-full", children: /* @__PURE__ */ jsx(
+                "input",
+                {
+                  placeholder: s.isOpen ? p.placeholder : void 0,
+                  ref: s.inputRef,
+                  onChange: s.handleInputChange,
+                  style: { opacity: s.isOpen ? 1 : 0 },
+                  tw: ["csuite-basic-input", "w-full h-full !outline-none"],
+                  type: "text",
+                  value: s.searchQuery
+                }
+              ) })
+            ]
           }
         ),
-        /* @__PURE__ */ jsx("div", { tw: "absolute top-0 left-0 right-0 z-50 h-full", children: /* @__PURE__ */ jsx(
-          "input",
-          {
-            placeholder: s.isOpen ? p.placeholder : void 0,
-            ref: s.inputRef,
-            onChange: s.handleInputChange,
-            style: { opacity: s.isOpen ? 1 : 0 },
-            tw: ["cushy-basic-input", "w-full h-full !outline-none"],
-            type: "text",
-            value: s.searchQuery
-          }
-        ) }),
-        s.isOpen && /* @__PURE__ */ jsx(SelectPopupUI, { showValues: !p.wrap, s })
-      ] })
+        (s.isOpen || false) && /* @__PURE__ */ jsx(SelectPopupUI, { showValues: !p.wrap, s })
+      ]
     }
   );
 });
 
-// src/csuite/fields/choices/WidgetChoicesUI.tsx
-var WidgetChoices_HeaderUI = observer46(function WidgetChoices_LineUI_(p) {
-  if (p.widget.config.appearance === "tab")
-    return /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { widget: p.widget });
-  else
-    return /* @__PURE__ */ jsx(WidgetChoices_SelectHeaderUI, { widget: p.widget });
-});
-var WidgetChoices_BodyUI = observer46(function WidgetChoices_BodyUI_(p) {
-  const widget = p.widget;
-  const activeSubwidgets = Object.entries(widget.children).map(([branch, subWidget]) => ({ branch, subWidget }));
-  return /* @__PURE__ */ jsx(
-    WidgetsContainerUI,
-    {
-      layout: widget.config.layout,
-      tw: [widget.config.className, p.className],
-      children: activeSubwidgets.map((val) => {
-        const subWidget = val.subWidget;
-        if (subWidget == null)
-          return /* @__PURE__ */ jsx(Fragment, { children: "\u274C error" });
-        return /* @__PURE__ */ jsx(
-          WidgetWithLabelUI,
-          {
-            justifyLabel: p.justify,
-            fieldName: val.branch,
-            widget: subWidget,
-            label: widget.isSingle ? false : void 0
-          },
-          val.branch
-        );
-      })
-    }
-  );
-});
-var WidgetChoices_TabHeaderUI = observer46(function WidgetChoicesTab_LineUI_(p) {
-  const widget = p.widget;
-  const choices = widget.choicesWithLabels;
-  const csuite = useCSuite();
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      tw: "rounded select-none flex flex-1 flex-wrap gap-x-0.5 gap-y-0.5",
-      style: {
-        justifyContent: widget.config.tabPosition === "start" ? "flex-start" : widget.config.tabPosition === "center" ? "center" : widget.config.tabPosition === "end" ? "flex-end" : "flex-end"
-      },
-      children: choices.map((c) => {
-        const isSelected = widget.serial.branches[c.key];
-        return /* @__PURE__ */ jsx(
-          InputBoolUI,
-          {
-            value: isSelected,
-            display: "button",
-            mode: p.widget.isMulti ? "checkbox" : "radio",
-            text: c.label,
-            box: isSelected ? void 0 : { text: csuite.labelText },
-            onValueChange: (value) => {
-              if (value != isSelected) {
-                widget.toggleBranch(c.key);
-              }
-            }
-          },
-          c.key
-        );
-      })
-    }
-  );
-});
-var WidgetChoices_SelectHeaderUI = observer46(function WidgetChoices_SelectLineUI_(p) {
-  const widget = p.widget;
-  const choices = widget.choicesWithLabels;
+// src/csuite/fields/choices/WidgetChoices_SelectHeaderUI.tsx
+var WidgetChoices_SelectHeaderUI = observer45(function WidgetChoices_SelectLineUI_(p) {
+  const field = p.field;
+  const choices = field.choicesWithLabels;
   return /* @__PURE__ */ jsx(
     "div",
     {
       tw: [
         //
         "relative",
-        p.widget.expand || p.widget.config.justifyLabel ? "w-full" : "w-64"
+        p.field.expand || p.field.config.justifyLabel ? "w-full" : "w-64"
       ],
       onMouseDown: (ev) => {
         ev.preventDefault();
@@ -6080,368 +6459,521 @@ var WidgetChoices_SelectHeaderUI = observer46(function WidgetChoices_SelectLineU
         SelectUI,
         {
           tw: "flex-grow",
-          placeholder: p.widget.config.placeholder,
-          value: () => Object.entries(widget.serial.branches).filter(([_, value]) => value).map(([key, _]) => ({ key, label: choices.find((v) => v.key === key)?.label ?? key })),
+          placeholder: p.field.config.placeholder,
+          value: () => Object.entries(field.serial.branches).filter(([_, value]) => value).map(([key, _]) => ({ key, label: choices.find((v) => v.key === key)?.label ?? key })),
           options: () => choices,
           getLabelText: (v) => v.label,
           getLabelUI: (v) => /* @__PURE__ */ jsx("div", { tw: "flex flex-1 justify-between", children: /* @__PURE__ */ jsx("div", { tw: "flex-1", children: v.label }) }),
           equalityCheck: (a, b) => a.key === b.key,
-          multiple: widget.config.multi ?? false,
-          closeOnPick: false,
+          multiple: field.config.multi ?? false,
           resetQueryOnPick: false,
-          onChange: (v) => widget.toggleBranch(v.key)
+          onChange: (v) => field.toggleBranch(v.key)
         }
       )
     }
   );
 });
 
-// src/csuite/fields/choices/WidgetChoices.tsx
-var Widget_choices = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
-    this.UITab = () => /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { widget: this });
-    this.UISelect = () => /* @__PURE__ */ jsx(WidgetChoices_HeaderUI, { widget: this });
-    this.UIChildren = () => /* @__PURE__ */ jsx(WidgetChoices_BodyUI, { widget: this, justify: false });
-    this.DefaultHeaderUI = WidgetChoices_HeaderUI;
-    this.DefaultBodyUI = WidgetChoices_BodyUI;
-    this.type = "choices";
-    this.expand = this.config.expand ?? false;
-    this.children = {};
-    this.isBranchDisabled = (branch) => !this.serial.branches[branch];
-    this.id = serial?.id ?? nanoid8();
-    const config = spec.config;
-    if (typeof config.items === "function") {
-      toastError('\u{1F534} ChoicesWidget "items" property should now be an object, not a function');
-      debugger;
-    }
-    this.serial = serial ?? {
-      type: "choices",
-      id: this.id,
-      active: true,
-      values_: {},
-      branches: {}
-    };
-    const allBranches = Object.keys(config.items);
-    const def = this.config.default;
-    const isMulti = this.config.multi;
-    if (isMulti) {
-      for (const branch of allBranches) {
-        const isActive = this.serial.branches[branch] ?? (typeof def === "string" ? branch === def : typeof def === "object" ? def?.[branch] ?? false : null);
-        if (isActive)
-          this.enableBranch(branch, { skipBump: true });
-      }
-    } else {
-      const allBranches2 = Object.keys(this.config.items);
-      const activeBranch = allBranches2.find((x) => this.serial.branches[x]) ?? (def == null ? allBranches2[0] : typeof def === "string" ? def : typeof def === "object" ? Object.entries(def).find(([, v]) => v)?.[0] ?? allBranches2[0] : allBranches2[0]);
-      if (activeBranch == null)
-        toastError(`\u274C No active branch found for single choice widget "${this.config.label}"`);
-      else
-        this.enableBranch(activeBranch, { skipBump: true });
-    }
-    this.init({
-      DefaultHeaderUI: false,
-      DefaultBodyUI: false
-    });
-  }
-  get baseErrors() {
-    return null;
-  }
-  get isMulti() {
-    return this.config.multi;
-  }
-  get isSingle() {
-    return !this.config.multi;
-  }
-  get firstChoice() {
-    return this.choices[0];
-  }
-  get choices() {
-    return Object.keys(this.config.items);
-  }
-  get choicesWithLabels() {
-    return Object.entries(this.config.items).map(([key, spec]) => ({
-      key,
-      // note:
-      // if child.config.label === false => makeLabelFromFieldName(key)
-      // if child.config.label === '' => makeLabelFromFieldName(key)
-      label: spec.config.label || makeLabelFromFieldName(key)
-    }));
-  }
-  /** array of all active branch keys */
-  get activeBranches() {
-    return Object.keys(this.serial.branches).filter((x) => this.serial.branches[x]);
-  }
-  get firstActiveBranchName() {
-    return this.activeBranches[0];
-  }
-  get firstActiveBranchWidget() {
-    if (this.firstActiveBranchName == null)
-      return void 0;
-    return this.children[this.firstActiveBranchName];
-  }
-  get hasChanges() {
-    const def = this.config.default;
-    for (const branchName of this.choices) {
-      const shouldBeActive = def == null ? false : typeof def === "string" ? branchName === def : def[branchName];
-      const child = this.children[branchName];
-      if (child && !shouldBeActive)
-        return true;
-      if (!child && shouldBeActive)
-        return true;
-      if (child && shouldBeActive && child.hasChanges)
-        return true;
-    }
-    return false;
-  }
-  reset() {
-    const def = this.config.default;
-    for (const branchName of this.choices) {
-      const shouldBeActive = def == null ? false : typeof def === "string" ? branchName === def : def[branchName];
-      const child = this.children[branchName];
-      if (child && !shouldBeActive)
-        this.disableBranch(branchName, { skipBump: true });
-      if (!child && shouldBeActive)
-        this.enableBranch(branchName, { skipBump: true });
-      const childAfter = this.children[branchName];
-      if (childAfter && childAfter.hasChanges)
-        childAfter.reset();
-    }
-    this.bumpValue();
-  }
-  get subWidgets() {
-    return Object.values(this.children);
-  }
-  get subWidgetsWithKeys() {
-    return Object.entries(this.children).map(([key, widget]) => ({ key, widget }));
-  }
-  toggleBranch(branch) {
-    if (this.children[branch]) {
-      if (this.isMulti)
-        this.disableBranch(branch);
-    } else
-      this.enableBranch(branch);
-  }
-  disableBranch(branch, p) {
-    if (!this.children[branch])
-      throw new Error(`\u274C Branch "${branch}" not enabled`);
-    delete this.children[branch];
-    this.serial.branches[branch] = false;
-    if (!p?.skipBump)
-      this.bumpValue();
-  }
-  enableBranch(branch, p) {
-    if (!this.config.multi) {
-      for (const key in this.children) {
-        this.disableBranch(key);
-      }
-    }
-    if (this.children[branch])
-      throw new Error(`\u274C Branch "${branch}" already enabled`);
-    let schema = this.config.items[branch];
-    if (typeof schema === "function")
-      schema = schema();
-    if (schema == null)
-      throw new Error(`\u274C Branch "${branch}" has no initializer function`);
-    const prevBranchSerial = this.serial.values_?.[branch];
-    if (prevBranchSerial && schema.type === prevBranchSerial.type) {
-      this.children[branch] = this.form.builder._HYDRATE(this, schema, prevBranchSerial);
-    } else {
-      this.children[branch] = this.form.builder._HYDRATE(this, schema, null);
-      this.serial.values_[branch] = this.children[branch]?.serial;
-    }
-    this.serial.branches[branch] = true;
-    if (!p?.skipBump)
-      this.bumpValue();
-  }
-  setValue(val) {
-    for (const branch of this.choices) {
-      if (val[branch] == null) {
-        if (!this.isBranchDisabled(branch)) {
-          this.disableBranch(branch);
-        }
-      } else {
-        if (this.isBranchDisabled(branch)) {
-          this.enableBranch(branch);
-        }
-        this.children[branch].setValue(val[branch]);
-      }
-    }
-    this.bumpValue();
-  }
-  /** results, but only for active branches */
-  get value() {
-    const out = {};
-    for (const branch in this.children) {
-      out[branch] = this.children[branch].value;
-    }
-    return out;
-  }
+// src/csuite/fields/choices/WidgetChoices_TabHeaderUI.tsx
+import { observer as observer46 } from "mobx-react-lite";
+
+// src/csuite/fields/choices/TabPositionConfig.tsx
+var getJustifyContent = (tabPosition) => {
+  if (tabPosition === "start") return "flex-start";
+  if (tabPosition === "center") return "center";
+  if (tabPosition === "end") return "flex-end";
+  return "flex-start";
 };
-registerWidgetClass("choices", Widget_choices);
 
-// src/csuite/fields/color/WidgetColor.tsx
-import { runInAction as runInAction7 } from "mobx";
-import { nanoid as nanoid9 } from "nanoid";
-
-// src/csuite/fields/color/WidgetColorUI.tsx
-import { observer as observer47 } from "mobx-react-lite";
-var WidgetColorUI = observer47(function WidgetColorUI_(p) {
-  const widget = p.widget;
+// src/csuite/fields/choices/WidgetChoices_TabHeaderUI.tsx
+var WidgetChoices_TabHeaderUI = observer46(function WidgetChoicesTab_LineUI_(p) {
+  const field = p.field;
+  const choices = field.choicesWithLabels;
+  const csuite = useCSuite();
   return /* @__PURE__ */ jsx(
-    "input",
+    "div",
     {
-      value: widget.serial.value,
-      type: "color",
-      onChange: (ev) => widget.value = ev.target.value
+      tw: "rounded select-none flex flex-1 flex-wrap gap-x-0.5 gap-y-0.5",
+      style: { justifyContent: getJustifyContent(field.config.tabPosition) },
+      children: choices.map((c) => {
+        const isSelected = field.serial.branches[c.key];
+        return /* @__PURE__ */ jsx(
+          InputBoolUI,
+          {
+            icon: c.icon,
+            value: isSelected,
+            display: "button",
+            mode: p.field.isMulti ? "checkbox" : "radio",
+            text: c.label,
+            box: isSelected ? void 0 : { text: csuite.labelText },
+            onValueChange: (value) => {
+              if (value != isSelected) {
+                field.toggleBranch(c.key);
+              }
+            }
+          },
+          c.key
+        );
+      })
     }
   );
 });
 
-// src/csuite/fields/color/WidgetColor.tsx
-var Widget_color = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
-    this.DefaultHeaderUI = WidgetColorUI;
-    this.DefaultBodyUI = void 0;
-    this.type = "color";
-    this.defaultValue = this.config.default ?? "#000000";
-    // prettier-ignore
-    this.reset = () => this.value = this.defaultValue;
-    this.id = serial?.id ?? nanoid9();
-    const config = spec.config;
-    this.serial = serial ?? {
-      type: "color",
-      collapsed: config.startCollapsed,
-      id: this.id,
-      value: config.default ?? "#000000"
-    };
-    this.init({
+// src/csuite/fields/choices/WidgetChoicesUI.tsx
+import { observer as observer48 } from "mobx-react-lite";
+
+// src/csuite/form/WidgetsContainerUI.tsx
+import { observer as observer47 } from "mobx-react-lite";
+var ListOfFieldsContainerUI = observer47(function ListOfFieldsContainerUI_(p) {
+  const isHorizontal = p.layout === "H";
+  const theme = useCSuite();
+  return /* @__PURE__ */ jsx(
+    Frame,
+    {
+      base: theme.fieldGroups.contrast,
+      border: theme.fieldGroups.border,
+      className: p.className,
+      tw: [isHorizontal ? `flex flex-wrap` : `flex flex-col`, "w-full", p.className],
+      children: p.children
+    }
+  );
+});
+
+// src/csuite/fields/choices/WidgetChoicesUI.tsx
+var WidgetChoices_HeaderUI = observer48(function WidgetChoices_LineUI_(p) {
+  if (p.field.config.appearance === "tab") return /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { field: p.field });
+  else return /* @__PURE__ */ jsx(WidgetChoices_SelectHeaderUI, { field: p.field });
+});
+var WidgetChoices_BodyUI = observer48(function WidgetChoices_BodyUI_(p) {
+  const field = p.field;
+  const activeSubwidgets = Object.entries(field.enabledBranches).map(([branch, subWidget]) => ({ branch, subWidget }));
+  return /* @__PURE__ */ jsx(
+    ListOfFieldsContainerUI,
+    {
+      layout: field.config.layout,
+      tw: [field.config.className, p.className],
+      children: activeSubwidgets.map((val) => {
+        const subWidget = val.subWidget;
+        if (subWidget == null) return /* @__PURE__ */ jsx(Fragment, { children: "\u274C error" });
+        return /* @__PURE__ */ jsx(
+          WidgetWithLabelUI,
+          {
+            justifyLabel: p.justify,
+            fieldName: val.branch,
+            field: subWidget
+          },
+          val.branch
+        );
+      })
+    }
+  );
+});
+
+// src/csuite/fields/choices/FieldChoices.tsx
+var Field_choices = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema, {
+      $: "choices",
+      branches: {},
+      values: {}
+    });
+    this.UITab = () => /* @__PURE__ */ jsx(WidgetChoices_TabHeaderUI, { field: this });
+    this.UISelect = () => /* @__PURE__ */ jsx(WidgetChoices_SelectHeaderUI, { field: this });
+    this.UIChildren = () => /* @__PURE__ */ jsx(WidgetChoices_BodyUI, { field: this, justify: false });
+    this.DefaultHeaderUI = WidgetChoices_HeaderUI;
+    this.DefaultBodyUI = WidgetChoices_BodyUI;
+    this.expand = this.config.expand ?? false;
+    /** dictionary of enabled children branches */
+    this.enabledBranches = {};
+    this.init(serial, {
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
   }
-  get baseErrors() {
+  static {
+    this.type = "choices";
+  }
+  get ownProblems() {
     return null;
+  }
+  /**
+   * true if the choice widget multiple values (0+)
+   */
+  get isMulti() {
+    return this.config.multi;
+  }
+  /**
+   * true if the choice widget accept ONE and only ONE value
+   * (not 0, not 2+)
+   */
+  get isSingle() {
+    return !this.config.multi;
+  }
+  /** alias for enabledBranches */
+  get branches() {
+    return this.enabledBranches;
+  }
+  get firstPossibleChoice() {
+    return this.allPossibleChoices[0];
+  }
+  get allPossibleChoices() {
+    return Object.keys(this.config.items);
+  }
+  get isCollapsible() {
+    if (this.activeBranchNames.length === 0) return false;
+    return super.isCollapsible;
+  }
+  get choicesWithLabels() {
+    return Object.entries(this.config.items).map(([key, schema]) => ({
+      key,
+      // note:
+      // if child.config.label === false => makeLabelFromFieldName(key)
+      // if child.config.label === '' => makeLabelFromFieldName(key)
+      label: schema.config.label || makeLabelFromFieldName(key),
+      icon: schema.config.icon
+    }));
+  }
+  /** array of all active branch keys */
+  get activeBranchNames() {
+    return Object.keys(this.serial.branches).filter((x) => this.serial.branches[x]);
+  }
+  get firstActiveBranchName() {
+    return this.activeBranchNames[0];
+  }
+  get firstActiveBranchField() {
+    if (this.firstActiveBranchName == null) return void 0;
+    return this.enabledBranches[this.firstActiveBranchName];
+  }
+  get hasChanges() {
+    const def = this.config.default;
+    for (const branchName of this.allPossibleChoices) {
+      const shouldBeActive = this.isBranchActiveByDefault(branchName);
+      const child = this.enabledBranches[branchName];
+      if (child && !shouldBeActive) return true;
+      if (!child && shouldBeActive) return true;
+      if (child && shouldBeActive && child.hasChanges) return true;
+    }
+    return false;
+  }
+  isBranchActiveByDefault(branchName) {
+    const def = this.config.default;
+    if (def == null) {
+      if (this.isMulti) return false;
+      return this.allPossibleChoices[0] === branchName;
+    }
+    const shouldBeActive = typeof def === "string" ? branchName === def : Boolean(def[branchName]);
+    return shouldBeActive;
+  }
+  get subFields() {
+    return Object.values(this.enabledBranches);
+  }
+  get subFieldsWithKeys() {
+    return Object.entries(this.enabledBranches).map(([key, field]) => ({ key, field }));
+  }
+  toggleBranch(branch) {
+    if (this.enabledBranches[branch]) {
+      if (this.isMulti) this.disableBranch(branch);
+    } else this.enableBranch(branch);
+  }
+  isBranchDisabled(branch) {
+    return !this.serial.branches[branch];
+  }
+  isBranchEnabled(branch) {
+    return Boolean(this.serial.branches[branch]);
+  }
+  setOwnSerial(serial__) {
+    const serial_ = serial__ == null ? null : (
+      // 🔶 deep clone is required because serial for this field is handled deeply
+      // here instead of children when branch is disabled but we have a value
+      JSON.parse(
+        JSON.stringify({
+          $: "choices",
+          //
+          branches: serial__.branches,
+          values: serial__.values ?? serial__.values_
+        })
+      )
+    );
+    const config = this.config;
+    if (typeof config.items === "function") {
+      toastError('\u{1F534} ChoicesWidget "items" property should now be an object, not a function');
+    }
+    if (this.isSingle) {
+      const getActiveBranches = (x) => Object.entries(x).filter(([k, active]) => active && this.allPossibleChoices.includes(k)).map(([k]) => k);
+      if (typeof config.default === "object" && getActiveBranches(config.default).length > 1) {
+        toastError("\u{1F534} ChoicesWidget is single but default sets multiple branches");
+      }
+      const activeBranches = serial_?.branches && getActiveBranches(serial_?.branches);
+      if (activeBranches && activeBranches?.length > 1) {
+        toastError(
+          "\u{1F534} ChoicesWidget is single but incoming serial sets multiple branches (recovering by picking the first one)"
+        );
+        serial_.branches = { [bang(activeBranches[0])]: true };
+      }
+    }
+    this.runInValueTransaction(() => {
+      for (const branch of this.allPossibleChoices) {
+        const shouldBeActive = serial_?.branches[branch] ?? this.isBranchActiveByDefault(branch);
+        let schema = this.config.items[branch];
+        if (typeof schema === "function") schema = schema();
+        if (schema == null) throw new Error(`\u274C Branch "${branch}" has no initializer function`);
+        if (shouldBeActive) {
+          this.RECONCILE({
+            correctChildSchema: schema,
+            existingChild: this.enabledBranches[branch],
+            targetChildSerial: serial_?.values?.[branch],
+            attach: (child) => {
+              this.enabledBranches[branch] = child;
+              this.serial.values[branch] = child.serial;
+            }
+          });
+        } else {
+          this.serial.values[branch] = serial_?.values?.[branch];
+          const prevChild = this.enabledBranches[branch];
+          if (prevChild) prevChild.disposeTree();
+          delete this.enabledBranches[branch];
+        }
+        this.serial.branches[branch] = shouldBeActive;
+      }
+    });
+  }
+  disableBranch(branch) {
+    if (!this.enabledBranches[branch]) {
+      return;
+    }
+    this.runInValueTransaction(() => {
+      const prevChild = this.enabledBranches[branch];
+      if (prevChild) prevChild.disposeTree();
+      delete this.enabledBranches[branch];
+      this.serial.branches[branch] = false;
+    });
+  }
+  enableBranch(branch, p = {}) {
+    const existingChild = this.enabledBranches[branch];
+    if (this.enabledBranches[branch]) {
+      return void console.info(`\u274C Branch "${branch}" already enabled`);
+    }
+    this.runInValueTransaction(() => {
+      if (!this.config.multi) {
+        for (const key in this.enabledBranches) {
+          this.disableBranch(key);
+        }
+      }
+      let schema = this.config.items[branch];
+      if (typeof schema === "function") schema = schema();
+      if (schema == null) throw new Error(`\u274C Branch "${branch}" has no initializer function`);
+      this.RECONCILE({
+        correctChildSchema: schema,
+        existingChild: this.enabledBranches[branch],
+        targetChildSerial: this.serial.values?.[branch],
+        attach: (child) => {
+          this.enabledBranches[branch] = child;
+          this.serial.values[branch] = child.serial;
+        }
+      });
+      this.serial.branches[branch] = true;
+    });
+    return this.enabledBranches[branch];
+  }
+  /** results, but only for active branches */
+  get value() {
+    const out = {};
+    for (const branch in this.enabledBranches) {
+      out[branch] = this.enabledBranches[branch].value;
+    }
+    return out;
+  }
+  set value(val) {
+    this.runInValueTransaction(() => {
+      for (const branch of this.allPossibleChoices) {
+        if (val[branch] == null) {
+          if (this.isBranchEnabled(branch)) this.disableBranch(branch);
+        } else {
+          if (this.isBranchDisabled(branch)) this.enableBranch(branch);
+          this.enabledBranches[branch].value = val[branch];
+        }
+      }
+    });
+  }
+};
+registerFieldClass("choices", Field_choices);
+
+// src/csuite/fields/color/WidgetColorUI.tsx
+import { observer as observer49 } from "mobx-react-lite";
+var WidgetColorUI = observer49(function WidgetColorUI_(p) {
+  const field = p.field;
+  return /* @__PURE__ */ jsx(
+    "input",
+    {
+      value: field.serial.value,
+      type: "color",
+      onChange: (ev) => field.value = ev.target.value
+    }
+  );
+});
+
+// src/csuite/fields/color/FieldColor.tsx
+var Field_color = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
+    this.DefaultHeaderUI = WidgetColorUI;
+    this.DefaultBodyUI = void 0;
+    this.init(serial, {
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
+  }
+  static {
+    this.type = "color";
+  }
+  setOwnSerial(serial) {
+    this.serial.value = serial?.value ?? this.defaultValue;
+  }
+  get value() {
+    return this.serial.value ?? this.config.default ?? "";
+  }
+  set value(next) {
+    if (this.serial.value === next) return;
+    this.runInValueTransaction(() => this.serial.value = next);
+  }
+  get ownProblems() {
+    return null;
+  }
+  get defaultValue() {
+    return this.config.default ?? "#000000";
   }
   get hasChanges() {
     return this.value !== this.defaultValue;
   }
-  get value() {
-    return this.serial.value;
+};
+registerFieldClass("color", Field_color);
+
+// src/csuite/fields/group/FieldGroup.tsx
+import { Fragment as Fragment5 } from "react";
+
+// src/csuite/collapsible/CollapsibleUI.tsx
+import { observer as observer50 } from "mobx-react-lite";
+import { useMemo as useMemo7 } from "react";
+
+// src/csuite/collapsible/CollapsibleState.tsx
+import { makeAutoObservable as makeAutoObservable9 } from "mobx";
+var CollapsibleState = class {
+  constructor(p) {
+    this.p = p;
+    this.isCollapsed = this.p.startCollapsed ?? true;
+    makeAutoObservable9(this);
   }
-  setValue(val) {
-    this.value = val;
+  get isExpanded() {
+    return !this.isCollapsed;
   }
-  set value(next) {
-    if (this.serial.value === next)
-      return;
-    runInAction7(() => {
-      this.serial.value = next;
-      this.bumpValue();
-    });
+  toggle() {
+    if (this.p.onToggle) this.p.onToggle?.(this);
+    else this.isCollapsed = !this.isCollapsed;
+  }
+  open() {
+    this.isCollapsed = false;
+  }
+  close() {
+    this.isCollapsed = true;
   }
 };
-registerWidgetClass("color", Widget_color);
 
-// src/csuite/fields/group/WidgetGroup.tsx
-import { runInAction as runInAction8 } from "mobx";
-import { nanoid as nanoid10 } from "nanoid";
+// src/csuite/collapsible/CollapsibleUI.tsx
+var CollapsibleUI = observer50(function CollapsibleUI_(p) {
+  const SELF = useMemo7(() => new CollapsibleState(p), []);
+  return /* @__PURE__ */ jsxs("div", { tw: ["flex flex-col cursor-pointer"], className: p.className, style: p.style, children: [
+    /* @__PURE__ */ jsx("div", { tw: "flex select-none", onClick: (ev) => SELF.toggle(), children: p.children ?? /* @__PURE__ */ jsx(Frame, { tw: "flex", look: "link", icon: SELF.isCollapsed ? "mdiChevronRight" : "mdiChevronDown", children: SELF.isCollapsed ? p.titleCollapsed ?? "Voir plus" : p.titleExpanded ?? "Voir moins" }) }),
+    SELF.isExpanded && p.content(SELF)
+  ] });
+});
+
+// src/csuite/utils/capitalize.ts
+function capitalize(string) {
+  if (string === "") return "";
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 // src/csuite/fields/group/WidgetGroupUI.tsx
-import { observer as observer50 } from "mobx-react-lite";
+import { observer as observer53 } from "mobx-react-lite";
 
 // src/csuite/form/WidgetSingleLineSummaryUI.tsx
-import { observer as observer49 } from "mobx-react-lite";
+import { observer as observer52 } from "mobx-react-lite";
 
 // src/csuite/wrappers/FrameSubtle.tsx
-import { observer as observer48 } from "mobx-react-lite";
-var FrameSubtle = observer48(function BoxSubtle_({ children, ...rest }) {
+import { observer as observer51 } from "mobx-react-lite";
+var FrameSubtle = observer51(function BoxSubtle_({ children, ...rest }) {
   return /* @__PURE__ */ jsx(Frame, { ...rest, text: { contrast: 0.3, chromaBlend: 1, hueShift: 0 }, children });
 });
 
 // src/csuite/form/WidgetSingleLineSummaryUI.tsx
-var WidgetSingleLineSummaryUI = observer49(function WidgetSingleLineSummaryUI_(p) {
+var WidgetSingleLineSummaryUI = observer52(function WidgetSingleLineSummaryUI_(p) {
   return /* @__PURE__ */ jsx(FrameSubtle, { className: "COLLAPSE-PASSTHROUGH ml-1 lh-input line-clamp-1 italic", children: p.children });
 });
 
 // src/csuite/fields/group/WidgetGroupUI.tsx
-var WidgetGroup_LineUI = observer50(function WidgetGroup_LineUI_(p) {
-  if (!p.widget.serial.collapsed) {
+var WidgetGroup_LineUI = observer53(function WidgetGroup_LineUI_(p) {
+  if (!p.field.serial.collapsed) {
     return /* @__PURE__ */ jsxs("div", { tw: "ml-auto flex gap-0.5", children: [
-      /* @__PURE__ */ jsx(Button, { square: true, onClick: () => p.widget.expandAllChildren(), subtle: true, icon: "mdiUnfoldMoreHorizontal" }),
-      /* @__PURE__ */ jsx(Button, { square: true, onClick: () => p.widget.collapseAllChildren(), subtle: true, icon: "mdiUnfoldLessHorizontal" })
+      /* @__PURE__ */ jsx(Button, { square: true, subtle: true, borderless: true, icon: "mdiUnfoldMoreHorizontal", onClick: () => p.field.expandAllChildren() }),
+      /* @__PURE__ */ jsx(Button, { square: true, subtle: true, borderless: true, icon: "mdiUnfoldLessHorizontal", onClick: () => p.field.collapseAllChildren() })
     ] });
   }
-  return /* @__PURE__ */ jsx(WidgetSingleLineSummaryUI, { children: p.widget.summary });
+  return /* @__PURE__ */ jsx(WidgetSingleLineSummaryUI, { children: p.field.summary });
 });
-var WidgetGroup_BlockUI = observer50(function WidgetGroup_BlockUI_(p) {
-  const widget = p.widget;
-  const groupFields = Object.entries(widget.fields);
-  const isHorizontal = widget.config.layout === "H";
-  return /* @__PURE__ */ jsx(WidgetsContainerUI, { layout: p.widget.config.layout, tw: [widget.config.className, p.className], children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
-    WidgetWithLabelUI,
+var WidgetGroup_BlockUI = observer53(function WidgetGroup_BlockUI_(p) {
+  const field = p.field;
+  const groupFields = Object.entries(field.fields);
+  const isHorizontal = field.config.layout === "H";
+  return /* @__PURE__ */ jsx(
+    ListOfFieldsContainerUI,
     {
-      fieldName: rootKey,
-      justifyLabel: isHorizontal ? false : widget.config.justifyLabel,
-      widget: bang(sub)
-    },
-    rootKey
-  )) });
+      layout: p.field.config.layout,
+      tw: [field.config.className, p.className],
+      children: groupFields.map(([rootKey, sub], ix) => /* @__PURE__ */ jsx(
+        WidgetWithLabelUI,
+        {
+          fieldName: rootKey,
+          justifyLabel: isHorizontal ? false : field.config.justifyLabel,
+          field: bang(sub)
+        },
+        rootKey
+      ))
+    }
+  );
 });
 
-// src/csuite/fields/group/WidgetGroup.tsx
-var Widget_group = class extends BaseField {
-  constructor(form, parent, spec, serial, preHydrate) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/group/FieldGroup.tsx
+var Field_group = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WidgetGroup_LineUI;
-    this.reset = () => {
-      for (const sub of this.subWidgets)
-        sub.reset();
-    };
-    this.type = "group";
-    this.at = (key) => this.fields[key];
-    this.get = (key) => this.fields[key].value;
-    /** the dict of all child widgets */
+    /**
+     * The dict of all child widgets
+     * will be filled during constructor
+     */
     this.fields = {};
-    // will be filled during constructor
-    this.serial = {};
-    this._defaultSerial = () => {
-      return {
-        type: "group",
-        id: this.id,
-        collapsed: this.config.startCollapsed,
-        values_: {}
-      };
-    };
     // @internal
     this.__value = new Proxy({}, {
-      ownKeys: (target) => {
+      ownKeys: (_target) => {
         return Object.keys(this.fields);
       },
-      get: (target, prop) => {
-        if (typeof prop !== "string")
-          return;
+      set: (_target, prop, value) => {
+        if (typeof prop !== "string") return false;
         const subWidget = this.fields[prop];
-        if (subWidget == null)
-          return;
+        if (subWidget == null) return false;
+        subWidget.value = value;
+        return true;
+      },
+      get: (_target, prop) => {
+        if (typeof prop !== "string") return;
+        const subWidget = this.fields[prop];
+        if (subWidget == null) return;
         return subWidget.value;
       },
-      getOwnPropertyDescriptor: (target, prop) => {
-        if (typeof prop !== "string")
-          return;
+      getOwnPropertyDescriptor: (_target, prop) => {
+        if (typeof prop !== "string") return;
         const subWidget = this.fields[prop];
-        if (subWidget == null)
-          return;
+        if (subWidget == null) return;
         return {
           enumerable: true,
           configurable: true,
@@ -6451,100 +6983,212 @@ var Widget_group = class extends BaseField {
         };
       }
     });
-    this.id = serial?.id ?? nanoid10();
-    this.serial = serial && serial.type === "group" ? serial : this._defaultSerial();
-    if (this.serial.values_ == null)
-      this.serial.values_ = {};
-    preHydrate?.(this);
-    const prevFieldSerials = this.serial.values_;
-    const itemsDef = this.config.items;
-    const _newValues = typeof itemsDef === "function" ? runWithGlobalForm(this.form.builder, itemsDef) ?? {} : itemsDef ?? {};
-    const childKeys = Object.keys(_newValues);
-    for (const key of childKeys) {
-      const unmounted = bang(_newValues[key]);
-      const prevFieldSerial = prevFieldSerials[key];
-      if (prevFieldSerial && unmounted.type === prevFieldSerial.type) {
-        this.fields[key] = this.form.builder._HYDRATE(this, unmounted, prevFieldSerial);
-      } else {
-        if (prevFieldSerial != null)
-          console.log(
-            `[\u{1F536}] invalid serial for "${key}": (${unmounted.type} != ${prevFieldSerial?.type}) => using fresh one instead`,
-            prevFieldSerials
-          );
-        this.fields[key] = this.form.builder._HYDRATE(this, unmounted, null);
-        this.serial.values_[key] = this.fields[key].serial;
-      }
+    for (const [fName, fSchema] of this._fieldSchemas) {
+      Object.defineProperty(this, capitalize(fName), {
+        get: () => this.fields[fName],
+        configurable: true
+      });
     }
-    this.init({
+    this.init(serial, {
       value: false,
       __value: false,
       DefaultHeaderUI: false
     });
   }
+  formFields(fields, props) {
+    const sm = props?.showMore;
+    return () => /* @__PURE__ */ jsxs(Fragment5, { children: [
+      fields.map((f) => {
+        if (typeof f === "function") {
+          const res = f(this);
+          return res({});
+        }
+        return this.fields[f].renderWithLabel({ fieldName: f });
+      }),
+      sm !== false && /* @__PURE__ */ jsx(
+        CollapsibleUI,
+        {
+          content: () => {
+            const moreFields = sm == null ? Object.keys(this.fields).filter((k) => !fields.includes(k)) : sm;
+            return moreFields.map((f) => this.fields[f].renderWithLabel({ fieldName: f }));
+          }
+        }
+      )
+    ] });
+  }
+  form(fields, props) {
+    return new Form({
+      ...props,
+      field: this,
+      component: this.formFields(fields, { showMore: props.showMore })
+    });
+  }
   get DefaultBodyUI() {
-    if (Object.keys(this.fields).length === 0)
-      return;
+    if (Object.keys(this.fields).length === 0) return;
     return WidgetGroup_BlockUI;
   }
-  get baseErrors() {
+  get ownProblems() {
     return null;
   }
   get hasChanges() {
     return Object.values(this.fields).some((f) => f.hasChanges);
   }
   get summary() {
-    return this.config.summary?.(this.value) ?? "";
+    return this.config.summary?.(this.value, this) ?? "";
+  }
+  static {
+    this.type = "group";
   }
   /** all [key,value] pairs */
   get entries() {
     return Object.entries(this.fields);
   }
-  setValue(val) {
-    this.value = val;
+  get numFields() {
+    return Object.keys(this.fields).length;
+  }
+  get justifyLabel() {
+    if (this.numFields > 1) return false;
+    return true;
+  }
+  /** return item at give key */
+  at(key) {
+    return this.fields[key];
+  }
+  /** return item.value at give key */
+  get(key) {
+    return this.fields[key].value;
+  }
+  /** just here to normalize fieldSchema definitions, since it used to be a lambda */
+  get _fieldSchemas() {
+    const itemsDef = this.config.items;
+    const fieldSchemas = typeof itemsDef === "function" ? itemsDef() ?? {} : itemsDef ?? {};
+    return Object.entries(fieldSchemas);
+  }
+  setOwnSerial(serial) {
+    if (this.serial.values_ == null) this.serial.values_ = {};
+    for (const [fName, fSchema] of this._fieldSchemas) {
+      this.RECONCILE({
+        existingChild: this.fields[fName],
+        correctChildSchema: fSchema,
+        targetChildSerial: serial?.values_?.[fName],
+        attach: (child) => {
+          this.fields[fName] = child;
+          this.serial.values_[fName] = child.serial;
+        }
+      });
+    }
   }
   setPartialValue(val) {
-    runInAction8(() => {
-      for (const key in val)
-        this.fields[key].setValue(val[key]);
-      this.bumpValue();
+    this.runInValueTransaction(() => {
+      for (const key in val) {
+        this.fields[key].value = val[key];
+      }
     });
+    return this;
   }
-  get subWidgets() {
+  get subFields() {
     return Object.values(this.fields);
   }
-  get subWidgetsWithKeys() {
-    return Object.entries(this.fields).map(([key, widget]) => ({ key, widget }));
-  }
-  set value(val) {
-    runInAction8(() => {
-      for (const key in val)
-        this.fields[key].setValue(val[key]);
-      this.bumpValue();
-    });
+  get subFieldsWithKeys() {
+    return Object.entries(this.fields).map(([key, field]) => ({ key, field }));
   }
   get value() {
     return this.__value;
   }
-  // 💬 2024-03-13 rvion: no setter for groups; groups can not be set; only their child can
+  set value(val) {
+    this.runInAutoTransaction(() => {
+      for (const key in val) {
+        this.fields[key].value = val[key];
+      }
+    });
+  }
 };
-registerWidgetClass("group", Widget_group);
+registerFieldClass("group", Field_group);
 
-// src/csuite/fields/list/WidgetList.ts
-import { observable as observable9, reaction } from "mobx";
-import { nanoid as nanoid11 } from "nanoid";
+// src/csuite/fields/link/FieldLink.tsx
+var Field_link = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
+    this.DefaultHeaderUI = () => /* @__PURE__ */ jsx(Fragment, { children: "\u{1F7E2}" });
+    this.DefaultBodyUI = () => this.bField.renderWithLabel();
+    this.init(serial, {});
+  }
+  static {
+    this.type = "link";
+  }
+  setOwnSerial(serial) {
+    this.RECONCILE({
+      existingChild: this.aField,
+      correctChildSchema: this.config.share,
+      targetChildSerial: serial?.a,
+      attach: (child) => {
+        this.aField = child;
+        this.serial.a = child.serial;
+      }
+    });
+    this.RECONCILE({
+      existingChild: this.bField,
+      correctChildSchema: this.config.children(this.aField),
+      targetChildSerial: serial?.b,
+      attach: (child) => {
+        this.bField = child;
+        this.serial.b = child.serial;
+      }
+    });
+  }
+  get actualWidgetToDisplay() {
+    return this.bField.actualWidgetToDisplay;
+  }
+  get ownProblems() {
+    return this.bField.hasErrors;
+  }
+  get hasChanges() {
+    return this.bField.hasChanges;
+  }
+  reset() {
+    this.bField.reset();
+  }
+  get indentChildren() {
+    return 0;
+  }
+  get summary() {
+    return this.bField.summary;
+  }
+  get subFields() {
+    return [this.aField, this.bField];
+  }
+  get subFieldsWithKeys() {
+    return [
+      { key: "a", field: this.aField },
+      { key: "b", field: this.bField }
+    ];
+  }
+  get value() {
+    return this.bField.value;
+  }
+  set value(val) {
+    this.runInAutoTransaction(() => {
+      this.bField.value = val;
+    });
+  }
+};
+registerFieldClass("link", Field_link);
+
+// src/csuite/fields/list/FieldList.ts
+import { reaction as reaction2 } from "mobx";
 
 // src/csuite/fields/list/WidgetListUI.tsx
-import { observer as observer52 } from "mobx-react-lite";
+import { observer as observer55 } from "mobx-react-lite";
 import { forwardRef as forwardRef2 } from "react";
 
 // src/csuite/fields/list/ListControlsUI.tsx
-import { observer as observer51 } from "mobx-react-lite";
-var ListControlsUI = observer51(function ListControlsUI_(p) {
-  const widget = p.widget;
-  const max = widget.config.max;
-  const min = widget.config.min;
-  const canAdd = max ? widget.items.length < max : true;
-  const canClear = min ? widget.items.length > min : true;
+import { observer as observer54 } from "mobx-react-lite";
+var ListControlsUI = observer54(function ListControlsUI_(p) {
+  const field = p.field;
+  const max = field.config.max;
+  const min = field.config.min;
+  const canAdd = max ? field.items.length < max : true;
+  const canClear = min ? field.items.length > min : true;
   return /* @__PURE__ */ jsxs(
     "div",
     {
@@ -6558,15 +7202,15 @@ var ListControlsUI = observer51(function ListControlsUI_(p) {
           Button,
           {
             size: "input",
+            borderless: true,
             subtle: true,
             disabled: !canAdd,
             square: true,
             icon: "mdiPlus",
             onClick: (ev) => {
-              if (!canAdd)
-                return;
+              if (!canAdd) return;
               ev.stopPropagation();
-              widget.addItem();
+              field.addItem();
             }
           }
         ),
@@ -6574,15 +7218,15 @@ var ListControlsUI = observer51(function ListControlsUI_(p) {
           Button,
           {
             size: "input",
+            borderless: true,
             subtle: true,
             disabled: !canClear,
             square: true,
             icon: "mdiDeleteOutline",
             onClick: (ev) => {
-              if (!canClear)
-                return;
+              if (!canClear) return;
               ev.stopPropagation();
-              widget.removeAllItems();
+              field.removeAllItems();
             }
           }
         ),
@@ -6590,12 +7234,13 @@ var ListControlsUI = observer51(function ListControlsUI_(p) {
           Button,
           {
             size: "input",
+            borderless: true,
             subtle: true,
             square: true,
             icon: "mdiUnfoldMoreHorizontal",
             onClick: (ev) => {
               ev.stopPropagation();
-              widget.expandAllItems();
+              field.expandAllChildren();
             }
           }
         ),
@@ -6603,12 +7248,13 @@ var ListControlsUI = observer51(function ListControlsUI_(p) {
           Button,
           {
             size: "input",
+            borderless: true,
             subtle: true,
             square: true,
             icon: "mdiUnfoldLessHorizontal",
             onClick: (ev) => {
               ev.stopPropagation();
-              widget.collapseAllItems();
+              field.collapseAllChildren();
             }
           }
         )
@@ -6619,210 +7265,72 @@ var ListControlsUI = observer51(function ListControlsUI_(p) {
 
 // src/csuite/fields/list/WidgetListUI.tsx
 var { default: SortableList, SortableItem, SortableKnob } = await import("react-easy-sort");
-var WidgetList_LineUI = observer52(function WidgetList_LineUI_(p) {
+var WidgetList_LineUI = observer55(function WidgetList_LineUI_(p) {
   return /* @__PURE__ */ jsxs("div", { tw: "flex flex-1 items-center COLLAPSE-PASSTHROUGH", children: [
     /* @__PURE__ */ jsxs("div", { tw: "text-sm text-gray-500 italic", children: [
-      p.widget.length,
+      p.field.length,
       " items"
     ] }),
-    p.widget.isAuto ? null : /* @__PURE__ */ jsx("div", { tw: "ml-auto", children: /* @__PURE__ */ jsx(ListControlsUI, { widget: p.widget }) })
+    p.field.isAuto ? null : /* @__PURE__ */ jsx("div", { tw: "ml-auto", children: /* @__PURE__ */ jsx(ListControlsUI, { field: p.field }) })
   ] });
 });
-var WidgetList_BodyUI = observer52(function WidgetList_BodyUI_(p) {
-  const widget = p.widget;
-  const subWidgets = widget.items;
-  const min = widget.config.min;
-  return /* @__PURE__ */ jsx("div", { className: "_WidgetListUI", tw: "flex-grow w-full", children: /* @__PURE__ */ jsx(SortableList, { onSortEnd: p.widget.moveItem, className: "list", draggedItemClassName: "dragged", children: /* @__PURE__ */ jsx("div", { tw: "flex flex-col gap-0.5", children: subWidgets.map((subWidget, ix) => {
-    const widgetHeader = subWidget.header();
-    const widgetBody = subWidget.body();
-    const collapsed = subWidget.serial.collapsed ?? false;
-    const showBorder = subWidget.border;
-    const isCollapsible = subWidget.isCollapsible;
-    const boxBorder = showBorder ? 20 : 0;
-    const boxBase = subWidget.background && (isCollapsible || showBorder) ? { contrast: 0.03 } : void 0;
-    return /* @__PURE__ */ jsx(SortableItem, { children: /* @__PURE__ */ jsxs(Frame, { border: boxBorder, tw: "flex flex-col", base: boxBase, children: [
-      /* @__PURE__ */ jsxs("div", { tw: "flex items-center", children: [
-        /* @__PURE__ */ jsx(
-          Button,
-          {
-            subtle: true,
-            square: true,
-            size: "input",
-            icon: "mdiChevronRight",
-            onClick: () => subWidget.toggleCollapsed()
-          }
-        ),
-        /* @__PURE__ */ jsx(SpacerUI, {}),
-        subWidget.config.showID ? /* @__PURE__ */ jsx("div", { className: "divider flex-1 border-top", children: /* @__PURE__ */ jsxs("div", { id: subWidget.id, tw: "opacity-20 italic", children: [
-          "#",
-          ix,
-          ":",
-          subWidget.id
-        ] }) }) : null,
-        widgetHeader && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: widgetHeader }),
-        p.widget.isAuto ? null : /* @__PURE__ */ jsx(
-          Button,
-          {
-            disabled: min != null && widget.items.length <= min,
-            square: true,
-            size: "input",
-            subtle: true,
-            icon: "mdiDeleteOutline",
-            onClick: () => widget.removeItem(subWidget)
-          }
-        ),
-        /* @__PURE__ */ jsx(SortableKnob, { children: /* @__PURE__ */ jsx(ListDragHandleUI, { widget: subWidget, ix }) }),
-        /* @__PURE__ */ jsx(RevealUI, { content: () => /* @__PURE__ */ jsx(menu_widgetActions.UI, { props: subWidget }), children: /* @__PURE__ */ jsx(Button, { icon: "mdiDotsVertical", subtle: true, square: true, size: "input" }) })
-      ] }),
-      widgetBody && !collapsed && subWidget != null && /* @__PURE__ */ jsx(ErrorBoundaryUI, { children: /* @__PURE__ */ jsx("div", { tw: "ml-2 pl-2", children: widgetBody }) })
-    ] }) }, subWidget.id);
-  }) }) }) });
+var WidgetList_BodyUI = observer55(function WidgetList_BodyUI_(p) {
+  const field = p.field;
+  const subFields = field.items;
+  const min = field.config.min;
+  return (
+    // <div className='_WidgetListUI' tw='flex-grow w-full'>
+    /* @__PURE__ */ jsx(SortableList, { onSortEnd: (s, e) => p.field.moveItem(s, e), className: "list", draggedItemClassName: "dragged", children: /* @__PURE__ */ jsx("div", { tw: "flex flex-col gap-0.5", children: subFields.map((subField, ix) => {
+      const widgetHeader = subField.header();
+      const widgetBody = subField.body();
+      const collapsed = subField.serial.collapsed ?? false;
+      const showBorder = subField.border != null;
+      const isCollapsible = subField.isCollapsible;
+      const boxBorder = showBorder ? 20 : 0;
+      const boxBase = subField.background != null && (isCollapsible || showBorder) ? { contrast: 0.03 } : void 0;
+      return /* @__PURE__ */ jsx(SortableItem, { children: /* @__PURE__ */ jsx(
+        WidgetWithLabelUI,
+        {
+          fieldName: ix.toString(),
+          field: subField,
+          slotDelete: field.isAuto ? null : /* @__PURE__ */ jsx(
+            Button,
+            {
+              disabled: min != null && field.items.length <= min,
+              square: true,
+              size: "input",
+              subtle: true,
+              icon: "mdiDeleteOutline",
+              onClick: () => field.removeItem(subField)
+            }
+          ),
+          slotDragKnob: /* @__PURE__ */ jsx(SortableKnob, { children: /* @__PURE__ */ jsx(ListDragHandleUI, { field: subField, ix }) })
+        }
+      ) }, subField.id);
+    }) }) })
+  );
 });
 var ListDragHandleUI = forwardRef2((p, ref) => {
   return (
     //TODO (bird_d): FIX UI - Needs to be Button when ref is implemented.
-    /* @__PURE__ */ jsx("div", { ref, onClick: () => p.widget.toggleCollapsed(), children: /* @__PURE__ */ jsx(Button, { size: "input", subtle: true, square: true, icon: "mdiDragHorizontalVariant" }) })
+    /* @__PURE__ */ jsx("div", { ref, onClick: () => p.field.toggleCollapsed(), children: /* @__PURE__ */ jsx(Button, { size: "input", subtle: true, square: true, icon: "mdiDragHorizontalVariant" }) })
   );
 });
 
-// src/csuite/fields/list/WidgetList.ts
-var Widget_list = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/list/FieldList.ts
+var Field_list = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WidgetList_LineUI;
     this.DefaultBodyUI = WidgetList_BodyUI;
-    this.type = "list";
-    this.reset = () => {
-      if (!this.config.auto) {
-        const defaultLength = clampOpt(this.config.defaultLength, this.config.min, this.config.max);
-        for (let i = this.items.length; i > defaultLength; i--)
-          this.removeItem(this.items[i - 1]);
-        for (let i = this.items.length; i < defaultLength; i++)
-          this.addItem({ skipBump: true });
-      }
-      for (const i of this.items)
-        i.reset();
-    };
-    this.findItemIndexContaining = (widget) => {
-      let at = widget;
-      let child = at;
-      while (at != null) {
-        at = at.parent;
-        if (at === this) {
-          return this.items.indexOf(child);
-        }
-        child = at;
-      }
-      return null;
-    };
-    this.schemaAt = (ix) => {
-      const _schema = this.config.element;
-      const schema = typeof _schema === "function" ? runWithGlobalForm(this.form.builder, () => _schema(ix)) : _schema;
-      return schema;
-    };
-    // probably slow and clunky; TODO: rewrite this piece of crap
-    this.startAutoBehaviour = () => {
-      const auto = this.config.auto;
-      if (auto == null)
-        return;
-      reaction(
-        () => auto.keys(this),
-        (keys) => {
-          const currentKeys = this.items.map((i, ix2) => auto.getKey(i, ix2));
-          const missingKeys = keys.filter((k) => !currentKeys.includes(k));
-          let needBump = false;
-          for (const k of missingKeys) {
-            this.addItem({ value: auto.init(k), skipBump: true });
-            needBump = true;
-          }
-          let ix = 0;
-          for (const item of this.items.slice()) {
-            const isExtra = !keys.includes(auto.getKey(item, ix++));
-            if (!isExtra)
-              continue;
-            this.removeItem(item);
-            needBump = true;
-          }
-          if (needBump)
-            this.bumpValue();
-        },
-        { fireImmediately: true }
-      );
-    };
-    // HELPERS =======================================================
-    // FOLDING -------------------------------------------------------
-    this.collapseAllItems = () => {
-      for (const i of this.items)
-        i.setCollapsed(true);
-    };
-    this.expandAllItems = () => {
-      for (const i of this.items)
-        i.setCollapsed(false);
-    };
-    // REMOVING ITEMS ------------------------------------------------
-    this.removeAllItems = () => {
-      if (this.length === 0)
-        return console.log(`[\u{1F536}] list.removeAllItems: list is already empty`);
-      const minLen = this.config.min ?? 0;
-      if (this.length <= minLen)
-        return console.log(`[\u{1F536}] list.removeAllItems: list is already at min lenght`);
-      this.serial.items_ = this.serial.items_.slice(0, minLen);
-      this.items = this.items.slice(0, minLen);
-      this.bumpValue();
-    };
-    this.removeItem = (item) => {
-      const i = this.items.indexOf(item);
-      if (i === -1)
-        return console.log(`[\u{1F536}] list.removeItem: item not found`);
-      this.serial.items_.splice(i, 1);
-      this.items.splice(i, 1);
-      this.bumpValue();
-    };
-    // MOVING ITEMS ---------------------------------------------------
-    this.moveItem = (oldIndex, newIndex) => {
-      if (oldIndex === newIndex)
-        return console.log(`[\u{1F536}] list.moveItem: oldIndex === newIndex`);
-      if (oldIndex < 0 || oldIndex >= this.length)
-        return console.log(`[\u{1F536}] list.moveItem: oldIndex out of bounds`);
-      if (newIndex < 0 || newIndex >= this.length)
-        return console.log(`[\u{1F536}] list.moveItem: newIndex out of bounds`);
-      const serials = this.serial.items_;
-      serials.splice(newIndex, 0, bang(serials.splice(oldIndex, 1)[0]));
-      const instances = this.items;
-      instances.splice(newIndex, 0, bang(instances.splice(oldIndex, 1)[0]));
-      this.bumpValue();
-    };
-    this.id = serial?.id ?? nanoid11();
-    this.serial = serial ?? observable9({ type: "list", id: this.id, active: true, items_: [] });
-    if (this.serial.items_ == null)
-      this.serial.items_ = [];
-    this.items = [];
-    if (serial == null && this.config.defaultLength != null) {
-      for (let i = 0; i < this.config.defaultLength; i++)
-        this.addItem({ skipBump: true });
-    } else {
-      const unmounted = this.schemaAt(0);
-      for (const subSerial of this.serial.items_) {
-        if (subSerial == null || // ⁉️ when can this happen ?
-        subSerial.type !== unmounted.type) {
-          console.log(`[\u274C] SKIPPING form item because it has an incompatible entry from a previous app definition`);
-          continue;
-        }
-        const subWidget = form.builder._HYDRATE(this, unmounted, subSerial);
-        this.items.push(subWidget);
-      }
-    }
-    const missingItems = (this.config.min ?? 0) - this.items.length;
-    for (let i = 0; i < missingItems; i++)
-      this.addItem({ skipBump: true });
-    this.init({
+    this.init(serial, {
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
     this.startAutoBehaviour();
+  }
+  static {
+    this.type = "list";
   }
   get length() {
     return this.items.length;
@@ -6830,38 +7338,160 @@ var Widget_list = class extends BaseField {
   get hasChanges() {
     if (!this.config.auto) {
       const defaultLength = clampOpt(this.config.defaultLength, this.config.min, this.config.max);
-      if (this.items.length !== defaultLength)
-        return true;
+      if (this.items.length !== defaultLength) return true;
     }
     return this.items.some((i) => i.hasChanges);
   }
-  get subWidgets() {
+  // resetSmart(): void {
+  //     // fix size
+  //     if (!this.config.auto) {
+  //         const defaultLength = clampOpt(this.config.defaultLength, this.config.min, this.config.max)
+  //         for (let i = this.items.length; i > defaultLength; i--) this.removeItem(this.items[i - 1]!)
+  //         for (let i = this.items.length; i < defaultLength; i++) this.addItem({ skipBump: true })
+  //     }
+  //     // reset all remaining values
+  //     for (const i of this.items) i.reset()
+  // }
+  findItemIndexContaining(widget) {
+    let at = widget;
+    let child = at;
+    while (at != null) {
+      at = at.parent;
+      if (at === this) {
+        return this.items.indexOf(child);
+      }
+      child = at;
+    }
+    return null;
+  }
+  get subFields() {
     return this.items;
   }
-  get subWidgetsWithKeys() {
-    return this.items.map((widget, ix) => ({ key: ix.toString(), widget }));
+  get subFieldsWithKeys() {
+    return this.items.map((field, ix) => ({ key: ix.toString(), field }));
+  }
+  schemaAt(ix) {
+    const _schema = this.config.element;
+    const schema = typeof _schema === "function" ? _schema(ix) : _schema;
+    return schema;
   }
   get isAuto() {
     return this.config.auto != null;
   }
-  setValue(val) {
-    for (let i = 0; i < val.length; i++) {
-      if (i < this.items.length) {
-        this.items[i].setValue(val[i]);
-      } else {
-        this.addItem({ skipBump: true });
-        this.items[i].setValue(val[i]);
-      }
-    }
-    this.serial.items_.splice(val.length);
-    this.items.splice(val.length);
-    this.bumpValue();
+  // probably slow and clunky;
+  // TODO: rewrite this piece of crap
+  startAutoBehaviour() {
+    const auto = this.config.auto;
+    if (auto == null) return;
+    const disposeFn = reaction2(
+      () => auto.keys(this),
+      (keys) => {
+        this.runInAutoTransaction(() => {
+          const currentKeys = this.items.map((i, ix2) => auto.getKey(i, ix2));
+          const missingKeys = keys.filter((k) => !currentKeys.includes(k));
+          for (const k of missingKeys) {
+            this.addItem({
+              value: auto.init(k)
+            });
+          }
+          let ix = 0;
+          for (const item of this.items.slice()) {
+            const isExtra = !keys.includes(auto.getKey(item, ix++));
+            if (!isExtra) continue;
+            this.removeItem(item);
+          }
+        });
+      },
+      { fireImmediately: true }
+    );
+    this.disposeFns.push(disposeFn);
   }
-  get value() {
+  at(ix) {
+    return this.items[ix];
+  }
+  get valueArr() {
     return this.items.map((i) => i.value);
   }
+  setOwnSerial(serial) {
+    if (this.serial.items_ == null) this.serial.items_ = [];
+    if (this.items != null) for (const item of this.items) item.disposeTree();
+    this.items = [];
+    this.serial.items_ = [];
+    if (serial == null) {
+      if (!this.config.auto) {
+        const defaultLength = clampOpt(this.config.defaultLength, this.config.min, this.config.max);
+        for (let i = this.items.length; i < defaultLength; i++) {
+          this.addItem();
+        }
+      }
+      return;
+    }
+    for (const [ix, subSerial] of serial.items_.entries()) {
+      const schema = this.schemaAt(ix);
+      this.RECONCILE({
+        correctChildSchema: schema,
+        existingChild: null,
+        targetChildSerial: subSerial,
+        attach: (sub) => {
+          this.items.push(sub);
+          this.serial.items_.push(sub.serial);
+        }
+      });
+    }
+    const missingItems = (this.config.min ?? 0) - this.items.length;
+    for (let i = 0; i < missingItems; i++) {
+      this.addItem();
+    }
+  }
+  /**
+   * code below is very wtf, and surprisingly simple for what it achieve
+   * see `src/csuite/model/TESTS/proxy.test.ts` if you're not scared
+   */
+  get value() {
+    return new Proxy(this.items, {
+      get: (target, prop) => {
+        if (typeof prop === "symbol") return target[prop];
+        if (prop === "toJSON") return () => this.valueArr;
+        if (prop === "pop") return () => this.pop();
+        if (prop === "shift") return () => this.shift();
+        if (prop === "unshift") return (...args) => this.unshift(...args);
+        if (prop === "push") return (...args) => this.push(...args);
+        if (parseInt(prop, 10) === +prop) {
+          return target[+prop]?.value;
+        }
+        return this.valueArr[prop];
+      },
+      set: (target, prop, value) => {
+        if (typeof prop === "symbol") return false;
+        if (parseInt(prop, 10) === +prop) {
+          const index = +prop;
+          if (index === this.items.length) {
+            this.addItem({ value });
+            return true;
+          } else if (this.items[prop]) {
+            this.items[prop].value = value;
+            return true;
+          }
+        }
+        return false;
+      }
+    });
+  }
+  set value(val) {
+    this.runInAutoTransaction(() => {
+      for (let i = 0; i < val.length; i++) {
+        if (i < this.items.length) {
+          this.items[i].value = val[i];
+        } else {
+          this.addItem();
+          this.items[i].value = val[i];
+        }
+      }
+      this.splice(val.length);
+    });
+  }
   // ERRORS --------------------------------------------------------
-  get baseErrors() {
+  get ownProblems() {
     const out = [];
     if (this.config.min != null && this.length < this.config.min) {
       out.push(`List is too short`);
@@ -6872,118 +7502,203 @@ var Widget_list = class extends BaseField {
     return out;
   }
   // ADDING ITEMS -------------------------------------------------
+  duplicateItemAtIndex(ix) {
+    const item = this.items[ix];
+    this.addItem({ at: ix, value: item.value });
+  }
+  /**
+   * Appends new elements to the end of an array,
+   * and returns the new length of the array.
+   */
+  push(...values) {
+    if (values.length === 0) return this.length;
+    this.runInValueTransaction(() => {
+      for (const v of values) {
+        this.addItem({ value: v });
+      }
+    });
+    return this.length;
+  }
+  /**
+   * Inserts new elements at the start of an array,
+   * and returns the new length of the array.
+   */
+  unshift(...values) {
+    if (values.length === 0) return this.length;
+    this.runInValueTransaction(() => {
+      for (const v of values) {
+        this.addItem({ value: v, at: 0 });
+      }
+    });
+    return this.length;
+  }
   addItem(p = {}) {
     if (this.config.max != null && this.items.length >= this.config.max)
-      return console.log(`[\u{1F536}] list.addItem: list is already at max length`);
-    if (p.at != null && p.at < 0)
-      return console.log(`[\u{1F536}] list.addItem: at is negative`);
-    if (p.at != null && p.at > this.items.length)
-      return console.log(`[\u{1F536}] list.addItem: at is out of bounds`);
-    const schema = this.schemaAt(p.at ?? this.serial.items_.length);
-    const element = this.form.builder._HYDRATE(this, schema, null);
-    if (p.value) {
-      element.setValue(p.value);
+      return void console.log(`[\u{1F536}] list.addItem: list is already at max length`);
+    if (p.at != null && p.at < 0) return void console.log(`[\u{1F536}] list.addItem: at is negative`);
+    if (p.at != null && p.at > this.items.length) return void console.log(`[\u{1F536}] list.addItem: at is out of bounds`);
+    return this.runInValueTransaction(() => {
+      const schema = this.schemaAt(p.at ?? this.serial.items_.length);
+      const element = schema.instanciate(this.repo, this.root, this, p.serial ?? null);
+      if (p.value) {
+        element.value = p.value;
+      }
+      if (p.at == null) {
+        this.items.push(element);
+        this.serial.items_.push(element.serial);
+      } else {
+        this.items.splice(p.at, 0, element);
+        this.serial.items_.splice(p.at, 0, element.serial);
+      }
+      return element;
+    });
+  }
+  // MOVING ITEMS ---------------------------------------------------
+  moveItem(oldIndex, newIndex) {
+    if (oldIndex === newIndex) return console.log(`[\u{1F536}] list.moveItem: oldIndex === newIndex`);
+    if (oldIndex < 0 || oldIndex >= this.length) return console.log(`[\u{1F536}] list.moveItem: oldIndex out of bounds`);
+    if (newIndex < 0 || newIndex >= this.length) return console.log(`[\u{1F536}] list.moveItem: newIndex out of bounds`);
+    this.runInValueTransaction(() => {
+      const serials = this.serial.items_;
+      serials.splice(newIndex, 0, bang(serials.splice(oldIndex, 1)[0]));
+      const instances = this.items;
+      instances.splice(newIndex, 0, bang(instances.splice(oldIndex, 1)[0]));
+    });
+  }
+  // REMOVING ITEMS ------------------------------------------------
+  /**
+   * Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
+   * @returns An array containing the elements that were deleted.
+   */
+  splice(start, deleteCount = Infinity) {
+    if (deleteCount === 0) return [];
+    if (start >= this.length) return [];
+    return this.runInValueTransaction(() => {
+      this.serial.items_.splice(start, deleteCount);
+      const deleted = this.items.splice(start, deleteCount);
+      for (const x of deleted) x.disposeTree();
+      return deleted;
+    });
+  }
+  /**
+   * Removes all elements from the array and
+   * @returns An array containing the elements that were deleted.
+   */
+  removeAllItems() {
+    if (this.length === 0) {
+      console.log(`[\u{1F536}] list.removeAllItems: list is already empty`);
+      return [];
     }
-    if (p.at == null) {
-      this.items.push(element);
-      this.serial.items_.push(element.serial);
-    } else {
-      this.items.splice(p.at, 0, element);
-      this.serial.items_.splice(p.at, 0, element.serial);
+    const minLen = this.config.min ?? 0;
+    if (this.length <= minLen) {
+      console.log(`[\u{1F536}] list.removeAllItems: list is already at min lenght`);
+      return [];
     }
-    if (!p?.skipBump)
-      this.bumpValue();
+    return this.splice(minLen);
+  }
+  removeItem(item) {
+    const i = this.items.indexOf(item);
+    if (i === -1) {
+      return void console.log(`[\u{1F536}] list.removeItem: item not found`);
+    }
+    this.removeItemAt(i);
+    return item;
+  }
+  pop() {
+    this.removeItemAt(this.items.length - 1);
+  }
+  /**
+   * Removes the first element from an array and returns it.
+   * If the array is empty, undefined is returned and the array is not modified.
+   */
+  shift() {
+    return this.removeItemAt(0);
+  }
+  removeItemAt(i) {
+    if (this.length < i) return null;
+    return this.splice(i, 1)[0];
   }
 };
-registerWidgetClass("list", Widget_list);
-
-// src/csuite/fields/markdown/WidgetMarkdown.ts
-import { nanoid as nanoid12 } from "nanoid";
+registerFieldClass("list", Field_list);
 
 // src/csuite/fields/markdown/WidgetMarkdownUI.tsx
-import { observer as observer53 } from "mobx-react-lite";
-var WidgetMardownUI = observer53(function WidgetMardownUI_(p) {
-  const widget = p.widget;
-  return /* @__PURE__ */ jsx(MarkdownUI, { tw: "_WidgetMardownUI w-full", markdown: widget.markdown });
+import { observer as observer56 } from "mobx-react-lite";
+var WidgetMardownUI = observer56(function WidgetMardownUI_(p) {
+  const field = p.field;
+  return /* @__PURE__ */ jsx(MarkdownUI, { tw: "_WidgetMardownUI w-full", markdown: field.markdown });
 });
 
-// src/csuite/fields/markdown/WidgetMarkdown.ts
-var Widget_markdown = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/markdown/FieldMarkdown.ts
+var Field_markdown = class extends Field {
+  static {
     this.type = "markdown";
-    /** always return false */
-    this.hasChanges = false;
-    /** do nothing */
-    this.reset = () => {
-    };
-    this.id = serial?.id ?? nanoid12();
-    const config = spec.config;
-    this.serial = serial ?? { type: "markdown", collapsed: config.startCollapsed, active: true, id: this.id };
-    makeAutoObservableInheritance(this);
+  }
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
+    this.init(serial);
+  }
+  setOwnSerial(serial) {
   }
   get DefaultHeaderUI() {
-    if (this.config.inHeader)
-      return WidgetMardownUI;
+    if (this.config.inHeader) return WidgetMardownUI;
     return void 0;
   }
   get DefaultBodyUI() {
-    if (this.config.inHeader)
-      return void 0;
+    if (this.config.inHeader) return void 0;
     return WidgetMardownUI;
   }
-  get baseErrors() {
+  get ownProblems() {
     return null;
   }
   get markdown() {
     const md = this.config.markdown;
-    if (typeof md === "string")
-      return md;
-    return md(this.form);
+    if (typeof md === "string") return md;
+    return md(this);
   }
-  setValue(val) {
-    this.value = val;
+  /**
+   * always return false, because the text isn't part of the serial, it's part of the config
+   * markdown fields have NO value
+   */
+  get hasChanges() {
+    return false;
   }
-  set value(val) {
+  /** do nothing, see coment on the hasChange getter */
+  // ⏸️ reset(): void {}
+  /** do nothing, see coment on the hasChange getter */
+  set value(_) {
   }
   get value() {
     return this.serial;
   }
 };
-registerWidgetClass("markdown", Widget_markdown);
+registerFieldClass("markdown", Field_markdown);
 
-// src/csuite/fields/matrix/WidgetMatrix.ts
-import { runInAction as runInAction9 } from "mobx";
-import { nanoid as nanoid13 } from "nanoid";
+// src/csuite/fields/matrix/FieldMatrix.ts
+import { runInAction as runInAction5 } from "mobx";
 
 // src/csuite/fields/matrix/WidgetMatrixUI.tsx
-import { observer as observer54 } from "mobx-react-lite";
-var WidgetMatrixUI = observer54(function WidgetStrUI_(p) {
-  const widget = p.widget;
-  const cols = widget.cols;
-  const rows = widget.rows;
-  if (cols.length === 0)
-    return /* @__PURE__ */ jsx("div", { children: "\u274C no cols" });
-  if (rows.length === 0)
-    return /* @__PURE__ */ jsx("div", { children: "\u274C no rows" });
+import { observer as observer57 } from "mobx-react-lite";
+var WidgetMatrixUI = observer57(function WidgetStrUI_(p) {
+  const field = p.field;
+  const cols = field.cols;
+  const rows = field.rows;
+  if (cols.length === 0) return /* @__PURE__ */ jsx("div", { children: "\u274C no cols" });
+  if (rows.length === 0) return /* @__PURE__ */ jsx("div", { children: "\u274C no rows" });
   return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs("table", { cellSpacing: 0, cellPadding: 0, children: [
     /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsxs("tr", { children: [
       /* @__PURE__ */ jsx(
         "th",
         {
-          className: "cursor-pointer hover:text-red-600 virtualBorder",
-          onClick: () => widget.setAll(!widget.firstValue),
+          className: "cursor-pointer hover:text-red-600",
+          onClick: () => field.setAll(!field.firstValue),
           children: "all"
         }
       ),
       cols.map((col, ix) => /* @__PURE__ */ jsx(
         "th",
         {
-          className: "virtualBorder",
-          onClick: () => widget.setCol(col, !widget.getCell(rows[0], col).value),
+          className: "",
+          onClick: () => field.setCol(col, !field.getCell(rows[0], col).value),
           children: col
         },
         ix
@@ -6993,18 +7708,18 @@ var WidgetMatrixUI = observer54(function WidgetStrUI_(p) {
       /* @__PURE__ */ jsx(
         "td",
         {
-          onClick: () => widget.setRow(row, !widget.getCell(row, cols[0]).value),
-          className: "virtualBorder cursor-pointer",
+          onClick: () => field.setRow(row, !field.getCell(row, cols[0]).value),
+          className: "cursor-pointer",
           children: row
         }
       ),
       cols.map((col, colIx) => {
-        const checked = widget.getCell(row, col).value;
+        const checked = field.getCell(row, col).value;
         return /* @__PURE__ */ jsx(
           "td",
           {
-            className: "hover:bg-gray-400 cursor-pointer virtualBorder",
-            onClick: () => widget.setCell(row, col, !checked),
+            className: "hover:bg-gray-400 cursor-pointer",
+            onClick: () => field.setCell(row, col, !checked),
             tw: [checked ? void 0 : ""],
             style: {
               background: checked ? "oklch(var(--p)/.5)" : void 0,
@@ -7019,145 +7734,150 @@ var WidgetMatrixUI = observer54(function WidgetStrUI_(p) {
   ] }) });
 });
 
-// src/csuite/fields/matrix/WidgetMatrix.ts
-var Widget_matrix = class extends BaseField {
-  // justifyLabel = false
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/matrix/FieldMatrix.ts
+var Field_matrix = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WidgetMatrixUI;
     this.DefaultBodyUI = void 0;
-    this.type = "matrix";
-    this.sep = " &&& ";
+    /** store of all active cells */
     this.store = /* @__PURE__ */ new Map();
-    this.key = (row, col) => `${row}${this.sep}${col}`;
-    // prettier-ignore
-    this.UPDATE = () => {
-      this.serial.selected = this.RESULT;
-      this.bumpValue();
-    };
-    this.setAll = (value) => {
-      for (const v of this.allCells)
-        v.value = value;
-      this.UPDATE();
-    };
-    this.setRow = (row, val) => {
-      for (const v of this.cols) {
-        const cell = this.getCell(row, v);
-        cell.value = val;
-      }
-      this.UPDATE();
-    };
-    this.setCol = (col, val) => {
-      for (const r of this.rows) {
-        const cell = this.getCell(r, col);
-        cell.value = val;
-      }
-      this.UPDATE();
-    };
-    /** get cell at {rol x col} */
-    this.getCell = (row, col) => {
-      return bang(this.store.get(this.key(row, col)));
-    };
-    /** set cell at {rol x col} to given value */
-    this.setCell = (row, col, value) => {
-      const cell = this.getCell(row, col);
-      cell.value = value;
-      this.UPDATE();
-    };
-    this.id = serial?.id ?? nanoid13();
-    const config = spec.config;
-    this.serial = serial ?? { type: "matrix", collapsed: config.startCollapsed, id: this.id, active: true, selected: [] };
-    const rows = config.rows;
-    const cols = config.cols;
-    for (const [rowIx, row] of rows.entries()) {
-      for (const [colIx, col] of cols.entries()) {
-        this.store.set(this.key(row, col), { x: rowIx, y: colIx, col, row, value: false });
+    this.init(serial, {
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
+  }
+  static {
+    this.type = "matrix";
+  }
+  /** this method must be idem-potent */
+  setOwnSerial(serial) {
+    const { rows, cols, default: defs } = this.config;
+    let selectedCells;
+    if (serial != null) selectedCells = new Set(serial.selected.map(({ row, col, value }) => this.getCellkey(row, col)));
+    else if (defs != null) selectedCells = new Set(defs.map(({ row, col }) => this.getCellkey(row, col)));
+    else selectedCells = /* @__PURE__ */ new Set();
+    for (const [x, row] of rows.entries()) {
+      for (const [y, col] of cols.entries()) {
+        const cellKey = this.getCellkey(row, col);
+        const value = selectedCells.has(cellKey);
+        const prev = this.store.get(cellKey);
+        if (prev == null) this.store.set(cellKey, { x, y, col, row, value });
+        else prev.value = value;
       }
     }
-    const values = this.serial.selected;
-    if (values)
-      for (const v of values) {
-        this.store.set(this.key(rows[v.x], cols[v.y]), v);
-      }
-    this.rows = config.rows;
-    this.cols = config.cols;
-    makeAutoObservableInheritance(this);
+    this.serial.selected = this.activeCells;
   }
-  get baseErrors() {
-    return null;
-  }
-  get hasChanges() {
-    const def = this.config.default;
-    if (def == null)
-      return this.value.length != 0;
-    else {
-      if (def.length != this.value.length)
-        return true;
-      for (const v of this.value) {
-        if (!def.find((d) => d.row == v.row && d.col == v.col))
-          return true;
-      }
-      return false;
-    }
-  }
-  reset() {
-    this.setAll(false);
-    for (const i of this.config.default ?? []) {
-      this.setCell(i.row, i.col, true);
-    }
-  }
-  setValue(val) {
-    this.value = val;
+  /** list of all active cells */
+  get value() {
+    return this.serial.selected;
   }
   /** 🔶 this is inneficient */
   set value(val) {
-    runInAction9(() => {
+    runInAction5(() => {
       for (const c of this.allCells) {
         c.value = false;
       }
       for (const v of val) {
-        this.store.set(this.key(v.row, v.col), v);
+        this.store.set(this.getCellkey(v.row, v.col), v);
       }
       this.UPDATE();
     });
   }
-  get value() {
-    return this.serial.selected;
+  /** list of all possible row keys */
+  get rows() {
+    return this.config.rows;
   }
+  /** list of all possible colum keys */
+  get cols() {
+    return this.config.cols;
+  }
+  get ownProblems() {
+    return null;
+  }
+  get hasChanges() {
+    const def = this.config.default;
+    if (def == null) return this.value.length != 0;
+    else {
+      if (def.length != this.value.length) return true;
+      for (const v of this.value) {
+        if (!def.find((d) => d.row == v.row && d.col == v.col)) return true;
+      }
+      return false;
+    }
+  }
+  /** return some unique string from a tupple [row: string, col: string] */
+  getCellkey(row, col) {
+    return `${row} &&& ${col}`;
+  }
+  /** return all cells, regardless of if they're on or off */
   get allCells() {
     return Array.from(this.store.values());
   }
-  /** list of all cells that are ON */
-  get RESULT() {
+  /**
+   * Internal method to update serial from the live list of active cells
+   * every setter should update this
+   */
+  UPDATE() {
+    this.runInValueTransaction(() => this.serial.selected = this.activeCells);
+  }
+  /** list of all cells that are active/on */
+  get activeCells() {
     return this.allCells.filter((v) => v.value);
   }
   /** whether the first grid cell is ON */
   get firstValue() {
     return this.allCells[0]?.value ?? false;
   }
+  /** set every cell in the matrix field to the given value `<value>`  */
+  setAll(value) {
+    for (const v of this.allCells) v.value = value;
+    this.UPDATE();
+  }
+  /** set all cells in given row `<row>` to value `<val>`  */
+  setRow(row, val) {
+    for (const v of this.cols) {
+      const cell = this.getCell(row, v);
+      cell.value = val;
+    }
+    this.UPDATE();
+  }
+  /** set all cells in given column `<col>` to value `<val>`  */
+  setCol(col, val) {
+    for (const r of this.rows) {
+      const cell = this.getCell(r, col);
+      cell.value = val;
+    }
+    this.UPDATE();
+  }
+  /** get cell at {rol x col} */
+  getCell(row, col) {
+    return bang(this.store.get(this.getCellkey(row, col)));
+  }
+  /** set cell at {rol x col} to given value */
+  setCell(row, col, value) {
+    const cell = this.getCell(row, col);
+    cell.value = value;
+    this.UPDATE();
+  }
 };
-registerWidgetClass("matrix", Widget_matrix);
+registerFieldClass("matrix", Field_matrix);
 
-// src/csuite/fields/number/WidgetNumber.tsx
-import { computed as computed4, observable as observable10, runInAction as runInAction11 } from "mobx";
-import { nanoid as nanoid14 } from "nanoid";
+// src/csuite/fields/number/FieldNumber.tsx
+import { computed as computed4 } from "mobx";
 
 // src/csuite/fields/number/WidgetNumberUI.tsx
-import { observer as observer56 } from "mobx-react-lite";
+import { observer as observer59 } from "mobx-react-lite";
 
 // src/csuite/input-number/InputNumberUI.tsx
-import { makeAutoObservable as makeAutoObservable10, runInAction as runInAction10 } from "mobx";
-import { observer as observer55 } from "mobx-react-lite";
-import React2, { useEffect as useEffect3, useMemo as useMemo7 } from "react";
+import { makeAutoObservable as makeAutoObservable10, runInAction as runInAction6 } from "mobx";
+import { observer as observer58 } from "mobx-react-lite";
+import React3, { useEffect as useEffect3, useMemo as useMemo8 } from "react";
 
 // src/csuite/utils/parseFloatNoRoundingErr.ts
 var parseFloatNoRoundingErr = (str, maxDigitsAfterDot = 3) => {
   const result = typeof str === "number" ? str : parseFloat(str);
-  if (isNaN(result))
-    return 0;
+  if (isNaN(result)) return 0;
   const out = Number(result.toFixed(maxDigitsAfterDot));
   return out;
 };
@@ -7180,7 +7900,7 @@ var InputNumberStableState = class {
     this.inputValue = this.value.toString();
     /* When editing the number <input> this will make it display inputValue instead of val.*/
     this.isEditing = false;
-    this.inputRef = React2.createRef();
+    this.inputRef = React3.createRef();
     this.syncValues = (value, opts = {}) => {
       const soft = opts.soft ?? false;
       const roundingModifier = opts.roundingModifier ?? 1;
@@ -7193,8 +7913,7 @@ var InputNumberStableState = class {
       if (this.forceSnap) {
         num = this.mode == "int" ? Math.round(num / this.step) * this.step : num;
       }
-      if (this.mode === "int")
-        num = Math.round(num);
+      if (this.mode === "int") num = Math.round(num);
       if (soft && startValue <= this.rangeMax && startValue >= this.rangeMin) {
         num = clamp2(num, this.rangeMin, this.rangeMax);
       } else {
@@ -7292,10 +8011,10 @@ var InputNumberStableState = class {
     return this.mode === "int";
   }
 };
-var InputNumberUI = observer55(function InputNumberUI_(p) {
+var InputNumberUI = observer58(function InputNumberUI_(p) {
   const kit = useCSuite();
-  const uist = useMemo7(() => new InputNumberStableState(p, kit), []);
-  runInAction10(() => Object.assign(uist.props, p));
+  const uist = useMemo8(() => new InputNumberStableState(p, kit), []);
+  runInAction6(() => Object.assign(uist.props, p));
   useEffect3(() => uist.onPointerUpListener, []);
   const val = uist.value;
   const step = uist.step;
@@ -7307,7 +8026,7 @@ var InputNumberUI = observer55(function InputNumberUI_(p) {
     Frame,
     {
       style: p.style,
-      base: 5,
+      base: { contrast: csuite.inputContrast ?? 0.05 },
       border: { contrast: border },
       hover: { contrast: 0.03 },
       className: p.className,
@@ -7334,21 +8053,21 @@ var InputNumberUI = observer55(function InputNumberUI_(p) {
           Frame,
           {
             className: "inui-foreground",
-            base: { contrast: p.hideSlider ? 0 : 0.1, chroma: 0.02 },
+            base: { contrast: p.hideSlider ? 0 : 0.1, chromaBlend: 2 },
             tw: ["z-10 absolute left-0 h-input"],
             style: { width: `${(val - uist.rangeMin) / (uist.rangeMax - uist.rangeMin) * 100}%` }
           }
         ),
         /* @__PURE__ */ jsxs("div", { tw: "grid w-full h-full items-center z-20", style: { gridTemplateColumns: "16px 1fr 16px" }, children: [
           /* @__PURE__ */ jsx(
-            Frame,
+            Button,
             {
               className: "control",
-              border: true,
-              tw: ["h-full flex rounded-none text-center justify-center items-center z-20", `opacity-0`],
+              borderless: true,
+              tw: "rounded-none items-center z-20 opacity-0",
               tabIndex: -1,
               onClick: uist.decrement,
-              children: /* @__PURE__ */ jsx(Ikon.mdiChevronLeft, {})
+              icon: "mdiChevronLeft"
             }
           ),
           /* @__PURE__ */ jsxs(
@@ -7360,8 +8079,7 @@ var InputNumberUI = observer55(function InputNumberUI_(p) {
                 `flex px-1 items-center justify-center text-sm truncate z-20 h-full`
               ],
               onMouseDown: (ev) => {
-                if (isEditing || ev.button != 0)
-                  return;
+                if (isEditing || ev.button != 0) return;
                 activeSlider = ev.currentTarget;
                 lastValue = startValue = val;
                 cumulativeOffset = 0;
@@ -7461,14 +8179,14 @@ var InputNumberUI = observer55(function InputNumberUI_(p) {
             }
           ),
           /* @__PURE__ */ jsx(
-            Frame,
+            Button,
             {
               className: "control",
-              border: true,
-              tw: ["h-full flex rounded-none text-center justify-center items-center z-20", `opacity-0`],
+              borderless: true,
+              tw: "rounded-none items-center z-20 opacity-0",
               tabIndex: -1,
               onClick: uist.increment,
-              children: /* @__PURE__ */ jsx(Ikon.mdiChevronRight, {})
+              icon: "mdiChevronRight"
             }
           )
         ] })
@@ -7478,188 +8196,162 @@ var InputNumberUI = observer55(function InputNumberUI_(p) {
 });
 
 // src/csuite/fields/number/WidgetNumberUI.tsx
-var WidgetNumberUI = observer56(function WidgetNumberUI_(p) {
-  const widget = p.widget;
-  const value = widget.serial.val;
-  const mode = widget.config.mode;
-  const step = widget.config.step ?? (mode === "int" ? 1 : 0.1);
+var WidgetNumberUI = observer59(function WidgetNumberUI_(p) {
+  const field = p.field;
+  const value = field.serial.value;
+  const mode = field.config.mode;
+  const step = field.config.step ?? (mode === "int" ? 1 : 0.1);
   return /* @__PURE__ */ jsx(
     InputNumberUI,
     {
       mode,
       value,
-      hideSlider: widget.config.hideSlider,
-      max: widget.config.max,
-      min: widget.config.min,
-      softMin: widget.config.softMin,
-      softMax: widget.config.softMax,
+      hideSlider: field.config.hideSlider,
+      max: field.config.max,
+      min: field.config.min,
+      softMin: field.config.softMin,
+      softMax: field.config.softMax,
       step,
-      suffix: widget.config.suffix,
-      text: widget.config.text,
-      onValueChange: (next) => widget.value = next,
-      forceSnap: widget.config.forceSnap
+      suffix: field.config.suffix,
+      text: field.config.text,
+      onValueChange: (next) => field.value = next,
+      forceSnap: field.config.forceSnap
     }
   );
 });
 
-// src/csuite/fields/number/WidgetNumber.tsx
-var Widget_number = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/number/FieldNumber.tsx
+var Field_number = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WidgetNumberUI;
     this.DefaultBodyUI = void 0;
-    this.type = "number";
     this.forceSnap = false;
-    this.defaultValue = this.config.default ?? 0;
-    // prettier-ignore
-    this.reset = () => {
-      if (this.serial.val === this.defaultValue)
-        return;
-      this.value = this.defaultValue;
-    };
-    this.id = serial?.id ?? nanoid14();
-    const config = spec.config;
-    this.serial = serial ?? {
-      type: "number",
-      collapsed: config.startCollapsed,
-      id: this.id,
-      val: config.default ?? 0
-    };
-    this.init({
-      serial: observable10,
+    this.init(serial, {
       value: computed4,
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
   }
-  get hasChanges() {
-    return this.serial.val !== this.defaultValue;
+  static {
+    this.type = "number";
   }
-  get baseErrors() {
-    if (this.config.min !== void 0 && this.value < this.config.min)
+  get defaultValue() {
+    return this.config.default ?? 0;
+  }
+  get hasChanges() {
+    return this.serial.value !== this.defaultValue;
+  }
+  get ownProblems() {
+    if (this.config.min != null && this.value < this.config.min) {
       return `Value is less than ${this.config.min}`;
-    if (this.config.max !== void 0 && this.value > this.config.max)
+    }
+    if (this.config.max != null && this.value > this.config.max) {
       return `Value is greater than ${this.config.max}`;
+    }
     return null;
   }
-  setValue(val) {
-    this.value = val;
+  setOwnSerial(serial) {
+    this.serial.value = serial?.value ?? serial?.val ?? this.defaultValue;
   }
-  set value(next) {
-    if (this.serial.val === next)
-      return;
-    runInAction11(() => {
-      this.serial.val = next;
-      this.bumpValue();
-    });
+  /** randomize respect (soft)Min and (soft)max */
+  randomize() {
+    const min = this.config.softMin ?? this.config.min ?? 0;
+    const max = this.config.softMax ?? this.config.max ?? 100;
+    this.value = Math.floor(Math.random() * (max - min + 1));
   }
   get value() {
-    return this.serial.val;
+    return this.serial.value ?? this.config.default ?? 0;
+  }
+  set value(next) {
+    if (this.serial.value === next) return;
+    this.runInValueTransaction(() => this.serial.value = next);
   }
 };
-registerWidgetClass("number", Widget_number);
+registerFieldClass("number", Field_number);
 
-// src/csuite/fields/optional/WidgetOptional.tsx
-import { computed as computed5, observable as observable11 } from "mobx";
-import { nanoid as nanoid15 } from "nanoid";
-var Widget_optional = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/optional/FieldOptional.tsx
+var Field_optional = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = void 0;
     this.DefaultBodyUI = void 0;
-    this.reset = () => {
-      if (this.config.startActive) {
-        if (!this.serial.active)
-          this.setActive(true);
-        if (this.child.hasChanges)
-          this.child.reset();
-        return;
-      } else {
-        if (this.serial.active)
-          this.setActive(false);
-        return;
-      }
-    };
-    this.type = "optional";
-    this.setActive = (value) => {
-      if (this.serial.active === value)
-        return;
-      this.serial.active = value;
-      this.bumpValue();
-      if (value)
-        this.child.setCollapsed(false);
-      else
-        this.child.setCollapsed(true);
-    };
-    /**
-     * as of 2024-03-14, this is only called in the constructor
-     * TODO: inline ?
-     */
-    this._ensureChildIsHydrated = () => {
-      if (this.child)
-        return;
-      const spec = this.config.widget;
-      const prevSerial = this.serial.child;
-      if (prevSerial && spec.type === prevSerial.type) {
-        this.child = this.form.builder._HYDRATE(this, spec, prevSerial);
-      } else {
-        this.child = this.form.builder._HYDRATE(this, spec, null);
-        this.serial.child = this.child.serial;
-      }
-    };
-    this.id = serial?.id ?? nanoid15();
-    const config = spec.config;
-    const defaultActive = config.startActive;
-    this.serial = serial ?? {
-      id: this.id,
-      type: "optional",
-      active: defaultActive ?? false,
-      collapsed: config.startCollapsed
-    };
-    const isActive = serial?.active ?? defaultActive;
-    if (isActive)
-      this.serial.active = true;
-    this._ensureChildIsHydrated();
-    this.init({
-      serial: observable11,
-      value: computed5,
+    this.init(serial, {
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
   }
+  setOwnSerial(serial) {
+    this.serial.active = serial?.active ?? this.config.startActive ?? false;
+    this.RECONCILE({
+      existingChild: this.child,
+      correctChildSchema: this.config.schema,
+      targetChildSerial: serial?.child,
+      attach: (child) => {
+        this.child = child;
+        this.serial.child = child.serial;
+      }
+    });
+  }
+  setActive(value) {
+    if (this.serial.active === value) return;
+    this.runInValueTransaction(() => {
+      this.serial.active = value;
+      if (value) this.child.setCollapsed(false);
+      else this.child.setCollapsed(true);
+    });
+  }
+  /**
+   * similar to reset,
+   * except when unactive by default => only reset the active property
+   * 👉 the base reset() will always reset the child
+   * 👉 this resetFast will only reset the child is active.
+   */
+  resetFast() {
+    if (this.config.startActive) {
+      if (!this.serial.active) this.setActive(true);
+      if (this.child.hasChanges) this.child.reset();
+      return;
+    } else {
+      if (this.serial.active) this.setActive(false);
+      return;
+    }
+  }
   get hasChanges() {
     if (this.config.startActive) {
-      if (!this.serial.active)
-        return true;
+      if (!this.serial.active) return true;
       return this.child.hasChanges;
     } else {
-      if (!this.serial.active)
-        return false;
+      if (!this.serial.active) return false;
       return true;
     }
   }
-  get baseErrors() {
+  static {
+    this.type = "optional";
+  }
+  get ownProblems() {
     return null;
   }
   get childOrThrow() {
-    if (this.child == null)
-      throw new Error("\u274C optional active but child is null");
+    if (this.child == null) throw new Error("\u274C optional active but child is null");
     return this.child;
   }
-  setValue(val) {
-    this.value = val;
+  get actualWidgetToDisplay() {
+    return this.child.actualWidgetToDisplay;
   }
-  get subWidgets() {
-    return this.serial.active ? [this.child] : [];
+  /** so optional fields do not increase nesting twice */
+  get indentChildren() {
+    return 0;
   }
-  get subWidgetsWithKeys() {
-    return this.serial.active ? [{ key: "child", widget: this.child }] : [];
+  get subFields() {
+    return [this.child];
+  }
+  get subFieldsWithKeys() {
+    return this.serial.active ? [{ key: "child", field: this.child }] : [];
+  }
+  get value() {
+    if (!this.serial.active) return null;
+    return this.childOrThrow.value;
   }
   set value(next) {
     if (next == null) {
@@ -7667,25 +8359,31 @@ var Widget_optional = class extends BaseField {
       return;
     } else {
       this.setActive(true);
-      this.child.setValue(next);
+      this.child.value = next;
     }
   }
-  get value() {
-    if (!this.serial.active)
-      return null;
-    return this.childOrThrow.value;
+};
+registerFieldClass("optional", Field_optional);
+
+// src/csuite/fields/seed/Seeder.ts
+import { makeAutoObservable as makeAutoObservable11 } from "mobx";
+var Seeder = class {
+  constructor() {
+    this.count = 0;
+    makeAutoObservable11(this);
   }
 };
-registerWidgetClass("optional", Widget_optional);
-
-// src/csuite/fields/seed/WidgetSeed.ts
-import { nanoid as nanoid16 } from "nanoid";
+var globablSeeder = null;
+function getGlobalSeeder() {
+  globablSeeder ??= new Seeder();
+  return globablSeeder;
+}
 
 // src/csuite/fields/seed/WidgetSeedUI.tsx
-import { observer as observer57 } from "mobx-react-lite";
-var WidgetSeedUI = observer57(function WidgetSeedUI_(p) {
-  const widget = p.widget;
-  const val = widget.serial.val;
+import { observer as observer60 } from "mobx-react-lite";
+var WidgetSeedUI = observer60(function WidgetSeedUI_(p) {
+  const field = p.field;
+  const val = field.serial.val;
   const csuite = useCSuite();
   const border = csuite.inputBorder;
   return /* @__PURE__ */ jsxs(Frame, { border: { contrast: border }, tw: ["h-input", "flex-1 flex items-center"], children: [
@@ -7693,29 +8391,29 @@ var WidgetSeedUI = observer57(function WidgetSeedUI_(p) {
       InputBoolToggleButtonUI,
       {
         icon: "mdiAutoFix",
-        value: widget.serial.mode === "randomize",
-        onValueChange: () => widget.setToRandomize()
+        value: field.serial.mode === "randomize",
+        onValueChange: () => field.setToRandomize()
       }
     ),
     /* @__PURE__ */ jsx(
       InputBoolToggleButtonUI,
       {
         icon: "mdiNumeric1CircleOutline",
-        value: widget.serial.mode === "fixed",
-        onValueChange: () => widget.setToFixed()
+        value: field.serial.mode === "fixed",
+        onValueChange: () => field.setToFixed()
       }
     ),
     /* @__PURE__ */ jsx(
       InputNumberUI,
       {
-        disabled: widget.serial.mode === "randomize",
+        disabled: field.serial.mode === "randomize",
         tw: ["!border-none flex-1"],
-        min: widget.config.min,
-        max: widget.config.max,
+        min: field.config.min,
+        max: field.config.max,
         step: 1,
         value: val,
         mode: "int",
-        onValueChange: (value) => widget.setValue(value)
+        onValueChange: (value) => field.value = value
       }
     ),
     /* @__PURE__ */ jsx(
@@ -7723,7 +8421,7 @@ var WidgetSeedUI = observer57(function WidgetSeedUI_(p) {
       {
         size: "input",
         tw: "!border-l !border-r-0",
-        onClick: () => widget.setToFixed(Math.floor(Math.random() * 1e8)),
+        onClick: () => field.setToFixed(Math.floor(Math.random() * 1e8)),
         icon: "mdiAutorenew",
         square: true
       }
@@ -7731,64 +8429,36 @@ var WidgetSeedUI = observer57(function WidgetSeedUI_(p) {
   ] });
 });
 
-// src/csuite/fields/seed/WidgetSeed.ts
-var Widget_seed = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/seed/FieldSeed.ts
+var Field_seed = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WidgetSeedUI;
     this.DefaultBodyUI = void 0;
-    this.reset = () => {
-      this.setMode(this.defaultMode);
-      if (this.serial.mode !== "randomize")
-        this.setValue(this.defaultValue);
-    };
-    this.type = "seed";
     this.setMode = (mode) => {
-      if (this.serial.mode === mode)
-        return;
-      this.serial.mode = mode;
-      this.bumpValue();
+      if (this.serial.mode === mode) return;
+      this.runInValueTransaction(() => this.serial.mode = mode);
     };
     this.setToFixed = (val) => {
-      this.serial.mode = "fixed";
-      if (val)
-        this.serial.val = val;
-      this.bumpValue();
+      this.runInValueTransaction(() => {
+        this.serial.mode = "fixed";
+        if (val) this.serial.val = val;
+      });
     };
-    this.setToRandomize = () => {
-      if (this.serial.mode === "randomize")
-        return;
-      this.serial.mode = "randomize";
-      this.bumpValue();
-    };
-    this.setValue = (val) => {
-      this.serial.val = val;
-      this.bumpValue();
-    };
-    this.id = serial?.id ?? nanoid16();
-    const config = spec.config;
-    this.serial = serial ?? {
-      type: "seed",
-      id: this.id,
-      val: this.defaultValue,
-      mode: this.defaultMode
-    };
-    makeAutoObservableInheritance(this, {
+    this.init(serial, {
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
   }
-  get baseErrors() {
+  static {
+    this.type = "seed";
+  }
+  get ownProblems() {
     return null;
   }
   get hasChanges() {
-    if (this.serial.mode !== this.defaultMode)
-      return true;
-    if (this.serial.mode === "fixed")
-      return this.value !== this.defaultValue;
+    if (this.serial.mode !== this.defaultMode) return true;
+    if (this.serial.mode === "fixed") return this.value !== this.defaultValue;
     return false;
   }
   get defaultMode() {
@@ -7797,32 +8467,48 @@ var Widget_seed = class extends BaseField {
   get defaultValue() {
     return this.config.default ?? 0;
   }
-  set value(val) {
-    this.serial.val = val;
-    this.bumpValue();
+  setToRandomize() {
+    if (this.serial.mode === "randomize") return;
+    this.runInValueTransaction(() => this.serial.mode = "randomize");
+  }
+  setOwnSerial(serial) {
+    this.serial.val = serial?.val ?? this.defaultValue;
+    this.serial.mode = serial?.mode ?? this.defaultMode;
   }
   get value() {
-    const count = this.form.builder._cache.count;
-    return this.serial.mode === "randomize" ? Math.floor(Math.random() * 9999999) : this.serial.val;
+    const seeder = this.config.seeder ?? getGlobalSeeder();
+    const count = seeder.count;
+    const mode = this.serial.mode ?? this.config.defaultMode ?? "randomize";
+    return mode === "randomize" ? Math.floor(Math.random() * 9999999) : this.serial.val ?? this.config.default ?? 0;
+  }
+  set value(val) {
+    if (this.serial.mode === "fixed" && this.serial.val === val) return;
+    this.runInValueTransaction(() => {
+      this.serial.val = val;
+    });
   }
 };
-registerWidgetClass("seed", Widget_seed);
+registerFieldClass("seed", Field_seed);
 
-// src/csuite/fields/selectMany/WidgetSelectMany.tsx
-import { runInAction as runInAction12 } from "mobx";
-import { nanoid as nanoid17 } from "nanoid";
+// src/csuite/fields/selectMany/WidgetSelectManyUI.tsx
+import { observer as observer67 } from "mobx-react-lite";
+
+// src/csuite/utils/exhaust.ts
+function exhaust2(x) {
+  return x;
+}
 
 // src/csuite/fields/selectMany/WidgetSelectMany_ListUI.tsx
-import { observer as observer60 } from "mobx-react-lite";
+import { observer as observer63 } from "mobx-react-lite";
 
 // src/csuite/resizableFrame/resizableFrameUI.tsx
-import { makeAutoObservable as makeAutoObservable11 } from "mobx";
-import { observer as observer59 } from "mobx-react-lite";
-import { useMemo as useMemo8 } from "react";
+import { makeAutoObservable as makeAutoObservable12 } from "mobx";
+import { observer as observer62 } from "mobx-react-lite";
+import { useMemo as useMemo9 } from "react";
 
-// src/panels/PanelHeader.tsx
-import { observer as observer58 } from "mobx-react-lite";
-var PanelHeaderUI = observer58(function PanelHeaderUI_(p) {
+// src/csuite/wrappers/PanelHeader.tsx
+import { observer as observer61 } from "mobx-react-lite";
+var PanelHeaderUI = observer61(function PanelHeaderUI_(p) {
   return /* @__PURE__ */ jsxs(
     Frame,
     {
@@ -7871,17 +8557,18 @@ var ResizableFrameStableState = class {
       this.size = next;
     };
     this.size = props.currentSize ?? props.startSize ?? defaultSize;
-    makeAutoObservable11(this);
+    makeAutoObservable12(this);
   }
 };
-var ResizableFrame = observer59(function ResizableFrame_(p) {
-  const uist = useMemo8(() => new ResizableFrameStableState(p), []);
+var ResizableFrame = observer62(function ResizableFrame_(p) {
+  const uist = useMemo9(() => new ResizableFrameStableState(p), []);
+  const { currentSize, ...props } = p;
   return /* @__PURE__ */ jsxs(
     Frame,
     {
       tw: "flex flex-col !p-0",
       style: { gap: "0px", ...p.style },
-      ...p,
+      ...props,
       children: [
         p.header && /* @__PURE__ */ jsx(PanelHeaderUI, { children: p.header }),
         /* @__PURE__ */ jsx(
@@ -7922,21 +8609,15 @@ var ResizableFrame = observer59(function ResizableFrame_(p) {
 });
 
 // src/csuite/fields/selectMany/WidgetSelectMany_ListUI.tsx
-var WidgetSelectMany_ListUI = observer60(function WidgetSelectMany_TabUI_(p) {
-  const widget = p.widget;
+var WidgetSelectMany_ListUI = observer63(function WidgetSelectMany_TabUI_(p) {
+  const field = p.field;
   return /* @__PURE__ */ jsx(
     ResizableFrame,
     {
-      header: /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsx(
-        "input",
-        {
-          tw: "w-full h-full !outline-none cushy-basic-input",
-          type: "text"
-        }
-      ) }),
+      border: true,
       tw: "w-full",
-      children: widget.choices.slice(0, 100).map((c) => {
-        const isSelected = Boolean(widget.serial.values.find((item) => item.id === c.id));
+      children: field.choices.slice(0, 100).map((c) => {
+        const isSelected = Boolean(field.serial.values.find((item) => item.id === c.id));
         return /* @__PURE__ */ jsx(
           InputBoolToggleButtonUI,
           {
@@ -7946,281 +8627,339 @@ var WidgetSelectMany_ListUI = observer60(function WidgetSelectMany_TabUI_(p) {
             tw: "w-full",
             text: c.label,
             onValueChange: (value) => {
-              if (value != isSelected)
-                widget.toggleItem(c);
+              if (value != isSelected) field.toggleItem(c);
             }
-          }
+          },
+          c.id
         );
       })
     }
   );
 });
 
-// src/csuite/fields/selectMany/WidgetSelectManyUI.tsx
-import { observer as observer63 } from "mobx-react-lite";
+// src/csuite/fields/selectMany/WidgetSelectMany_SelectUI.tsx
+import { observer as observer65 } from "mobx-react-lite";
 
-// src/csuite/utils/exhaust.ts
-var exhaust2 = (x) => x;
+// src/csuite/checkbox/InputBoolFlipButtonUI.tsx
+import { observer as observer64 } from "mobx-react-lite";
+var InputBoolFlipButtonUI = observer64(function InputBoolFlipButtonUI_(p) {
+  const isActive = p.value ?? false;
+  const label = p.text;
+  const mode = p.mode ?? false;
+  return /* @__PURE__ */ jsxs(
+    Frame,
+    {
+      style: p.style,
+      className: p.className,
+      disabled: p.disabled,
+      tooltip: p.tooltip,
+      tooltipPlacement: p.tooltipPlacement,
+      hover: true,
+      triggerOnPress: { startingState: isActive },
+      expand: p.expand,
+      tw: ["flex flex-row !select-none cursor-pointer"],
+      onClick: (ev) => {
+        if (!p.onValueChange) return;
+        ev.stopPropagation();
+        p.onValueChange(!isActive);
+      },
+      children: [
+        /* @__PURE__ */ jsx(
+          Frame,
+          {
+            size: "input",
+            square: true,
+            icon: p.icon ?? (isActive ? "mdiCheckBold" : null),
+            tw: ["!select-none", mode === "radio" ? "rounded-full" : "rounded-sm"],
+            iconSize: "var(--input-icon-height)",
+            hover: true,
+            ...p.box
+          }
+        ),
+        p.children ?? (label ? /* @__PURE__ */ jsx("div", { tw: "ml-1", children: label }) : null)
+      ]
+    }
+  );
+});
 
 // src/csuite/fields/selectMany/WidgetSelectMany_SelectUI.tsx
-import { observer as observer61 } from "mobx-react-lite";
-var WidgetSelectMany_SelectUI = observer61(function WidgetSelectMany_SelectUI_(p) {
-  const widget = p.widget;
+var WidgetSelectMany_SelectUI = observer65(function WidgetSelectMany_SelectUI_(p) {
+  const field = p.field;
   return /* @__PURE__ */ jsxs("div", { tw: "flex flex-1 gap-1", children: [
     /* @__PURE__ */ jsx(
       SelectUI,
       {
         multiple: true,
-        wrap: widget.wrap,
-        tw: [widget.baseErrors && "rsx-field-error"],
+        wrap: field.wrap,
+        tw: [field.ownProblems && "rsx-field-error"],
         getLabelText: (t) => t.label ?? t.id,
-        getLabelUI: widget.config.getLabelUI,
-        getSearchQuery: () => widget.serial.query ?? "",
-        setSearchQuery: (query) => widget.serial.query = query,
-        disableLocalFiltering: widget.config.disableLocalFiltering,
-        options: () => widget.choices,
-        value: () => widget.serial.values,
+        getLabelUI: field.config.getLabelUI,
+        getSearchQuery: () => field.serial.query ?? "",
+        setSearchQuery: (query) => field.serial.query = query,
+        disableLocalFiltering: field.config.disableLocalFiltering,
+        options: () => field.choices,
+        value: () => field.serial.values,
         equalityCheck: (a, b) => a.id === b.id,
-        onChange: (selectOption) => widget.toggleItem(selectOption)
+        onChange: (selectOption) => field.toggleItem(selectOption)
       }
     ),
     /* @__PURE__ */ jsx(
-      InputBoolCheckboxUI,
+      InputBoolFlipButtonUI,
       {
+        tooltip: "Wrap items",
         tw: "self-start",
-        icon: p.widget.wrap ? "mdiWrapDisabled" : "mdiWrap",
-        value: p.widget.wrap,
-        onValueChange: (next) => p.widget.wrap = next
+        icon: p.field.wrap ? "mdiWrapDisabled" : "mdiWrap",
+        value: p.field.wrap,
+        onValueChange: (next) => p.field.wrap = next
       }
     )
   ] });
 });
 
 // src/csuite/fields/selectMany/WidgetSelectMany_TabUI.tsx
-import { observer as observer62 } from "mobx-react-lite";
-var WidgetSelectMany_TabUI = observer62(function WidgetSelectMany_TabUI_2(p) {
-  const widget = p.widget;
-  return /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("div", { tw: "rounded select-none flex flex-wrap gap-x-0.5 gap-y-0", children: [
-    widget.choices.map((c) => {
-      const isSelected = Boolean(widget.serial.values.find((item) => item.id === c.id));
-      return /* @__PURE__ */ jsx(
-        InputBoolUI,
-        {
-          value: isSelected,
-          display: "button",
-          text: c.label,
-          onValueChange: (value) => {
-            if (value != isSelected)
-              widget.toggleItem(c);
+import { observer as observer66 } from "mobx-react-lite";
+var WidgetSelectMany_TabUI = observer66(function WidgetSelectMany_TabUI_2(p) {
+  const field = p.field;
+  return /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs(
+    "div",
+    {
+      tw: "rounded select-none flex flex-wrap gap-x-0.5 gap-y-0",
+      style: { justifyContent: getJustifyContent(field.config.tabPosition) },
+      children: [
+        field.choices.map((c) => {
+          const isSelected = Boolean(field.serial.values.find((item) => item.id === c.id));
+          return /* @__PURE__ */ jsx(
+            InputBoolUI,
+            {
+              value: isSelected,
+              display: "button",
+              text: c.label ?? c.id,
+              onValueChange: (value) => {
+                if (value != isSelected) field.toggleItem(c);
+              }
+            }
+          );
+        }),
+        field.serial.values.filter((v) => field.choices.find((i) => i.id === v.id) == null).map((item) => /* @__PURE__ */ jsx(
+          InputBoolUI,
+          {
+            value: true,
+            style: { border: "1px solid oklch(var(--er))" },
+            display: "button",
+            text: item.label ?? "no label",
+            onValueChange: (value) => field.toggleItem(item)
           }
-        }
-      );
-    }),
-    widget.serial.values.filter((v) => widget.choices.find((i) => i.id === v.id) == null).map((item) => /* @__PURE__ */ jsx(
-      InputBoolUI,
-      {
-        value: true,
-        style: { border: "1px solid oklch(var(--er))" },
-        display: "button",
-        text: item.label ?? "no label",
-        onValueChange: (value) => widget.toggleItem(item)
-      }
-    ))
-  ] }) });
+        ))
+      ]
+    }
+  ) });
 });
 
 // src/csuite/fields/selectMany/WidgetSelectManyUI.tsx
-var WidgetSelectManyUI = observer63(function WidgetSelectManyUI_(p) {
-  const widget = p.widget;
-  const appearance = widget.config.appearance ?? "tab";
-  if (appearance === "tab")
-    return /* @__PURE__ */ jsx(WidgetSelectMany_TabUI, { widget });
-  if (appearance === "select")
-    return /* @__PURE__ */ jsx(WidgetSelectMany_SelectUI, { widget });
-  if (appearance === "list")
-    return /* @__PURE__ */ jsx(WidgetSelectMany_ListUI, { widget });
+var WidgetSelectManyUI = observer67(function WidgetSelectManyUI_(p) {
+  const field = p.field;
+  const appearance = field.config.appearance ?? "tab";
+  if (appearance === "tab") return /* @__PURE__ */ jsx(WidgetSelectMany_TabUI, { field });
+  if (appearance === "select") return /* @__PURE__ */ jsxs("div", { tw: "flex flex-col flex-1", children: [
+    /* @__PURE__ */ jsx(WidgetSelectMany_SelectUI, { field }),
+    !field.isCollapsed && /* @__PURE__ */ jsx(WidgetSelectMany_ListUI, { field })
+  ] });
+  if (appearance === "list") return /* @__PURE__ */ jsx(WidgetSelectMany_ListUI, { field });
   exhaust2(appearance);
 });
 
-// src/csuite/fields/selectMany/WidgetSelectMany.tsx
-var Widget_selectMany = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/selectMany/FieldSelectMany.tsx
+var Field_selectMany = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WidgetSelectManyUI;
-    this.DefaultBodyUI = WidgetSelectMany_ListUI;
-    this.type = "selectMany";
-    this.reset = () => {
-      this.value = this.defaultValue;
-    };
+    // DefaultBodyUI = WidgetSelectMany_ListUI
+    this.DefaultBodyUI = void 0;
     this.wrap = this.config.wrap ?? false;
-    /** un-select given item */
-    this.removeItem = (item) => {
-      const indexOf = this.serial.values.findIndex((i) => i.id === item.id);
-      if (indexOf < 0)
-        return console.log(`[\u{1F536}] WidgetSelectMany.removeItem: item not found`);
-      this.serial.values = this.serial.values.filter((v) => v.id !== item.id);
-      this.bumpValue();
-    };
-    /** select given item */
-    this.addItem = (item) => {
-      const i = this.serial.values.indexOf(item);
-      if (i >= 0)
-        return console.log(`[\u{1F536}] WidgetSelectMany.addItem: item already in list`);
-      this.serial.values.push(item);
-      this.bumpValue();
-    };
-    /** select item if item was not selected, un-select if item was selected */
-    this.toggleItem = (item) => {
-      const i = this.serial.values.findIndex((i2) => i2.id === item.id);
-      if (i < 0) {
-        this.serial.values.push(item);
-        this.bumpValue();
-      } else {
-        this.serial.values = this.serial.values.filter((v) => v.id !== item.id);
-        this.bumpValue();
-      }
-    };
-    this.id = serial?.id ?? nanoid17();
-    const config = spec.config;
-    this.serial = serial ?? {
-      type: "selectMany",
-      collapsed: config.startCollapsed,
-      id: this.id,
-      query: "",
-      values: config.default ?? []
-    };
-    if (this.serial.values == null)
-      this.serial.values = [];
-    makeAutoObservableInheritance(this, {
+    const config = schema.config;
+    if (this.serial.values == null) this.serial.values = [];
+    this.init(serial, {
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
+  }
+  static {
+    this.type = "selectMany";
+  }
+  get isCollapsedByDefault() {
+    return true;
+  }
+  get isCollapsible() {
+    return true;
   }
   get defaultValue() {
     return this.config.default ?? [];
   }
   get hasChanges() {
-    if (this.serial.values.length !== this.defaultValue.length)
-      return true;
+    if (this.serial.values.length !== this.defaultValue.length) return true;
     for (const item of this.serial.values) {
-      if (!this.defaultValue.find((i) => i.id === item.id))
-        return true;
+      if (!this.defaultValue.find((i) => i.id === item.id)) return true;
     }
     return false;
+  }
+  reset() {
+    this.value = this.defaultValue;
   }
   get choices() {
     const _choices = this.config.choices;
     return typeof _choices === "function" ? _choices(this) : _choices;
   }
-  get baseErrors() {
-    if (this.serial.values == null)
-      return null;
+  get ownProblems() {
+    if (this.serial.values == null) return null;
     const errors = [];
     for (const value of this.serial.values) {
       if (!this.choices.find((choice) => choice.id === value.id)) {
         errors.push(`value ${value.id} (label: ${value.label}) not in choices`);
       }
     }
-    if (errors.length > 0)
-      return errors;
+    if (errors.length > 0) return errors;
     return null;
   }
-  setValue(val) {
-    this.value = val;
+  setOwnSerial(serial) {
+    this.serial.query = serial?.query ?? "";
+    const finalVal = serial?.values ?? this.defaultValue;
+    this.serial.values = [...finalVal];
   }
-  set value(next) {
-    if (this.serial.values === next)
-      return;
-    runInAction12(() => {
-      this.serial.values = next;
-      this.bumpValue();
+  /** un-select given item */
+  removeItem(item) {
+    const indexOf = this.serial.values.findIndex((i) => i.id === item.id);
+    if (indexOf < 0) return console.log(`[\u{1F536}] WidgetSelectMany.removeItem: item not found`);
+    this.runInValueTransaction(() => {
+      this.serial.values = this.serial.values.filter((v) => v.id !== item.id);
+    });
+  }
+  /** select given item */
+  addItem(item) {
+    const i = this.serial.values.findIndex((i2) => i2.id === item.id);
+    if (i >= 0) return console.log(`[\u{1F536}] WidgetSelectMany.addItem: item already in list`);
+    this.runInValueTransaction(() => this.serial.values.push(item));
+  }
+  /** select item if item was not selected, un-select if item was selected */
+  toggleItem(item) {
+    this.runInValueTransaction(() => {
+      const i = this.serial.values.findIndex((i2) => i2.id === item.id);
+      if (i < 0) {
+        this.serial.values.push(item);
+      } else {
+        this.serial.values = this.serial.values.filter((v) => v.id !== item.id);
+      }
     });
   }
   get value() {
-    return this.serial.values;
+    const cloned = potatoClone(this.serial.values);
+    return new Proxy(cloned, {
+      get: (target, prop) => {
+        if (typeof prop === "symbol") return target[prop];
+        if (prop === "push") return this.addItem.bind(this);
+        if (prop === "slice") throw new Error(`you can't manipulate the FieldSelectMany value directly, please use internal api instead`);
+        if (prop === "splice") throw new Error(`you can't manipulate the FieldSelectMany value directly, please use internal api instead`);
+        if (parseInt(prop, 10) === +prop) {
+          return target[+prop];
+        }
+        return target[prop];
+      },
+      set: (target, prop, value) => {
+        const msg = `[\u{1F536}] Field_selectMany.value: use .addItem() or .removeItem() instead`;
+        throw new Error(msg);
+      }
+    });
+  }
+  set value(next) {
+    if (this.serial.values === next) return;
+    this.runInValueTransaction(() => this.serial.values = next);
   }
 };
-registerWidgetClass("selectMany", Widget_selectMany);
+registerFieldClass("selectMany", Field_selectMany);
 
-// src/csuite/fields/selectOne/WidgetSelectOne.ts
-import { runInAction as runInAction13 } from "mobx";
-import { nanoid as nanoid18 } from "nanoid";
+// src/csuite/fields/selectOne/WidgetSelectOne_CellUI.tsx
+import { observer as observer68 } from "mobx-react-lite";
+var stupidHueHash = (x) => Array.from(x).reduce((a, b) => a + b.charCodeAt(0), 0) % 360;
+var WidgetSelectOne_CellUI = observer68(function WidgetSelectOne_TabUI_(p) {
+  const val = p.field.value;
+  const hue = val.hue ?? stupidHueHash(val.id);
+  if (p.opts?.reveal)
+    return /* @__PURE__ */ jsx(RevealUI, { content: () => val.label ?? val.id, trigger: "hover", placement: "right", children: /* @__PURE__ */ jsx(BadgeUI, { hue, children: val.id[0] }) });
+  return /* @__PURE__ */ jsx(BadgeUI, { hue, children: val.id });
+});
 
 // src/csuite/fields/selectOne/WidgetSelectOneUI.tsx
-import { observer as observer67 } from "mobx-react-lite";
+import { observer as observer72 } from "mobx-react-lite";
 
 // src/csuite/fields/selectOne/WidgetSelectOne_RollUI.tsx
-import { observer as observer64 } from "mobx-react-lite";
-var WidgetSelectOne_RollUI = observer64(function WidgetSelectOne_RollUI_(p) {
-  const widget = p.widget;
-  const selected = widget.serial.val;
-  const idx = widget.choices.findIndex((c) => c.id === selected?.id);
-  const curr = widget.value;
-  const next = widget.choices[(idx + 1) % widget.choices.length];
+import { observer as observer69 } from "mobx-react-lite";
+var WidgetSelectOne_RollUI = observer69(function WidgetSelectOne_RollUI_(p) {
+  const field = p.field;
+  const selected = field.serial.val;
+  const idx = field.choices.findIndex((c) => c.id === selected?.id);
+  const curr = field.value;
+  const next = field.choices[(idx + 1) % field.choices.length];
   return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsx(
     Button,
     {
       subtle: true,
       icon: curr.icon,
       disabled: next == null,
-      onClick: () => widget.value = next,
+      onClick: () => field.value = next,
       children: curr.label
     }
   ) });
 });
 
 // src/csuite/fields/selectOne/WidgetSelectOne_SelectUI.tsx
-import { observer as observer65 } from "mobx-react-lite";
-var WidgetSelectOne_SelectUI = observer65(function WidgetSelectOne_SelectUI_(p) {
-  const widget = p.widget;
+import { observer as observer70 } from "mobx-react-lite";
+var WidgetSelectOne_SelectUI = observer70(function WidgetSelectOne_SelectUI_(p) {
+  const field = p.field;
   return /* @__PURE__ */ jsx("div", { tw: "flex-1", children: /* @__PURE__ */ jsx(
     SelectUI,
     {
-      tw: [widget.baseErrors && "rsx-field-error"],
+      tw: [field.ownProblems && "rsx-field-error"],
       getLabelText: (t) => t.label ?? makeLabelFromFieldName(t.id),
-      getLabelUI: widget.config.getLabelUI,
-      getSearchQuery: () => widget.serial.query ?? "",
-      setSearchQuery: (query) => widget.serial.query = query,
-      disableLocalFiltering: widget.config.disableLocalFiltering,
-      options: () => widget.choices,
+      getLabelUI: field.config.getLabelUI,
+      getSearchQuery: () => field.serial.query ?? "",
+      setSearchQuery: (query) => field.serial.query = query,
+      disableLocalFiltering: field.config.disableLocalFiltering,
+      options: () => field.choices,
       equalityCheck: (a, b) => a.id === b.id,
-      value: () => widget.serial.val,
+      value: () => field.serial.val,
       onChange: (selectOption) => {
         if (selectOption == null) {
           return;
         }
-        const next = widget.choices.find((c) => c.id === selectOption.id);
+        const next = field.choices.find((c) => c.id === selectOption.id);
         if (next == null) {
           console.log(`\u274C WidgetSelectOneUI: could not find choice for ${JSON.stringify(selectOption)}`);
           return;
         }
-        widget.value = next;
+        field.value = next;
       }
     },
-    widget.id
+    field.id
   ) });
 });
 
 // src/csuite/fields/selectOne/WidgetSelectOne_TabUI.tsx
-import { observer as observer66 } from "mobx-react-lite";
-var WidgetSelectOne_TabUI = observer66(function WidgetSelectOne_TabUI_(p) {
-  const widget = p.widget;
-  const selected = widget.serial.val;
+import { observer as observer71 } from "mobx-react-lite";
+var WidgetSelectOne_TabUI = observer71(function WidgetSelectOne_TabUI_2(p) {
+  const field = p.field;
+  const selected = field.serial.val;
   return /* @__PURE__ */ jsx(
     "div",
     {
+      style: { justifyContent: getJustifyContent(field.config.tabPosition) },
       tw: [
         //
-        "flex",
-        (widget.config.wrap ?? true) && "flex-wrap",
-        "rounded ml-auto justify-end",
+        "flex flex-1",
+        (field.config.wrap ?? true) && "flex-wrap",
+        "rounded",
         "select-none",
         "gap-x-0.5 gap-y-0"
       ],
-      children: widget.choices.map((c) => {
+      children: field.choices.map((c) => {
         const isSelected = selected?.id === c.id;
         return /* @__PURE__ */ jsx(
           InputBoolUI,
@@ -8230,9 +8969,8 @@ var WidgetSelectOne_TabUI = observer66(function WidgetSelectOne_TabUI_(p) {
             display: "button",
             text: c.label ?? c.id,
             onValueChange: (value) => {
-              if (value === isSelected)
-                return;
-              widget.value = c;
+              if (value === isSelected) return;
+              field.value = c;
             }
           },
           c.id
@@ -8243,269 +8981,173 @@ var WidgetSelectOne_TabUI = observer66(function WidgetSelectOne_TabUI_(p) {
 });
 
 // src/csuite/fields/selectOne/WidgetSelectOneUI.tsx
-var WidgetSelectOneUI = observer67(function WidgetSelectOneUI_(p) {
-  const widget = p.widget;
-  const skin = widget.config.appearance ?? "select";
-  if (skin === "tab")
-    return /* @__PURE__ */ jsx(WidgetSelectOne_TabUI, { widget });
-  if (skin === "select")
-    return /* @__PURE__ */ jsx(WidgetSelectOne_SelectUI, { widget });
-  if (skin === "roll")
-    return /* @__PURE__ */ jsx(WidgetSelectOne_RollUI, { widget });
+var WidgetSelectOneUI = observer72(function WidgetSelectOneUI_(p) {
+  const field = p.field;
+  const skin = field.config.appearance ?? "select";
+  if (skin === "tab") return /* @__PURE__ */ jsx(WidgetSelectOne_TabUI, { field });
+  if (skin === "select") return /* @__PURE__ */ jsx(WidgetSelectOne_SelectUI, { field });
+  if (skin === "roll") return /* @__PURE__ */ jsx(WidgetSelectOne_RollUI, { field });
   exhaust2(skin);
   return /* @__PURE__ */ jsx(Fragment, { children: "\u274C error" });
 });
 
-// src/csuite/fields/selectOne/WidgetSelectOne.ts
+// src/csuite/fields/selectOne/FieldSelectOne.tsx
 var FAILOVER_VALUE = Object.freeze({ id: "\u274C", label: "\u274C" });
-var Widget_selectOne = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+var Field_selectOne = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WidgetSelectOneUI;
     this.DefaultBodyUI = void 0;
-    this.type = "selectOne";
-    this.reset = () => {
-      this.value = this.defaultValue;
-    };
-    this.id = serial?.id ?? nanoid18();
-    const config = spec.config;
-    const choices = this.choices;
-    this.serial = serial ?? {
-      type: "selectOne",
-      collapsed: config.startCollapsed,
-      id: this.id,
-      query: "",
-      val: config.default ?? choices[0] ?? FAILOVER_VALUE
-    };
-    if (this.serial.val == null && Array.isArray(this.config.choices))
-      this.serial.val = choices[0] ?? FAILOVER_VALUE;
-    makeAutoObservableInheritance(this);
+    this.DefaultCellUI = WidgetSelectOne_CellUI;
+    this.init(serial, {
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
-  get baseErrors() {
-    if (this.serial.val == null)
-      return "no value selected";
-    const selected = this.choices.find((c) => c.id === this.serial.val.id);
-    if (selected == null)
-      return "selected value not in choices";
+  static {
+    this.type = "selectOne";
+  }
+  get ownProblems() {
+    if (this.serial.val == null) return "no value selected";
+    const selected = this.choices.find((c) => c.id === this.serial.val?.id);
+    if (selected == null && !this.config.disableLocalFiltering) return "selected value not in choices";
     return;
   }
-  get defaultValue() {
-    return this.config.default ?? this.choices[0] ?? FAILOVER_VALUE;
-  }
   get hasChanges() {
-    return this.serial.val.id !== this.defaultValue.id;
+    return this.serial.val?.id !== this.defaultValue.id;
+  }
+  reset() {
+    this.value = this.defaultValue;
   }
   get choices() {
     const _choices = this.config.choices;
     if (typeof _choices === "function") {
-      if (!this.form.ready)
-        return [];
-      if (this.form._ROOT == null)
-        throw new Error("\u274C IMPOSSIBLE: this.form._ROOT is null");
+      if (!this.root.ready) return [];
       return _choices(this);
     }
     return _choices;
   }
-  setValue(val) {
-    this.value = val;
+  get defaultValue() {
+    return this.config.default ?? //
+    this.choices[0] ?? FAILOVER_VALUE;
+  }
+  setOwnSerial(serial) {
+    this.serial.val = serial?.val ?? this.defaultValue;
+    this.serial.query = serial?.query;
+  }
+  get value() {
+    return this.serial.val ?? this.defaultValue;
   }
   set value(next) {
-    if (this.serial.val === next)
-      return;
-    const nextHasSameID = this.serial.val.id === next.id;
-    runInAction13(() => {
+    if (this.serial.val === next) return;
+    this.runInValueTransaction(() => {
       this.serial.val = next;
-      if (!nextHasSameID)
-        this.bumpValue();
-      else
-        this.bumpSerial();
     });
   }
-  get value() {
-    return this.serial.val;
+  renderAsCell(p) {
+    return /* @__PURE__ */ jsx(this.DefaultCellUI, { field: this, opts: p, ...p });
   }
 };
-registerWidgetClass("selectOne", Widget_selectOne);
+registerFieldClass("selectOne", Field_selectOne);
 
-// src/csuite/fields/shared/WidgetShared.tsx
-import { nanoid as nanoid19 } from "nanoid";
-var Widget_shared = class _Widget_shared extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
-    // prettier-ignore
-    this.type = "shared";
+// src/csuite/fields/shared/FieldShared.tsx
+var Field_shared = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = void 0;
     this.DefaultBodyUI = void 0;
-    // 🔴
-    this.hidden = () => {
-      const ctor = this.form.builder.SpecCtor;
-      const config = { ...this.spec.config, hidden: true };
-      const spec2 = new ctor("shared", config);
-      new _Widget_shared(this.form, null, spec2, this.serial);
-    };
-    this.id = serial?.id ?? nanoid19();
-    const config = spec.config;
-    this.serial = serial ?? { id: this.id, type: "shared", collapsed: config.startCollapsed };
-    makeAutoObservableInheritance(this);
+    this.init(serial, {
+      DefaultHeaderUI: false,
+      DefaultBodyUI: false
+    });
   }
-  get config() {
-    return this.spec.config;
+  static {
+    this.type = "shared";
+  }
+  setOwnSerial(_serial) {
   }
   get hasChanges() {
-    return this.config.widget.hasChanges;
+    return this.shared.hasChanges ?? false;
   }
-  reset() {
-    return this.config.widget.reset();
+  get actualWidgetToDisplay() {
+    return this.shared.actualWidgetToDisplay;
   }
   get shared() {
-    return this.config.widget;
+    return this.config.field;
   }
-  get baseErrors() {
-    return null;
-  }
-  setValue(val) {
-    this.value = val;
-  }
-  set value(val) {
-    this.config.widget.setValue(val);
+  get ownProblems() {
+    return this.shared.ownProblems;
   }
   get value() {
-    return this.config.widget.value;
+    return this.shared.value;
+  }
+  set value(val) {
+    this.shared.value = val;
   }
 };
-registerWidgetClass("shared", Widget_shared);
+registerFieldClass("shared", Field_shared);
 
-// src/csuite/fields/size/WidgetSize.ts
-import { runInAction as runInAction14 } from "mobx";
-import { nanoid as nanoid20 } from "nanoid";
-
-// src/csuite/fields/size/ResolutionState.tsx
-import { makeAutoObservable as makeAutoObservable12 } from "mobx";
-var ResolutionState = class {
-  constructor(req) {
-    this.req = req;
-    this.idealSizeforModelType = (model) => {
-      if (model === "xl")
-        return { width: 1024, height: 1024 };
-      if (model === "2.0")
-        return { width: 768, height: 768 };
-      if (model === "2.1")
-        return { width: 768, height: 768 };
-      if (model === "1.5")
-        return { width: 512, height: 512 };
-      if (model === "1.4")
-        return { width: 512, height: 512 };
-      return { width: this.width, height: this.height };
-    };
-    this.flip = () => {
-      const prevWidth = this.width;
-      this.req.width = this.height;
-      this.req.height = prevWidth;
-    };
-    // prettier-ignore
-    this.desiredModelType = "1.5";
-    this.desiredAspectRatio = "1:1";
-    this.isAspectRatioLocked = false;
-    this.wasHeightAdjustedLast = true;
-    this.desiredAspectRatio = (() => {
-      const ratio = parseFloatNoRoundingErr(this.realAspectRatio, 2);
-      if (ratio === parseFloatNoRoundingErr(1 / 1, 2))
-        return "1:1";
-      if (ratio === parseFloatNoRoundingErr(16 / 9, 2))
-        return "16:9";
-      if (ratio === parseFloatNoRoundingErr(4 / 3, 2))
-        return "4:3";
-      if (ratio === parseFloatNoRoundingErr(3 / 2, 2))
-        return "3:2";
-      return "1:1";
-    })();
-    makeAutoObservable12(this);
-  }
-  get width() {
-    return this.req.width;
-  }
-  // prettier-ignore
-  get height() {
-    return this.req.height;
-  }
-  // prettier-ignore
-  set width(next) {
-    this.req.width = next;
-  }
-  // prettier-ignore
-  set height(next) {
-    this.req.height = next;
-  }
-  setWidth(width) {
-    this.width = width;
-    this.wasHeightAdjustedLast = false;
-    if (this.isAspectRatioLocked) {
-      this.updateHeightBasedOnAspectRatio();
-    }
-  }
-  setHeight(height) {
-    this.height = height;
-    this.wasHeightAdjustedLast = true;
-    if (this.isAspectRatioLocked) {
-      this.updateWidthBasedOnAspectRatio();
-    }
-  }
-  get realAspectRatio() {
-    return this.width / this.height;
-  }
-  setModelType(modelType) {
-    this.desiredModelType = modelType;
-    const itgt = this.idealSizeforModelType(modelType);
-    const diagPrev = Math.sqrt(this.width ** 2 + this.height ** 2);
-    const diagNext = Math.sqrt(itgt.width ** 2 + itgt.height ** 2);
-    const factor = diagNext / diagPrev;
-    console.log({ modelType, idealTarget: itgt, avg: diagPrev, avg2: diagNext, factor });
-    this.width = Math.round(this.width * factor);
-    this.height = Math.round(this.height * factor);
-    console.log(`final is w=${this.width} x h=${this.height}`);
-    console.log(`fixed avg is ${Math.sqrt(this.width ** 2 + this.height ** 2)}`);
-  }
-  setAspectRatio(aspectRatio) {
-    this.desiredAspectRatio = aspectRatio;
-    if (this.wasHeightAdjustedLast) {
-      this.updateWidthBasedOnAspectRatio();
-    } else {
-      this.updateHeightBasedOnAspectRatio();
-    }
-  }
-  updateHeightBasedOnAspectRatio() {
-    const [widthRatio, heightRatio] = this.desiredAspectRatio.split(":").map(Number);
-    this.height = Math.round(this.width * (heightRatio / widthRatio));
-  }
-  updateWidthBasedOnAspectRatio() {
-    const [widthRatio, heightRatio] = this.desiredAspectRatio.split(":").map(Number);
-    this.width = Math.round(this.height * (widthRatio / heightRatio));
-  }
+// src/csuite/fields/size/WidgetSizeTypes.ts
+var aspectRatioMap = {
+  "15:16": { width: 960, height: 1024 },
+  "16:15": { width: 1024, height: 960 },
+  "15:17": { width: 960, height: 1088 },
+  "17:15": { width: 1088, height: 896 },
+  "14:17": { width: 896, height: 1088 },
+  "17:14": { width: 1088, height: 896 },
+  "7:9": { width: 896, height: 1152 },
+  "9:7": { width: 1152, height: 896 },
+  "13:18": { width: 832, height: 1152 },
+  "18:13": { width: 1152, height: 832 },
+  "13:19": { width: 832, height: 1216 },
+  "19:13": { width: 1216, height: 832 },
+  "3:5": { width: 768, height: 1280 },
+  "5:3": { width: 1280, height: 768 },
+  "4:7": { width: 768, height: 1344 },
+  "7:4": { width: 1344, height: 768 },
+  "11:21": { width: 704, height: 1344 },
+  "21:11": { width: 1344, height: 704 },
+  "1:2": { width: 704, height: 1408 },
+  "2:1": { width: 1408, height: 704 },
+  "16:9": { width: 1024, height: 576 },
+  "9:16": { width: 576, height: 1024 },
+  "4:3": { width: 1024, height: 768 },
+  "3:4": { width: 768, height: 1024 },
+  "3:2": { width: 1024, height: 683 },
+  "2:3": { width: 683, height: 1024 },
+  "1:1": { width: 1024, height: 1024 }
 };
 
 // src/csuite/fields/size/WidgetSizeUI.tsx
-import { observer as observer68 } from "mobx-react-lite";
-var WigetSize_LineUI = observer68(function WigetSize_LineUI_(p) {
-  return /* @__PURE__ */ jsx(WidgetSizeX_LineUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
+import { observer as observer73 } from "mobx-react-lite";
+var WigetSize_LineUI = observer73(function WigetSize_LineUI_(p) {
+  return /* @__PURE__ */ jsx(WidgetSizeX_LineUI, { size: p.field, bounds: p.field.config });
 });
-var WigetSize_BlockUI = observer68(function WigetSize_BlockUI_(p) {
-  return /* @__PURE__ */ jsx(WigetSizeXUI, { sizeHelper: p.widget.sizeHelper, bounds: p.widget.config });
+var WigetSize_BlockUI = observer73(function WigetSize_BlockUI_(p) {
+  return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsx(WigetSizeXUI, { size: p.field, bounds: p.field.config }) });
 });
-var WidgetSizeX_LineUI = observer68(function WidgetSize_LineUI_(p) {
-  const uist = p.sizeHelper;
-  return /* @__PURE__ */ jsx("div", { className: "flex flex-1 flex-col gap-1", children: /* @__PURE__ */ jsxs(
+var WidgetSizeX_LineUI = observer73(function WidgetSize_LineUI_(p) {
+  const uist = p.size;
+  const modelBtn = (model) => /* @__PURE__ */ jsx(
+    InputBoolToggleButtonUI,
+    {
+      tw: "w-input",
+      value: uist.desiredModelType == model,
+      onValueChange: () => uist.setModelType(model),
+      text: model
+    }
+  );
+  return /* @__PURE__ */ jsx("div", { className: "flex flex-1 flex-col gap-0.5", children: /* @__PURE__ */ jsxs(
     Frame,
     {
       border: { contrast: 0.05 },
       tw: ["h-input w-full h-full flex gap-2 items-center overflow-clip"],
       style: { padding: "0px" },
       children: [
+        /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
+          modelBtn("1.5"),
+          modelBtn("xl")
+        ] }),
         /* @__PURE__ */ jsx(
           InputNumberUI,
           {
@@ -8545,7 +9187,7 @@ var WidgetSizeX_LineUI = observer68(function WidgetSize_LineUI_(p) {
     }
   ) });
 });
-var AspectLockButtonUI = observer68(function AspectLockButtonUI_(p) {
+var AspectLockButtonUI = observer73(function AspectLockButtonUI_(p) {
   const uist = p.sizeHelper;
   return /* @__PURE__ */ jsx(
     Frame,
@@ -8555,19 +9197,14 @@ var AspectLockButtonUI = observer68(function AspectLockButtonUI_(p) {
       icon: uist.isAspectRatioLocked ? "mdiLink" : "mdiLinkOff",
       onMouseDown: (ev) => {
         uist.isAspectRatioLocked = !uist.isAspectRatioLocked;
-        if (!uist.isAspectRatioLocked) {
-          return;
-        }
-        if (uist.wasHeightAdjustedLast) {
-          uist.setHeight(uist.height);
-        } else {
-          uist.setWidth(uist.width);
-        }
+        if (!uist.isAspectRatioLocked) return;
+        if (uist.wasHeightAdjustedLast) uist.setHeight(uist.height);
+        else uist.setWidth(uist.width);
       }
     }
   );
 });
-var AspectRatioSquareUI = observer68(function AspectRatioSquareUI_(p) {
+var AspectRatioSquareUI = observer73(function AspectRatioSquareUI_(p) {
   const uist = p.sizeHelper;
   const ratioDisplaySize = 26;
   return /* @__PURE__ */ jsx(
@@ -8578,7 +9215,7 @@ var AspectRatioSquareUI = observer68(function AspectRatioSquareUI_(p) {
       border: 10,
       tw: ["flex", "overflow-clip", "items-center justify-center", "cursor-pointer"],
       style: { borderRadius: "0px" },
-      onClick: uist.flip,
+      onClick: () => uist.flip(),
       hover: true,
       children: /* @__PURE__ */ jsx(
         Frame,
@@ -8601,8 +9238,8 @@ var AspectRatioSquareUI = observer68(function AspectRatioSquareUI_(p) {
     }
   );
 });
-var WigetSizeXUI = observer68(function WigetSizeXUI_(p) {
-  const uist = p.sizeHelper;
+var WigetSizeXUI = observer73(function WigetSizeXUI_(p) {
+  const uist = p.size;
   const resoBtn = (ar) => /* @__PURE__ */ jsx(
     InputBoolUI,
     {
@@ -8612,97 +9249,105 @@ var WigetSizeXUI = observer68(function WigetSizeXUI_(p) {
       text: ar
     }
   );
-  const modelBtn = (model) => /* @__PURE__ */ jsx(
-    InputBoolUI,
-    {
-      display: "button",
-      value: uist.desiredModelType == model,
-      onValueChange: () => uist.setModelType(model),
-      text: model
-    }
-  );
   const portrait = uist.height / uist.width > 1;
   return /* @__PURE__ */ jsx(
     Frame,
     {
-      children: /* @__PURE__ */ jsxs("div", { tw: "flex", children: [
-        /* @__PURE__ */ jsxs("div", { tw: "join", children: [
-          modelBtn("1.5"),
-          modelBtn("xl")
+      children: /* @__PURE__ */ jsx("div", { tw: "flex", children: /* @__PURE__ */ jsxs("div", { tw: "ml-auto flex flex-wrap items-center gap-1.5", children: [
+        /* @__PURE__ */ jsx("div", { tw: "join", children: resoBtn("1:1") }),
+        /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+          resoBtn("16:9"),
+          resoBtn("9:16")
         ] }),
-        /* @__PURE__ */ jsxs("div", { tw: "ml-auto flex items-center gap-1.5", children: [
-          /* @__PURE__ */ jsx("div", { tw: "join", children: resoBtn("1:1") }),
-          /* @__PURE__ */ jsxs("div", { tw: "join", children: [
-            resoBtn("16:9"),
-            resoBtn("9:16")
+        /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+          resoBtn("4:3"),
+          resoBtn("3:4")
+        ] }),
+        /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+          resoBtn("3:2"),
+          resoBtn("2:3")
+        ] }),
+        p.size.desiredModelType === "xl" && /* @__PURE__ */ jsxs(Fragment, { children: [
+          /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+            resoBtn("16:15"),
+            resoBtn("15:16")
           ] }),
-          /* @__PURE__ */ jsxs("div", { tw: "join", children: [
-            resoBtn("4:3"),
-            resoBtn("3:4")
+          /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+            resoBtn("17:15"),
+            resoBtn("15:17")
           ] }),
-          /* @__PURE__ */ jsxs("div", { tw: "join", children: [
-            resoBtn("3:2"),
-            resoBtn("2:3")
+          /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+            resoBtn("9:7"),
+            resoBtn("7:9")
+          ] }),
+          /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+            resoBtn("18:13"),
+            resoBtn("13:18")
+          ] }),
+          /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+            resoBtn("19:13"),
+            resoBtn("13:19")
+          ] }),
+          /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+            resoBtn("7:4"),
+            resoBtn("4:7")
+          ] }),
+          /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+            resoBtn("21:11"),
+            resoBtn("11:21")
+          ] }),
+          /* @__PURE__ */ jsxs("div", { tw: "join flex flex-col", children: [
+            resoBtn("2:1"),
+            resoBtn("1:2")
           ] })
         ] })
-      ] })
+      ] }) })
     }
   );
 });
 
-// src/csuite/fields/size/WidgetSize.ts
-var Widget_size = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
+// src/csuite/fields/size/FieldSize.tsx
+var Field_size = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
     this.DefaultHeaderUI = WigetSize_LineUI;
     this.DefaultBodyUI = WigetSize_BlockUI;
-    this.type = "size";
-    this.id = serial?.id ?? nanoid20();
-    const config = spec.config;
-    if (serial) {
-      this.serial = serial;
-    } else {
-      const aspectRatio = config.default?.aspectRatio ?? "1:1";
-      const modelType = config.default?.modelType ?? "SD1.5 512";
-      const width = config.default?.width ?? parseInt(modelType.split(" ")[1]);
-      const height = config.default?.height ?? parseInt(modelType.split(" ")[1]);
-      this.serial = {
-        type: "size",
-        id: this.id,
-        aspectRatio,
-        modelType,
-        height,
-        width
-      };
-    }
-    this.init({
+    this.desiredModelType = "1.5";
+    this.desiredAspectRatio = "1:1";
+    this.isAspectRatioLocked = false;
+    this.wasHeightAdjustedLast = true;
+    this.init(serial, {
       sizeHelper: false,
       DefaultHeaderUI: false,
       DefaultBodyUI: false
     });
   }
-  get baseErrors() {
+  static {
+    this.type = "size";
+  }
+  setOwnSerial(serial) {
+    const config = this.config;
+    this.serial.aspectRatio = serial?.aspectRatio ?? config.default?.aspectRatio ?? "1:1";
+    this.serial.modelType = serial?.modelType ?? config.default?.modelType ?? "SD1.5 512";
+    this.serial.width = serial?.width ?? config.default?.width ?? parseInt(this.serial.modelType.split(" ")[1]);
+    this.serial.height = serial?.height ?? config.default?.height ?? parseInt(this.serial.modelType.split(" ")[1]);
+  }
+  get ownProblems() {
     return null;
   }
   get defaultValue() {
-    const config = this.spec.config;
+    const config = this.schema.config;
     const aspectRatio = config.default?.aspectRatio ?? "1:1";
     const modelType = config.default?.modelType ?? "SD1.5 512";
     const width = config.default?.width ?? parseInt(modelType.split(" ")[1]);
     const height = config.default?.height ?? parseInt(modelType.split(" ")[1]);
-    return { type: "size", aspectRatio, modelType, height, width };
+    return { $: "size", aspectRatio, modelType, height, width };
   }
   get hasChanges() {
     const def = this.defaultValue;
-    if (this.serial.width !== def.width)
-      return true;
-    if (this.serial.height !== def.height)
-      return true;
-    if (this.serial.aspectRatio !== def.aspectRatio)
-      return true;
+    if (this.serial.width !== def.width) return true;
+    if (this.serial.height !== def.height) return true;
+    if (this.serial.aspectRatio !== def.aspectRatio) return true;
     return false;
   }
   reset() {
@@ -8711,108 +9356,121 @@ var Widget_size = class extends BaseField {
   get width() {
     return this.serial.width;
   }
-  // prettier-ignore
   get height() {
     return this.serial.height;
   }
-  // prettier-ignore
   set width(next) {
-    if (next === this.serial.width)
-      return;
-    runInAction14(() => {
-      this.serial.width = next;
-      this.bumpValue();
-    });
+    if (next === this.serial.width) return;
+    this.runInValueTransaction(() => this.serial.width = next);
   }
   set height(next) {
-    if (next === this.serial.height)
-      return;
-    runInAction14(() => {
-      this.serial.height = next;
-      this.bumpValue();
-    });
+    if (next === this.serial.height) return;
+    this.runInValueTransaction(() => this.serial.height = next);
   }
-  get sizeHelper() {
-    const state = new ResolutionState(this);
-    Object.defineProperty(this, "sizeHelper", { value: state });
-    return state;
+  setWidth(width) {
+    this.width = width;
+    this.wasHeightAdjustedLast = false;
+    if (this.isAspectRatioLocked) {
+      this.updateHeightBasedOnAspectRatio();
+    }
   }
-  setValue(val) {
-    this.value = val;
+  setHeight(height) {
+    this.height = height;
+    this.wasHeightAdjustedLast = true;
+    if (this.isAspectRatioLocked) {
+      this.updateWidthBasedOnAspectRatio();
+    }
+  }
+  get value() {
+    return this.serial;
   }
   set value(val) {
     if (val.width === this.serial.width && //
     val.height === this.serial.height && val.aspectRatio === this.serial.aspectRatio) {
       return;
     }
-    runInAction14(() => {
+    this.runInValueTransaction(() => {
       Object.assign(this.serial, val);
-      this.bumpValue();
     });
   }
-  get value() {
-    return this.serial;
+  idealSizeforModelType(model) {
+    if (model === "xl") return { width: 1024, height: 1024 };
+    if (model === "2.0") return { width: 768, height: 768 };
+    if (model === "2.1") return { width: 768, height: 768 };
+    if (model === "1.5") return { width: 512, height: 512 };
+    if (model === "1.4") return { width: 512, height: 512 };
+    return { width: this.width, height: this.height };
   }
-};
-registerWidgetClass("size", Widget_size);
-
-// src/csuite/fields/spacer/WidgetSpacer.tsx
-import { observable as observable12 } from "mobx";
-import { nanoid as nanoid21 } from "nanoid";
-
-// src/csuite/fields/spacer/WidgetSpacerUI.tsx
-import { observer as observer69 } from "mobx-react-lite";
-var WidgetSpacerUI = observer69(function WidgetSpacerUI_(p) {
-  return /* @__PURE__ */ jsx(SpacerUI, {});
-});
-
-// src/csuite/fields/spacer/WidgetSpacer.tsx
-var Widget_spacer = class extends BaseField {
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
-    this.DefaultHeaderUI = WidgetSpacerUI;
-    this.DefaultBodyUI = void 0;
-    this.type = "spacer";
-    this.hasChanges = false;
-    this.reset = () => {
-    };
-    this.id = serial?.id ?? nanoid21();
-    this.serial = serial ?? {
-      id: this.id,
-      type: "spacer",
-      collapsed: false
-    };
-    this.init({
-      serial: observable12,
-      DefaultHeaderUI: false,
-      DefaultBodyUI: false
+  /** flip width and height */
+  flip() {
+    if (this.width === this.height) return;
+    this.runInValueTransaction(() => {
+      const prevWidth = this.width;
+      this.width = this.height;
+      this.height = prevWidth;
     });
   }
-  get baseErrors() {
-    return null;
+  toAspectRatio(realAspectRatio) {
+    const ratio = parseFloatNoRoundingErr(realAspectRatio, 2);
+    if (ratio === parseFloatNoRoundingErr(1 / 1, 2)) return "1:1";
+    if (ratio === parseFloatNoRoundingErr(16 / 9, 2)) return "16:9";
+    if (ratio === parseFloatNoRoundingErr(4 / 3, 2)) return "4:3";
+    if (ratio === parseFloatNoRoundingErr(16 / 15, 2)) return "16:15";
+    if (ratio === parseFloatNoRoundingErr(17 / 15, 2)) return "17:15";
+    if (ratio === parseFloatNoRoundingErr(17 / 14, 2)) return "17:14";
+    if (ratio === parseFloatNoRoundingErr(9 / 7, 2)) return "9:7";
+    if (ratio === parseFloatNoRoundingErr(18 / 13, 2)) return "18:13";
+    if (ratio === parseFloatNoRoundingErr(19 / 13, 2)) return "19:13";
+    if (ratio === parseFloatNoRoundingErr(5 / 3, 2)) return "5:3";
+    if (ratio === parseFloatNoRoundingErr(7 / 4, 2)) return "7:4";
+    if (ratio === parseFloatNoRoundingErr(21 / 11, 2)) return "21:11";
+    if (ratio === parseFloatNoRoundingErr(2 / 1, 2)) return "2:1";
+    return "1:1";
   }
-  get value() {
-    return false;
+  get realAspectRatio() {
+    return this.width / this.height;
   }
-  setValue(val) {
+  setModelType(modelType) {
+    this.desiredModelType = modelType;
+    const itgt = this.idealSizeforModelType(modelType);
+    const diagPrev = Math.sqrt(this.width ** 2 + this.height ** 2);
+    const diagNext = Math.sqrt(itgt.width ** 2 + itgt.height ** 2);
+    const factor = diagNext / diagPrev;
+    console.log({ modelType, idealTarget: itgt, avg: diagPrev, avg2: diagNext, factor });
+    this.width = Math.round(this.width * factor);
+    this.height = Math.round(this.height * factor);
+    console.log(`final is w=${this.width} x h=${this.height}`);
+    console.log(`fixed avg is ${Math.sqrt(this.width ** 2 + this.height ** 2)}`);
   }
-  set value(val) {
+  setAspectRatio(aspectRatio) {
+    this.desiredAspectRatio = aspectRatio;
+    const definedHeight = aspectRatioMap[this.desiredAspectRatio]?.height;
+    const definedWidth = aspectRatioMap[this.desiredAspectRatio]?.width;
+    if (definedHeight && definedWidth) {
+      this.height = definedHeight;
+      this.width = definedWidth;
+    } else if (this.wasHeightAdjustedLast) {
+      this.updateWidthBasedOnAspectRatio();
+    } else {
+      this.updateHeightBasedOnAspectRatio();
+    }
+  }
+  updateHeightBasedOnAspectRatio() {
+    const [widthRatio, heightRatio] = this.desiredAspectRatio.split(":").map(Number);
+    this.height = Math.round(this.width * (heightRatio / widthRatio));
+  }
+  updateWidthBasedOnAspectRatio() {
+    const [widthRatio, heightRatio] = this.desiredAspectRatio.split(":").map(Number);
+    this.width = Math.round(this.height * (widthRatio / heightRatio));
   }
 };
-registerWidgetClass("spacer", Widget_spacer);
-
-// src/csuite/fields/string/WidgetString.tsx
-import { runInAction as runInAction15 } from "mobx";
-import { nanoid as nanoid22 } from "nanoid";
+registerFieldClass("size", Field_size);
 
 // src/csuite/fields/string/WidgetStringUI.tsx
-import { observer as observer71 } from "mobx-react-lite";
+import { observer as observer75 } from "mobx-react-lite";
 
 // src/csuite/input-string/InputStringUI.tsx
-import { observer as observer70 } from "mobx-react-lite";
+import { observer as observer74 } from "mobx-react-lite";
 import { useState as useState2 } from "react";
 
 // src/csuite/kolor/getLCHFromStringAsString.tsx
@@ -8838,7 +9496,7 @@ var fmtNum1 = (n) => {
 };
 
 // src/csuite/input-string/InputStringUI.tsx
-var InputStringUI = observer70(function WidgetStringUI_(p) {
+var InputStringUI = observer74(function WidgetStringUI_(p) {
   const value = p.getValue();
   const isBuffered = Boolean(p.buffered);
   const temporaryValue = p.buffered?.getTemporaryValue?.();
@@ -8867,7 +9525,7 @@ var InputStringUI = observer70(function WidgetStringUI_(p) {
   return /* @__PURE__ */ jsxs(
     Frame,
     {
-      base: 5,
+      base: { contrast: csuite.inputContrast ?? 0.05 },
       text: { contrast: 1, chromaBlend: 1 },
       hover: true,
       border: isDirty ? { contrast: 0.3, hue: knownOKLCHHues.warning, chroma: 0.2 } : { contrast: csuite.inputBorder },
@@ -8898,10 +9556,8 @@ var InputStringUI = observer70(function WidgetStringUI_(p) {
             autoFocus: p.autofocus,
             value: p.buffered ? temporaryValue ?? value : value,
             onChange: (ev) => {
-              if (p.buffered)
-                p.buffered.setTemporaryValue(ev.target.value);
-              else
-                p.setValue(ev.currentTarget.value);
+              if (p.buffered) p.buffered.setTemporaryValue(ev.target.value);
+              else p.setValue(ev.currentTarget.value);
             },
             onDragStart: (ev) => ev.preventDefault(),
             onFocus: (ev) => {
@@ -8910,15 +9566,13 @@ var InputStringUI = observer70(function WidgetStringUI_(p) {
             },
             onBlur: () => {
               const tempValue = p.buffered?.getTemporaryValue?.();
-              if (tempValue != null)
-                p.setValue(tempValue);
+              if (tempValue != null) p.setValue(tempValue);
             },
             onKeyDown: (ev) => {
               if (ev.key === "Enter") {
                 ev.currentTarget.blur();
               } else if (ev.key === "Escape") {
-                if (!p.buffered && temporaryValue)
-                  p.setValue(temporaryValue);
+                if (!p.buffered && temporaryValue) p.setValue(temporaryValue);
                 p.buffered?.setTemporaryValue(null);
                 ev.currentTarget.blur();
               }
@@ -8942,122 +9596,125 @@ var InputStringUI = observer70(function WidgetStringUI_(p) {
 });
 
 // src/csuite/fields/string/WidgetStringUI.tsx
-var WidgetString_TextareaHeaderUI = observer71(function WidgetString_TextareaHeaderUI_(p) {
-  const widget = p.widget;
-  if (!widget.config.textarea)
-    return null;
-  if (!p.widget.serial.collapsed)
-    return null;
-  return /* @__PURE__ */ jsx("div", { tw: "line-clamp-1 italic opacity-50", children: p.widget.value });
+var WidgetString_TextareaHeaderUI = observer75(function WidgetString_TextareaHeaderUI_(p) {
+  const field = p.field;
+  if (!field.config.textarea) return null;
+  if (!p.field.serial.collapsed) return null;
+  return /* @__PURE__ */ jsx("div", { tw: "line-clamp-1 italic opacity-50", children: JSON.stringify(p.field.value) });
 });
-var WidgetString_TextareaBodyUI = observer71(function WidgetString_TextareaBodyUI_(p) {
-  const widget = p.widget;
-  if (!widget.config.textarea)
-    return null;
-  const val = widget.value;
-  return /* @__PURE__ */ jsx(Frame, { base: 5, children: /* @__PURE__ */ jsx(
+var WidgetString_TextareaBodyUI = observer75(function WidgetString_TextareaBodyUI_(p) {
+  const field = p.field;
+  if (!field.config.textarea) return null;
+  const val = field.value;
+  const csuite = useCSuite();
+  return /* @__PURE__ */ jsx(Frame, { base: { contrast: csuite.inputContrast ?? 0.05 }, expand: true, children: /* @__PURE__ */ jsx(
     "textarea",
     {
       style: {
         /* ...p.widget.config.style, */
         lineHeight: "1.3rem",
-        resize: p.widget.config.resize ?? "both"
+        resize: p.field.config.resize ?? "both"
       },
-      tw: "cushy-basic-input w-full p-2",
-      placeholder: widget.config.placeHolder,
+      tw: "csuite-input w-full p-2",
+      placeholder: field.config.placeHolder,
       rows: 3,
       value: val,
       onChange: (ev) => {
-        widget.value = ev.target.value;
+        field.value = ev.target.value;
       }
     }
   ) });
 });
-var WidgetString_HeaderUI = observer71(function WidgetStringUI_2(p) {
-  const widget = p.widget;
-  const config = widget.config;
+var WidgetString_HeaderUI = observer75(function WidgetStringUI_2(p) {
+  const field = p.field;
+  const config = field.config;
   return /* @__PURE__ */ jsx(
     InputStringUI,
     {
-      icon: p.widget.config.innerIcon,
+      icon: p.field.config.innerIcon,
       type: config.inputType,
       pattern: config.pattern,
       className: config.className,
-      getValue: () => widget.value,
-      setValue: (value) => widget.value = value,
-      buffered: widget.config.buffered ? {
-        getTemporaryValue: () => widget.temporaryValue,
-        setTemporaryValue: (value) => widget.temporaryValue = value
+      getValue: () => field.value,
+      setValue: (value) => field.value = value,
+      buffered: field.config.buffered ? {
+        getTemporaryValue: () => field.temporaryValue,
+        setTemporaryValue: (value) => void (field.temporaryValue = value)
       } : void 0
     }
   );
 });
 
-// src/csuite/fields/string/WidgetString.tsx
-var Widget_string = class extends BaseField {
-  // prettier-ignore
-  constructor(form, parent, spec, serial) {
-    super();
-    this.form = form;
-    this.parent = parent;
-    this.spec = spec;
-    this.type = "str";
-    // --------------
+// src/csuite/fields/string/FieldString.tsx
+var Field_string = class extends Field {
+  constructor(repo, root, parent, schema, serial) {
+    super(repo, root, parent, schema);
+    this.UITextarea = () => /* @__PURE__ */ jsx(WidgetString_TextareaBodyUI, { field: this });
+    this.UIInputText = () => /* @__PURE__ */ jsx(WidgetString_HeaderUI, { field: this });
+    this.DefaultBodyUI = void 0;
     this.temporaryValue = null;
-    this.setTemporaryValue = (next) => this.temporaryValue = next;
-    this.defaultValue = this.config.default ?? "";
-    // prettier-ignore
-    this.reset = () => {
-      this.value = this.defaultValue;
-    };
-    this.id = serial?.id ?? nanoid22();
-    const config = spec.config;
-    this.serial = serial ?? {
-      type: "str",
-      val: this.config.default,
-      collapsed: config.startCollapsed,
-      id: this.id
-    };
-    makeAutoObservableInheritance(this);
+    this.init(serial);
+  }
+  static {
+    this.type = "str";
   }
   get DefaultHeaderUI() {
-    if (this.config.textarea)
-      return WidgetString_TextareaHeaderUI;
-    else
-      return WidgetString_HeaderUI;
-  }
-  get DefaultBodyUI() {
-    if (this.config.textarea)
+    if (this.config.textarea) {
+      if (this.isCollapsed) return WidgetString_TextareaHeaderUI;
       return WidgetString_TextareaBodyUI;
-    return void 0;
+    } else {
+      return WidgetString_HeaderUI;
+    }
   }
-  get baseErrors() {
+  get isCollapsible() {
+    if (this.config.textarea) return true;
+    return false;
+  }
+  get ownProblems() {
+    const min = this.config.minLength;
+    if (min != null && this.value.length < min) return `Value is too short (must be at least ${min} chars)`;
+    const max = this.config.maxLength;
+    if (max != null && this.value.length > max) return `Value is too long (must be at most ${max} chars)`;
+    const pattern = this.config.pattern;
+    if (pattern != null) {
+      const reg = new RegExp(pattern).test(this.value);
+      if (!reg) return `Value does not match pattern`;
+    }
     return null;
   }
-  get hasChanges() {
-    return this.serial.val !== this.defaultValue;
+  setTemporaryValue(next) {
+    this.temporaryValue = next;
   }
   get animateResize() {
-    if (this.config.textarea)
-      return false;
+    if (this.config.textarea) return false;
     return true;
   }
-  setValue(val) {
-    this.value = val;
+  setOwnSerial(serial) {
+    this.serial.value = serial?.value ?? serial?.val ?? this.defaultValue;
   }
-  set value(next) {
-    if (this.serial.val === next)
-      return;
-    runInAction15(() => {
-      this.serial.val = next;
-      this.bumpValue();
-    });
+  evalDefaultValue() {
+    const d = this.config.default;
+    if (d == null) return "";
+    if (typeof d === "function") return d();
+    if (typeof d === "string") return d;
+    return JSON.stringify(d);
+  }
+  get defaultValue() {
+    return this.evalDefaultValue() ?? "";
+  }
+  get hasChanges() {
+    return this.value !== this.defaultValue;
   }
   get value() {
-    return this.serial.val ?? this.config.default ?? "";
+    return this.serial.value ?? this.defaultValue;
+  }
+  set value(next) {
+    const nextStrVal = typeof next === "string" ? next : JSON.stringify(next);
+    if (this.serial.value === nextStrVal) return;
+    this.runInValueTransaction(() => this.serial.value = nextStrVal);
   }
 };
-registerWidgetClass("str", Widget_string);
+registerFieldClass("str", Field_string);
 
 // src/csuite/openrouter/OpenRouter_infos.ts
 var openRouterInfos = {
@@ -9603,300 +10260,174 @@ var openRouterInfos = {
   }
 };
 
-// src/csuite/simple/SimpleBlueprint.ts
-import { makeObservable as makeObservable5 } from "mobx";
-var SimpleBlueprint = class _SimpleBlueprint {
-  constructor(type, config) {
-    this.type = type;
-    this.config = config;
-    this.LabelExtraUI = (p) => null;
-    // PubSub -----------------------------------------------------
-    this.producers = [];
-    this.reactions = [];
-    // -----------------------------------------------------
-    this.Make = (type, config) => new _SimpleBlueprint(type, config);
-    /** wrap widget spec to list stuff */
-    this.list = (config = {}) => new _SimpleBlueprint("list", {
-      ...config,
-      element: this
-    });
-    this.optional = (startActive = false) => new _SimpleBlueprint("optional", {
-      widget: this,
-      startActive,
-      label: this.config.label,
-      // requirements: this.config.requirements,
-      startCollapsed: this.config.startCollapsed,
-      collapsed: this.config.collapsed,
-      border: this.config.border
-    });
-    this.shared = (key) => getCurrentForm_IMPL().shared(key, this);
-    /** clone the spec, and patch the cloned config */
-    this.withConfig = (config) => {
-      const mergedConfig = { ...this.config, ...config };
-      const cloned = new _SimpleBlueprint(this.type, mergedConfig);
-      cloned.producers = this.producers;
-      cloned.reactions = this.reactions;
-      return cloned;
-    };
-    this.hidden = () => this.withConfig({ hidden: true });
-    makeObservable5(this, { config: true });
+// src/csuite/simple/SimpleBuilder.ts
+var SimpleBuilder = class {
+  constructor() {
+    makeAutoObservable13(this, {});
   }
-  publish(chan, produce) {
-    this.producers.push({ chan, produce });
-    return this;
+  time(config = {}) {
+    return new SimpleSchema(Field_string, { inputType: "time", ...config });
   }
-  subscribe(chan, effect) {
-    return this.addReaction(
-      (self2) => self2.consume(chan),
-      (arg, self2) => {
-        if (arg == null)
-          return;
-        effect(arg, self2);
-      }
-    );
+  date(config = {}) {
+    return new SimpleSchema(Field_string, { inputType: "date", ...config });
   }
-  addReaction(expr, effect) {
-    this.reactions.push({ expr, effect });
-    return this;
+  datetime(config = {}) {
+    return new SimpleSchema(Field_string, { inputType: "datetime-local", ...config });
   }
-};
-
-// src/csuite/simple/SimpleDomain.ts
-var SimpleDomain = class {
-  /** (@internal) don't call this yourself */
-  constructor(form) {
-    this.form = form;
-    /** (@internal) DO NOT USE YOURSELF */
-    this.SpecCtor = SimpleBlueprint;
-    this.time = (config = {}) => {
-      return new SimpleBlueprint("str", { inputType: "time", ...config });
-    };
-    this.date = (config = {}) => {
-      return new SimpleBlueprint("str", { inputType: "date", ...config });
-    };
-    this.datetime = (config = {}) => {
-      return new SimpleBlueprint("str", { inputType: "datetime-local", ...config });
-    };
-    this.password = (config = {}) => {
-      return new SimpleBlueprint("str", { inputType: "password", ...config });
-    };
-    this.email = (config = {}) => {
-      return new SimpleBlueprint("str", { inputType: "email", ...config });
-    };
-    this.url = (config = {}) => {
-      return new SimpleBlueprint("str", { inputType: "url", ...config });
-    };
-    this.string = (config = {}) => {
-      return new SimpleBlueprint("str", config);
-    };
-    this.text = (config = {}) => {
-      return new SimpleBlueprint("str", config);
-    };
-    this.textarea = (config = {}) => {
-      return new SimpleBlueprint("str", { textarea: true, ...config });
-    };
-    this.boolean = (config = {}) => {
-      return new SimpleBlueprint("bool", config);
-    };
-    this.bool = (config = {}) => {
-      return new SimpleBlueprint("bool", config);
-    };
-    this.size = (config = {}) => {
-      return new SimpleBlueprint("size", config);
-    };
-    this.seed = (config = {}) => {
-      return new SimpleBlueprint("seed", config);
-    };
-    this.color = (config = {}) => {
-      return new SimpleBlueprint("color", config);
-    };
-    this.colorV2 = (config = {}) => {
-      return new SimpleBlueprint("str", { inputType: "color", ...config });
-    };
-    this.matrix = (config) => {
-      return new SimpleBlueprint("matrix", config);
-    };
-    this.button = (config) => {
-      return new SimpleBlueprint("button", config);
-    };
-    /** variants: `header` */
-    this.markdown = (config) => new SimpleBlueprint("markdown", typeof config === "string" ? { markdown: config } : config);
-    /** [markdown variant]: inline=true, label=false */
-    this.header = (config) => new SimpleBlueprint(
-      "markdown",
+  password(config = {}) {
+    return new SimpleSchema(Field_string, { inputType: "password", ...config });
+  }
+  email(config = {}) {
+    return new SimpleSchema(Field_string, { inputType: "email", ...config });
+  }
+  url(config = {}) {
+    return new SimpleSchema(Field_string, { inputType: "url", ...config });
+  }
+  string(config = {}) {
+    return new SimpleSchema(Field_string, config);
+  }
+  text(config = {}) {
+    return new SimpleSchema(Field_string, config);
+  }
+  textarea(config = {}) {
+    return new SimpleSchema(Field_string, { textarea: true, ...config });
+  }
+  boolean(config = {}) {
+    return new SimpleSchema(Field_bool, config);
+  }
+  bool(config = {}) {
+    return new SimpleSchema(Field_bool, config);
+  }
+  size(config = {}) {
+    return new SimpleSchema(Field_size, config);
+  }
+  seed(config = {}) {
+    return new SimpleSchema(Field_seed, config);
+  }
+  color(config = {}) {
+    return new SimpleSchema(Field_color, config);
+  }
+  colorV2(config = {}) {
+    return new SimpleSchema(Field_string, { inputType: "color", ...config });
+  }
+  matrix(config) {
+    return new SimpleSchema(Field_matrix, config);
+  }
+  button(config) {
+    return new SimpleSchema(Field_button, config);
+  }
+  /** variants: `header` */
+  markdown(config) {
+    return new SimpleSchema(Field_markdown, typeof config === "string" ? { markdown: config } : config);
+  }
+  /** [markdown variant]: inline=true, label=false */
+  header(config) {
+    return new SimpleSchema(
+      Field_markdown,
       typeof config === "string" ? { markdown: config, inHeader: true, label: false } : { inHeader: true, label: false, justifyLabel: false, ...config }
     );
-    this.int = (config = {}) => {
-      return new SimpleBlueprint("number", { mode: "int", ...config });
-    };
-    /** [number variant] precent = mode=int, default=100, step=10, min=1, max=100, suffix='%', */
-    this.percent = (config = {}) => {
-      return new SimpleBlueprint("number", {
-        mode: "int",
-        default: 100,
-        step: 10,
-        min: 1,
-        max: 100,
-        suffix: "%",
-        ...config
-      });
-    };
-    this.float = (config = {}) => {
-      return new SimpleBlueprint("number", { mode: "float", ...config });
-    };
-    this.number = (config = {}) => {
-      return new SimpleBlueprint("number", { mode: "float", ...config });
-    };
-    this.list = (config) => {
-      return new SimpleBlueprint("list", config);
-    };
-    this.selectOne = (config) => {
-      return new SimpleBlueprint("selectOne", config);
-    };
-    this.selectOneV2 = (p) => {
-      return new SimpleBlueprint("selectOne", {
-        choices: p.map((id) => ({ id, label: id })),
-        appearance: "tab"
-      });
-    };
-    this.selectOneV3 = (p, config = {}) => {
-      return new SimpleBlueprint("selectOne", { choices: p.map((id) => ({ id, label: id })), appearance: "tab", ...config });
-    };
-    this.selectMany = (config) => {
-      return new SimpleBlueprint("selectMany", config);
-    };
-    /** see also: `fields` for a more practical api */
-    this.group = (config = {}) => {
-      return new SimpleBlueprint("group", config);
-    };
-    this.fields = (fields, config = {}) => {
-      return new SimpleBlueprint("group", { items: fields, ...config });
-    };
-    this.choice = (config) => {
-      return new SimpleBlueprint("choices", { multi: false, ...config });
-    };
-    this.choices = (config) => {
-      return new SimpleBlueprint("choices", { multi: true, ...config });
-    };
-    this.ok = (config = {}) => new SimpleBlueprint("group", config);
-    /** simple choice alternative api */
-    this.tabs = (items, config = {}) => new SimpleBlueprint("choices", { items, multi: false, ...config, appearance: "tab" });
-    // optional wrappers
-    this.optional = (p) => {
-      return new SimpleBlueprint("optional", p);
-    };
-    this.llmModel = (p = {}) => {
-      const choices = Object.entries(openRouterInfos).map(([id, info]) => ({ id, label: info.name }));
-      const def = p.default ? choices.find((c) => c.id === p.default) : void 0;
-      return this.selectOne({ default: def, choices });
-    };
-    /**
-     * Calling this function will mount and instanciate the subform right away
-     * Subform will be register in the root form `group`, using `__${key}__` as the key
-     * This is a core abstraction that enables features like
-     *  - mountting a widget at several places in the form
-     *  - recursive forms
-     *  - dynamic widgets depending on other widgets values
-     * */
-    this.shared = (key, spec) => {
-      const prevSerial = this.form.shared[key];
-      let widget;
-      if (prevSerial && prevSerial.type === spec.type) {
-        widget = this._HYDRATE(null, spec, prevSerial);
-      } else {
-        widget = this._HYDRATE(null, spec, null);
-      }
-      this.form.shared[key] = widget.serial;
-      this.form.knownShared.set(key, widget);
-      const sharedSpec = new SimpleBlueprint("shared", { rootKey: key, widget });
-      return new Widget_shared(this.form, null, sharedSpec);
-    };
-    this._HYDRATE = (parent, spec, serial) => {
-      const w = this.__HYDRATE(parent, spec, serial);
-      w.publishValue();
-      for (const { expr, effect } of spec.reactions) {
-        reaction2(
-          () => expr(w),
-          (arg) => effect(arg, w),
-          { fireImmediately: true }
-        );
-      }
-      return w;
-    };
-    /** (@internal); */
-    this._cache = { count: 0 };
-    /** (@internal) advanced way to restore form state. used internally */
-    this.__HYDRATE = (parent, spec, serial) => {
-      if (serial != null && serial.type !== spec.type) {
-        console.log(`[\u{1F536}] INVALID SERIAL (expected: ${spec.type}, got: ${serial.type})`);
-        serial = null;
-      }
-      if (spec instanceof Widget_shared)
-        return spec;
-      if (!(spec instanceof SimpleBlueprint))
-        console.log(`[\u274C] _HYDRATE received an invalid unmounted widget. This is probably a bug.`);
-      const type = spec.type;
-      const config = spec.config;
-      const spec2 = spec;
-      if (type === "group")
-        return new Widget_group(
-          this.form,
-          parent,
-          spec2,
-          serial,
-          this.form._ROOT ? void 0 : (x) => {
-            this.form._ROOT = x;
-          }
-        );
-      if (type === "shared") {
-        throw new Error(`[\u274C] For now, Shared_Widget have been design to bypass spec hydratation completely.`);
-      }
-      if (type === "optional")
-        return new Widget_optional(this.form, parent, spec2, serial);
-      if (type === "bool")
-        return new Widget_bool(this.form, parent, spec2, serial);
-      if (type === "str")
-        return new Widget_string(this.form, parent, spec2, serial);
-      if (type === "choices")
-        return new Widget_choices(this.form, parent, spec2, serial);
-      if (type === "number")
-        return new Widget_number(this.form, parent, spec2, serial);
-      if (type === "color")
-        return new Widget_color(this.form, parent, spec2, serial);
-      if (type === "list")
-        return new Widget_list(this.form, parent, spec2, serial);
-      if (type === "button")
-        return new Widget_button(this.form, parent, spec2, serial);
-      if (type === "seed")
-        return new Widget_seed(this.form, parent, spec2, serial);
-      if (type === "matrix")
-        return new Widget_matrix(this.form, parent, spec2, serial);
-      if (type === "selectOne")
-        return new Widget_selectOne(this.form, parent, spec2, serial);
-      if (type === "selectMany")
-        return new Widget_selectMany(this.form, parent, spec2, serial);
-      if (type === "size")
-        return new Widget_size(this.form, parent, spec2, serial);
-      if (type === "spacer")
-        return new Widget_spacer(this.form, parent, spec2, serial);
-      if (type === "markdown")
-        return new Widget_markdown(this.form, parent, spec2, serial);
-      console.log(`\u{1F534} unknown widget "${type}" in serial.`);
-      return new Widget_markdown(
-        this.form,
-        parent,
-        new SimpleBlueprint("markdown", { markdown: `\u{1F534} unknown widget "${type}" in serial.` })
-      );
-    };
-    makeAutoObservable13(this, {
-      SpecCtor: false
+  }
+  int(config = {}) {
+    return new SimpleSchema(Field_number, { mode: "int", ...config });
+  }
+  /** [number variant] precent = mode=int, default=100, step=10, min=1, max=100, suffix='%', */
+  percent(config = {}) {
+    return new SimpleSchema(Field_number, {
+      mode: "int",
+      default: 100,
+      step: 10,
+      min: 1,
+      max: 100,
+      suffix: "%",
+      ...config
     });
+  }
+  float(config = {}) {
+    return new SimpleSchema(Field_number, { mode: "float", ...config });
+  }
+  number(config = {}) {
+    return new SimpleSchema(Field_number, { mode: "float", ...config });
+  }
+  list(config) {
+    return new SimpleSchema(Field_list, config);
+  }
+  selectOne(config) {
+    return new SimpleSchema(Field_selectOne, config);
+  }
+  selectOneV2(p) {
+    return new SimpleSchema(Field_selectOne, {
+      choices: p.map((id) => ({ id, label: id })),
+      appearance: "tab"
+    });
+  }
+  selectOneV3(p, config = {}) {
+    return new SimpleSchema(Field_selectOne, {
+      choices: p.map((id) => ({ id, label: id })),
+      appearance: "tab",
+      ...config
+    });
+  }
+  selectMany(config) {
+    return new SimpleSchema(Field_selectMany, config);
+  }
+  /**
+   * Allow to instanciate a field early, so you can re-use it in multiple places
+   * or access it's instance to dynamically change some other field schema.
+   *
+   * @since 2024-06-27
+   * @stability unstable
+   */
+  with(injected, children) {
+    return new SimpleSchema(Field_link, { share: injected, children });
+  }
+  linked(field) {
+    return new SimpleSchema(Field_shared, { field });
+  }
+  /** see also: `fields` for a more practical api */
+  group(config = {}) {
+    return new SimpleSchema(Field_group, config);
+  }
+  fields(fields, config = {}) {
+    return new SimpleSchema(Field_group, { items: fields, ...config });
+  }
+  choice_v0(config) {
+    return new SimpleSchema(Field_choices, { multi: false, ...config });
+  }
+  choices_v0(config) {
+    return new SimpleSchema(Field_choices, { multi: true, ...config });
+  }
+  choice(items, config = {}) {
+    return new SimpleSchema(Field_choices, { multi: false, items, ...config });
+  }
+  choices(items, config = {}) {
+    return new SimpleSchema(Field_choices, { multi: true, items, ...config });
+  }
+  empty(config = {}) {
+    return new SimpleSchema(Field_group, config);
+  }
+  /** simple choice alternative api */
+  tabs(items, config = {}) {
+    return new SimpleSchema(Field_choices, {
+      items,
+      multi: false,
+      ...config,
+      appearance: "tab"
+    });
+  }
+  // optional wrappers
+  optional(p) {
+    return new SimpleSchema(Field_optional, p);
+  }
+  llmModel(p = {}) {
+    const choices = Object.entries(openRouterInfos).map(([id, info]) => ({ id, label: info.name }));
+    const def = p.default ? choices.find((c) => c.id === p.default) : void 0;
+    return this.selectOne({ default: def, choices });
   }
 };
 
 // src/csuite/ctx/CSuiteProvider.tsx
-import { observer as observer72 } from "mobx-react-lite";
-var CSuiteProvider = observer72(function CSuiteProvider_(p) {
+import { observer as observer76 } from "mobx-react-lite";
+var CSuiteProvider = observer76(function CSuiteProvider_(p) {
   const config = p.config;
   return /* @__PURE__ */ jsx(CSuiteCtx.Provider, { value: config, children: /* @__PURE__ */ jsx(
     Frame,
@@ -9912,6 +10443,7 @@ var CSuiteProvider = observer72(function CSuiteProvider_(p) {
         // '--input-border': getNum(config.inputBorder) / 100,
         "--DIR": config.shiftDirection,
         "--roundness": "5px",
+        "--widget-height": `${config.widgetHeight}rem`,
         "--input-height": `${config.inputHeight}rem`,
         "--input-icon-height": `${config.inputHeight / 1.8}rem`
       },
@@ -9926,18 +10458,23 @@ var CSuite_ThemeLoco = class {
   constructor() {
     // form behaviour
     this.clickAndSlideMultiplicator = 1;
-    this.showWidgetUndo = true;
-    this.showWidgetMenu = true;
-    this.showWidgetDiff = true;
+    this.showWidgetUndo = false;
+    this.showWidgetMenu = false;
+    this.showWidgetDiff = false;
     this.showToggleButtonBox = false;
+    this.labellayout = "fixed-left";
     // theme
     this.base = new Kolor(0.9999, 0, 240);
+    this.labelBackground = void 0;
     this.text = { contrast: 0.824 };
     this.inputBorder = 0.08;
+    this.inputContrast = 0;
     this.labelText = { contrast: 0.48, chroma: 0.035 };
+    this.widgetHeight = 1.8;
     this.inputHeight = 1.6;
     this.showWidgetExtra = true;
     this.truncateLabels = false;
+    this.fieldGroups = {};
     makeAutoObservable14(this);
   }
   get baseStr() {
@@ -9948,84 +10485,118 @@ var CSuite_ThemeLoco = class {
   }
 };
 
-// src/csuite/model/Channel.ts
+// src/csuite/model/pubsub/Channel.ts
 import { makeAutoObservable as makeAutoObservable15 } from "mobx";
-import { nanoid as nanoid23 } from "nanoid";
+import { nanoid as nanoid6 } from "nanoid";
 var Channel = class {
-  constructor(id = nanoid23()) {
+  constructor(id = nanoid6()) {
     this.id = id;
     makeAutoObservable15(this);
   }
+  get() {
+    return (field) => field.consume(this);
+  }
+  getOrThrow(field) {
+    return bang(field.consume(this), "Empty channel");
+  }
+  // see src/csuite/utils/potatoClone.ts
+  [Symbol.for("\u{1F954}")]() {
+    return this;
+  }
 };
 
-// src/csuite/activity/ActivityUI.tsx
-import { observer as observer73 } from "mobx-react-lite";
-import { Fragment as Fragment5 } from "react/jsx-runtime";
-var ActivityStackUI = observer73(function ActivityStackUI_(p) {
-  return /* @__PURE__ */ jsx(Fragment5, { children: activityManager._stack.map((activity, ix) => /* @__PURE__ */ jsx(
-    ActivityContainerUI,
-    {
-      stop: () => {
-        activity.onStop?.();
-        activityManager.stopCurrentActivity();
-      },
-      activity,
-      ix,
-      children: /* @__PURE__ */ jsx(
-        activity.UI,
-        {
-          activity,
-          stop: () => activityManager.stopActivity(activity)
-        }
-      )
-    },
-    activity.uid
-  )) });
-});
-var ActivityContainerUI = observer73(function ActivityContainerUI_(p) {
+// src/csuite/activity/ActivityContainerUI.tsx
+import { observer as observer77 } from "mobx-react-lite";
+var ActivityContainerUI = observer77(function ActivityContainerUI_(p) {
+  const routine = p.routine;
   const backdropzIndex = 1e3 + 100 * (p.ix ?? 1);
   const activityZIndex = backdropzIndex + 1;
+  const activity = p.routine.activity;
   let pos = void 0;
-  if (p.activity.event) {
-    const target = p.activity.event.target;
+  if (activity.event) {
+    const target = activity.event.target;
     if (target instanceof HTMLElement) {
-      pos = computePlacement(p.activity.placement ?? "popup-lg", target.getBoundingClientRect());
+      pos = computePlacement(activity.placement ?? "popup-lg", target.getBoundingClientRect());
     }
   }
   return /* @__PURE__ */ jsx(
     "div",
     {
       tabIndex: -1,
-      className: "_InputBlockerUI",
+      className: "$activity-root",
       tw: "absolute inset-0 h-full w-full pointer-events-auto",
+      onAuxClick: (ev) => {
+        activity.onAuxClick?.(ev, routine);
+        activity.onEvent?.(ev, routine);
+      },
+      onClick: (ev) => {
+        activity.onClick?.(ev, routine);
+        activity.onEvent?.(ev, routine);
+      },
+      onMouseDown: (ev) => {
+        activity.onMouseDown?.(ev, routine);
+        activity.onEvent?.(ev, routine);
+      },
+      onMouseEnter: (ev) => {
+        activity.onMouseEnter?.(ev, routine);
+        activity.onEvent?.(ev, routine);
+      },
+      onMouseUp: (ev) => {
+        activity.onMouseUp?.(ev, routine);
+        activity.onEvent?.(ev, routine);
+      },
+      onMouseMove: (ev) => {
+        activity.onMouseMove?.(ev, routine);
+        activity.onEvent?.(ev, routine);
+      },
+      onMouseLeave: (ev) => {
+        activity.onMouseLeave?.(ev, routine);
+        activity.onEvent?.(ev, routine);
+      },
       onKeyUp: (ev) => {
-        if (ev.key === "Escape") {
+        const shouldStopOnEscapeKey = activity.stopOnEscapeKey ?? true;
+        if (shouldStopOnEscapeKey && ev.key === "Escape") {
           console.log("Escape key pressed");
           p.stop?.();
         }
+        activity.onKeyUp?.(ev, routine);
+        activity.onEvent?.(ev, routine);
       },
       children: /* @__PURE__ */ jsxs("div", { tw: "relative w-full h-full", children: [
-        /* @__PURE__ */ jsx(
+        activity.backdrop ? /* @__PURE__ */ jsx(
           "div",
           {
-            className: "_InputBlockerUI-backdrop",
+            className: "$activity-backdrop",
             tw: "absolute inset-0 bg-[#000000db]",
             style: { zIndex: backdropzIndex },
-            children: /* @__PURE__ */ jsx("div", { style: { zIndex: -1 }, tw: "absolute inset-0 z" })
+            children: /* @__PURE__ */ jsx("div", { style: { zIndex: -1 }, tw: "absolute inset-0" })
+          }
+        ) : null,
+        /* @__PURE__ */ jsxs(
+          "div",
+          {
+            tw: "absolute top-10 left-10 [z-index:99999]",
+            children: [
+              'activity "',
+              activity.title,
+              '"'
+            ]
           }
         ),
         /* @__PURE__ */ jsx(
           "div",
           {
+            tabIndex: -1,
+            autoFocus: true,
             tw: "absolute inset-0",
             style: { zIndex: activityZIndex, ...pos },
-            className: "_InputBlockerUI-activity-container flex justify-center",
+            className: "$activity-focus flex justify-center",
             onMouseDown: (ev) => {
+              if (!activity.stopOnBackdropClick) return;
               console.log("activity backref clicked");
-              if (ev.target === ev.currentTarget)
-                p.stop?.();
+              if (ev.target === ev.currentTarget) p.stop();
             },
-            children: p.activity.shell === "popup-lg" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "max-w-lg w-fit h-fit m-8", close: () => p.stop(), title: p.activity.title, children: p.children }) : p.activity.shell === "popup-sm" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "max-w-sm w-fit h-fit m-8", close: () => p.stop(), title: p.activity.title, children: p.children }) : p.activity.shell === "popup-full" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "m-8", close: () => p.stop(), title: p.activity.title, children: p.children }) : p.children
+            children: activity.shell === "popup-lg" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "max-w-lg w-fit h-fit m-8", close: () => p.stop(), title: activity.title, children: p.children }) : activity.shell === "popup-sm" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "max-w-sm w-fit h-fit m-8", close: () => p.stop(), title: activity.title, children: p.children }) : activity.shell === "popup-full" ? /* @__PURE__ */ jsx(ModalShellUI, { tw: "m-8", close: () => p.stop(), title: activity.title, children: p.children }) : p.children
           }
         )
       ] })
@@ -10033,13 +10604,44 @@ var ActivityContainerUI = observer73(function ActivityContainerUI_(p) {
   );
 });
 
+// src/csuite/activity/ActivityStackUI.tsx
+import { observer as observer78 } from "mobx-react-lite";
+import { Fragment as Fragment6 } from "react/jsx-runtime";
+var ActivityStackUI = observer78(function ActivityStackUI_(p) {
+  return /* @__PURE__ */ jsx(Fragment6, { children: activityManager.routines.map((routine, ix) => {
+    const activity = routine.activity;
+    return /* @__PURE__ */ jsx(
+      ActivityContainerUI,
+      {
+        stop: () => {
+          activity.onStop?.();
+          activityManager.stopLast();
+        },
+        routine,
+        ix,
+        children: activity.UI ? /* @__PURE__ */ jsx(
+          activity.UI,
+          {
+            routine,
+            activity,
+            stop: () => activityManager.stop(routine)
+          }
+        ) : null
+      },
+      routine.uid
+    );
+  }) });
+});
+
 // src/csuite/index.ts
-var SimpleModelManager = new ModelManager(SimpleDomain);
+var simpleBuilder = new SimpleBuilder();
+var simpleFactory = new Factory(simpleBuilder);
 export {
   ActivityContainerUI,
   ActivityStackUI,
   CSuiteProvider,
   CSuite_ThemeLoco,
   Channel,
-  SimpleModelManager
+  simpleBuilder,
+  simpleFactory
 };
